@@ -14,16 +14,17 @@ process.load("Geometry.TrackerNumberingBuilder.trackerNumberingGeometry_cfi")
 process.load("Geometry.CaloEventSetup.CaloTopology_cfi")
 
 process.load('Configuration/StandardSequences/Services_cff')
-process.load('Configuration/StandardSequences/GeometryExtended_cff')
+#process.load('Configuration/StandardSequences/GeometryExtended_cff')
 process.load('Configuration/StandardSequences/MagneticField_AutoFromDBCurrent_cff')
-
+process.load('Configuration.StandardSequences.GeometryDB_cff')
 
 #process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck")
 
 process.source = cms.Source("PoolSource",
     skipEvents = cms.untracked.uint32(0),
     fileNames = cms.untracked.vstring(
-'file:/cmsrm/pc18/pandolf/CMSSW_3_7_0_patch2/src/JetMETCorrections/GammaJet/test/PD.root'
+#'file:/cmsrm/pc18/pandolf/CMSSW_3_7_0_patch2/src/JetMETCorrections/GammaJet/test/PD.root'
+'file:events_RelVal_TTbar.root'
 )
 
 )
@@ -61,15 +62,15 @@ process.monster = cms.EDFilter(
 
 process.myanalysis = cms.EDAnalyzer("HZZlljjAnalyzer",
     debug = cms.bool(False),
-    recoProducer = cms.string('ecalRecHit'),
     MCTruthCollection = cms.untracked.InputTag("source"),
     genMet = cms.untracked.InputTag("genMetTrue"),
-    met = cms.untracked.InputTag("met"),
+    met = cms.untracked.InputTag("pfMet"),
     tracks = cms.untracked.InputTag("generalTracks"),
-    Electronsrc = cms.untracked.InputTag("gsfelectrons"),
+    Electronsrc = cms.untracked.InputTag("gsfElectrons"),
     Muonsrc = cms.untracked.InputTag("muons"),
-    recoCollection = cms.string('EcalRecHitsEB'),
-    JetAlgo = cms.string('ak5'),
+    ecalHitsCollection = cms.string('EcalRecHitsEB'),
+    ecalHitsProducer = cms.string('ecalRecHit'),
+    jetalgo = cms.untracked.string('ak5'),
     hbhits = cms.untracked.InputTag("hbhereco"),
     TriggerTag = cms.untracked.InputTag("TriggerResults::HLT"),
     vertices = cms.untracked.InputTag("offlinePrimaryVertices"),
