@@ -14,6 +14,8 @@
 <use name=DataFormats/EgammaReco>
 <use name=DataFormats/Candidate>
 <use name=DataFormats/EgammaCandidates>
+<use name=DataFormats/MuonReco>
+<use name=DataFormats/VertexReco>
 <use name=DataFormats/GeometryVector>
 <use name=DataFormats/HcalRecHit>
 <use name=DataFormats/JetReco>
