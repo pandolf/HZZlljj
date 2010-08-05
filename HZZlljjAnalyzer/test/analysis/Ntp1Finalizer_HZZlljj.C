@@ -11,14 +11,14 @@
 #include <cmath>
 
 
-double fitTools::delta_phi(double phi1, double phi2) {
+double delta_phi(double phi1, double phi2) {
 
   double dphi = fabs(phi1 - phi2);
   return (dphi <= TMath::Pi())? dphi : TMath::TwoPi() - dphi;
 }
 
 
-float fitTools::delta_phi(float phi1, float phi2) {
+float delta_phi(float phi1, float phi2) {
 
   float dphi = fabs(phi1 - phi2);
   float sgn = (phi1 >= phi2 ? +1. : -1.);

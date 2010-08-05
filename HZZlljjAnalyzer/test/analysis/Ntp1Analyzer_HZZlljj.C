@@ -6,7 +6,21 @@
 #include "TRandom3.h"
 #include "TLorentzVector.h"
 
-#include "fitTools.h"
+
+double delta_phi(double phi1, double phi2) {
+
+  double dphi = fabs(phi1 - phi2);
+  return (dphi <= TMath::Pi())? dphi : TMath::TwoPi() - dphi;
+}
+
+
+float delta_phi(float phi1, float phi2) {
+
+  float dphi = fabs(phi1 - phi2);
+  float sgn = (phi1 >= phi2 ? +1. : -1.);
+  return sgn * (dphi <= TMath::Pi() ? dphi : TMath::TwoPi() - dphi);
+}
+
 
 
 
@@ -336,12 +350,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        // far away from leptons:
        Float_t deltaEta1 = thisJet.Eta() - etaLept1_;
-       Float_t deltaPhi1 = fitTools::delta_phi((Float_t)thisJet.Phi(), phiLept1_);
+       Float_t deltaPhi1 = delta_phi((Float_t)thisJet.Phi(), phiLept1_);
        Float_t deltaR1 = sqrt( deltaEta1*deltaEta1 + deltaPhi1*deltaPhi1 );
        if( deltaR1 <= 0.25 ) continue;
 
        Float_t deltaEta2 = thisJet.Eta() - etaLept2_;
-       Float_t deltaPhi2 = fitTools::delta_phi((Float_t)thisJet.Phi(), phiLept2_);
+       Float_t deltaPhi2 = delta_phi((Float_t)thisJet.Phi(), phiLept2_);
        Float_t deltaR2 = sqrt( deltaEta2*deltaEta2 + deltaPhi2*deltaPhi2 );
        if( deltaR2 <= 0.25 ) continue;
 
