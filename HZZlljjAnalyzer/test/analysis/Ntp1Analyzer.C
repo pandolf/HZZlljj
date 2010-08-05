@@ -42,22 +42,25 @@ void Ntp1Analyzer::LoadInput() {
    std::cout << "-> Loading input... (could take a while)" << std::endl;
 
    char treePath[400];
-   TChain * chain = new TChain("pippo","");
+   TChain * chain = new TChain("ntp1","");
    if( dataset_=="Wenu_Summer10_START37_V5_S09_v1" ) {
      sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/Wenu_Summer10_START37_V5_S09_v1/default_*.root/ntp1");
-     chain->Add(treePath);
    } else {
      sprintf(treePath, "%s/default_*.root/ntp1", dataset_.c_str());
-     chain->Add(treePath);
    }
-     
-   TTree* tree = chain;
-   std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
 
-   this->CreateOutputFile();
+   int addInt = chain->Add(treePath);
 
-   Init(tree);
-
+   if( addInt==0 ) {
+     std::cout << "Didn't find files to add for dataset: '" << dataset_ << "'. Looking for a list..." << std::endl;
+     std::string fileName = "files_HZZlljj_" + dataset_ + ".txt";
+     this->LoadInputFromFile(fileName);
+   } else {
+     TTree* tree = chain;
+     std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
+     Init(tree);
+     this->CreateOutputFile();
+   }
 
 }
 
@@ -70,14 +73,14 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
      exit(-1);
    }
 
-   TChain * chain = new TChain("pippo","");
+   TChain * chain = new TChain("ntp1","");
 
    char singleLine[500];
  
    while( fscanf(iff, "%s", singleLine) !=EOF ) {
    
      std::string singleLine_str(singleLine);
-     singleLine_str = singleLine_str + "/myanalysis/pippo";
+     singleLine_str = singleLine_str + "/ntp1";
      std::cout << "-> Adding " << singleLine_str << std::endl;
      chain->Add(singleLine_str.c_str());
 
@@ -86,12 +89,14 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
 
    TTree* tree = chain;
    std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
-
    Init(tree);
-  
    this->CreateOutputFile();
 
 }
+
+
+
+
 
 void Ntp1Analyzer::CreateOutputFile() {
 
@@ -1034,13 +1039,14 @@ GenEventParameters Ntp1Analyzer::getGenEventParameters() {
      returnGenPars.crossSection = 7899.;
      returnGenPars.ptHatMax = 10000.;
    } else {
-     std::cout << "WARNING! Dataset '" << dataset_ << "' has no hardwired cross-section, setting it to -1." << std::endl;
+     std::cout << "-> (No ptHat cuts introduced.)" << std::endl;
      returnGenPars.crossSection = -1.;
+     returnGenPars.ptHatMin = 0.;
      returnGenPars.ptHatMax = 10000.;
    }
 
-   if( returnGenPars.crossSection != -1 ) 
-     std::cout << "-> Dataset was in database. Cross-section correctly set." << std::endl;
+//   if( returnGenPars.crossSection != -1 ) 
+//     std::cout << "-> Dataset was in database. Cross-section correctly set." << std::endl;
 
    return returnGenPars;
 
