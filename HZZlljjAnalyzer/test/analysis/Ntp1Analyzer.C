@@ -43,142 +43,21 @@ void Ntp1Analyzer::LoadInput() {
 
    char treePath[400];
    TChain * chain = new TChain("pippo","");
-   if( dataset_=="MinimumBias_Commissioning10-GOODCOLL-v9" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/DATA/MinimumBias/Commissioning10-GOODCOLL-v9_2ndTry/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="MinimumBias_Commissioning10_May6thPDSkim2_SD_EG" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/DATA/MinimumBias/Commissioning10_May6thPDSkim2_SD_EG/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="MinimumBias_Commissioning10-Apr20Skim_GOODCOLL-v1" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/DATA/MinimumBias/Commissioning10-Apr20Skim_GOODCOLL-v1_3rdTry/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="MinimumBias_Commissioning10_SD_EG-v9" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/DATA/MinimumBias/Commissioning10_SD_EG-v9/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Spring10_Pt0to15" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Spring10/PhotonJetPt0to15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Spring10_Pt5to15" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Spring10/PhotonJetPt5to15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Spring10_Pt15" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Spring10/PhotonJetPt15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Spring10_Pt30" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Spring10/PhotonJetPt30/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Spring10_Pt80" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Spring10/PhotonJetPt80/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Spring10_Pt170" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Spring10/PhotonJetPt170/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="MinBias_357ReReco_v3"||dataset_=="MinBias_357ReReco_v3_Pt0to15" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/MinBias_357ReReco_v3/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt0to15" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt0to15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt5to15" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt0to15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt5to15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt15" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt15to20" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt15to20/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt20to30" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt20to30/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt30" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt30/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt30to50" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt30/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt30to50/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt50to80" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt30/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt50to80/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt80" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt80/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt170" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt170/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt300" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt300/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt470" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt470/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Spring10_Pt1400" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Spring10/QCDPt1400/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="QCD_Pythia8" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/QCD_Pythia8/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="EG_Run2010A-PromptReco-v1" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/DATA/EG/Run2010A-PromptReco-v1/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="EG_Run2010A-PromptReco-v2" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/DATA/EG/Run2010A-PromptReco-v2/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="EG_Run2010A-PromptReco-v4" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/DATA/EG/Run2010A-PromptReco-v4/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt0to15" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Summer1036X/PhotonJetPt0to15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt5to15" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Summer1036X/PhotonJetPt5to15/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt15to20" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Summer1036X/PhotonJetPt15to20/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt20to30" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Summer1036X/PhotonJetPt20to30/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt30to50" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Summer1036X/PhotonJetPt30to50/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt50to80" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Summer1036X/PhotonJetPt50to80/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt80to120" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Summer1036X/PhotonJetPt80to120/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt120to170" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Summer1036X/PhotonJetPt120to170/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt170to300" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/PhotonJet_Summer1036X/PhotonJetPt170to300/output_*.root/myanalysis/pippo");
-     chain->Add(treePath);
-   } else if( dataset_=="Wenu_Summer10_START37_V5_S09_v1" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/Wenu_Summer10_START37_V5_S09_v1/output_*.root/myanalysis/pippo");
+   if( dataset_=="Wenu_Summer10_START37_V5_S09_v1" ) {
+     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/Wenu_Summer10_START37_V5_S09_v1/default_*.root/ntp1");
      chain->Add(treePath);
    } else {
-     sprintf(treePath, "%s/output_*.root/myanalysis/pippo", dataset_.c_str());
+     sprintf(treePath, "%s/default_*.root/ntp1", dataset_.c_str());
      chain->Add(treePath);
    }
      
    TTree* tree = chain;
    std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
-   //std::cout << "-> Added " << nFiles << " files. Tree has " << tree->GetEntries() << " entries." << std::endl;
+
+   this->CreateOutputFile();
 
    Init(tree);
 
-   this->CreateOutputFile();
 
 }
 
@@ -207,7 +86,6 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
 
    TTree* tree = chain;
    std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
-   //std::cout << "-> Added " << nFiles << " files. Tree has " << tree->GetEntries() << " entries." << std::endl;
 
    Init(tree);
   
@@ -226,7 +104,10 @@ void Ntp1Analyzer::CreateOutputFile() {
    }
 
 
-   outfileName = outfileName + "_" + flags_ + ".root";
+   if( flags_=="" )
+     outfileName = outfileName + ".root";
+   else 
+     outfileName = outfileName + "_" + flags_ + ".root";
 
    outfile_ = TFile::Open(outfileName.c_str(), "RECREATE");
    
@@ -279,8 +160,8 @@ void Ntp1Analyzer::Init(TTree *tree)
 
    //will cut on pt_hat, so have to divide only by correct number of events:
    char cutOnPtHat[70];
-   sprintf( cutOnPtHat, "genpt>%f && genpt<%f", ptHatMin_, ptHatMax_);
-   Int_t nEntries_cut = (Float_t)tree->GetEntries(cutOnPtHat);
+   sprintf( cutOnPtHat, "genPtHat>%lf && genPtHat<%lf", (Double_t)ptHatMin_, (Double_t)ptHatMax_);
+   Int_t nEntries_cut = tree->GetEntries(cutOnPtHat);
    h1_nCounter_->SetBinContent( 1, nEntries_cut );
 
 
