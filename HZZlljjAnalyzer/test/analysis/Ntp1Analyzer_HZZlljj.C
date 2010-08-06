@@ -74,7 +74,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
 
   reducedTree_->Branch("ptHat",&ptHat_,"ptHat_/F");
 
-  reducedTree_->Branch("leptType",  &leptType_,  "leptType_/S");
+  reducedTree_->Branch("leptType",  &leptType_,  "leptType_/I");
   
   reducedTree_->Branch("eLept1",  &eLept1_,  "eLept1_/F");
   reducedTree_->Branch("ptLept1",  &ptLept1_,  "ptLept1_/F");
@@ -348,7 +348,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      if( electrons.size() == 2 && muons.size() == 2 ) { //default: choose muons
 
-       leptType_ = "muon";
+       leptType_ = 0;
        eLept1_ = muons[0].Energy();
        ptLept1_ = muons[0].Pt();
        etaLept1_ = muons[0].Eta();
@@ -361,7 +361,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      } else if( electrons.size() == 2 ) {
 
-       leptType_ = "electron";
+       leptType_ = 1;
        eLept1_ = electrons[0].Energy();
        ptLept1_ = electrons[0].Pt();
        etaLept1_ = electrons[0].Eta();
@@ -374,7 +374,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      } else if( muons.size() == 2 ) {
 
-       leptType_ = "muon";
+       leptType_ = 0;
        eLept1_ = muons[0].Energy();
        ptLept1_ = muons[0].Pt();
        etaLept1_ = muons[0].Eta();

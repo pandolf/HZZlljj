@@ -28,7 +28,7 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
 
  private:
 
-   std::string leptType_;
+   int leptType_; //0: muon; 1: electron
 
    Float_t eLept1_;
    Float_t ptLept1_;
