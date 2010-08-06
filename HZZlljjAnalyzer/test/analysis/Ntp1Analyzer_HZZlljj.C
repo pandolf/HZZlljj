@@ -301,36 +301,96 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // MUONS
      // ------------------
 
-//   std::vector<TLorentzVector> muons;
+     std::vector<TLorentzVector> muons;
+     int chargeFirstMuon;
 
-//   for( unsigned int iMuon=0; iMuon<nMuon; ++iMuon ) {
+     for( unsigned int iMuon=0; iMuon<nMuon; ++iMuon ) {
 
-//     TLorentzVector thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
+       TLorentzVector thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
 
-//     // --------------
-//     // kinematics:
-//     // --------------
-//     if( thisMuon.Pt() < 10. ) continue;
-//     //if( (fabs(thisMu.Eta() > 2.5) || ( fabs(thisMu.Eta())>1.4442 && fabs(thisMu.Eta())<1.566) ) ) continue;
-
-//     // --------------
-//     // isolation:
-//     // --------------
-
-//   } //for muons
+       // --------------
+       // kinematics:
+       // --------------
+       if( thisMuon.Pt() < 10. ) continue;
 
 
-     if( electrons.size() < 2 ) continue;
+       // --------------
+       // ID:
+       // --------------
+       if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
+       if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
+       if( pixelHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
+       if( transvImpactParTrack[trackIndexMuon[iMuon]] > 0.2 ) continue;    
 
-     eLept1_ = electrons[0].Energy();
-     ptLept1_ = electrons[0].Pt();
-     etaLept1_ = electrons[0].Eta();
-     phiLept1_ = electrons[0].Phi();
 
-     eLept2_ = electrons[1].Energy();
-     ptLept2_ = electrons[1].Pt();
-     etaLept2_ = electrons[1].Eta();
-     phiLept2_ = electrons[1].Phi();
+       // --------------
+       // isolation:
+       // --------------
+       if( sumPt03Muon[iMuon] >= 3. ) continue;
+
+
+
+       if( muons.size()==0 ) {
+         muons.push_back( thisMuon );
+         chargeFirstMuon = chargeMuon[iMuon];
+       } else {
+         if( chargeMuon[iMuon]==chargeFirstMuon ) continue;
+         if( fabs(muons[0].Eta())>2.1 && fabs(thisMuon.Eta())>2.1 ) continue;
+         muons.push_back(thisMuon);
+       }
+
+     } //for muons
+
+
+     if( electrons.size() < 2 && muons.size() < 2 ) continue;
+
+
+
+     if( electrons.size() == 2 && muons.size() == 2 ) { //default: choose muons
+
+       leptType_ = "muon";
+       eLept1_ = muons[0].Energy();
+       ptLept1_ = muons[0].Pt();
+       etaLept1_ = muons[0].Eta();
+       phiLept1_ = muons[0].Phi();
+     
+       eLept2_ = muons[1].Energy();
+       ptLept2_ = muons[1].Pt();
+       etaLept2_ = muons[1].Eta();
+       phiLept2_ = muons[1].Phi();
+
+     } else if( electrons.size() == 2 ) {
+
+       leptType_ = "electron";
+       eLept1_ = electrons[0].Energy();
+       ptLept1_ = electrons[0].Pt();
+       etaLept1_ = electrons[0].Eta();
+       phiLept1_ = electrons[0].Phi();
+     
+       eLept2_ = electrons[1].Energy();
+       ptLept2_ = electrons[1].Pt();
+       etaLept2_ = electrons[1].Eta();
+       phiLept2_ = electrons[1].Phi();
+
+     } else if( muons.size() == 2 ) {
+
+       leptType_ = "muon";
+       eLept1_ = muons[0].Energy();
+       ptLept1_ = muons[0].Pt();
+       etaLept1_ = muons[0].Eta();
+       phiLept1_ = muons[0].Phi();
+     
+       eLept2_ = muons[1].Energy();
+       ptLept2_ = muons[1].Pt();
+       etaLept2_ = muons[1].Eta();
+       phiLept2_ = muons[1].Phi();
+
+     } else {
+
+       std::cout << "There must be an error this is not possible." << std::endl;
+       exit(9101);
+
+     }
 
 
      // ------------------
