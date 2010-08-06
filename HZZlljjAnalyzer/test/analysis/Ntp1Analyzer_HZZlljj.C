@@ -71,6 +71,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("run",&run_,"run_/I");
   reducedTree_->Branch("event",&event_,"event_/I");
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
+  reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
 
   reducedTree_->Branch("ptHat",&ptHat_,"ptHat_/F");
 
@@ -196,6 +197,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      run_ = runNumber;
      event_ = eventNumber;
      ptHat_ = genPtHat;
+     eventWeight_ = -1.; //default
 
      if( !isGoodLS() ) continue; //this takes care also of integrated luminosity
 
