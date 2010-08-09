@@ -34,7 +34,7 @@ Double_t totalLumi=0.;
 TChain* tree;
 
 
-void addInput(const std::string& dataset);
+void addFile(const std::string& dataset);
 
 
 void finalize(const std::string& dataset) {
@@ -47,12 +47,12 @@ void finalize(const std::string& dataset) {
 
   if( dataset=="DATA_EG_37X" ) {
 
-    addInput( "EG_Run2010A_Jul15thReReco_v1" );
-    addInput( "EG_Run2010A_Jul26thReReco_v1" );
+    addFile( "EG_Run2010A_Jul15thReReco_v1" );
+    addFile( "EG_Run2010A_Jul26thReReco_v1" );
 
   } else {
   
-    addInput( dataset );
+    addFile( dataset );
 
   }
 
@@ -64,12 +64,18 @@ void finalize(const std::string& dataset) {
 
 
   int nBins_invMass = 50;
+  float invMassMin = 0.;
+  float invMassMax = 120.;
 
-  TH1D* h1_LeptLeptInvMass = new TH1D("LeptLeptInvMass", "", nBins_invMass, 40., 140.);
+  TH1D* h1_LeptLeptInvMass = new TH1D("LeptLeptInvMass", "", nBins_invMass, invMassMin, invMassMax);
   h1_LeptLeptInvMass->Sumw2();
-  TH1D* h1_JetJetInvMass = new TH1D("JetJetInvMass", "", nBins_invMass, 40., 140.);
+  TH1D* h1_MuMuInvMass = new TH1D("MuMuInvMass", "", nBins_invMass, invMassMin, invMassMax);
+  h1_MuMuInvMass->Sumw2();
+  TH1D* h1_EleEleInvMass = new TH1D("EleEleInvMass", "", nBins_invMass, invMassMin, invMassMax);
+  h1_EleEleInvMass->Sumw2();
+  TH1D* h1_JetJetInvMass = new TH1D("JetJetInvMass", "", nBins_invMass, invMassMin, invMassMax);
   h1_JetJetInvMass->Sumw2();
-  TH1D* h1_ZZInvMass = new TH1D("ZZInvMass", "", nBins_invMass, 80., 230.);
+  TH1D* h1_ZZInvMass = new TH1D("ZZInvMass", "", nBins_invMass/2, 100., 600.);
   h1_ZZInvMass->Sumw2();
 
 
@@ -80,6 +86,11 @@ void finalize(const std::string& dataset) {
   tree->SetBranchAddress("nvertex", &nvertex);
   Int_t event;
   tree->SetBranchAddress("event", &event);
+  Float_t eventWeight;
+  tree->SetBranchAddress("eventWeight", &eventWeight);
+
+  Float_t ptHat;
+  tree->SetBranchAddress("ptHat", &ptHat);
 
   Float_t eMet;
   tree->SetBranchAddress("epfMet", &eMet);
@@ -87,8 +98,8 @@ void finalize(const std::string& dataset) {
   tree->SetBranchAddress("phipfMet", &phiMet);
 
 
-  Float_t ptHat;
-  tree->SetBranchAddress("ptHat", &ptHat);
+  int leptType;
+  tree->SetBranchAddress("leptType", &leptType);
 
   Float_t eLept1;
   tree->SetBranchAddress("eLept1", &eLept1);
@@ -131,8 +142,6 @@ void finalize(const std::string& dataset) {
   tree->SetBranchAddress("eChargedHadronsJet2", &eChargedHadronsJet2);
 
 
-  Float_t eventWeight = 1.;
-
 
   int nEntries = tree->GetEntries();
 //nEntries = 100000;
@@ -152,6 +161,12 @@ void finalize(const std::string& dataset) {
 
     TLorentzVector Zll = ( lept1 + lept2 );
     h1_LeptLeptInvMass->Fill( Zll.M(), eventWeight );
+    if( leptType==0 )
+      h1_MuMuInvMass->Fill( Zll.M(), eventWeight );
+    else if( leptType==1 )
+      h1_EleEleInvMass->Fill( Zll.M(), eventWeight );
+    else
+      std::cout << "WARNING!! found incredible leptType: '" << leptType << "'." << std::endl;
 
     TLorentzVector jet1, jet2;
     jet1.SetPtEtaPhiE( ptJet1, etaJet1, phiJet1, eJet1 );
@@ -181,16 +196,25 @@ void finalize(const std::string& dataset) {
   TFile* outFile = new TFile(outfileName.c_str(), "RECREATE");
   outFile->cd();
 
+  h1_totalLumi->Write();
 
   h1_LeptLeptInvMass->Write();
+  h1_MuMuInvMass->Write();
+  h1_EleEleInvMass->Write();
   h1_JetJetInvMass->Write();
   h1_ZZInvMass->Write();
 
 
   outFile->Close();
 
+  delete h1_totalLumi;
+  h1_totalLumi = 0;
   delete h1_LeptLeptInvMass;
   h1_LeptLeptInvMass = 0;
+  delete h1_MuMuInvMass;
+  h1_MuMuInvMass = 0;
+  delete h1_EleEleInvMass;
+  h1_EleEleInvMass = 0;
   delete h1_JetJetInvMass;
   h1_JetJetInvMass = 0;
   delete h1_ZZInvMass;
@@ -204,56 +228,24 @@ void finalize(const std::string& dataset) {
 }
 
 
-void addInput( const std::string& dataset ) {
+void addFile( const std::string& dataset ) {
 
-  std::string infileName = "files_HZZlljj_2ndLevel_" + dataset+"_" +".txt";
-  TH1F* h1_lumi;
-
-
-  //open from file.txt:
-  FILE* iff = fopen(infileName.c_str(),"r");
-  if(iff == 0) {
-    std::cout << "cannot open input file '" << infileName << "' ... adding single file." << std::endl;
-    infileName = "HZZlljj_2ndLevelTree_" + dataset + ".root";
-    std::string treeName = infileName +"/reducedTree";
-    tree->Add(treeName.c_str());
-    std::cout << "-> Added " << treeName << ". Tree has " << tree->GetEntries() << " entries." << std::endl;
-    TFile* infile = TFile::Open(infileName.c_str(), "READ");
-    h1_lumi = (TH1F*)infile->Get("lumi");
-    if( h1_lumi!=0 ) {
-      totalLumi += h1_lumi->GetBinContent(1);
-      std::cout << "\tTotal lumi: " << totalLumi << " ub-1" << std::endl;
-    } else {
-      std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping." << std::endl;
-    }
-    infile->Close();
-
+  std::string infileName = "HZZlljj_2ndLevelTreeW_" + dataset + ".root"; //the W is important: means that files have passed treatment (merging and weights)
+  std::string treeName = infileName +"/reducedTree";
+  tree->Add(treeName.c_str());
+  std::cout << "-> Added " << treeName << ". Tree has " << tree->GetEntries() << " entries." << std::endl;
+  TFile* infile = TFile::Open(infileName.c_str(), "READ");
+  TH1F* h1_lumi = (TH1F*)infile->Get("lumi");
+  if( h1_lumi!=0 ) {
+    totalLumi += h1_lumi->GetBinContent(1);
+    std::cout << "\tTotal lumi: " << totalLumi << " ub-1" << std::endl;
   } else {
-
-    char singleLine[500];
-
-    while( fscanf(iff, "%s", singleLine) !=EOF ) {
-
-      std::string rootfilename(singleLine);
-      std::string treename = rootfilename + "/reducedTree";
-      std::cout << "-> Added " << treename;
-      tree->Add(treename.c_str());
-      TFile* infile = TFile::Open(rootfilename.c_str(), "READ");
-      h1_lumi = (TH1F*)infile->Get("lumi");
-      if( h1_lumi!=0 ) {
-        totalLumi += h1_lumi->GetBinContent(1);
-        std::cout << "\tTotal lumi: " << totalLumi << " ub-1" << std::endl;
-      } else {
-        std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping." << std::endl;
-      }
-      infile->Close();
-
-    }
-    fclose(iff);
-
+    std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping." << std::endl;
   }
+  infile->Close();
 
-} //addinput
+
+} //addFile
 
 
   
