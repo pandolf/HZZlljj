@@ -306,7 +306,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      std::vector<TLorentzVector> muons;
      int chargeFirstMuon;
 
-     for( unsigned int iMuon=0; iMuon<nMuon; ++iMuon ) {
+     for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
 
        TLorentzVector thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
 

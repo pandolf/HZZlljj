@@ -58,8 +58,8 @@ void Ntp1Analyzer::LoadInput() {
    } else {
      TTree* tree = chain;
      std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
-     Init(tree);
      this->CreateOutputFile();
+     Init(tree);
    }
 
 }
@@ -89,8 +89,8 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
 
    TTree* tree = chain;
    std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
-   Init(tree);
    this->CreateOutputFile();
+   Init(tree);
 
 }
 
@@ -109,10 +109,7 @@ void Ntp1Analyzer::CreateOutputFile() {
    }
 
 
-   if( flags_=="" )
-     outfileName = outfileName + ".root";
-   else 
-     outfileName = outfileName + "_" + flags_ + ".root";
+   outfileName = outfileName + flags_ + ".root";
 
    outfile_ = TFile::Open(outfileName.c_str(), "RECREATE");
    
