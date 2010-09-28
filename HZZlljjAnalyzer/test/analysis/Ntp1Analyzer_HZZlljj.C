@@ -155,19 +155,15 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("phipfMet",&phipfMet_,"phipfMet_/F");
 
   
-  int nBins_eff = 50;
+  int nBins_eff = 20;
   float ptMin_eff = 10.;
-  float ptMax_eff = 160.;
-  h1_nEvents_vs_ptEle1 = new TH1F("nEvents_vs_ptEle1", "", nBins_eff, ptMin_eff, ptMax_eff);
-  h1_nEvents_vs_ptEle2 = new TH1F("nEvents_vs_ptEle2", "", nBins_eff, ptMin_eff, ptMax_eff);
-  h1_nEvents_vs_ptMuon1 = new TH1F("nEvents_vs_ptMuon1", "", nBins_eff, ptMin_eff, ptMax_eff);
-  h1_nEvents_vs_ptMuon2 = new TH1F("nEvents_vs_ptMuon2", "", nBins_eff, ptMin_eff, ptMax_eff);
-  h1_passed_vs_ptEle1 = new TH1F("passed_vs_ptEle1", "", nBins_eff, ptMin_eff, ptMax_eff);
-  h1_passed_vs_ptEle2 = new TH1F("passed_vs_ptEle2", "", nBins_eff, ptMin_eff, ptMax_eff);
-  h1_passed_vs_ptMuon1 = new TH1F("passed_vs_ptMuon1", "", nBins_eff, ptMin_eff, ptMax_eff);
-  h1_passed_vs_ptMuon2 = new TH1F("passed_vs_ptMuon2", "", nBins_eff, ptMin_eff, ptMax_eff);
-  h1_deltaRmatching_muons = new TH1F("deltaRmatching_muons", "", 50, 0., 0.25);
-  h1_deltaRmatching_electrons = new TH1F("deltaRmatching_electrons", "", 50, 0., 0.25);
+  float ptMax_eff = 150.;
+  h1_nEvents_vs_ptEle = new TH1F("nEvents_vs_ptEle", "", nBins_eff, ptMin_eff, ptMax_eff);
+  h1_nEvents_vs_ptMuon = new TH1F("nEvents_vs_ptMuon", "", nBins_eff, ptMin_eff, ptMax_eff);
+  h1_passed_vs_ptEle = new TH1F("passed_vs_ptEle", "", nBins_eff, ptMin_eff, ptMax_eff);
+  h1_passed_vs_ptMuon = new TH1F("passed_vs_ptMuon", "", nBins_eff, ptMin_eff, ptMax_eff);
+  h1_deltaRmatching_muons = new TH1F("deltaRmatching_muons", "", 50, 0., 0.05);
+  h1_deltaRmatching_electrons = new TH1F("deltaRmatching_electrons", "", 50, 0., 0.05);
 
 } 
 
@@ -176,6 +172,13 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
 Ntp1Analyzer_HZZlljj::~Ntp1Analyzer_HZZlljj() {
 
   outfile_->cd();
+  h1_nEvents_vs_ptEle->Write();
+  h1_nEvents_vs_ptMuon->Write();
+  h1_passed_vs_ptEle->Write();
+  h1_passed_vs_ptMuon->Write();
+  h1_deltaRmatching_muons->Write();
+  h1_deltaRmatching_electrons->Write();
+  
 
 }
 
@@ -227,60 +230,59 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( (ptHat_ > ptHatMax_) || (ptHat_ < ptHatMin_) ) continue;
 
 
+     bool noLeptons = false;
      TLorentzVector lept1MC, lept2MC;
 
      if( isMC ) {
 
-       int zIndex = -1;
+       std::vector<TLorentzVector> electronsMC;
+       std::vector<TLorentzVector> muonsMC;
 
-       for( unsigned iMc=0; iMc<nMc && zIndex!=-1; ++iMc ) {
-    
-         if( statusMc[iMc]==3 && idMc[iMc]==23 ) {
-           zIndex = iMc;
-         }
+       for( unsigned iMc=0; iMc<nMc; ++iMc ) {
+
+         if( statusMc[iMc] != 1 ) continue;
+
+         TLorentzVector* thisParticle = new TLorentzVector();
+         thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
+
+         // remember: a stable lepton is daughter of a parton lepton, which is daughter of the Z:
+         if( fabs(idMc[iMc])==11 && idMc[mothMc[mothMc[iMc]]]==23 ) electronsMC.push_back( *thisParticle );
+         if( fabs(idMc[iMc])==13 && idMc[mothMc[mothMc[iMc]]]==23 ) muonsMC.push_back( *thisParticle );
+
+         delete thisParticle;
+         thisParticle = 0;
 
        }
 
-       if( zIndex != -1 ) {
-
-         std::vector<TLorentzVector*> electronsMC;
-         std::vector<TLorentzVector*> muonsMC;
-
-         for( unsigned iMc=0; iMc<nMc; ++iMc ) {
-
-           if( statusMc[iMc] != 1 ) continue;
-
-           TLorentzVector* thisParticle = new TLorentzVector();
-           thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
-
-           if( fabs(idMc[iMc])==11 && mothMc[iMc]==zIndex ) electronsMC.push_back( thisParticle );
-           if( fabs(idMc[iMc])==13 && mothMc[iMc]==zIndex ) muonsMC.push_back( thisParticle );
-
-           delete thisParticle;
-           thisParticle = 0;
-
-         }
-
-         if( electronsMC.size()==2 ) {
-           lept1MC = *(electronsMC[0]);
-           lept2MC = *(electronsMC[1]);
-           h1_nEvents_vs_ptEle1->Fill( lept1MC.Pt() );
-           h1_nEvents_vs_ptEle2->Fill( lept2MC.Pt() );
-         } else if( muonsMC.size()==2 ) {
-           lept1MC = *(muonsMC[0]);
-           lept2MC = *(muonsMC[1]);
-           h1_nEvents_vs_ptMuon1->Fill( lept1MC.Pt() );
-           h1_nEvents_vs_ptMuon2->Fill( lept2MC.Pt() );
+       if( electronsMC.size()==2 ) {
+         if( electronsMC[0].Pt() > electronsMC[1].Pt() ) {
+           lept1MC = electronsMC[0];
+           lept2MC = electronsMC[1];
          } else {
-           std::cout << "STRANGE! Found " << muonsMC.size() << " muons and " << electronsMC.size() << " electrons." << std::endl;
+           lept1MC = electronsMC[1];
+           lept2MC = electronsMC[0];
          }
-
-       } // if zIndex -1
+         if( (fabs(lept1MC.Eta()) < 2.5) && ( fabs(lept1MC.Eta())<1.4442 || fabs(lept1MC.Eta())>1.566) ) h1_nEvents_vs_ptEle->Fill( lept1MC.Pt() );
+         if( (fabs(lept2MC.Eta()) < 2.5) && ( fabs(lept2MC.Eta())<1.4442 || fabs(lept2MC.Eta())>1.566) ) h1_nEvents_vs_ptEle->Fill( lept2MC.Pt() );
+       } else if( muonsMC.size()==2 ) {
+         if( muonsMC[0].Pt() > muonsMC[1].Pt() ) {
+           lept1MC = muonsMC[0];
+           lept2MC = muonsMC[1];
+         } else {
+           lept1MC = muonsMC[1];
+           lept2MC = muonsMC[0];
+         }
+         if( fabs(lept1MC.Eta()) < 2.4 ) h1_nEvents_vs_ptMuon->Fill( lept1MC.Pt() );
+         if( fabs(lept1MC.Eta()) < 2.1 || fabs(lept2MC.Eta()) < 2.1 ) h1_nEvents_vs_ptMuon->Fill( lept2MC.Pt() );
+       } else {
+         //taus
+         noLeptons = true;
+       }
 
      } //if isMC
 
 
-     if( lept1MC.Pt() < lept2MC.Pt() ) std::cout << "WARNING MC leptons not ordered in pt!!" << std::endl;
+     if( !noLeptons && lept1MC.Pt() < lept2MC.Pt() ) std::cout << "WARNING MC leptons not ordered in pt!!" << std::endl;
 
      epfMet_ = energyPFMet[0];
      phipfMet_ = phiPFMet[0];
@@ -301,7 +303,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // kinematics:
        // --------------
        if( thisEle.Pt() < 10. ) continue;
-       if( (fabs(thisEle.Eta() > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) ) continue;
+       if( (fabs(thisEle.Eta()) > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) continue;
 
 
        Float_t dr03TkSumPt_thresh;
@@ -401,6 +403,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // isolation:
        // --------------
+       // (this is sum pt tracks)
        if( sumPt03Muon[iMuon] >= 3. ) continue;
 
 
@@ -425,51 +428,51 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      if( electrons.size() == 2 && muons.size() == 2 ) { //default: choose muons
 
-       leptons.push_back( muons[0] );
-       leptons.push_back( muons[1] );
-
        leptType_ = 0;
-       eLept1_ = muons[0].Energy();
-       ptLept1_ = muons[0].Pt();
-       etaLept1_ = muons[0].Eta();
-       phiLept1_ = muons[0].Phi();
-     
-       eLept2_ = muons[1].Energy();
-       ptLept2_ = muons[1].Pt();
-       etaLept2_ = muons[1].Eta();
-       phiLept2_ = muons[1].Phi();
+
+       if( muons[0].Pt() > muons[1].Pt() ) {
+
+         leptons.push_back( muons[0] );
+         leptons.push_back( muons[1] );
+
+       } else {
+
+         leptons.push_back( muons[1] );
+         leptons.push_back( muons[0] );
+
+       }
 
      } else if( electrons.size() == 2 ) {
 
-       leptons.push_back( electrons[0] );
-       leptons.push_back( electrons[1] );
-
        leptType_ = 1;
-       eLept1_ = electrons[0].Energy();
-       ptLept1_ = electrons[0].Pt();
-       etaLept1_ = electrons[0].Eta();
-       phiLept1_ = electrons[0].Phi();
-     
-       eLept2_ = electrons[1].Energy();
-       ptLept2_ = electrons[1].Pt();
-       etaLept2_ = electrons[1].Eta();
-       phiLept2_ = electrons[1].Phi();
+
+       if( electrons[0].Pt() > electrons[1].Pt() ) {
+
+         leptons.push_back( electrons[0] );
+         leptons.push_back( electrons[1] );
+
+       } else {
+
+         leptons.push_back( electrons[1] );
+         leptons.push_back( electrons[0] );
+
+       }
 
      } else if( muons.size() == 2 ) {
 
-       leptons.push_back( muons[0] );
-       leptons.push_back( muons[1] );
-
        leptType_ = 0;
-       eLept1_ = muons[0].Energy();
-       ptLept1_ = muons[0].Pt();
-       etaLept1_ = muons[0].Eta();
-       phiLept1_ = muons[0].Phi();
-     
-       eLept2_ = muons[1].Energy();
-       ptLept2_ = muons[1].Pt();
-       etaLept2_ = muons[1].Eta();
-       phiLept2_ = muons[1].Phi();
+
+       if( muons[0].Pt() > muons[1].Pt() ) {
+
+         leptons.push_back( muons[0] );
+         leptons.push_back( muons[1] );
+
+       } else {
+
+         leptons.push_back( muons[1] );
+         leptons.push_back( muons[0] );
+
+       }
 
      } else {
 
@@ -477,6 +480,16 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        exit(9101);
 
      }
+
+     eLept1_ = leptons[0].Energy();
+     ptLept1_ = leptons[0].Pt();
+     etaLept1_ = leptons[0].Eta();
+     phiLept1_ = leptons[0].Phi();
+     
+     eLept2_ = leptons[1].Energy();
+     ptLept2_ = leptons[1].Pt();
+     etaLept2_ = leptons[1].Eta();
+     phiLept2_ = leptons[1].Phi();
 
 
      // --------------------
@@ -508,19 +521,19 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        } // for i mc
 
-       if( leptType_==0 ) {
-         h1_deltaRmatching_muons->Fill( deltaRmin );
-         if( deltaRmin<0.1 ) {
-           if( iLept==0 ) h1_passed_vs_ptMuon1->Fill( matchedLeptonMC.Pt() );
-           else           h1_passed_vs_ptMuon2->Fill( matchedLeptonMC.Pt() );
-         }
-       } else if( leptType_==1 ) { 
-         h1_deltaRmatching_electrons->Fill( deltaRmin );
-         if( deltaRmin<0.1 ) {
-           if( iLept==0 ) h1_passed_vs_ptEle1->Fill( matchedLeptonMC.Pt() );
-           else           h1_passed_vs_ptEle2->Fill( matchedLeptonMC.Pt() );
-         }
-       }  //if lept type
+       if( !noLeptons ) {
+         if( leptType_==0 ) {
+           h1_deltaRmatching_muons->Fill( deltaRmin );
+           if( deltaRmin<0.1 ) {
+             h1_passed_vs_ptMuon->Fill( matchedLeptonMC.Pt() );
+           }
+         } else if( leptType_==1 ) { 
+           h1_deltaRmatching_electrons->Fill( deltaRmin );
+           if( deltaRmin<0.1 ) {
+             h1_passed_vs_ptEle->Fill( matchedLeptonMC.Pt() );
+           }
+         }  //if lept type
+       } //if yes leptons
 
 
      } //for i leptons
