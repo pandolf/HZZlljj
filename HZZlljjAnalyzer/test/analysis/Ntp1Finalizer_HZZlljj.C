@@ -50,6 +50,17 @@ void finalize(const std::string& dataset) {
     addFile( "EG_Run2010A_Jul15thReReco_v1" );
     addFile( "EG_Run2010A_Jul26thReReco_v1" );
 
+  } else if( dataset=="all" ) {
+
+    finalize( "HZZ_qqll_gluonfusion_M130" );
+    finalize( "HZZ_qqll_gluonfusion_M150" );
+    finalize( "HZZ_qqll_gluonfusion_M200" );
+    finalize( "HZZ_qqll_gluonfusion_M300" );
+    finalize( "HZZ_qqll_gluonfusion_M400" );
+    finalize( "HZZ_qqll_gluonfusion_M500" );
+    finalize( "ZJets_madgraph" );
+    return;
+
   } else {
   
     addFile( dataset );
@@ -63,6 +74,38 @@ void finalize(const std::string& dataset) {
   h1_totalLumi->SetBinContent(1, totalLumi);
 
 
+  TH1D* h1_ptLept1 = new TH1D("ptLept1", "", 50, 10., 220.);
+  h1_ptLept1->Sumw2();
+  TH1D* h1_ptLept2 = new TH1D("ptLept2", "", 50, 10., 220.);
+  h1_ptLept2->Sumw2();
+
+  TH1D* h1_ptJet1 = new TH1D("ptJet1", "", 50, 20., 220.);
+  h1_ptJet1->Sumw2();
+  TH1D* h1_ptJet2 = new TH1D("ptJet2", "", 50, 20., 140.);
+  h1_ptJet2->Sumw2();
+  TH1D* h1_etaJet1 = new TH1D("etaJet1", "", 50, -5., 5.);
+  h1_etaJet1->Sumw2();
+  TH1D* h1_etaJet2 = new TH1D("etaJet2", "", 50, -5., 5.);
+  h1_etaJet2->Sumw2();
+  TH1D* h1_RchJet1 = new TH1D("RchJet1", "", 50, 0., 1.001);
+  h1_RchJet1->Sumw2();
+  TH1D* h1_RchJet2 = new TH1D("RchJet2", "", 50, 0., 1.001);
+  h1_RchJet2->Sumw2();
+
+  TH1D* h1_LeptLeptPt = new TH1D("LeptLeptPt", "", 50, 0., 200.);
+  h1_LeptLeptPt->Sumw2();
+  TH1D* h1_JetJetPt = new TH1D("JetJetPt", "", 50, 0., 200.);
+  h1_JetJetPt->Sumw2();
+  TH1D* h1_ptHardestZ = new TH1D("ptHardestZ", "", 50, 0., 240.);
+  h1_ptHardestZ->Sumw2();
+
+  TH1D* h1_deltaRjj = new TH1D("deltaRjj", "", 50, 0.5, 5.);
+  h1_deltaRjj->Sumw2();
+  TH1D* h1_deltaRZZ = new TH1D("deltaRZZ", "", 50, 0.5, 5.);
+  h1_deltaRZZ->Sumw2();
+  TH1D* h1_ptZZ = new TH1D("ptZZ", "", 50, 0., 100.);
+  h1_ptZZ->Sumw2();
+
   int nBins_invMass = 50;
   float invMassMin = 0.;
   float invMassMax = 120.;
@@ -73,11 +116,41 @@ void finalize(const std::string& dataset) {
   h1_MuMuInvMass->Sumw2();
   TH1D* h1_EleEleInvMass = new TH1D("EleEleInvMass", "", nBins_invMass, invMassMin, invMassMax);
   h1_EleEleInvMass->Sumw2();
-  TH1D* h1_JetJetInvMass = new TH1D("JetJetInvMass", "", nBins_invMass, invMassMin, invMassMax);
+  TH1D* h1_JetJetInvMass = new TH1D("JetJetInvMass", "", nBins_invMass, 20., 200.);
   h1_JetJetInvMass->Sumw2();
-  TH1D* h1_ZZInvMass = new TH1D("ZZInvMass", "", nBins_invMass/2, 100., 600.);
-  h1_ZZInvMass->Sumw2();
 
+  TH1D* h1_ZZInvMass_loMass = new TH1D("ZZInvMass_loMass", "", nBins_invMass, 90., 190.);
+  h1_ZZInvMass_loMass->Sumw2();
+  TH1D* h1_ZZInvMass_medMass = new TH1D("ZZInvMass_medMass", "", nBins_invMass, 120., 280.);
+  h1_ZZInvMass_medMass->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass = new TH1D("ZZInvMass_hiMass", "", nBins_invMass, 400., 600.);
+  h1_ZZInvMass_hiMass->Sumw2();
+
+  TH1D* h1_ZZInvMass_loMass_ZjjTag = new TH1D("ZZInvMass_loMass_ZjjTag", "", nBins_invMass, 90., 190.);
+  h1_ZZInvMass_loMass_ZjjTag->Sumw2();
+  TH1D* h1_ZZInvMass_medMass_ZjjTag = new TH1D("ZZInvMass_medMass_ZjjTag", "", nBins_invMass, 120., 280.);
+  h1_ZZInvMass_medMass_ZjjTag->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_ZjjTag = new TH1D("ZZInvMass_hiMass_ZjjTag", "", nBins_invMass, 250., 600.);
+  h1_ZZInvMass_hiMass_ZjjTag->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_fullSelection_tight = new TH1D("ZZInvMass_hiMass_fullSelection_tight", "", nBins_invMass, 250., 600.);
+  h1_ZZInvMass_hiMass_fullSelection_tight->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_fullSelection_medium = new TH1D("ZZInvMass_hiMass_fullSelection_medium", "", nBins_invMass, 250., 600.);
+  h1_ZZInvMass_hiMass_fullSelection_medium->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_fullSelection_loose = new TH1D("ZZInvMass_hiMass_fullSelection_loose", "", nBins_invMass, 250., 600.);
+  h1_ZZInvMass_hiMass_fullSelection_loose->Sumw2();
+
+  TH1D* h1_ZZInvMass_medMass_ZjjTag_kinem = new TH1D("ZZInvMass_medMass_ZjjTag_kinem", "", nBins_invMass, 120., 280.);
+  h1_ZZInvMass_medMass_ZjjTag_kinem->Sumw2();
+
+  TH1D* h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag = new TH1D("ZZInvMass_loMass_ZjjTag_ZllAntiTag", "", nBins_invMass, 90., 190.);
+  h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag = new TH1D("ZZInvMass_hiMass_ZjjTag_ZllAntiTag", "", nBins_invMass, 250., 600.);
+  h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag->Sumw2();
+
+  TH1D* h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40 = new TH1D("ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40", "", nBins_invMass, 90., 190.);
+  h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40 = new TH1D("ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40", "", nBins_invMass, 250., 600.);
+  h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40->Sumw2();
 
 
   Int_t run;
@@ -155,11 +228,15 @@ void finalize(const std::string& dataset) {
 
     if( eventWeight <= 0. ) eventWeight = 1.;
 
+    h1_ptLept1->Fill( ptLept1, eventWeight );
+    h1_ptLept2->Fill( ptLept2, eventWeight );
+
     TLorentzVector lept1, lept2;
     lept1.SetPtEtaPhiE( ptLept1, etaLept1, phiLept1, eLept1 );
     lept2.SetPtEtaPhiE( ptLept2, etaLept2, phiLept2, eLept2 );
 
     TLorentzVector Zll = ( lept1 + lept2 );
+    h1_LeptLeptPt->Fill( Zll.Pt(), eventWeight );
     h1_LeptLeptInvMass->Fill( Zll.M(), eventWeight );
     if( leptType==0 )
       h1_MuMuInvMass->Fill( Zll.M(), eventWeight );
@@ -172,12 +249,140 @@ void finalize(const std::string& dataset) {
     jet1.SetPtEtaPhiE( ptJet1, etaJet1, phiJet1, eJet1 );
     jet2.SetPtEtaPhiE( ptJet2, etaJet2, phiJet2, eJet2 );
 
+    h1_ptJet1->Fill( ptJet1, eventWeight );
+    h1_ptJet2->Fill( ptJet2, eventWeight );
+
+    h1_etaJet1->Fill( etaJet1, eventWeight );
+    h1_etaJet2->Fill( etaJet2, eventWeight );
+
+    float Rch1 = eChargedHadronsJet1/eJet1;
+    float Rch2 = eChargedHadronsJet2/eJet2;
+    h1_RchJet1->Fill( Rch1, eventWeight );
+    h1_RchJet2->Fill( Rch2, eventWeight );
+
+    float deltaRjj = jet1.DeltaR(jet2);
+    h1_deltaRjj->Fill( deltaRjj, eventWeight );
+
     TLorentzVector Zjj = ( jet1 + jet2 );
     h1_JetJetInvMass->Fill( Zjj.M(), eventWeight );
+    h1_JetJetPt->Fill( Zjj.Pt(), eventWeight );
+ 
+    float ptHardestZ;
+    if( Zjj.Pt() > Zll.Pt() )
+      ptHardestZ = Zjj.Pt();
+    else
+      ptHardestZ = Zll.Pt();
+
+    h1_ptHardestZ->Fill( ptHardestZ, eventWeight );
+
+    float deltaRZZ = Zll.DeltaR(Zjj);
+    h1_deltaRZZ->Fill( deltaRZZ, eventWeight );
 
     TLorentzVector ZZ = Zll + Zjj;
-    h1_ZZInvMass->Fill( ZZ.M(), eventWeight );
 
+    float ptZZ = ZZ.Pt();
+    h1_ptZZ->Fill( ptZZ, eventWeight );
+
+    // ----------------------------------
+    //   LOW MASS ANALYSIS (mH < 180)
+    // ----------------------------------
+
+    h1_ZZInvMass_loMass->Fill( ZZ.M(), eventWeight );
+
+    if( Zjj.M() > 80. && ptJet1>35.) {
+
+      h1_ZZInvMass_loMass_ZjjTag->Fill( ZZ.M(), eventWeight );
+
+      if( Zll.M() < 80. ) {
+
+        h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag->Fill( ZZ.M(), eventWeight );
+
+        if( Rch1>0.4 && Rch2>0.4 ) {
+
+          h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40->Fill( ZZ.M(), eventWeight );
+ 
+        }
+      }
+    }
+
+
+    // ----------------------------------
+    //   HIGH MASS ANALYSIS (mH > 180)
+    // ----------------------------------
+
+    if( Zll.M()<80. || Zll.M()>100. ) continue;
+
+    h1_ZZInvMass_medMass->Fill( ZZ.M(), eventWeight );
+    h1_ZZInvMass_hiMass->Fill( ZZ.M(), eventWeight );
+
+    if( Zjj.M() > 80. && Zjj.M()<110. && ptJet1>115. && ptJet2>55. && deltaRjj<1.5 && ptZZ>30.) {
+
+      h1_ZZInvMass_hiMass_ZjjTag->Fill( ZZ.M(), eventWeight );
+
+    }
+
+    if( ptJet1 > 100. &&
+        ptJet2 > 50. &&
+        ptLept1 > 60. &&
+        ptLept2 > 60. &&
+        Zjj.M() > 80. &&
+        Zjj.M() < 110. &&
+        Zll.M() > 86. &&
+        Zll.M() < 96. &&
+        ptHardestZ > 120. &&
+        deltaRjj < 1.5 &&
+        ptZZ > 20. &&
+        deltaRZZ > 2.8 ) {
+
+      h1_ZZInvMass_hiMass_fullSelection_tight->Fill( ZZ.M(), eventWeight );
+
+    }
+
+    if( ptJet1 > 80. &&
+        ptJet2 > 40. &&
+        ptLept1 > 60. &&
+        ptLept2 > 60. &&
+        Zjj.M() > 80. &&
+        Zjj.M() < 110. &&
+        Zll.M() > 86. &&
+        Zll.M() < 96. &&
+        ptHardestZ > 100. &&
+        deltaRjj < 2. &&
+        ptZZ > 20. &&
+        deltaRZZ > 2.8 ) {
+
+      h1_ZZInvMass_hiMass_fullSelection_medium->Fill( ZZ.M(), eventWeight );
+
+    }
+
+    if( ptJet1 > 80. &&
+        ptJet2 > 30. &&
+        ptLept1 > 50. &&
+        ptLept2 > 50. &&
+        Zjj.M() > 80. &&
+        Zjj.M() < 110. &&
+        Zll.M() > 86. &&
+        Zll.M() < 96. &&
+        ptHardestZ > 80. &&
+        deltaRjj < 2. &&
+        ptZZ > 20. &&
+        deltaRZZ > 2.8 ) {
+
+      h1_ZZInvMass_hiMass_fullSelection_loose->Fill( ZZ.M(), eventWeight );
+
+    }
+
+    if( Zjj.M() > 80. && Zjj.M()<110. && ptJet1>45. && ptJet2>30. && deltaRjj>2.2 ) {
+
+      h1_ZZInvMass_medMass_ZjjTag->Fill( ZZ.M(), eventWeight );
+
+      if( ptZZ>15. && deltaRZZ < 3.5 ) {
+
+        h1_ZZInvMass_medMass_ZjjTag_kinem->Fill( ZZ.M(), eventWeight );
+   
+      }
+
+    }
 
   } //for entries
 
@@ -198,17 +403,83 @@ void finalize(const std::string& dataset) {
 
   h1_totalLumi->Write();
 
+  h1_ptLept1->Write();
+  h1_ptLept2->Write();
+
+  h1_ptJet1->Write();
+  h1_ptJet2->Write();
+  h1_etaJet1->Write();
+  h1_etaJet2->Write();
+  h1_RchJet1->Write();
+  h1_RchJet2->Write();
+
+  h1_deltaRjj->Write();
+  h1_ptZZ->Write();
+  h1_deltaRZZ->Write();
+
+  h1_LeptLeptPt->Write();
+  h1_JetJetPt->Write();
+  h1_ptHardestZ->Write();
+
   h1_LeptLeptInvMass->Write();
   h1_MuMuInvMass->Write();
   h1_EleEleInvMass->Write();
   h1_JetJetInvMass->Write();
-  h1_ZZInvMass->Write();
 
+  h1_ZZInvMass_loMass->Write();
+  h1_ZZInvMass_medMass->Write();
+  h1_ZZInvMass_hiMass->Write();
+
+  h1_ZZInvMass_loMass_ZjjTag->Write();
+  h1_ZZInvMass_medMass_ZjjTag->Write();
+  h1_ZZInvMass_hiMass_ZjjTag->Write();
+  h1_ZZInvMass_hiMass_fullSelection_tight->Write();
+  h1_ZZInvMass_hiMass_fullSelection_medium->Write();
+  h1_ZZInvMass_hiMass_fullSelection_loose->Write();
+
+  h1_ZZInvMass_medMass_ZjjTag_kinem->Write();
+
+  h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag->Write();
+  h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag->Write();
+
+  h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40->Write();
+  h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40->Write();
 
   outFile->Close();
 
+  delete h1_ptLept1;
+  h1_ptLept1 = 0;
+  delete h1_ptLept2;
+  h1_ptLept2 = 0;
+
+  delete h1_ptJet1;
+  h1_ptJet1 = 0;
+  delete h1_ptJet2;
+  h1_ptJet2 = 0;
+  delete h1_etaJet1;
+  h1_etaJet1 = 0;
+  delete h1_etaJet2;
+  h1_etaJet2 = 0;
+  delete h1_RchJet1;
+  h1_RchJet1 = 0;
+  delete h1_RchJet2;
+  h1_RchJet2 = 0;
+
+  delete h1_deltaRjj;
+  h1_deltaRjj = 0;
+  delete h1_ptZZ;
+  h1_ptZZ = 0;
+  delete h1_deltaRZZ;
+  h1_deltaRZZ = 0;
+
   delete h1_totalLumi;
   h1_totalLumi = 0;
+
+  delete h1_JetJetPt;
+  h1_JetJetPt = 0;
+  delete h1_LeptLeptPt;
+  h1_LeptLeptPt = 0;
+
   delete h1_LeptLeptInvMass;
   h1_LeptLeptInvMass = 0;
   delete h1_MuMuInvMass;
@@ -217,9 +488,41 @@ void finalize(const std::string& dataset) {
   h1_EleEleInvMass = 0;
   delete h1_JetJetInvMass;
   h1_JetJetInvMass = 0;
-  delete h1_ZZInvMass;
-  h1_ZZInvMass = 0;
+  delete h1_ptHardestZ;
+  h1_ptHardestZ = 0;
 
+  delete h1_ZZInvMass_loMass;
+  h1_ZZInvMass_loMass = 0;
+  delete h1_ZZInvMass_medMass;
+  h1_ZZInvMass_medMass = 0;
+  delete h1_ZZInvMass_hiMass;
+  h1_ZZInvMass_hiMass = 0;
+
+  delete h1_ZZInvMass_loMass_ZjjTag;
+  h1_ZZInvMass_loMass_ZjjTag = 0;
+  delete h1_ZZInvMass_medMass_ZjjTag;
+  h1_ZZInvMass_medMass_ZjjTag = 0;
+  delete h1_ZZInvMass_hiMass_ZjjTag;
+  h1_ZZInvMass_hiMass_ZjjTag = 0;
+  delete h1_ZZInvMass_hiMass_fullSelection_tight;
+  h1_ZZInvMass_hiMass_fullSelection_tight = 0;
+  delete h1_ZZInvMass_hiMass_fullSelection_medium;
+  h1_ZZInvMass_hiMass_fullSelection_medium = 0;
+  delete h1_ZZInvMass_hiMass_fullSelection_loose;
+  h1_ZZInvMass_hiMass_fullSelection_loose = 0;
+
+  delete h1_ZZInvMass_medMass_ZjjTag_kinem;
+  h1_ZZInvMass_medMass_ZjjTag_kinem = 0;
+
+  delete h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag;
+  h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag = 0;
+  delete h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag;
+  h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag = 0;
+
+  delete h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40;
+  h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40 = 0;
+  delete h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40;
+  h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40 = 0;
   delete tree;
   tree = 0;
 
