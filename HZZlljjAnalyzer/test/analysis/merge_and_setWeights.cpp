@@ -34,6 +34,8 @@ int main( int argc, char* argv[] ) {
   EventsAndLumi evlu;
   evlu = addInput( dataset );
 
+  std::cout << std::endl << "-> Finished adding. Total entries: " << tree->GetEntries() << std::endl;
+
   float weight = getWeight( dataset, evlu.nTotalEvents );
 
   // and now set the weights
@@ -86,27 +88,25 @@ EventsAndLumi addInput( const std::string& dataset ) {
   FILE* iff = fopen(infileName.c_str(),"r");
   if(iff == 0) {
     std::cout << "cannot open input file '" << infileName << "' ... adding single file." << std::endl;
-    std::cout << "Exiting." << std::endl;
-    exit(9172);
-//  infileName = "HZZlljj_2ndLevelTree_" + dataset + ".root";
-//  std::string treeName = infileName +"/reducedTree";
-//  tree->Add(treeName.c_str());
-//  std::cout << "-> Added " << treeName << ". Tree has " << tree->GetEntries() << " entries." << std::endl;
-//  TFile* infile = TFile::Open(infileName.c_str(), "READ");
-//  h1_nCounter = (TH1F*)infile->Get("nCounter");
-//  if( h1_nCounter!=0 ) {
-//    totalEvents += h1_nCounter->GetBinContent(1);
-//  } else {
-//    std::cout << " WARNING! File '" << infileName << "' has no nCounter information. Skipping." << std::endl;
-//  }
-//  h1_lumi = (TH1F*)infile->Get("lumi");
-//  if( h1_lumi!=0 ) {
-//    totalLumi += h1_lumi->GetBinContent(1);
-//    std::cout << "\tTotal lumi: " << totalLumi << " ub-1" << std::endl;
-//  } else {
-//    std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping." << std::endl;
-//  }
-//  infile->Close();
+    infileName = "HZZlljj_2ndLevelTree_" + dataset + ".root";
+    std::string treeName = infileName +"/reducedTree";
+    tree->Add(treeName.c_str());
+    std::cout << "-> Added " << treeName << ". Tree has " << tree->GetEntries() << " entries." << std::endl;
+    TFile* infile = TFile::Open(infileName.c_str(), "READ");
+    h1_nCounter = (TH1F*)infile->Get("nCounter");
+    if( h1_nCounter!=0 ) {
+      totalEvents += h1_nCounter->GetBinContent(1);
+    } else {
+      std::cout << " WARNING! File '" << infileName << "' has no nCounter information. Skipping." << std::endl;
+    }
+    h1_lumi = (TH1F*)infile->Get("lumi");
+    if( h1_lumi!=0 ) {
+      totalLumi += h1_lumi->GetBinContent(1);
+      std::cout << "\tTotal lumi: " << totalLumi << " ub-1" << std::endl;
+    } else {
+      std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping." << std::endl;
+    }
+    infile->Close();
 
   } else {
 
@@ -123,14 +123,14 @@ EventsAndLumi addInput( const std::string& dataset ) {
       if( h1_nCounter!=0 ) {
         totalEvents += h1_nCounter->GetBinContent(1);
       } else {
-        std::cout << " WARNING! File '" << infileName << "' has no nCounter information. Skipping." << std::endl;
+        std::cout << " WARNING! File '" << rootfilename << "' has no nCounter information. Skipping." << std::endl;
       }
       h1_lumi = (TH1F*)infile->Get("lumi");
       if( h1_lumi!=0 ) {
         totalLumi += h1_lumi->GetBinContent(1);
         std::cout << "\tTotal lumi: " << totalLumi << " ub-1" << std::endl;
       } else {
-        std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping." << std::endl;
+        std::cout << " WARNING! File '" << rootfilename << "' has no lumi information. Skipping." << std::endl;
       }
       infile->Close();
 
@@ -152,14 +152,20 @@ float getWeight( const std::string& dataset, int nEvents ) {
 
   float xSection = -1.;
 
-  if( dataset=="Zjets-madgraph" ) {
+  if( dataset=="ZJets_madgraph" ) {
     xSection = 2800.;
   } else if( dataset=="HZZ_qqll_gluonfusion_M130" ) {
-    xSection = 25.560*0.03913; //sigma x BR
+    xSection = 25.560*0.03913*0.0337*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M150" ) {
-    xSection = 19.568*0.08234; //sigma x BR
+    xSection = 19.568*0.08234*0.0337*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="HZZ_qqll_gluonfusion_M200" ) {
+    xSection = 10.361*0.2537*0.0337*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="HZZ_qqll_gluonfusion_M300" ) {
+    xSection = 5.2728*0.3053*0.0337*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="HZZ_qqll_gluonfusion_M400" ) {
+    xSection = 4.8236*0.2664*0.0337*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M500" ) {
-    xSection = 2.1914*0.2602; //sigma x BR
+    xSection = 2.1914*0.2602*0.0337*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else {
     std::cout << std::endl;
     std::cout << "-> WARNING!! Dataset: '" << dataset << "' not present in database. Cross section unknown." << std::endl;
