@@ -110,6 +110,17 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t epfMet_;
    Float_t phipfMet_;
 
+   TH1F* h1_nEvents_vs_ptEle1; 
+   TH1F* h1_nEvents_vs_ptEle2; 
+   TH1F* h1_nEvents_vs_ptMuon1; 
+   TH1F* h1_nEvents_vs_ptMuon2; 
+   TH1F* h1_passed_vs_ptMuon1; 
+   TH1F* h1_passed_vs_ptMuon2; 
+   TH1F* h1_passed_vs_ptEle1; 
+   TH1F* h1_passed_vs_ptEle2; 
+   TH1F* h1_deltaRmatching_muons; 
+   TH1F* h1_deltaRmatching_electrons; 
+
    bool DEBUG_VERBOSE_;
 
 };

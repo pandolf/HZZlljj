@@ -18,6 +18,9 @@ Ntp1Analyzer::Ntp1Analyzer(const std::string& analyzerType, const std::string& d
 
    flags_ = flags;
 
+   ptHatMin_ = 0.;
+   ptHatMax_ = 10000.;
+
 }
 
 
@@ -45,6 +48,12 @@ void Ntp1Analyzer::LoadInput() {
    TChain * chain = new TChain("ntp1","");
    if( dataset_=="Wenu_Summer10_START37_V5_S09_v1" ) {
      sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/Wenu_Summer10_START37_V5_S09_v1/default_*.root/ntp1");
+   } else if( dataset_=="HZZ_qqll_gluonfusion_M200" ) {
+     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M200/default_*.root/ntp1");
+   } else if( dataset_=="HZZ_qqll_gluonfusion_M300" ) {
+     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M300/default_*.root/ntp1");
+   } else if( dataset_=="HZZ_qqll_gluonfusion_M400" ) {
+     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M400/default_*.root/ntp1");
    } else {
      sprintf(treePath, "%s/default_*.root/ntp1", dataset_.c_str());
    }
