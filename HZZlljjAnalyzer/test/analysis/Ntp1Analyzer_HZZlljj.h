@@ -116,6 +116,8 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    TH1F* h1_passed_vs_ptMuon; 
    TH1F* h1_deltaRmatching_muons; 
    TH1F* h1_deltaRmatching_electrons; 
+   TH1F* h1_ptHadronicZ; 
+   TH1F* h1_deltaRqq; 
 
    bool DEBUG_VERBOSE_;
 

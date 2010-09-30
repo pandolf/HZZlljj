@@ -164,6 +164,8 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   h1_passed_vs_ptMuon = new TH1F("passed_vs_ptMuon", "", nBins_eff, ptMin_eff, ptMax_eff);
   h1_deltaRmatching_muons = new TH1F("deltaRmatching_muons", "", 50, 0., 0.05);
   h1_deltaRmatching_electrons = new TH1F("deltaRmatching_electrons", "", 50, 0., 0.05);
+  h1_ptHadronicZ = new TH1F("ptHadronicZ", "", 50, 0., 500.);
+  h1_deltaRqq = new TH1F("deltaRqq", "", 50, 0., 3.);
 
 } 
 
@@ -178,6 +180,8 @@ Ntp1Analyzer_HZZlljj::~Ntp1Analyzer_HZZlljj() {
   h1_passed_vs_ptMuon->Write();
   h1_deltaRmatching_muons->Write();
   h1_deltaRmatching_electrons->Write();
+  h1_ptHadronicZ->Write();
+  h1_deltaRqq->Write();
   
 
 }
@@ -234,6 +238,39 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      TLorentzVector lept1MC, lept2MC;
 
      if( isMC ) {
+
+
+       // first look for Z->qq
+       std::vector<TLorentzVector> quarksMC;
+       int zIndex=-1;
+
+       for( unsigned iMc=0; iMc<nMc && quarksMC.size()<2; ++iMc ) {
+
+         // quarks have status 3
+         if( statusMc[iMc] != 3 ) continue;
+
+         TLorentzVector* thisParticle = new TLorentzVector();
+         thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
+
+         if( fabs(idMc[iMc])<7 && idMc[mothMc[iMc]]==23 ) {
+           zIndex = mothMc[iMc];
+           quarksMC.push_back( *thisParticle );
+         }
+
+       }
+
+       // (checked that always 2 quarks are found)
+       if( quarksMC.size()==2 && zIndex!=-1 ) {
+
+         float ptZqq = pMc[zIndex]*sin(thetaMc[zIndex]);
+         h1_ptHadronicZ->Fill( ptZqq );
+
+         float deltaRqq = quarksMC[0].DeltaR(quarksMC[1]);
+         h1_deltaRqq->Fill(deltaRqq);
+
+       }
+
+       // now look for Z->ll
 
        std::vector<TLorentzVector> electronsMC;
        std::vector<TLorentzVector> muonsMC;
