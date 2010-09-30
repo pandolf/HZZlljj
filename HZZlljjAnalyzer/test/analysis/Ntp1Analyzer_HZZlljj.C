@@ -164,7 +164,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   h1_passed_vs_ptMuon = new TH1F("passed_vs_ptMuon", "", nBins_eff, ptMin_eff, ptMax_eff);
   h1_deltaRmatching_muons = new TH1F("deltaRmatching_muons", "", 50, 0., 0.05);
   h1_deltaRmatching_electrons = new TH1F("deltaRmatching_electrons", "", 50, 0., 0.05);
-  h1_ptHadronicZ = new TH1F("ptHadronicZ", "", 50, 0., 500.);
+  h1_ptHadronicZ = new TH1F("ptHadronicZ", "", 50, 0., 400.);
   h1_deltaRqq = new TH1F("deltaRqq", "", 50, 0., 3.);
 
 } 
@@ -463,21 +463,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      std::vector< TLorentzVector > leptons;
 
-     if( electrons.size() == 2 && muons.size() == 2 ) { //default: choose muons
+     if( electrons.size() == 2 && muons.size() == 2 ) { //veto H->ZZ->4l
 
-       leptType_ = 0;
-
-       if( muons[0].Pt() > muons[1].Pt() ) {
-
-         leptons.push_back( muons[0] );
-         leptons.push_back( muons[1] );
-
-       } else {
-
-         leptons.push_back( muons[1] );
-         leptons.push_back( muons[0] );
-
-       }
+       continue;
 
      } else if( electrons.size() == 2 ) {
 
