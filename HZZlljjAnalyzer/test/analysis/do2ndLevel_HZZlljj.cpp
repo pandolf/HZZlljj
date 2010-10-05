@@ -14,6 +14,9 @@ int main( int argc, char* argv[]) {
 
   Ntp1Analyzer_HZZlljj* na = new Ntp1Analyzer_HZZlljj(dataset);
 
+  na->AddRequiredTrigger( "HLT_Ele15_LW_L1R" );
+  na->AddRequiredTrigger( "HLT_Mu9" );
+  na->AddRequiredTrigger( "HLT_Mu15" );
   na->LoadInput();
   na->Loop();
 
