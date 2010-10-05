@@ -60,7 +60,7 @@ public :
    Int_t           mothMc[1000];   //[nMc]
    Int_t           statusMc[1000];   //[nMc]
    Int_t           nTrg;
-   Int_t           firedTrg[50];   //[nTrg]
+   Int_t           firedTrg[4];   //[nTrg]
    Int_t           nEle;
    Int_t           chargeEle[30];   //[nEle]
    Float_t         energyEle[30];   //[nEle]
@@ -613,6 +613,9 @@ public :
    LSRange goodLS_;
    LSRange::const_iterator goodLSCache_; // ptr to list of good LS for last run
    bool filterGoodRuns_;
+
+   std::vector<std::string> requiredTriggers_;
+   std::vector<int> index_requiredTriggers_;
 
    typedef std::pair< int, int > RunLumiPair;
    typedef std::map< RunLumiPair, double > LSLumi;
@@ -1201,12 +1204,16 @@ public :
    virtual ~Ntp1Analyzer();
 
    virtual void SetFlags( const std::string& flags ) { flags_ = flags; };
+   virtual void SetRequiredTriggers( const std::vector<std::string>& reqTrigz ) { requiredTriggers_ = reqTrigz; };
+   virtual void AddRequiredTrigger( const std::string& trigger ) { requiredTriggers_.push_back(trigger); };
+   virtual bool PassedHLT();
 
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     LoadInput();
    virtual void     LoadInputFromFile( const std::string& fileName );
+   virtual void     LoadTriggerFromConditions( TFile* condFile );
    virtual void     CreateOutputFile();
    virtual void     Init(TTree *tree);
    virtual void     Loop()=0;
@@ -1215,7 +1222,7 @@ public :
    virtual void     ReadJSONFile(const std::string& json);
    virtual void     ReadCSVFile(const std::string& csv);
    virtual void     UpdateCache();
-   virtual bool     isGoodLS ();
+   virtual bool     isGoodEvent();
    virtual GenEventParameters     getGenEventParameters ();
 
    //virtual void BookStuff()=0;

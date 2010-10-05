@@ -30,6 +30,21 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
 
    int leptType_; //0: muon; 1: electron
 
+   Float_t eZqqMC_;
+   Float_t ptZqqMC_;
+   Float_t etaZqqMC_;
+   Float_t phiZqqMC_;
+
+   Float_t eZllMC_;
+   Float_t ptZllMC_;
+   Float_t etaZllMC_;
+   Float_t phiZllMC_;
+
+   Float_t eHiggsMC_;
+   Float_t ptHiggsMC_;
+   Float_t etaHiggsMC_;
+   Float_t phiHiggsMC_;
+
    Float_t eLept1_;
    Float_t ptLept1_;
    Float_t etaLept1_;
@@ -56,10 +71,16 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t phiJet1_;
    Float_t etaJet1_;
 
-   Float_t   ptJet1Gen_;
-   Float_t    eJet1Gen_;
-   Float_t  phiJet1Gen_;
-   Float_t  etaJet1Gen_;
+   Float_t   ptJetGen1_;
+   Float_t    eJetGen1_;
+   Float_t  phiJetGen1_;
+   Float_t  etaJetGen1_;
+   Int_t    partIdJetGen1_;
+
+   Float_t   ptPart1_;
+   Float_t    ePart1_;
+   Float_t  phiPart1_;
+   Float_t  etaPart1_;
 
    Float_t  eChargedHadronsJet1_;
    Float_t  ePhotonsJet1_;
@@ -83,10 +104,16 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t phiJet2_;
    Float_t etaJet2_;
 
-   Float_t   ptJet2Gen_;
-   Float_t    eJet2Gen_;
-   Float_t  phiJet2Gen_;
-   Float_t  etaJet2Gen_;
+   Float_t   ptJetGen2_;
+   Float_t    eJetGen2_;
+   Float_t  phiJetGen2_;
+   Float_t  etaJetGen2_;
+   Int_t    partIdJetGen2_;
+
+   Float_t   ptPart2_;
+   Float_t    ePart2_;
+   Float_t  phiPart2_;
+   Float_t  etaPart2_;
 
    Float_t  eChargedHadronsJet2_;
    Float_t  ePhotonsJet2_;
@@ -116,8 +143,11 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    TH1F* h1_passed_vs_ptMuon; 
    TH1F* h1_deltaRmatching_muons; 
    TH1F* h1_deltaRmatching_electrons; 
-   TH1F* h1_ptHadronicZ; 
-   TH1F* h1_deltaRqq; 
+   TH1F* h1_deltaRmatching_jet_parton; 
+   TH1F* h1_deltaRmatching_genjet_parton; 
+   TH1F* h1_deltaRmatching_jet_genjet; 
+// TH1F* h1_ptHadronicZ; 
+// TH1F* h1_deltaRqq; 
 
    bool DEBUG_VERBOSE_;
 

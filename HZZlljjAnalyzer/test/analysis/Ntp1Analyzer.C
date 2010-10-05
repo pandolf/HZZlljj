@@ -44,19 +44,21 @@ void Ntp1Analyzer::LoadInput() {
 
    std::cout << "-> Loading input... (could take a while)" << std::endl;
 
+   std::string treeDir;
    char treePath[400];
    TChain * chain = new TChain("ntp1","");
    if( dataset_=="Wenu_Summer10_START37_V5_S09_v1" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/Wenu_Summer10_START37_V5_S09_v1/default_*.root/ntp1");
+     treeDir = "/cmsrm/pc21_2/pandolf/MC/Wenu_Summer10_START37_V5_S09_v1";
    } else if( dataset_=="HZZ_qqll_gluonfusion_M200" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M200/default_*.root/ntp1");
+     treeDir = "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M200";
    } else if( dataset_=="HZZ_qqll_gluonfusion_M300" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M300/default_*.root/ntp1");
+     treeDir = "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M300";
    } else if( dataset_=="HZZ_qqll_gluonfusion_M400" ) {
-     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M400/default_*.root/ntp1");
-   } else {
-     sprintf(treePath, "%s/default_*.root/ntp1", dataset_.c_str());
+     treeDir = "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M400";
+// } else {
    }
+
+   sprintf(treePath, "%s/default_*.root/ntp1", treeDir.c_str());
 
    int addInt = chain->Add(treePath);
 
@@ -69,6 +71,10 @@ void Ntp1Analyzer::LoadInput() {
      std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
      this->CreateOutputFile();
      Init(tree);
+     //load trigger mask:
+     std::string firstFileName = treeDir + "/default_1.root";
+     TFile* firstFile = TFile::Open( firstFileName.c_str(), "read" );
+     this->LoadTriggerFromConditions(firstFile);
    }
 
 }
@@ -85,13 +91,19 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
    TChain * chain = new TChain("ntp1","");
 
    char singleLine[500];
- 
+   bool firstFile=true;
+
    while( fscanf(iff, "%s", singleLine) !=EOF ) {
    
      std::string singleLine_str(singleLine);
      singleLine_str = singleLine_str + "/ntp1";
      std::cout << "-> Adding " << singleLine_str << std::endl;
      chain->Add(singleLine_str.c_str());
+     if( firstFile ) {
+       TFile* firstFile = TFile::Open(singleLine_str.c_str(), "read");
+       this->LoadTriggerFromConditions(firstFile);
+       firstFile=false;
+     }
 
    }
    fclose(iff);
@@ -103,6 +115,74 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
 
 }
 
+
+
+
+void Ntp1Analyzer::LoadTriggerFromConditions( TFile* condFile ) {
+
+  
+  TTree* treeCond = (TTree*)(condFile->Get("Conditions"));
+  if( treeCond==0 ) {
+    std::cout << "-> WARNING!! Didn't find Conditions tree in file: " << condFile << std::endl;
+    return;
+  }
+
+  int           nHLT_;
+  std::vector<std::string>  *nameHLT_;
+  std::vector<unsigned int> *indexHLT_;
+
+  //To get the pointers for the vectors
+  nameHLT_=0;
+  indexHLT_=0;
+
+  treeCond->SetBranchAddress("nHLT", &nHLT_);
+  treeCond->SetBranchAddress("nameHLT", &nameHLT_);
+  treeCond->SetBranchAddress("indexHLT", &indexHLT_);
+  treeCond->GetEntry(0);
+
+  std::vector<int> triggerMask;
+  for (std::vector< std::string >::const_iterator fIter=requiredTriggers_.begin();fIter!=requiredTriggers_.end();++fIter)
+    {
+      bool foundThisTrigger = false;
+      for(unsigned int i=0; i<nameHLT_->size(); i++) 
+        {
+          if( !strcmp ((*fIter).c_str(), nameHLT_->at(i).c_str() ) ) 
+            {
+              foundThisTrigger = true;
+              triggerMask.push_back( indexHLT_->at(i) ) ;
+              break;
+            }
+        }
+      if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+    }
+  index_requiredTriggers_ = triggerMask;
+  for (int i=0;i<index_requiredTriggers_.size();++i)
+    std::cout << "[ReloadTriggerMask]::Requiring bit " << index_requiredTriggers_[i] << " " << requiredTriggers_[i] << std::endl;
+
+
+} // LoadTriggerFromConditions
+
+
+
+
+
+bool Ntp1Analyzer::PassedHLT() { //default is OR of all required triggers
+
+  if ( index_requiredTriggers_.size() == 0 ) return true;
+  
+  // unpack the trigger words
+  for( int i=0; i<index_requiredTriggers_.size(); i++ ) {
+
+    int block =  index_requiredTriggers_[i]/30;
+    int pos = index_requiredTriggers_[i]%30;
+    int word = firedTrg[block];
+    
+    if ( (word >> pos)%2 ) return true;
+  }
+
+  return false;
+
+}
 
 
 
@@ -771,7 +851,7 @@ Int_t Ntp1Analyzer::Cut(Long64_t entry)
 
 
 void Ntp1Analyzer::UpdateCache() {
-     // cache current run
+     // cache current run for lumi measurement:
      if( oldrun_ != runNumber ) {
        oldrun_ = runNumber;
        goodLSCache_ = goodLS_.find( runNumber );
@@ -832,11 +912,14 @@ void Ntp1Analyzer::ReadJSONFile(const std::string& json) {
 }
 
 
-bool Ntp1Analyzer::isGoodLS() {
+bool Ntp1Analyzer::isGoodEvent() {
 
-     bool returnBool = false;
+     bool okForJSON = false;
+     bool okForHLT = false;
 
-     if(!filterGoodRuns_) returnBool = true; // if filtered not requested all events are good
+     // FIRST STEP: check if LS is a good one in the JSON file:
+
+     if(!filterGoodRuns_) okForJSON = true; // if filtered not requested all events are good
 
      this->UpdateCache();
 
@@ -847,16 +930,20 @@ bool Ntp1Analyzer::isGoodLS() {
         // get list of LS intervals
         const GoodLSVector& lsvector =   goodLSCache_->second; 
         // loop over good LS intervals and return as soon as one interval contains this event
-        for(GoodLSVector::const_iterator iLS = lsvector.begin(); (iLS != lsvector.end())&&(returnBool==false); iLS++) {
+        for(GoodLSVector::const_iterator iLS = lsvector.begin(); (iLS != lsvector.end())&&(okForJSON==false); iLS++) {
      
            if(lumiBlock >= iLS->first && lumiBlock <= iLS->second ) {
     
-             returnBool = true;
+             okForJSON = true;
           } // check current LS being in the interval
         } // loop over good LS for this run
      }
 
-     if( returnBool==true ) {
+     // SECOND STEP: if it's ok in the JSON, check if it has passed the trigger
+
+     okForHLT = this->PassedHLT();
+
+     if( okForJSON && okForHLT ) { //will take lumi, so (once per LS) increment luminosity
    
        if( currentLS_ != lumiBlock )  {
           currentLS_ = lumiBlock;
@@ -865,6 +952,7 @@ bool Ntp1Analyzer::isGoodLS() {
        }
      }
 
+     bool returnBool = ( okForJSON && okForHLT );
      return returnBool;
 
 }

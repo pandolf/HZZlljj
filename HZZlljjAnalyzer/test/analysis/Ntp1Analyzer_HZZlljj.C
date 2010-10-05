@@ -77,6 +77,21 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
 
   reducedTree_->Branch("leptType",  &leptType_,  "leptType_/I");
   
+  reducedTree_->Branch("eZqqMC",  &eZqqMC_,  "eZqqMC_/F");
+  reducedTree_->Branch("ptZqqMC",  &ptZqqMC_,  "ptZqqMC_/F");
+  reducedTree_->Branch("etaZqqMC",  &etaZqqMC_,  "etaZqqMC_/F");
+  reducedTree_->Branch("phiZqqMC",  &phiZqqMC_,  "phiZqqMC_/F");
+
+  reducedTree_->Branch("eZllMC",  &eZllMC_,  "eZllMC_/F");
+  reducedTree_->Branch("ptZllMC",  &ptZllMC_,  "ptZllMC_/F");
+  reducedTree_->Branch("etaZllMC",  &etaZllMC_,  "etaZllMC_/F");
+  reducedTree_->Branch("phiZllMC",  &phiZllMC_,  "phiZllMC_/F");
+
+  reducedTree_->Branch("eHiggsMC",  &eHiggsMC_,  "eHiggsMC_/F");
+  reducedTree_->Branch("ptHiggsMC",  &ptHiggsMC_,  "ptHiggsMC_/F");
+  reducedTree_->Branch("etaHiggsMC",  &etaHiggsMC_,  "etaHiggsMC_/F");
+  reducedTree_->Branch("phiHiggsMC",  &phiHiggsMC_,  "phiHiggsMC_/F");
+
   reducedTree_->Branch("eLept1",  &eLept1_,  "eLept1_/F");
   reducedTree_->Branch("ptLept1",  &ptLept1_,  "ptLept1_/F");
   reducedTree_->Branch("etaLept1",  &etaLept1_,  "etaLept1_/F");
@@ -118,11 +133,16 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nHFHadronsJet1", &nHFHadronsJet1_, "nHFHadronsJet1_/I");
   reducedTree_->Branch("nHFEMJet1", &nHFEMJet1_, "nHFEMJet1_/I");
 
-  reducedTree_->Branch(  "eJet1Gen",   &eJet1Gen_,   "eJet1Gen_/F");
-  reducedTree_->Branch(  "ptJet1Gen",   &ptJet1Gen_,   "ptJet1Gen_/F");
-  reducedTree_->Branch( "etaJet1Gen",  &etaJet1Gen_,  "etaJet1Gen_/F");
-  reducedTree_->Branch( "phiJet1Gen",  &phiJet1Gen_,  "phiJet1Gen_/F");
-  reducedTree_->Branch("pdgIdPartJet1", &pdgIdPartJet1_, "pdgIdPartJet1_/I");
+  reducedTree_->Branch(   "eJetGen1",    &eJetGen1_,    "eJetGen1_/F");
+  reducedTree_->Branch(  "ptJetGen1",   &ptJetGen1_,   "ptJetGen1_/F");
+  reducedTree_->Branch( "etaJetGen1",  &etaJetGen1_,  "etaJetGen1_/F");
+  reducedTree_->Branch( "phiJetGen1",  &phiJetGen1_,  "phiJetGen1_/F");
+  reducedTree_->Branch("partIdJetGen1", &partIdJetGen1_, "partIdJetGen1_/I");
+
+  reducedTree_->Branch(   "ePart1",    &ePart1_,    "ePart1_/F");
+  reducedTree_->Branch(  "ptPart1",   &ptPart1_,   "ptPart1_/F");
+  reducedTree_->Branch( "etaPart1",  &etaPart1_,  "etaPart1_/F");
+  reducedTree_->Branch( "phiPart1",  &phiPart1_,  "phiPart1_/F");
 
   reducedTree_->Branch("eJet2",  &eJet2_,  "eJet2_/F");
   reducedTree_->Branch( "ptJet2",  &ptJet2_,  "ptJet2_/F");
@@ -145,11 +165,17 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nHFHadronsJet2", &nHFHadronsJet2_, "nHFHadronsJet2_/I");
   reducedTree_->Branch("nHFEMJet2", &nHFEMJet2_, "nHFEMJet2_/I");
 
-  reducedTree_->Branch(  "eJet2Gen",   &eJet2Gen_,   "eJet2Gen_/F");
-  reducedTree_->Branch(  "ptJet2Gen",   &ptJet2Gen_,   "ptJet2Gen_/F");
-  reducedTree_->Branch( "etaJet2Gen",  &etaJet2Gen_,  "etaJet2Gen_/F");
-  reducedTree_->Branch( "phiJet2Gen",  &phiJet2Gen_,  "phiJet2Gen_/F");
-  reducedTree_->Branch("pdgIdPartJet2", &pdgIdPartJet2_, "pdgIdPartJet2_/I");
+  reducedTree_->Branch(   "eJetGen2",    &eJetGen2_,    "eJetGen2_/F");
+  reducedTree_->Branch(  "ptJetGen2",   &ptJetGen2_,   "ptJetGen2_/F");
+  reducedTree_->Branch( "etaJetGen2",  &etaJetGen2_,  "etaJetGen2_/F");
+  reducedTree_->Branch( "phiJetGen2",  &phiJetGen2_,  "phiJetGen2_/F");
+  reducedTree_->Branch("partIdJetGen2", &partIdJetGen2_, "partIdJetGen2_/I");
+
+  reducedTree_->Branch(   "ePart2",    &ePart2_,    "ePart2_/F");
+  reducedTree_->Branch(  "ptPart2",   &ptPart2_,   "ptPart2_/F");
+  reducedTree_->Branch( "etaPart2",  &etaPart2_,  "etaPart2_/F");
+  reducedTree_->Branch( "phiPart2",  &phiPart2_,  "phiPart2_/F");
+
 
   reducedTree_->Branch("epfMet",&epfMet_,"epfMet_/F");
   reducedTree_->Branch("phipfMet",&phipfMet_,"phipfMet_/F");
@@ -162,10 +188,13 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   h1_nEvents_vs_ptMuon = new TH1F("nEvents_vs_ptMuon", "", nBins_eff, ptMin_eff, ptMax_eff);
   h1_passed_vs_ptEle = new TH1F("passed_vs_ptEle", "", nBins_eff, ptMin_eff, ptMax_eff);
   h1_passed_vs_ptMuon = new TH1F("passed_vs_ptMuon", "", nBins_eff, ptMin_eff, ptMax_eff);
-  h1_deltaRmatching_muons = new TH1F("deltaRmatching_muons", "", 50, 0., 0.05);
-  h1_deltaRmatching_electrons = new TH1F("deltaRmatching_electrons", "", 50, 0., 0.05);
-  h1_ptHadronicZ = new TH1F("ptHadronicZ", "", 50, 0., 400.);
-  h1_deltaRqq = new TH1F("deltaRqq", "", 50, 0., 3.);
+  h1_deltaRmatching_muons = new TH1F("deltaRmatching_muons", "", 100, 0., 0.01);
+  h1_deltaRmatching_electrons = new TH1F("deltaRmatching_electrons", "", 100, 0., 0.01);
+  h1_deltaRmatching_jet_parton = new TH1F("deltaRmatching_jet_parton", "", 100, 0., 0.6);
+  h1_deltaRmatching_genjet_parton = new TH1F("deltaRmatching_genjet_parton", "", 100, 0., 0.6);
+  h1_deltaRmatching_jet_genjet = new TH1F("deltaRmatching_jet_genjet", "", 100, 0., 0.6);
+//h1_ptHadronicZ = new TH1F("ptHadronicZ", "", 50, 0., 400.);
+//h1_deltaRqq = new TH1F("deltaRqq", "", 50, 0., 3.);
 
 } 
 
@@ -180,8 +209,11 @@ Ntp1Analyzer_HZZlljj::~Ntp1Analyzer_HZZlljj() {
   h1_passed_vs_ptMuon->Write();
   h1_deltaRmatching_muons->Write();
   h1_deltaRmatching_electrons->Write();
-  h1_ptHadronicZ->Write();
-  h1_deltaRqq->Write();
+  h1_deltaRmatching_jet_parton->Write();
+  h1_deltaRmatching_genjet_parton->Write();
+  h1_deltaRmatching_jet_genjet->Write();
+//h1_ptHadronicZ->Write();
+//h1_deltaRqq->Write();
   
 
 }
@@ -222,7 +254,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      ptHat_ = genPtHat;
      eventWeight_ = -1.; //default
 
-     if( !isGoodLS() ) continue; //this takes care also of integrated luminosity
+     if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
 
      //trigger:
      // not yet
@@ -236,13 +268,14 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      bool noLeptons = false;
      TLorentzVector lept1MC, lept2MC;
+     int zIndexqq=-1;
+     int zIndexll=-1;
 
      if( isMC ) {
 
 
        // first look for Z->qq
        std::vector<TLorentzVector> quarksMC;
-       int zIndex=-1;
 
        for( unsigned iMc=0; iMc<nMc && quarksMC.size()<2; ++iMc ) {
 
@@ -253,20 +286,28 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
 
          if( fabs(idMc[iMc])<7 && idMc[mothMc[iMc]]==23 ) {
-           zIndex = mothMc[iMc];
+           zIndexqq = mothMc[iMc];
            quarksMC.push_back( *thisParticle );
          }
 
        }
 
        // (checked that always 2 quarks are found)
-       if( quarksMC.size()==2 && zIndex!=-1 ) {
+       if( quarksMC.size()==2 && zIndexqq!=-1 ) {
 
-         float ptZqq = pMc[zIndex]*sin(thetaMc[zIndex]);
-         h1_ptHadronicZ->Fill( ptZqq );
+         TLorentzVector ZqqMC;
+         ZqqMC.SetPtEtaPhiE( pMc[zIndexqq]*sin(thetaMc[zIndexqq]), etaMc[zIndexqq], phiMc[zIndexqq], energyMc[zIndexqq] );
 
-         float deltaRqq = quarksMC[0].DeltaR(quarksMC[1]);
-         h1_deltaRqq->Fill(deltaRqq);
+         ptZqqMC_  = ZqqMC.Pt();
+         eZqqMC_   = ZqqMC.Energy();
+         etaZqqMC_ = ZqqMC.Eta();
+         phiZqqMC_ = ZqqMC.Phi();
+
+      // float ptZqq = pMc[zIndexqq]*sin(thetaMc[zIndexqq]);
+      // h1_ptHadronicZ->Fill( ptZqq );
+
+      // float deltaRqq = quarksMC[0].DeltaR(quarksMC[1]);
+      // h1_deltaRqq->Fill(deltaRqq);
 
        }
 
@@ -283,8 +324,11 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
 
          // remember: a stable lepton is daughter of a parton lepton, which is daughter of the Z:
-         if( fabs(idMc[iMc])==11 && idMc[mothMc[mothMc[iMc]]]==23 ) electronsMC.push_back( *thisParticle );
-         if( fabs(idMc[iMc])==13 && idMc[mothMc[mothMc[iMc]]]==23 ) muonsMC.push_back( *thisParticle );
+         if( idMc[mothMc[mothMc[iMc]]]==23 ) {
+           zIndexll = mothMc[mothMc[iMc]]; 
+           if( fabs(idMc[iMc])==11 && idMc[mothMc[mothMc[iMc]]]==23 ) electronsMC.push_back( *thisParticle );
+           if( fabs(idMc[iMc])==13 && idMc[mothMc[mothMc[iMc]]]==23 ) muonsMC.push_back( *thisParticle );
+         }
 
          delete thisParticle;
          thisParticle = 0;
@@ -316,10 +360,49 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          noLeptons = true;
        }
 
+
+       if( !noLeptons ) {
+
+         TLorentzVector ZllMC;
+         ZllMC.SetPtEtaPhiE( pMc[zIndexll]*sin(thetaMc[zIndexll]), etaMc[zIndexll], phiMc[zIndexll], energyMc[zIndexll] );
+
+         ptZllMC_  = ZllMC.Pt();
+         eZllMC_   = ZllMC.Energy();
+         etaZllMC_ = ZllMC.Eta();
+         phiZllMC_ = ZllMC.Phi();
+
+       }
+
+
+       // now look for the higgs:
+       if( zIndexll!=-1 && zIndexqq!=-1 ) {
+
+         int higgsIndex = mothMc[zIndexll];
+
+         if( idMc[higgsIndex] == 25 ) {
+
+           TLorentzVector HiggsMC;
+           HiggsMC.SetPtEtaPhiE( pMc[higgsIndex]*sin(thetaMc[higgsIndex]), etaMc[higgsIndex], phiMc[higgsIndex], energyMc[higgsIndex] );
+
+           eHiggsMC_   = HiggsMC.Energy(); 
+           ptHiggsMC_  = HiggsMC.Pt(); 
+           etaHiggsMC_ = HiggsMC.Eta(); 
+           phiHiggsMC_ = HiggsMC.Phi(); 
+
+         } // if higgs
+
+       } //if found two Z's
+
      } //if isMC
 
-
      if( !noLeptons && lept1MC.Pt() < lept2MC.Pt() ) std::cout << "WARNING MC leptons not ordered in pt!!" << std::endl;
+
+
+
+     // -----------------------------
+     //      FROM NOW ON RECO
+     // -----------------------------
+
 
      epfMet_ = energyPFMet[0];
      phipfMet_ = phiPFMet[0];
@@ -529,7 +612,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        for( unsigned iMc=0; iMc<nMc; ++iMc ) {
 
-         if( statusMc[iMc]==1 && fabs(idMc[iMc])==correctIdMc ) {
+         if( statusMc[iMc]==1 && fabs(idMc[iMc])==correctIdMc && idMc[mothMc[mothMc[iMc]]]==23 ) {
 
            TLorentzVector* thisParticle = new TLorentzVector();
            thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
@@ -613,6 +696,124 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      phiJet2_ = jets[1].Phi();
      eChargedHadronsJet2_ = jets[1].eChargedHadrons;
      
+
+     // --------------------
+     // match jets to MC:
+     // --------------------
+     std::vector<TLorentzVector> matchedGenJets;
+     std::vector<TLorentzVector> matchedPartons;
+     std::vector<int> pdgIdPartonGenJets;
+
+     for( unsigned iJet=0; iJet<jets.size(); ++iJet ) {
+
+       float deltaRmin = 100.;
+       TLorentzVector matchedPartonMC;
+
+       
+       // first match to partons (only for signal):
+       for( unsigned iMc=0; iMc<nMc; ++iMc ) {
+
+         if( statusMc[iMc]==3 && fabs(idMc[iMc])<=6 && idMc[mothMc[iMc]]==23 ) { //partons from Z
+
+           TLorentzVector* thisParticle = new TLorentzVector();
+           thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
+           float thisDeltaR = jets[iJet].DeltaR( *thisParticle );
+           if( thisDeltaR < deltaRmin ) {
+             deltaRmin = thisDeltaR;
+             matchedPartonMC = *thisParticle;
+           }
+
+           delete thisParticle;
+           thisParticle = 0;
+
+         } //if correct id mc
+
+       } // for i mc
+
+       h1_deltaRmatching_jet_parton->Fill( deltaRmin );
+       matchedPartons.push_back(matchedPartonMC);
+
+
+
+
+
+       // now match to genjet (general mc case):
+
+       float deltaRmin_genjet = 100.;
+       TLorentzVector matchedGenJet;
+
+       for( unsigned iGenJet=0; iGenJet<nAK5GenJet; ++iGenJet ) {
+
+         TLorentzVector* thisGenJet = new TLorentzVector( pxAK5GenJet[iGenJet], pyAK5GenJet[iGenJet], pzAK5GenJet[iGenJet], energyAK5GenJet[iGenJet]);
+         float thisDeltaR = jets[iJet].DeltaR( *thisGenJet );
+         if( thisDeltaR < deltaRmin_genjet ) {
+           deltaRmin_genjet = thisDeltaR;
+           matchedGenJet = *thisGenJet;
+         }
+
+         delete thisGenJet;
+         thisGenJet = 0;
+
+       } // for i GenJet
+
+       h1_deltaRmatching_jet_genjet->Fill( deltaRmin_genjet );
+       matchedGenJets.push_back(matchedGenJet);
+
+
+
+       // match genjet to parton:
+
+       float deltaRmin_parton = 100.;
+       int foundPdgId;
+
+       for( unsigned iMc=0; iMc<nMc; ++iMc ) {
+
+         if( statusMc[iMc]==3 && (fabs(idMc[iMc])<=6 || idMc[iMc]==21) ) {
+
+           TLorentzVector* thisParticle = new TLorentzVector();
+           thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
+           float thisDeltaR = matchedGenJet.DeltaR( *thisParticle );
+           if( thisDeltaR < deltaRmin_parton ) {
+             deltaRmin_parton = thisDeltaR;
+             foundPdgId = idMc[iMc];
+           }
+
+           delete thisParticle;
+           thisParticle = 0;
+
+         } //if correct id mc
+
+       } // for i mc
+
+       h1_deltaRmatching_genjet_parton->Fill( deltaRmin_parton );
+       pdgIdPartonGenJets.push_back(foundPdgId); 
+
+
+     } //for i jets
+
+
+     eJetGen1_ = matchedGenJets[0].Energy();
+     ptJetGen1_ = matchedGenJets[0].Pt();
+     etaJetGen1_ = matchedGenJets[0].Eta();
+     phiJetGen1_ = matchedGenJets[0].Phi();
+     partIdJetGen1_ = pdgIdPartonGenJets[0];
+
+     eJetGen2_ = matchedGenJets[1].Energy();
+     ptJetGen2_ = matchedGenJets[1].Pt();
+     etaJetGen2_ = matchedGenJets[1].Eta();
+     phiJetGen2_ = matchedGenJets[1].Phi();
+     partIdJetGen2_ = pdgIdPartonGenJets[1];
+
+     ePart1_ = matchedPartons[0].Energy();
+     ptPart1_ = matchedPartons[0].Pt();
+     etaPart1_ = matchedPartons[0].Eta();
+     phiPart1_ = matchedPartons[0].Phi();
+
+     ePart2_ = matchedPartons[1].Energy();
+     ptPart2_ = matchedPartons[1].Pt();
+     etaPart2_ = matchedPartons[1].Eta();
+     phiPart2_ = matchedPartons[1].Phi();
+
 
      reducedTree_->Fill(); 
 
