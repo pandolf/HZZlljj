@@ -112,10 +112,11 @@ EventsAndLumi addInput( const std::string& dataset ) {
     h1_lumi = (TH1F*)infile->Get("lumi");
     if( h1_lumi!=0 ) {
       totalLumi += h1_lumi->GetBinContent(1);
-      std::cout << "\tTotal lumi: " << totalLumi << " ub-1" << std::endl;
+      std::cout << "\tTotal lumi: " << totalLumi << " ub-1";
     } else {
-      std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping." << std::endl;
+      //std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping.";
     }
+    std::cout << std::endl;
     infile->Close();
 
   } else { //if file is good:
@@ -138,10 +139,11 @@ EventsAndLumi addInput( const std::string& dataset ) {
       h1_lumi = (TH1F*)infile->Get("lumi");
       if( h1_lumi!=0 ) {
         totalLumi += h1_lumi->GetBinContent(1);
-        std::cout << "\tTotal lumi: " << totalLumi << " ub-1" << std::endl;
+        std::cout << "\tTotal lumi: " << totalLumi << " ub-1";
       } else {
-        std::cout << std::endl << " WARNING! File '" << rootfilename << "' has no lumi information. Skipping." << std::endl;
+        //std::cout << std::endl << " WARNING! File '" << rootfilename << "' has no lumi information. Skipping." << std::endl;
       }
+      std::cout << std::endl;
       infile->Close();
 
     }
@@ -165,6 +167,8 @@ float getWeight( const std::string& dataset, int nEvents ) {
   // all cross sections in pb-1:
   if( dataset=="ZJets_madgraph" ) {
     xSection = 3048.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
+  } else if( dataset=="Z0Jets_Pt0to100-alpgen_Spring10" ) {
+    xSection = 2350.*0.853 ; // sigma x filter efficiency taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/ProductionReProcessingSpring10#ALPGEN
   } else if( dataset=="Z1Jets_Pt0to100-alpgen_Spring10" ) {
     xSection = 870.*0.447 ; // sigma x filter efficiency
   } else if( dataset=="Z1Jets_Pt100to300-alpgen_Spring10" ) {
@@ -189,6 +193,22 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 0.465*0.162; // sigma x filter efficiency
   } else if( dataset=="Z3Jets_Pt800to1600-alpgen_Spring10" ) {
     xSection = 0.00152*0.149; // sigma x filter efficiency
+  } else if( dataset=="Z4Jets_Pt0to100-alpgen_Spring10" ) {
+    xSection = 46.1*0.0939; // sigma x filter efficiency
+  } else if( dataset=="Z4Jets_Pt100to300-alpgen_Spring10" ) {
+    xSection = 10.7*0.115; // sigma x filter efficiency
+  } else if( dataset=="Z4Jets_Pt300to800-alpgen_Spring10" ) {
+    xSection = 0.319*0.104; // sigma x filter efficiency
+  } else if( dataset=="Z4Jets_Pt800to1600-alpgen_Spring10" ) {
+    xSection = 0.0011*0.106; // sigma x filter efficiency
+  } else if( dataset=="Z5Jets_Pt0to100-alpgen_Spring10" ) {
+    xSection = 13.9*0.0727; // sigma x filter efficiency
+  } else if( dataset=="Z5Jets_Pt100to300-alpgen_Spring10" ) {
+    xSection = 4.42*0.0956; // sigma x filter efficiency
+  } else if( dataset=="Z5Jets_Pt300to800-alpgen_Spring10" ) {
+    xSection = 0.164*0.103; // sigma x filter efficiency
+  } else if( dataset=="Z5Jets_Pt800to1600-alpgen_Spring10" ) {
+    xSection = 0.000588*0.109; // sigma x filter efficiency
   } else if( dataset=="HZZ_qqll_gluonfusion_M130" ) {
     xSection = 25.560*0.03913*0.0674*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M150" ) {
@@ -213,7 +233,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
   }
 
   TString dataset_tstr(dataset.c_str());
-  TRegexp re("Z*Jets*alpgen");
+  TRegexp re("alpgen");
   if( dataset_tstr.Contains(re) ) {
     std::cout << "-> Scaling LO alpgen cross-section to NNLO." << std::endl;
     xSection*=(3048./2054.);
