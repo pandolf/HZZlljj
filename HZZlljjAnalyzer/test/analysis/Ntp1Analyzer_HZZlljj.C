@@ -30,13 +30,16 @@ class AnalysisJet : public TLorentzVector {
 
   AnalysisJet( float x=0., float y=0., float z=0., float t=0.) : TLorentzVector( x, y, z, t ) {
     eChargedHadrons=0.;
+    ePhotons=0.;
+    eNeutralHadrons=0.;
+    eElectrons=0.;
   }
 
   float eChargedHadrons;
-//float ePhotons;
-//float eNeutralHadrons;
+  float ePhotons;
+  float eNeutralHadrons;
 //float eMuons;
-//float eElectrons;
+  float eElectrons;
 //float eHFHadrons;
 //float eHFEM;
 
@@ -193,6 +196,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   h1_deltaRmatching_jet_parton = new TH1F("deltaRmatching_jet_parton", "", 100, 0., 0.6);
   h1_deltaRmatching_genjet_parton = new TH1F("deltaRmatching_genjet_parton", "", 100, 0., 0.6);
   h1_deltaRmatching_jet_genjet = new TH1F("deltaRmatching_jet_genjet", "", 100, 0., 0.6);
+  h1_indexMatchedJet = new TH1F("indexMatchedJet", "", 6, -0.5, 5.5);
 //h1_ptHadronicZ = new TH1F("ptHadronicZ", "", 50, 0., 400.);
 //h1_deltaRqq = new TH1F("deltaRqq", "", 50, 0., 3.);
 
@@ -212,6 +216,7 @@ Ntp1Analyzer_HZZlljj::~Ntp1Analyzer_HZZlljj() {
   h1_deltaRmatching_jet_parton->Write();
   h1_deltaRmatching_genjet_parton->Write();
   h1_deltaRmatching_jet_genjet->Write();
+  h1_indexMatchedJet->Write();
 //h1_ptHadronicZ->Write();
 //h1_deltaRqq->Write();
   
@@ -654,7 +659,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      std::vector<AnalysisJet> jets;
 
-     for( unsigned int iJet=0; iJet<nAK5PFJet && jets.size()<2; ++iJet ) {
+     for( unsigned int iJet=0; iJet<nAK5PFJet && jets.size()<5; ++iJet ) {
 
        AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
 
@@ -675,6 +680,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( deltaR2 <= 0.25 ) continue;
 
        thisJet.eChargedHadrons = chargedHadronEnergyAK5PFJet[iJet];
+       thisJet.ePhotons = neutralEmEnergyAK5PFJet[iJet];
+       thisJet.eNeutralHadrons = neutralHadronEnergyAK5PFJet[iJet];
+       thisJet.eElectrons = chargedEmEnergyAK5PFJet[iJet];
 
        jets.push_back( thisJet );
 
@@ -689,12 +697,18 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      etaJet1_ = jets[0].Eta();
      phiJet1_ = jets[0].Phi();
      eChargedHadronsJet1_ = jets[0].eChargedHadrons;
+     eNeutralHadronsJet1_ = jets[0].eNeutralHadrons;
+     ePhotonsJet1_ = jets[0].ePhotons;
+     eElectronsJet1_ = jets[0].eElectrons;
 
      eJet2_ = jets[1].Energy();
      ptJet2_ = jets[1].Pt();
      etaJet2_ = jets[1].Eta();
      phiJet2_ = jets[1].Phi();
      eChargedHadronsJet2_ = jets[1].eChargedHadrons;
+     eNeutralHadronsJet2_ = jets[1].eNeutralHadrons;
+     ePhotonsJet2_ = jets[1].ePhotons;
+     eElectronsJet2_ = jets[1].eElectrons;
      
 
      // --------------------
@@ -731,6 +745,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        } // for i mc
 
        h1_deltaRmatching_jet_parton->Fill( deltaRmin );
+       if( deltaRmin < 0.25 )  //matched
+         h1_indexMatchedJet->Fill( iJet );
        matchedPartons.push_back(matchedPartonMC);
 
 
