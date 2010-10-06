@@ -197,6 +197,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   h1_deltaRmatching_genjet_parton = new TH1F("deltaRmatching_genjet_parton", "", 100, 0., 0.6);
   h1_deltaRmatching_jet_genjet = new TH1F("deltaRmatching_jet_genjet", "", 100, 0., 0.6);
   h1_indexMatchedJet = new TH1F("indexMatchedJet", "", 6, -0.5, 5.5);
+  h1_nMatched_per_event = new TH1F("nMatched_per_event", "", 6, -0.5, 5.5);
 //h1_ptHadronicZ = new TH1F("ptHadronicZ", "", 50, 0., 400.);
 //h1_deltaRqq = new TH1F("deltaRqq", "", 50, 0., 3.);
 
@@ -217,6 +218,7 @@ Ntp1Analyzer_HZZlljj::~Ntp1Analyzer_HZZlljj() {
   h1_deltaRmatching_genjet_parton->Write();
   h1_deltaRmatching_jet_genjet->Write();
   h1_indexMatchedJet->Write();
+  h1_nMatched_per_event->Write();
 //h1_ptHadronicZ->Write();
 //h1_deltaRqq->Write();
   
@@ -718,6 +720,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      std::vector<TLorentzVector> matchedPartons;
      std::vector<int> pdgIdPartonGenJets;
 
+     int nMatched_per_event = 0;
+
      for( unsigned iJet=0; iJet<jets.size(); ++iJet ) {
 
        float deltaRmin = 100.;
@@ -745,8 +749,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        } // for i mc
 
        h1_deltaRmatching_jet_parton->Fill( deltaRmin );
-       if( deltaRmin < 0.25 )  //matched
+       if( deltaRmin < 0.25 )  { //matched
          h1_indexMatchedJet->Fill( iJet );
+         nMatched_per_event++;
+       }
        matchedPartons.push_back(matchedPartonMC);
 
 
@@ -807,6 +813,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      } //for i jets
 
+     h1_nMatched_per_event->Fill( nMatched_per_event );
 
      eJetGen1_ = matchedGenJets[0].Energy();
      ptJetGen1_ = matchedGenJets[0].Pt();
