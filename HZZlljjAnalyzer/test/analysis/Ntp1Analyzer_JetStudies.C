@@ -68,6 +68,8 @@ void Ntp1Analyzer_JetStudies::CreateOutputFile() {
   Ntp1Analyzer::CreateOutputFile();
 
   
+  reducedTree_->Branch("eventWeight",  &eventWeight_,  "eventWeight_/F");
+
   reducedTree_->Branch("nJet",  &nJet_,  "nJet_/I");
 
   reducedTree_->Branch("eJet",  &eJet_,  "eJet_[nJet_]/F");
@@ -117,6 +119,8 @@ void Ntp1Analyzer_JetStudies::Loop()
 if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      if( (jentry%100000) == 0 ) std::cout << "Event #" << jentry  << " of " << nentries << std::endl;
+
+     eventWeight_ = -1.; //default
 
      if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
 
