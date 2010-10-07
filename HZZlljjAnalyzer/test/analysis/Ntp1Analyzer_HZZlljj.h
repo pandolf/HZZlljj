@@ -146,8 +146,13 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    TH1F* h1_deltaRmatching_jet_parton; 
    TH1F* h1_deltaRmatching_genjet_parton; 
    TH1F* h1_deltaRmatching_jet_genjet; 
+   TH1F* h1_deltaRmatching_jet_leptonParton;
    TH1F* h1_indexMatchedJet;
+   TH1F* h1_indexMatched05Jet;
    TH1F* h1_nMatched_per_event;
+   TH1F* h1_nMatched05_per_event;
+   TH1F* h1_pdgIdParton1;
+   TH1F* h1_pdgIdParton2;
 // TH1F* h1_ptHadronicZ; 
 // TH1F* h1_deltaRqq; 
 
