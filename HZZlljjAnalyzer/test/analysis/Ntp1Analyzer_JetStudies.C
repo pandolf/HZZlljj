@@ -53,7 +53,7 @@ class AnalysisJet : public TLorentzVector {
 
 
 Ntp1Analyzer_JetStudies::Ntp1Analyzer_JetStudies( const std::string& dataset, const std::string& flags, TTree* tree ) :
-     Ntp1Analyzer( "HZZlljj", dataset, flags, tree ) {
+     Ntp1Analyzer( "JetStudies", dataset, flags, tree ) {
 
 
   //nothing to do here
