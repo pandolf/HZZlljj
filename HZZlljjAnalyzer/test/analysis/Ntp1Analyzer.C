@@ -96,9 +96,9 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
    while( fscanf(iff, "%s", singleLine) !=EOF ) {
    
      std::string singleLine_str(singleLine);
-     singleLine_str = singleLine_str + "/ntp1";
-     std::cout << "-> Adding " << singleLine_str << std::endl;
-     chain->Add(singleLine_str.c_str());
+     std::string treeName_str = singleLine_str + "/ntp1";
+     std::cout << "-> Adding " << treeName_str << std::endl;
+     chain->Add(treeName_str.c_str());
      if( firstFile ) {
        TFile* firstFile = TFile::Open(singleLine_str.c_str(), "read");
        this->LoadTriggerFromConditions(firstFile);
