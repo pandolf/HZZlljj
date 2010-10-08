@@ -72,6 +72,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
 
   
   reducedTree_->Branch("run",&run_,"run_/I");
+  reducedTree_->Branch("LS",&LS_,"LS_/I");
   reducedTree_->Branch("event",&event_,"event_/I");
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
@@ -115,6 +116,17 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("etaLept2Gen",  &etaLept2Gen_,  "etaLept2Gen_/F");
   reducedTree_->Branch("phiLept2Gen",  &phiLept2Gen_,  "phiLept2Gen_/F");
 
+  reducedTree_->Branch("eJetLead",  &eJetLead_,  "eJetLead_/F");
+  reducedTree_->Branch( "ptJetLead",  &ptJetLead_,  "ptJetLead_/F");
+  reducedTree_->Branch("etaJetLead", &etaJetLead_, "etaJetLead_/F");
+  reducedTree_->Branch("phiJetLead", &phiJetLead_, "phiJetLead_/F");
+
+  reducedTree_->Branch("eJetRecoil",  &eJetRecoil_,  "eJetRecoil_/F");
+  reducedTree_->Branch( "ptJetRecoil",  &ptJetRecoil_,  "ptJetRecoil_/F");
+  reducedTree_->Branch("etaJetRecoil", &etaJetRecoil_, "etaJetRecoil_/F");
+  reducedTree_->Branch("phiJetRecoil", &phiJetRecoil_, "phiJetRecoil_/F");
+
+  reducedTree_->Branch("iJet1",  &iJet1_,  "iJet1_/I");
   reducedTree_->Branch("eJet1",  &eJet1_,  "eJet1_/F");
   reducedTree_->Branch( "ptJet1",  &ptJet1_,  "ptJet1_/F");
   reducedTree_->Branch("etaJet1", &etaJet1_, "etaJet1_/F");
@@ -147,6 +159,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch( "etaPart1",  &etaPart1_,  "etaPart1_/F");
   reducedTree_->Branch( "phiPart1",  &phiPart1_,  "phiPart1_/F");
 
+  reducedTree_->Branch("iJet2",  &iJet2_,  "iJet2_/I");
   reducedTree_->Branch("eJet2",  &eJet2_,  "eJet2_/F");
   reducedTree_->Branch( "ptJet2",  &ptJet2_,  "ptJet2_/F");
   reducedTree_->Branch("etaJet2", &etaJet2_, "etaJet2_/F");
@@ -267,6 +280,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      if( (jentry%100000) == 0 ) std::cout << "Event #" << jentry  << " of " << nentries << std::endl;
 
      run_ = runNumber;
+     LS_ = lumiBlock;
      event_ = eventNumber;
      ptHat_ = genPtHat;
      eventWeight_ = -1.; //default
@@ -669,9 +683,16 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // JETS
      // ------------------
 
-     std::vector<AnalysisJet> jets;
 
-     for( unsigned int iJet=0; iJet<nAK5PFJet && jets.size()<5; ++iJet ) {
+     // look for jet pair which has invariant mass closest to Z:
+     float Zmass = 91.19;
+     float bestMass = 0.;
+     int best_i=-1;
+     int best_j=-1;
+     int iLeadJet=-1;
+     bool firstJet=true;
+
+     for( unsigned int iJet=0; iJet<nAK5PFJet && iJet<6; ++iJet ) {
 
        AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
 
@@ -691,74 +712,143 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        Float_t deltaR2 = sqrt( deltaEta2*deltaEta2 + deltaPhi2*deltaPhi2 );
        if( deltaR2 <= 0.25 ) continue;
 
-       thisJet.eChargedHadrons = chargedHadronEnergyAK5PFJet[iJet];
-       thisJet.ePhotons = neutralEmEnergyAK5PFJet[iJet];
-       thisJet.eNeutralHadrons = neutralHadronEnergyAK5PFJet[iJet];
-       thisJet.eElectrons = chargedEmEnergyAK5PFJet[iJet];
-
-       jets.push_back( thisJet );
-
-     } //for jets
-
-     
-     if( jets.size() < 2 ) continue;
+       if( firstJet ) {
+         iLeadJet = iJet;
+         firstJet=false;
+       }
 
 
-     // look for jet pair which has invariant mass closest to Z:
-     float Zmass = 91.19;
-     float bestMass = 0.;
-     int best_i=-1;
-     int best_j=-1;
+       for( unsigned int jJet=iJet+1; jJet<nAK5PFJet && jJet<6; ++jJet ) {
 
-     for( unsigned i=0; i<jets.size(); ++i ) {
-       for( unsigned j=i+1; j<jets.size(); ++j ) {
-         TLorentzVector dijet = jets[i]+jets[j];
+         AnalysisJet otherJet( pxAK5PFJet[jJet], pyAK5PFJet[jJet], pzAK5PFJet[jJet], energyAK5PFJet[jJet] );
+
+         // --------------
+         // kinematics:
+         // --------------
+         if( otherJet.Pt() < 20. ) continue;
+
+         // far away from leptons:
+         Float_t deltaEta1 = otherJet.Eta() - etaLept1_;
+         Float_t deltaPhi1 = delta_phi((Float_t)otherJet.Phi(), phiLept1_);
+         Float_t deltaR1 = sqrt( deltaEta1*deltaEta1 + deltaPhi1*deltaPhi1 );
+         if( deltaR1 <= 0.25 ) continue;
+
+         Float_t deltaEta2 = otherJet.Eta() - etaLept2_;
+         Float_t deltaPhi2 = delta_phi((Float_t)otherJet.Phi(), phiLept2_);
+         Float_t deltaR2 = sqrt( deltaEta2*deltaEta2 + deltaPhi2*deltaPhi2 );
+         if( deltaR2 <= 0.25 ) continue;
+
+
+         TLorentzVector dijet = thisJet + otherJet;
          float invMass = dijet.M();
          if( (best_i==-1 && best_j==-1 ) || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
            bestMass = invMass;
-           best_i = i;
-           best_j = j;
+           best_i = iJet;
+           best_j = jJet;
          }
-       } //jets j
-     } //jets i
+       } //for j
+     } //for i
+
+     
+     //if( jets.size() < 2 ) continue;
+     if( best_i==-1 || best_j==-1 || iLeadJet==-1 ) continue; //means that less than 2 jets were found
+
+
+//   for( unsigned i=0; i<jets.size(); ++i ) {
+//     for( unsigned j=i+1; j<jets.size(); ++j ) {
+//       TLorentzVector dijet = jets[i]+jets[j];
+//       float invMass = dijet.M();
+//       if( (best_i==-1 && best_j==-1 ) || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
+//         bestMass = invMass;
+//         best_i = i;
+//         best_j = j;
+//       }
+//     } //jets j
+//   } //jets i
+
+     
+     // look for hardest jet in event which is not already picked as best-Z pair (but no pt cut):
+     TLorentzVector recoilJet(0., 0., 0., 0.);
+     for( unsigned int iJet=0; iJet<nAK5PFJet && recoilJet.Energy()==0.; ++iJet ) {
+
+       if( iJet==best_i || iJet==best_j ) {
+
+         continue;
+
+       } else {
+
+         AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
        
+         // far away from leptons:
+         Float_t deltaEta1 = thisJet.Eta() - etaLept1_;
+         Float_t deltaPhi1 = delta_phi((Float_t)thisJet.Phi(), phiLept1_);
+         Float_t deltaR1 = sqrt( deltaEta1*deltaEta1 + deltaPhi1*deltaPhi1 );
+         if( deltaR1 <= 0.25 ) continue;
+       
+         Float_t deltaEta2 = thisJet.Eta() - etaLept2_;
+         Float_t deltaPhi2 = delta_phi((Float_t)thisJet.Phi(), phiLept2_);
+         Float_t deltaR2 = sqrt( deltaEta2*deltaEta2 + deltaPhi2*deltaPhi2 );
+         if( deltaR2 <= 0.25 ) continue;
+       
+         recoilJet = thisJet;
 
-     eJet1_ = jets[best_i].Energy();
-     ptJet1_ = jets[best_i].Pt();
-     etaJet1_ = jets[best_i].Eta();
-     phiJet1_ = jets[best_i].Phi();
-     eChargedHadronsJet1_ = jets[best_i].eChargedHadrons;
-     eNeutralHadronsJet1_ = jets[best_i].eNeutralHadrons;
-     ePhotonsJet1_ = jets[best_i].ePhotons;
-     eElectronsJet1_ = jets[best_i].eElectrons;
+       }
 
-     eJet2_ = jets[best_j].Energy();
-     ptJet2_ = jets[best_j].Pt();
-     etaJet2_ = jets[best_j].Eta();
-     phiJet2_ = jets[best_j].Phi();
-     eChargedHadronsJet2_ = jets[best_j].eChargedHadrons;
-     eNeutralHadronsJet2_ = jets[best_j].eNeutralHadrons;
-     ePhotonsJet2_ = jets[best_j].ePhotons;
-     eElectronsJet2_ = jets[best_j].eElectrons;
+     }
+
+         
+
+     eJetRecoil_ = recoilJet.Energy();
+     ptJetRecoil_ = recoilJet.Pt();
+     etaJetRecoil_ = recoilJet.Eta();
+     phiJetRecoil_ = recoilJet.Phi();
+   //eChargedHadronsJetRecoil_ = recoilJet.eChargedHadrons;
+   //eNeutralHadronsJetRecoil_ = recoilJet.eNeutralHadrons;
+   //ePhotonsJetRecoil_ = recoilJet.ePhotons;
+   //eElectronsJetRecoil_ = recoilJet.eElectrons;
+   
+     TLorentzVector leadJet(pxAK5PFJet[iLeadJet], pyAK5PFJet[iLeadJet], pzAK5PFJet[iLeadJet], energyAK5PFJet[iLeadJet] );
+
+     eJetLead_ = leadJet.Energy();
+     ptJetLead_ = leadJet.Pt();
+     etaJetLead_ = leadJet.Eta();
+     phiJetLead_ = leadJet.Phi();
+   //eChargedHadronsJetLead_ = jets[0].eChargedHadrons;
+   //eNeutralHadronsJetLead_ = jets[0].eNeutralHadrons;
+   //ePhotonsJetLead_ = jets[0].ePhotons;
+   //eElectronsJetLead_ = jets[0].eElectrons;
+
+     TLorentzVector jet1(pxAK5PFJet[best_i], pyAK5PFJet[best_i], pzAK5PFJet[best_i], energyAK5PFJet[best_i] );
+
+     iJet1_ = best_i;
+     eJet1_ = jet1.Energy();
+     ptJet1_ = jet1.Pt();
+     etaJet1_ = jet1.Eta();
+     phiJet1_ = jet1.Phi();
+     eChargedHadronsJet1_ = chargedHadronEnergyAK5PFJet[best_i];
+     eChargedHadronsJet1_ = neutralHadronEnergyAK5PFJet[best_i];
+     ePhotonsJet1_ = neutralEmEnergyAK5PFJet[best_i];
+     ePhotonsJet1_ = chargedEmEnergyAK5PFJet[best_i];
+
+
+     TLorentzVector jet2(pxAK5PFJet[best_j], pyAK5PFJet[best_j], pzAK5PFJet[best_j], energyAK5PFJet[best_j] );
+
+     iJet2_ = best_j;
+     eJet2_ = jet2.Energy();
+     ptJet2_ = jet2.Pt();
+     etaJet2_ = jet2.Eta();
+     phiJet2_ = jet2.Phi();
+     eChargedHadronsJet2_ = chargedHadronEnergyAK5PFJet[best_j];
+     eChargedHadronsJet2_ = neutralHadronEnergyAK5PFJet[best_j];
+     ePhotonsJet2_ = neutralEmEnergyAK5PFJet[best_j];
+     ePhotonsJet2_ = chargedEmEnergyAK5PFJet[best_j];
+
+      
      
-//   eJet1_ = jets[0].Energy();
-//   ptJet1_ = jets[0].Pt();
-//   etaJet1_ = jets[0].Eta();
-//   phiJet1_ = jets[0].Phi();
-//   eChargedHadronsJet1_ = jets[0].eChargedHadrons;
-//   eNeutralHadronsJet1_ = jets[0].eNeutralHadrons;
-//   ePhotonsJet1_ = jets[0].ePhotons;
-//   eElectronsJet1_ = jets[0].eElectrons;
+     std::vector<TLorentzVector> jets;
+     jets.push_back(jet1);
+     jets.push_back(jet2);
 
-//   eJet2_ = jets[1].Energy();
-//   ptJet2_ = jets[1].Pt();
-//   etaJet2_ = jets[1].Eta();
-//   phiJet2_ = jets[1].Phi();
-//   eChargedHadronsJet2_ = jets[1].eChargedHadrons;
-//   eNeutralHadronsJet2_ = jets[1].eNeutralHadrons;
-//   ePhotonsJet2_ = jets[1].ePhotons;
-//   eElectronsJet2_ = jets[1].eElectrons;
-     
 
      // --------------------
      // match jets to MC:
@@ -776,7 +866,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        TLorentzVector matchedPartonMC;
 
        //if( iJet!=0 && iJet!=1 ) continue;
-       if( iJet!=best_i && iJet!=best_j ) continue;
+       //if( iJet!=best_i && iJet!=best_j ) continue;
        
        // first match to partons (only for signal):
        for( unsigned iMc=0; iMc<nMc; ++iMc ) {
@@ -870,40 +960,40 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      h1_nMatched_per_event->Fill( nMatched_per_event );
      h1_nMatched05_per_event->Fill( nMatched05_per_event );
 
-if( nMatched_per_event==0 ) {
-
+     if( nMatched_per_event==0 ) {
 
        for( unsigned iMc=0; iMc<nMc; ++iMc ) {
 
          if( statusMc[mothMc[iMc]]==3 && (fabs(idMc[iMc])==11 || fabs(idMc[iMc])==13) ) {
            TLorentzVector lepton;
            lepton.SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
-           h1_deltaRmatching_jet_leptonParton->Fill( lepton.DeltaR(jets[best_i]) );
-           h1_deltaRmatching_jet_leptonParton->Fill( lepton.DeltaR(jets[best_j]) );
+           h1_deltaRmatching_jet_leptonParton->Fill( lepton.DeltaR(jets[0]) );
+           h1_deltaRmatching_jet_leptonParton->Fill( lepton.DeltaR(jets[1]) );
          }
 
-     }
-}
-
-int iPart1 = -1;
-int iPart2 = -1;
-float ptPartMax=0.;
-
-       for( unsigned iMc=0; iMc<nMc; ++iMc ) {
-
-         if( statusMc[iMc]==3 && (fabs(idMc[iMc])<=6 || idMc[iMc]==21) ) {
-
-           if( pMc[iMc]*sin(thetaMc[iMc])>ptPartMax ) {
-             iPart2 = iPart1;
-             iPart1 = iMc;
-           }
-
-         }          
-
        }
+     }
 
-       if( iPart1>=0 ) h1_pdgIdParton1->Fill( idMc[iPart1] );
-       if( iPart2>=0 ) h1_pdgIdParton2->Fill( idMc[iPart2] );
+
+     int iPart1 = -1;
+     int iPart2 = -1;
+     float ptPartMax=0.;
+
+     for( unsigned iMc=0; iMc<nMc; ++iMc ) {
+
+       if( statusMc[iMc]==3 && (fabs(idMc[iMc])<=6 || idMc[iMc]==21) ) {
+
+         if( pMc[iMc]*sin(thetaMc[iMc])>ptPartMax ) {
+           iPart2 = iPart1;
+           iPart1 = iMc;
+         }
+
+       }          
+
+     }
+
+     if( iPart1>=0 ) h1_pdgIdParton1->Fill( idMc[iPart1] );
+     if( iPart2>=0 ) h1_pdgIdParton2->Fill( idMc[iPart2] );
 
      eJetGen1_ = matchedGenJets[0].Energy();
      ptJetGen1_ = matchedGenJets[0].Pt();
