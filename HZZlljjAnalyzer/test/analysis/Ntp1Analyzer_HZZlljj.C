@@ -699,7 +699,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // kinematics:
        // --------------
-       if( thisJet.Pt() < 20. ) continue;
+       if( thisJet.Pt() < 30. ) continue;
 
        // far away from leptons:
        Float_t deltaEta1 = thisJet.Eta() - etaLept1_;
@@ -725,7 +725,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          // --------------
          // kinematics:
          // --------------
-         if( otherJet.Pt() < 20. ) continue;
+         if( otherJet.Pt() < 30. ) continue;
 
          // far away from leptons:
          Float_t deltaEta1 = otherJet.Eta() - etaLept1_;
