@@ -75,6 +75,16 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t phiJetLead_;
    Float_t etaJetLead_;
 
+   Float_t  ptJetLead2_;
+   Float_t   eJetLead2_;
+   Float_t phiJetLead2_;
+   Float_t etaJetLead2_;
+
+   Float_t  ptJetLead3_;
+   Float_t   eJetLead3_;
+   Float_t phiJetLead3_;
+   Float_t etaJetLead3_;
+
    Int_t  iJet1_;
    Float_t  ptJet1_;
    Float_t   eJet1_;
