@@ -74,7 +74,7 @@ void Ntp1Analyzer::LoadInput() {
      //load trigger mask:
      std::string firstFileName = treeDir + "/default_1.root";
      TFile* firstFile = TFile::Open( firstFileName.c_str(), "read" );
-     this->LoadTriggerFromConditions(firstFile);
+     this->LoadTrigger(firstFile);
    }
 
 }
@@ -101,7 +101,7 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
      chain->Add(treeName_str.c_str());
      if( firstFile ) {
        TFile* firstFile = TFile::Open(singleLine_str.c_str(), "read");
-       this->LoadTriggerFromConditions(firstFile);
+       this->LoadTrigger(firstFile);
        firstFile=false;
      }
 
@@ -118,49 +118,72 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
 
 
 
-void Ntp1Analyzer::LoadTriggerFromConditions( TFile* condFile ) {
+void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
 
   
   TTree* treeCond = (TTree*)(condFile->Get("Conditions"));
-  if( treeCond==0 ) {
-    std::cout << "-> WARNING!! Didn't find Conditions tree in file: " << condFile << std::endl;
-    return;
+
+
+  //new version: trigger loaded from ntp1 tree:
+  if( treeCond==0 ) { 
+
+    std::vector<int> triggerMask;
+    for (std::vector< std::string >::const_iterator fIter=requiredTriggers_.begin();fIter!=requiredTriggers_.end();++fIter)
+      {
+        bool foundThisTrigger = false;
+        for(unsigned int i=0; i<nameHLT->size(); i++) 
+          {
+            if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) ) 
+              {
+                foundThisTrigger = true;
+                triggerMask.push_back( indexHLT[i] ) ;
+                break;
+              }
+          }
+        if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+      }
+    index_requiredTriggers_ = triggerMask;
+
+  } else { //old version: Conditions
+
+    int           nHLT_;
+    std::vector<std::string>  *nameHLT_;
+    std::vector<unsigned int> *indexHLT_;
+
+    //To get the pointers for the vectors
+    nameHLT_=0;
+    indexHLT_=0;
+
+    treeCond->SetBranchAddress("nHLT", &nHLT_);
+    treeCond->SetBranchAddress("nameHLT", &nameHLT_);
+    treeCond->SetBranchAddress("indexHLT", &indexHLT_);
+    treeCond->GetEntry(0);
+
+    std::vector<int> triggerMask;
+    for (std::vector< std::string >::const_iterator fIter=requiredTriggers_.begin();fIter!=requiredTriggers_.end();++fIter)
+      {
+        bool foundThisTrigger = false;
+        for(unsigned int i=0; i<nameHLT_->size(); i++) 
+          {
+            if( !strcmp ((*fIter).c_str(), nameHLT_->at(i).c_str() ) ) 
+              {
+                foundThisTrigger = true;
+                triggerMask.push_back( indexHLT_->at(i) ) ;
+                break;
+              }
+          }
+        if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+      }
+    index_requiredTriggers_ = triggerMask;
+
   }
 
-  int           nHLT_;
-  std::vector<std::string>  *nameHLT_;
-  std::vector<unsigned int> *indexHLT_;
 
-  //To get the pointers for the vectors
-  nameHLT_=0;
-  indexHLT_=0;
-
-  treeCond->SetBranchAddress("nHLT", &nHLT_);
-  treeCond->SetBranchAddress("nameHLT", &nameHLT_);
-  treeCond->SetBranchAddress("indexHLT", &indexHLT_);
-  treeCond->GetEntry(0);
-
-  std::vector<int> triggerMask;
-  for (std::vector< std::string >::const_iterator fIter=requiredTriggers_.begin();fIter!=requiredTriggers_.end();++fIter)
-    {
-      bool foundThisTrigger = false;
-      for(unsigned int i=0; i<nameHLT_->size(); i++) 
-        {
-          if( !strcmp ((*fIter).c_str(), nameHLT_->at(i).c_str() ) ) 
-            {
-              foundThisTrigger = true;
-              triggerMask.push_back( indexHLT_->at(i) ) ;
-              break;
-            }
-        }
-      if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
-    }
-  index_requiredTriggers_ = triggerMask;
   for (int i=0;i<index_requiredTriggers_.size();++i)
     std::cout << "[ReloadTriggerMask]::Requiring bit " << index_requiredTriggers_[i] << " " << requiredTriggers_[i] << std::endl;
 
 
-} // LoadTriggerFromConditions
+} // LoadTrigger
 
 
 
@@ -256,6 +279,8 @@ void Ntp1Analyzer::Init(TTree *tree)
    h1_nCounter_->SetBinContent( 1, nEntries_cut );
 
 
+   // Set object pointer
+   nameHLT = 0;
    // Set branch addresses and branch pointers
    fChain = tree;
    fCurrent = -1;
@@ -283,6 +308,9 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("statusMc", statusMc, &b_statusMc);
    fChain->SetBranchAddress("nTrg", &nTrg, &b_nTrg);
    fChain->SetBranchAddress("firedTrg", firedTrg, &b_firedTrg);
+   fChain->SetBranchAddress("nHLT", &nHLT, &b_nHLT);
+   fChain->SetBranchAddress("nameHLT", &nameHLT, &b_nameHLT);
+   fChain->SetBranchAddress("indexHLT", indexHLT, &b_indexHLT);
    fChain->SetBranchAddress("nEle", &nEle, &b_nEle);
    fChain->SetBranchAddress("chargeEle", chargeEle, &b_chargeEle);
    fChain->SetBranchAddress("energyEle", energyEle, &b_energyEle);

@@ -61,6 +61,9 @@ public :
    Int_t           statusMc[1000];   //[nMc]
    Int_t           nTrg;
    Int_t           firedTrg[4];   //[nTrg]
+   Int_t           nHLT;
+   Int_t           indexHLT[300];   //[nHLT]
+   std::vector<std::string>  *nameHLT;
    Int_t           nEle;
    Int_t           chargeEle[30];   //[nEle]
    Float_t         energyEle[30];   //[nEle]
@@ -664,6 +667,9 @@ public :
    TBranch        *b_statusMc;   //!
    TBranch        *b_nTrg;   //!
    TBranch        *b_firedTrg;   //!
+   TBranch        *b_nHLT;   //!
+   TBranch        *b_nameHLT;   //!
+   TBranch        *b_indexHLT;   //!
    TBranch        *b_nEle;   //!
    TBranch        *b_chargeEle;   //!
    TBranch        *b_energyEle;   //!
@@ -1214,7 +1220,7 @@ public :
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     LoadInput();
    virtual void     LoadInputFromFile( const std::string& fileName );
-   virtual void     LoadTriggerFromConditions( TFile* condFile );
+   virtual void     LoadTrigger( TFile* condFile );
    virtual void     CreateOutputFile();
    virtual void     Init(TTree *tree);
    virtual void     Loop()=0;
