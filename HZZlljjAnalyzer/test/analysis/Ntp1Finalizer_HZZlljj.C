@@ -1,200 +1,57 @@
-#include <TH2F.h>
-#include <TH1D.h>
-#include <TFile.h>
-#include <TLorentzVector.h>
-#include <TChain.h>
-#include <TTree.h>
-#include <TCanvas.h>
-#include <TString.h>
-#include <TRegexp.h>
-#include <TMath.h>
+#include "Ntp1Finalizer_HZZlljj.h"
+
 #include <iostream>
 #include <fstream>
-#include <vector>
-#include <cmath>
-#include "fitTools.C"
-//#include "TFitConstraintM.h"
-//#include "TFitParticleEtEtaPhi.h"
-//#include "TKinFitter.h"
-//#include "TFitConstraintM.cc"
-//#include "TFitParticleEtEtaPhi.cc"
-//#include "TKinFitter.cc"
+#include <cstdlib>
+
+#include "TLorentzVector.h"
+#include "TH2D.h"
+#include "TProfile.h"
+#include "TRegexp.h"
+
+#include "TFitConstraintM.h"
+#include "TFitParticleEtEtaPhi.h"
+#include "TKinFitter.h"
 
 
-std::string LEPT_TYPE;
-
-
-double delta_phi(double phi1, double phi2) {
-
-  double dphi = fabs(phi1 - phi2);
-  return (dphi <= TMath::Pi())? dphi : TMath::TwoPi() - dphi;
-}
-
-
-float delta_phi(float phi1, float phi2) {
-
-  float dphi = fabs(phi1 - phi2);
-  float sgn = (phi1 >= phi2 ? +1. : -1.);
-  return sgn * (dphi <= TMath::Pi() ? dphi : TMath::TwoPi() - dphi);
-}
+#include "fitTools.h"
 
 
 
-
-bool DEBUG_ = false;
-
-Double_t totalLumi=0.;
-TChain* tree;
-
-
-void addFile(const std::string& dataset);
-std::vector<TH1F*> getResponseHistos(const std::string& name, int binArraySize, Double_t* ptBins);
-void writeResponseHistos( TFile* file, std::vector<TH1F*> h1_response, std::string dirName );
+void print(TKinFitter *fitter);
 Double_t ErrEt(Float_t Et, Float_t Eta);
 Double_t ErrEta(Float_t Et, Float_t Eta);
 Double_t ErrPhi(Float_t Et, Float_t Eta);
 
 
-void finalize(const std::string& dataset, const std::string lept_type="ALL") {
 
-  tree = new TChain("reducedTree");
+// constructor:
 
-  if( lept_type!="ALL" && lept_type!="ELE" && lept_type!="MU" ) {
-    std::cout << "Lepton type: '" << lept_type << "' currently not supported. Please use 'ALL', 'ELE' or 'MU'." << std::endl;
-    std::cout << "Exiting." << std::endl;
-    exit(9181);
+Ntp1Finalizer_HZZlljj::Ntp1Finalizer_HZZlljj( const std::string& dataset, const std::string& leptType ) : Ntp1Finalizer( "HZZlljj", dataset, leptType ) {
+
+  if( leptType!="ALL" && leptType!="MU" && leptType!="ELE" ) {
+    std::cout << "Lept type '" << leptType << "' currently not supported. Exiting." << std::endl;
+    exit(9176);
   }
 
+  leptType_ = leptType;
 
-  LEPT_TYPE = lept_type;
-
-  std::string infileName, treeName;
-
-
-  if( dataset=="DATA_EG_37X" ) {
-
-    addFile( "EG_Run2010A_Jul15thReReco_v1" );
-    addFile( "EG_Run2010A_Jul26thReReco_v1" );
-
-  } else if( dataset=="Electron_Run2010B" ) {
-
-    addFile( "Electron_Run2010B_PromptReco_v2_runs146240_146733_prod2" );
-    addFile( "Electron_Run2010B_PromptReco_v2_runs146733_147111" );
-
-  } else if( dataset=="Run2010B_runs146240_146733" ) {
-
-    addFile( "Electron_Run2010B_PromptReco_v2_runs146240_146733_prod2" );
-    addFile( "MU_Run2010B_PromptReco_v2_runs146240_146733" );
-
-  } else if( dataset=="Mu_upto147589" ) {
-
-    addFile("Mu_Run2010B_PromptReco_v2_runs146734_147589");
-    addFile("Mu_Run2010A-Sep17ReReco_v2_runs135821_144114");
-    addFile("Mu_Run2010B_PromptReco_v2_runs146240_146733");
-
-  } else if( dataset=="ELEMUCombined" ) {
-
-    addFile("Mu_Run2010B_PromptReco_v2_runs146734_147589");
-    addFile("Mu_Run2010A-Sep17ReReco_v2_runs135821_144114");
-    addFile("Mu_Run2010B_PromptReco_v2_runs146240_146733");
-    addFile("EG_upto146724");
-
-  } else if( dataset=="ZJets_alpgen" ) {
-
-    addFile( "Z0Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z1Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z1Jets_Pt100to300-alpgen_Spring10" );
-    addFile( "Z1Jets_Pt300to800-alpgen_Spring10" );
-    addFile( "Z1Jets_Pt800to1600-alpgen_Spring10" );
-    addFile( "Z2Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z2Jets_Pt100to300-alpgen_Spring10" );
-    addFile( "Z2Jets_Pt300to800-alpgen_Spring10" );
-    addFile( "Z2Jets_Pt800to1600-alpgen_Spring10" );
-    addFile( "Z3Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z3Jets_Pt100to300-alpgen_Spring10" );
-    addFile( "Z3Jets_Pt300to800-alpgen_Spring10" );
-    addFile( "Z3Jets_Pt800to1600-alpgen_Spring10" );
-    addFile( "Z4Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z4Jets_Pt100to300-alpgen_Spring10" );
-    addFile( "Z4Jets_Pt300to800-alpgen_Spring10" );
-    addFile( "Z4Jets_Pt800to1600-alpgen_Spring10" );
-    addFile( "Z5Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z5Jets_Pt100to300-alpgen_Spring10" );
-    addFile( "Z5Jets_Pt300to800-alpgen_Spring10" );
-    addFile( "Z5Jets_Pt800to1600-alpgen_Spring10" );
-
-  } else if( dataset=="Z1Jets_alpgen_Spring10" ) {
-
-    addFile( "Z1Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z1Jets_Pt100to300-alpgen_Spring10" );
-    addFile( "Z1Jets_Pt300to800-alpgen_Spring10" );
-    addFile( "Z1Jets_Pt800to1600-alpgen_Spring10" );
-
-  } else if( dataset=="Z2Jets_alpgen_Spring10" ) {
-
-    addFile( "Z2Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z2Jets_Pt100to300-alpgen_Spring10" );
-    addFile( "Z2Jets_Pt300to800-alpgen_Spring10" );
-    addFile( "Z2Jets_Pt800to1600-alpgen_Spring10" );
-
-  } else if( dataset=="Z3Jets_alpgen_Spring10" ) {
-
-    addFile( "Z3Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z3Jets_Pt100to300-alpgen_Spring10" );
-    addFile( "Z3Jets_Pt300to800-alpgen_Spring10" );
-    addFile( "Z3Jets_Pt800to1600-alpgen_Spring10" );
-
-  } else if( dataset=="Z4Jets_alpgen_Spring10" ) {
-
-    addFile( "Z4Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z4Jets_Pt100to300-alpgen_Spring10" );
-    addFile( "Z4Jets_Pt300to800-alpgen_Spring10" );
-    addFile( "Z4Jets_Pt800to1600-alpgen_Spring10" );
-
-  } else if( dataset=="Z5Jets_alpgen_Spring10" ) {
-
-    addFile( "Z5Jets_Pt0to100-alpgen_Spring10" );
-    addFile( "Z5Jets_Pt100to300-alpgen_Spring10" );
-    addFile( "Z5Jets_Pt300to800-alpgen_Spring10" );
-    addFile( "Z5Jets_Pt800to1600-alpgen_Spring10" );
-
-  } else if( dataset=="all" ) {
-
-    if( lept_type=="ELE" ) {
-      finalize( "EG_upto146724", lept_type );
-    } else if( lept_type=="MU") {
-      //finalize( "Mu_upto147589", lept_type);
-      finalize("Mu_upto147589", lept_type);
-    } else if( lept_type=="ALL" ) {
-      finalize("ELEMUCombined", lept_type);
-    }
-
-    finalize( "HZZ_qqll_gluonfusion_M130", lept_type );
-    finalize( "HZZ_qqll_gluonfusion_M150", lept_type );
-    finalize( "HZZ_qqll_gluonfusion_M200", lept_type );
-    finalize( "HZZ_qqll_gluonfusion_M300", lept_type );
-    finalize( "HZZ_qqll_gluonfusion_M400", lept_type );
-    finalize( "HZZ_qqll_gluonfusion_M500", lept_type );
-    finalize( "TTbar_2l_Spring10", lept_type );
-    finalize( "ZZ_Spring10", lept_type );
-    finalize( "ZJets_alpgen", lept_type );
-    finalize( "ZJets_madgraph", lept_type );
-    return;
-
-  } else {
-  
-    addFile( dataset );
-
-  }
+}
 
 
 
-  std::cout << "-> Total integrated luminosity: " << totalLumi << " ub-1." << std::endl;
+
+
+void Ntp1Finalizer_HZZlljj::finalize() {
+
+  if( outFile_==0 ) this->createOutputFile();
+
+
   TH1F* h1_totalLumi = new TH1F("totalLumi", "", 1, 0., 1.);
-  if( dataset=="Run2010B_runs146240_146733" )
+  if( dataset_=="Run2010B_runs146240_146733" )
     h1_totalLumi->SetBinContent(1, 1220000.);
   else
-    h1_totalLumi->SetBinContent(1, totalLumi);
+    h1_totalLumi->SetBinContent(1, totalLumi_);
 
   TH1F* h1_run = new TH1F("run", "", 15149, 132440, 147589);
 
@@ -322,6 +179,12 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
   h1_EleEleInvMass->Sumw2();
   TH1D* h1_massZjj = new TH1D("massZjj", "", nBins_invMass, 20., 200.);
   h1_massZjj->Sumw2();
+  TH1D* h1_massZjj_kinfit = new TH1D("massZjj_kinfit", "", nBins_invMass, 20., 200.);
+  h1_massZjj_kinfit->Sumw2();
+  TH1D* h1_massZjj_MCassoc = new TH1D("massZjj_MCassoc", "", nBins_invMass, 20., 200.);
+  h1_massZjj_MCassoc->Sumw2();
+  TH1D* h1_massZjj_MCassoc_kinfit = new TH1D("massZjj_MCassoc_kinfit", "", nBins_invMass, 20., 200.);
+  h1_massZjj_MCassoc_kinfit->Sumw2();
   TH1D* h1_massZjj_cutOnH = new TH1D("massZjj_cutOnH", "", nBins_invMass, 20., 200.);
   h1_massZjj_cutOnH->Sumw2();
   TH1D* h1_massZjj_Nm1 = new TH1D("massZjj_Nm1", "", nBins_invMass, 20., 200.);
@@ -341,15 +204,17 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
 
   TH1D* h1_ZZInvMass_loMass = new TH1D("ZZInvMass_loMass", "", nBins_invMass, 90., 190.);
   h1_ZZInvMass_loMass->Sumw2();
-  TH1D* h1_ZZInvMass_medMass = new TH1D("ZZInvMass_medMass", "", nBins_invMass, 100., 350.);
-  h1_ZZInvMass_medMass->Sumw2();
-  TH1D* h1_ZZInvMass_medMass_FINEBINNING = new TH1D("ZZInvMass_medMass_FINEBINNING", "", 20000, 100., 350.);
-  h1_ZZInvMass_medMass_FINEBINNING->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass = new TH1D("ZZInvMass_hiMass", "", nBins_invMass, 400., 600.);
-  h1_ZZInvMass_hiMass->Sumw2();
-
   TH1D* h1_ZZInvMass_loMass_ZjjTag = new TH1D("ZZInvMass_loMass_ZjjTag", "", nBins_invMass, 90., 190.);
   h1_ZZInvMass_loMass_ZjjTag->Sumw2();
+
+  TH1D* h1_ZZInvMass_hiMass = new TH1D("ZZInvMass_hiMass", "", nBins_invMass, 250., 600.);
+  h1_ZZInvMass_hiMass->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_kinfit = new TH1D("ZZInvMass_hiMass_kinfit", "", nBins_invMass, 250., 600.);
+  h1_ZZInvMass_hiMass_kinfit->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_MCassoc = new TH1D("ZZInvMass_hiMass_MCassoc", "", nBins_invMass, 250., 600.);
+  h1_ZZInvMass_hiMass_MCassoc->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_MCassoc_kinfit = new TH1D("ZZInvMass_hiMass_MCassoc_kinfit", "", nBins_invMass, 250., 600.);
+  h1_ZZInvMass_hiMass_MCassoc_kinfit->Sumw2();
   TH1D* h1_ZZInvMass_hiMass_ZjjTag = new TH1D("ZZInvMass_hiMass_ZjjTag", "", nBins_invMass, 250., 600.);
   h1_ZZInvMass_hiMass_ZjjTag->Sumw2();
   TH1D* h1_ZZInvMass_hiMass_fullSelection_tightOLD = new TH1D("ZZInvMass_hiMass_fullSelection_tightOLD", "", nBins_invMass, 250., 600.);
@@ -363,6 +228,10 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
   TH1D* h1_ZZInvMass_hiMass_fullSelection_loose = new TH1D("ZZInvMass_hiMass_fullSelection_loose", "", nBins_invMass, 250., 600.);
   h1_ZZInvMass_hiMass_fullSelection_loose->Sumw2();
 
+  TH1D* h1_ZZInvMass_medMass = new TH1D("ZZInvMass_medMass", "", nBins_invMass, 100., 350.);
+  h1_ZZInvMass_medMass->Sumw2();
+  TH1D* h1_ZZInvMass_medMass_FINEBINNING = new TH1D("ZZInvMass_medMass_FINEBINNING", "", 20000, 100., 350.);
+  h1_ZZInvMass_medMass_FINEBINNING->Sumw2();
   TH1D* h1_ZZInvMass_medMass_fullSelection = new TH1D("ZZInvMass_medMass_fullSelection", "", nBins_invMass, 100., 350.);
   h1_ZZInvMass_medMass_fullSelection->Sumw2();
   TH1D* h1_ZZInvMass_medMass_fullSelection_FINEBINNING = new TH1D("ZZInvMass_medMass_fullSelection_FINEBINNING", "", 20000, 100., 350.);
@@ -405,142 +274,141 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
   std::vector<TH1F*> h1_response_vs_pt_Rch70100 = getResponseHistos("response_Rch70100", 16, ptBins);
 
 
+
   Int_t run;
-  tree->SetBranchAddress("run", &run);
+  tree_->SetBranchAddress("run", &run);
   Int_t nvertex;
-  tree->SetBranchAddress("nvertex", &nvertex);
+  tree_->SetBranchAddress("nvertex", &nvertex);
   Int_t LS;
-  tree->SetBranchAddress("LS", &LS);
+  tree_->SetBranchAddress("LS", &LS);
   Int_t event;
-  tree->SetBranchAddress("event", &event);
+  tree_->SetBranchAddress("event", &event);
   Float_t eventWeight;
-  tree->SetBranchAddress("eventWeight", &eventWeight);
+  tree_->SetBranchAddress("eventWeight", &eventWeight);
 
   Float_t ptHat;
-  tree->SetBranchAddress("ptHat", &ptHat);
+  tree_->SetBranchAddress("ptHat", &ptHat);
 
   Float_t pfMet;
-  tree->SetBranchAddress("epfMet", &pfMet);
+  tree_->SetBranchAddress("epfMet", &pfMet);
   Float_t phiMet;
-  tree->SetBranchAddress("phipfMet", &phiMet);
+  tree_->SetBranchAddress("phipfMet", &phiMet);
 
 
   int leptType;
-  tree->SetBranchAddress("leptType", &leptType);
+  tree_->SetBranchAddress("leptType", &leptType);
 
   Float_t eLept1;
-  tree->SetBranchAddress("eLept1", &eLept1);
+  tree_->SetBranchAddress("eLept1", &eLept1);
   Float_t ptLept1;
-  tree->SetBranchAddress("ptLept1", &ptLept1);
+  tree_->SetBranchAddress("ptLept1", &ptLept1);
   Float_t etaLept1;
-  tree->SetBranchAddress("etaLept1", &etaLept1);
+  tree_->SetBranchAddress("etaLept1", &etaLept1);
   Float_t phiLept1;
-  tree->SetBranchAddress("phiLept1", &phiLept1);
+  tree_->SetBranchAddress("phiLept1", &phiLept1);
 
   Float_t eLept2;
-  tree->SetBranchAddress("eLept2", &eLept2);
+  tree_->SetBranchAddress("eLept2", &eLept2);
   Float_t ptLept2;
-  tree->SetBranchAddress("ptLept2", &ptLept2);
+  tree_->SetBranchAddress("ptLept2", &ptLept2);
   Float_t etaLept2;
-  tree->SetBranchAddress("etaLept2", &etaLept2);
+  tree_->SetBranchAddress("etaLept2", &etaLept2);
   Float_t phiLept2;
-  tree->SetBranchAddress("phiLept2", &phiLept2);
+  tree_->SetBranchAddress("phiLept2", &phiLept2);
 
   Float_t eJetLead;
-  tree->SetBranchAddress("eJetLead", &eJetLead);
+  tree_->SetBranchAddress("eJetLead", &eJetLead);
   Float_t ptJetLead;
-  tree->SetBranchAddress("ptJetLead", &ptJetLead);
+  tree_->SetBranchAddress("ptJetLead", &ptJetLead);
   Float_t etaJetLead;
-  tree->SetBranchAddress("etaJetLead", &etaJetLead);
+  tree_->SetBranchAddress("etaJetLead", &etaJetLead);
   Float_t phiJetLead;
-  tree->SetBranchAddress("phiJetLead", &phiJetLead);
+  tree_->SetBranchAddress("phiJetLead", &phiJetLead);
 
   Float_t eJetLead2;
-  tree->SetBranchAddress("eJetLead2", &eJetLead2);
+  tree_->SetBranchAddress("eJetLead2", &eJetLead2);
   Float_t ptJetLead2;
-  tree->SetBranchAddress("ptJetLead2", &ptJetLead2);
+  tree_->SetBranchAddress("ptJetLead2", &ptJetLead2);
   Float_t etaJetLead2;
-  tree->SetBranchAddress("etaJetLead2", &etaJetLead2);
+  tree_->SetBranchAddress("etaJetLead2", &etaJetLead2);
   Float_t phiJetLead2;
-  tree->SetBranchAddress("phiJetLead2", &phiJetLead2);
+  tree_->SetBranchAddress("phiJetLead2", &phiJetLead2);
 
   Float_t eJetLead3;
-  tree->SetBranchAddress("eJetLead3", &eJetLead3);
+  tree_->SetBranchAddress("eJetLead3", &eJetLead3);
   Float_t ptJetLead3;
-  tree->SetBranchAddress("ptJetLead3", &ptJetLead3);
+  tree_->SetBranchAddress("ptJetLead3", &ptJetLead3);
   Float_t etaJetLead3;
-  tree->SetBranchAddress("etaJetLead3", &etaJetLead3);
+  tree_->SetBranchAddress("etaJetLead3", &etaJetLead3);
   Float_t phiJetLead3;
-  tree->SetBranchAddress("phiJetLead3", &phiJetLead3);
+  tree_->SetBranchAddress("phiJetLead3", &phiJetLead3);
 
   Float_t eJetRecoil;
-  tree->SetBranchAddress("eJetRecoil", &eJetRecoil);
+  tree_->SetBranchAddress("eJetRecoil", &eJetRecoil);
   Float_t ptJetRecoil;
-  tree->SetBranchAddress("ptJetRecoil", &ptJetRecoil);
+  tree_->SetBranchAddress("ptJetRecoil", &ptJetRecoil);
   Float_t etaJetRecoil;
-  tree->SetBranchAddress("etaJetRecoil", &etaJetRecoil);
+  tree_->SetBranchAddress("etaJetRecoil", &etaJetRecoil);
   Float_t phiJetRecoil;
-  tree->SetBranchAddress("phiJetRecoil", &phiJetRecoil);
+  tree_->SetBranchAddress("phiJetRecoil", &phiJetRecoil);
 
   Int_t iJet1;
-  tree->SetBranchAddress("iJet1", &iJet1);
+  tree_->SetBranchAddress("iJet1", &iJet1);
   Float_t eJet1;
-  tree->SetBranchAddress("eJet1", &eJet1);
+  tree_->SetBranchAddress("eJet1", &eJet1);
   Float_t ptJet1;
-  tree->SetBranchAddress("ptJet1", &ptJet1);
+  tree_->SetBranchAddress("ptJet1", &ptJet1);
   Float_t etaJet1;
-  tree->SetBranchAddress("etaJet1", &etaJet1);
+  tree_->SetBranchAddress("etaJet1", &etaJet1);
   Float_t phiJet1;
-  tree->SetBranchAddress("phiJet1", &phiJet1);
+  tree_->SetBranchAddress("phiJet1", &phiJet1);
   Float_t eJetGen1;
-  tree->SetBranchAddress("eJetGen1", &eJetGen1);
+  tree_->SetBranchAddress("eJetGen1", &eJetGen1);
   Float_t ptJetGen1;
-  tree->SetBranchAddress("ptJetGen1", &ptJetGen1);
+  tree_->SetBranchAddress("ptJetGen1", &ptJetGen1);
   Float_t etaJetGen1;
-  tree->SetBranchAddress("etaJetGen1", &etaJetGen1);
+  tree_->SetBranchAddress("etaJetGen1", &etaJetGen1);
   Float_t phiJetGen1;
-  tree->SetBranchAddress("phiJetGen1", &phiJetGen1);
+  tree_->SetBranchAddress("phiJetGen1", &phiJetGen1);
   Float_t ePart1;
-  tree->SetBranchAddress("ePart1", &ePart1);
+  tree_->SetBranchAddress("ePart1", &ePart1);
   Float_t ptPart1;
-  tree->SetBranchAddress("ptPart1", &ptPart1);
+  tree_->SetBranchAddress("ptPart1", &ptPart1);
   Float_t etaPart1;
-  tree->SetBranchAddress("etaPart1", &etaPart1);
+  tree_->SetBranchAddress("etaPart1", &etaPart1);
   Float_t phiPart1;
-  tree->SetBranchAddress("phiPart1", &phiPart1);
+  tree_->SetBranchAddress("phiPart1", &phiPart1);
   Float_t eChargedHadronsJet1;
-  tree->SetBranchAddress("eChargedHadronsJet1", &eChargedHadronsJet1);
+  tree_->SetBranchAddress("eChargedHadronsJet1", &eChargedHadronsJet1);
 
   Int_t iJet2;
-  tree->SetBranchAddress("iJet2", &iJet2);
+  tree_->SetBranchAddress("iJet2", &iJet2);
   Float_t eJet2;
-  tree->SetBranchAddress("eJet2", &eJet2);
+  tree_->SetBranchAddress("eJet2", &eJet2);
   Float_t ptJet2;
-  tree->SetBranchAddress("ptJet2", &ptJet2);
+  tree_->SetBranchAddress("ptJet2", &ptJet2);
   Float_t etaJet2;
-  tree->SetBranchAddress("etaJet2", &etaJet2);
+  tree_->SetBranchAddress("etaJet2", &etaJet2);
   Float_t phiJet2;
-  tree->SetBranchAddress("phiJet2", &phiJet2);
+  tree_->SetBranchAddress("phiJet2", &phiJet2);
   Float_t eJetGen2;
-  tree->SetBranchAddress("eJetGen2", &eJetGen2);
+  tree_->SetBranchAddress("eJetGen2", &eJetGen2);
   Float_t ptJetGen2;
-  tree->SetBranchAddress("ptJetGen2", &ptJetGen2);
+  tree_->SetBranchAddress("ptJetGen2", &ptJetGen2);
   Float_t etaJetGen2;
-  tree->SetBranchAddress("etaJetGen2", &etaJetGen2);
+  tree_->SetBranchAddress("etaJetGen2", &etaJetGen2);
   Float_t phiJetGen2;
-  tree->SetBranchAddress("phiJetGen2", &phiJetGen2);
+  tree_->SetBranchAddress("phiJetGen2", &phiJetGen2);
   Float_t ePart2;
-  tree->SetBranchAddress("ePart2", &ePart2);
+  tree_->SetBranchAddress("ePart2", &ePart2);
   Float_t ptPart2;
-  tree->SetBranchAddress("ptPart2", &ptPart2);
+  tree_->SetBranchAddress("ptPart2", &ptPart2);
   Float_t etaPart2;
-  tree->SetBranchAddress("etaPart2", &etaPart2);
+  tree_->SetBranchAddress("etaPart2", &etaPart2);
   Float_t phiPart2;
-  tree->SetBranchAddress("phiPart2", &phiPart2);
+  tree_->SetBranchAddress("phiPart2", &phiPart2);
   Float_t eChargedHadronsJet2;
-  tree->SetBranchAddress("eChargedHadronsJet2", &eChargedHadronsJet2);
-
-
+  tree_->SetBranchAddress("eChargedHadronsJet2", &eChargedHadronsJet2);
 
   float nEvents400_pre=0.;
   float nEvents400_pre_leptPt=0.;
@@ -557,26 +425,30 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
   float nEvents500_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj=0.;
 
 
-  int nEntries = tree->GetEntries();
+  int nEntries = tree_->GetEntries();
   std::map< int, std::map<int, std::vector<int> > > run_lumi_ev_map;
 
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
 
     if( (iEntry % 100000)==0 ) std::cout << "Entry: " << iEntry << " /" << nEntries << std::endl;
 
-    tree->GetEntry(iEntry);
+    tree_->GetEntry(iEntry);
 
 
     if( eventWeight <= 0. ) eventWeight = 1.;
 
-    if( LEPT_TYPE!="ALL" ) {
-      if( LEPT_TYPE=="ELE" && leptType==0 ) continue;
-      if( LEPT_TYPE=="MU" && leptType==1 ) continue;
+    if( leptType_!="ALL" ) {
+      if( leptType_=="ELE" && leptType==0 ) continue;
+      if( leptType_=="MU" && leptType==1 ) continue;
     }
 
 
-    if( run>5 ) {
+
+    if( run>5 ) { //is not MC:
     
+
+      // remove duplicate events:
+
       std::map<int, std::map<int, std::vector<int> > >::iterator it;
 
       it = run_lumi_ev_map.find(run);
@@ -734,24 +606,6 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
     else if( Rch2 < 0.7 ) h1_massZjj_Rch2_5070->Fill( Zjj.M(), eventWeight );
     else h1_massZjj_Rch2_70100->Fill( Zjj.M(), eventWeight );
 
-    bool isSignal=false;
-    TString dataset_tstr(dataset);
-    TRegexp re("HZZ_qqll");
-    if( dataset_tstr.Contains(re) ) isSignal=true;
-    if( isSignal ) {
-      TLorentzVector part1, part2;
-      if( ptPart1!=0. ) part1.SetPtEtaPhiE( ptPart1, etaPart1, phiPart1, ePart1 );
-      else part1.SetPtEtaPhiE(0., 20., 0., 0.);
-      if( ptPart2!=0. ) part2.SetPtEtaPhiE( ptPart2, etaPart2, phiPart2, ePart2 );
-      else part2.SetPtEtaPhiE(0., 20., 0., 0.);
-
-      if( jet1.DeltaR(part1) < 0.25 && jet2.DeltaR(part2) < 0.25 ) {
-        if( Rch1>0.7 && Rch2>0.7 ) h1_massZjj_RchHIHI->Fill( Zjj.M(), eventWeight );
-        else if( Rch1>0.7 || Rch2>0.7 ) h1_massZjj_RchHILO->Fill( Zjj.M(), eventWeight );
-        else  h1_massZjj_RchLOLO->Fill( Zjj.M(), eventWeight );
-      }
-    } //if signal
-
 
     h1_deltaPhi_ZllRecoil->Fill( Zll.DeltaPhi(jetRecoil), eventWeight );
     h1_deltaPhi_ZjjRecoil->Fill( Zjj.DeltaPhi(jetRecoil), eventWeight );
@@ -830,19 +684,41 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
 //  m_chJet1(1,1) = ErrEta(chjet1.Et(), chjet1.Eta()); // eta
 //  m_chJet1(2,2) = ErrPhi(chjet1.Et(), chjet1.Eta()); // phi
 
-//  TMatrixD m_jet1(3,3);
-//  TMatrixD m_jet2(3,3);
+    TMatrixD m_jet1(3,3);
+    TMatrixD m_jet2(3,3);
 
-//  m_jet1(0,0) = ErrEt (jet1.Et(), jet1.Eta()); // et
-//  m_jet1(1,1) = ErrEta(jet1.Et(), jet1.Eta()); // eta
-//  m_jet1(2,2) = ErrPhi(jet1.Et(), jet1.Eta()); // phi
-//  m_jet2(0,0) = ErrEt (jet2.Et(), jet2.Eta()); // et
-//  m_jet2(1,1) = ErrEta(jet2.Et(), jet2.Eta()); // eta
-//  m_jet2(2,2) = ErrPhi(jet2.Et(), jet2.Eta()); // phi
+    m_jet1(0,0) = ErrEt (jet1.Et(), jet1.Eta()); // et
+    m_jet1(1,1) = ErrEta(jet1.Et(), jet1.Eta()); // eta
+    m_jet1(2,2) = ErrPhi(jet1.Et(), jet1.Eta()); // phi
+    m_jet2(0,0) = ErrEt (jet2.Et(), jet2.Eta()); // et
+    m_jet2(1,1) = ErrEta(jet2.Et(), jet2.Eta()); // eta
+    m_jet2(2,2) = ErrPhi(jet2.Et(), jet2.Eta()); // phi
 
-//  TFitParticleEtEtaPhi *fitJet1 = new TFitParticleEtEtaPhi( "Jet1", "Jet1", &jet1, &m_jet2 );
-//  TFitParticleEtEtaPhi *fitJet2 = new TFitParticleEtEtaPhi( "Jet2", "Jet2", &jet2, &m_jet2 );
+    TFitParticleEtEtaPhi *fitJet1 = new TFitParticleEtEtaPhi( "Jet1", "Jet1", &jet1, &m_jet2 );
+    TFitParticleEtEtaPhi *fitJet2 = new TFitParticleEtEtaPhi( "Jet2", "Jet2", &jet2, &m_jet2 );
     
+    TFitConstraintM *mCons1 = new TFitConstraintM( "ZMassConstraint", "ZMass-Constraint", 0, 0 , 91.19);
+    mCons1->addParticles1( fitJet1, fitJet2 );
+
+    TKinFitter* fitter = new TKinFitter("fitter", "fitter");
+    fitter->addMeasParticle( fitJet1 );
+    fitter->addMeasParticle( fitJet2 );
+    fitter->addConstraint( mCons1 );
+
+    //Set convergence criteria
+    fitter->setMaxNbIter( 30 );
+    fitter->setMaxDeltaS( 1e-2 );
+    fitter->setMaxF( 1e-1 );
+    fitter->setVerbosity(0);
+
+    //Perform the fit
+    fitter->fit();
+
+    TLorentzVector jet1_kinfit(*fitJet1->getCurr4Vec());
+    TLorentzVector jet2_kinfit(*fitJet2->getCurr4Vec());
+    TLorentzVector Zjj_kinfit = jet1_kinfit + jet2_kinfit;
+
+    TLorentzVector ZZ_kinfit = Zll + Zjj_kinfit;
 
 
     // ------------------------
@@ -909,9 +785,39 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
     h1_ZZInvMass_medMass->Fill( ZZ.M(), eventWeight );
     h1_ZZInvMass_medMass_FINEBINNING->Fill( ZZ.M(), eventWeight );
     h1_ZZInvMass_hiMass->Fill( ZZ.M(), eventWeight );
+    h1_ZZInvMass_hiMass_kinfit->Fill( ZZ_kinfit.M(), eventWeight );
+
 
 
     h1_massZjj->Fill( Zjj.M(), eventWeight );
+    h1_massZjj_kinfit->Fill( Zjj_kinfit.M(), eventWeight );
+
+    // MC association for signal only:
+    bool isSignal=false;
+    TString dataset_tstr(dataset_);
+    TRegexp re("HZZ_qqll");
+    if( dataset_tstr.Contains(re) ) isSignal=true;
+    if( isSignal ) {
+      TLorentzVector part1, part2;
+      if( ptPart1!=0. ) part1.SetPtEtaPhiE( ptPart1, etaPart1, phiPart1, ePart1 );
+      else part1.SetPtEtaPhiE(0., 20., 0., 0.);
+      if( ptPart2!=0. ) part2.SetPtEtaPhiE( ptPart2, etaPart2, phiPart2, ePart2 );
+      else part2.SetPtEtaPhiE(0., 20., 0., 0.);
+
+      if( jet1.DeltaR(part1) < 0.25 && jet2.DeltaR(part2) < 0.25 ) {
+        if( Rch1>0.7 && Rch2>0.7 ) h1_massZjj_RchHIHI->Fill( Zjj.M(), eventWeight );
+        else if( Rch1>0.7 || Rch2>0.7 ) h1_massZjj_RchHILO->Fill( Zjj.M(), eventWeight );
+        else  h1_massZjj_RchLOLO->Fill( Zjj.M(), eventWeight );
+
+        h1_massZjj_MCassoc->Fill( Zjj.M(), eventWeight );
+        h1_massZjj_MCassoc_kinfit->Fill( Zjj_kinfit.M(), eventWeight );
+
+        h1_ZZInvMass_hiMass_MCassoc->Fill( ZZ.M(), eventWeight );
+        h1_ZZInvMass_hiMass_MCassoc_kinfit->Fill( ZZ_kinfit.M(), eventWeight );
+      }
+    } //if signal
+
+
     h1_deltaRll->Fill( deltaRll, eventWeight );
     h1_deltaRll->Fill( deltaRjj, eventWeight );
     h1_deltaRZZ->Fill( deltaRjj, eventWeight );
@@ -964,12 +870,12 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
         h1_RchJet1->Fill( Rch1, eventWeight );
         h1_RchJet2->Fill( Rch2, eventWeight );
   ////if( Zjj.M() > 80. && Zjj.M() < 100 ) {
-    if( ZZ.M() > 190. && ZZ.M() < 200 ) {
-      std::cout << "Run: " << run << " LS: " << LS << " event: " << event << std::endl;
-      std::cout << " pt1: " << jet1.Pt() << " eta1: " << jet1.Eta() << " phi1: " << jet1.Phi() << " Rch1: " << Rch1 << std::endl;
-      std::cout << " pt2: " << jet2.Pt() << " eta2: " << jet2.Eta() << " phi2: " << jet2.Phi() << " Rch2: " << Rch2 << std::endl;
-      std::cout << " M(jj): " << Zjj.M() << std::endl;
-    }
+ // if( ZZ.M() > 190. && ZZ.M() < 200 ) {
+ //   std::cout << "Run: " << run << " LS: " << LS << " event: " << event << std::endl;
+ //   std::cout << " pt1: " << jet1.Pt() << " eta1: " << jet1.Eta() << " phi1: " << jet1.Phi() << " Rch1: " << Rch1 << std::endl;
+ //   std::cout << " pt2: " << jet2.Pt() << " eta2: " << jet2.Eta() << " phi2: " << jet2.Phi() << " Rch2: " << Rch2 << std::endl;
+ //   std::cout << " M(jj): " << Zjj.M() << std::endl;
+ // }
 
         if( ptJet1>45. && ptJet2>30. ) {
 
@@ -1104,10 +1010,10 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
   } //for entries
 
 
-  std::string ofs400_name = "effTable400_tight_"+dataset+".txt";
+  std::string ofs400_name = "effTable400_tight_"+dataset_+".txt";
   ofstream ofs400(ofs400_name.c_str());
   ofs400 << "DATASET\tPreselection\tLepton pt\tLepton mass\tjet pt\tdijet mass\tjet deltaR" << std::endl;
-  ofs400 << dataset << "\t"
+  ofs400 << dataset_ << "\t"
       << nEvents400_pre*1000. << "\t"
       << nEvents400_pre_leptPt*1000. << "\t"
       << nEvents400_pre_leptPt_leptMass*1000. << "\t"
@@ -1116,10 +1022,10 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
       << nEvents400_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj*1000. << "\t"
       << std::endl;
 
-  std::string ofs500_name = "effTable500_tight_"+dataset+".txt";
+  std::string ofs500_name = "effTable500_tight_"+dataset_+".txt";
   ofstream ofs500(ofs500_name.c_str());
   ofs500 << "DATASET\tPreselection\tLepton pt\tLepton mass\tjet pt\tdijet mass\tjet deltaR" << std::endl;
-  ofs500 << dataset << "\t"
+  ofs500 << dataset_ << "\t"
       << nEvents500_pre*1000. << "\t"
       << nEvents500_pre_leptPt*1000. << "\t"
       << nEvents500_pre_leptPt_leptMass*1000. << "\t"
@@ -1129,19 +1035,7 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
       << std::endl;
 
 
-  std::string outfileName;
-
-  if( DEBUG_ ) outfileName = "provaHZZlljj_"+dataset;
-  else {
-   if(dataset!="") outfileName = "HZZlljj_"+dataset;
-   else outfileName = "HZZlljj";
-  }
-
-  if( LEPT_TYPE!="ALL" ) outfileName += "_" + LEPT_TYPE;
-  outfileName += ".root";
-
-  TFile* outFile = new TFile(outfileName.c_str(), "RECREATE");
-  outFile->cd();
+  outFile_->cd();
 
   h1_totalLumi->Write();
   h1_run->Write();
@@ -1207,6 +1101,9 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
   h1_EleEleInvMass->Write();
 
   h1_massZjj->Write();
+  h1_massZjj_kinfit->Write();
+  h1_massZjj_MCassoc->Write();
+  h1_massZjj_MCassoc_kinfit->Write();
   h1_massZjj_cutOnH->Write();
   h1_massZjj_Nm1->Write();
   h1_massZjj_Rch2_050->Write();
@@ -1223,6 +1120,9 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
   h1_ZZInvMass_medMass->Write();
   h1_ZZInvMass_medMass_FINEBINNING->Write();
   h1_ZZInvMass_hiMass->Write();
+  h1_ZZInvMass_hiMass_kinfit->Write();
+  h1_ZZInvMass_hiMass_MCassoc->Write();
+  h1_ZZInvMass_hiMass_MCassoc_kinfit->Write();
 
   h1_ZZInvMass_loMass_ZjjTag->Write();
   h1_ZZInvMass_medMass->Write();
@@ -1252,285 +1152,40 @@ void finalize(const std::string& dataset, const std::string lept_type="ALL") {
 
   hp_ptJetGenMean->Write();
 
-  writeResponseHistos( outFile, h1_response_vs_pt, "response" );
-  writeResponseHistos( outFile, h1_response_vs_pt_Rch050, "response_Rch050" );
-  writeResponseHistos( outFile, h1_response_vs_pt_Rch5070, "response_Rch5070" );
-  writeResponseHistos( outFile, h1_response_vs_pt_Rch70100, "response_Rch70100" );
+  this->writeResponseHistos( outFile_, h1_response_vs_pt, "response" );
+  this->writeResponseHistos( outFile_, h1_response_vs_pt_Rch050, "response_Rch050" );
+  this->writeResponseHistos( outFile_, h1_response_vs_pt_Rch5070, "response_Rch5070" );
+  this->writeResponseHistos( outFile_, h1_response_vs_pt_Rch70100, "response_Rch70100" );
 
 
-  outFile->Close();
-
-  delete h1_ptLept1;
-  h1_ptLept1 = 0;
-  delete h1_ptLept2;
-  h1_ptLept2 = 0;
-  delete h1_ptLept2OverLept1;
-  h1_ptLept2OverLept1 = 0;
-
-  delete h1_ptJetLead;
-  h1_ptJetLead = 0;
-  delete h1_ptJetLead2;
-  h1_ptJetLead2 = 0;
-  delete h1_ptJetLead3;
-  h1_ptJetLead3 = 0;
-  delete h1_ptRecoilOverJet2;
-  h1_ptRecoilOverJet2 = 0;
-  delete h1_ptHiggsOverRecoil;
-  h1_ptHiggsOverRecoil = 0;
-  delete h1_deltaPhi_HiggsRecoil;
-  h1_deltaPhi_HiggsRecoil = 0;
-  delete h1_deltaPhi_ZllRecoil;
-  h1_deltaPhi_ZllRecoil = 0;
-  delete h1_deltaPhi_ZjjRecoil;
-  h1_deltaPhi_ZjjRecoil = 0;
-  delete h1_deltaR_ZjjRecoil;
-  h1_deltaR_ZjjRecoil = 0;
-  delete h1_ptFullSystem;
-  h1_ptFullSystem = 0;
-  delete h1_ptJetRecoil;
-  h1_ptJetRecoil = 0;
-
-  delete h1_iJet1;
-  h1_iJet1 = 0;
-  delete h1_iJet2;
-  h1_iJet2 = 0;
-  delete h1_iJet2MinusiJet1;
-  h1_iJet2MinusiJet1 = 0;
-  delete h1_iJet2PlusiJet1;
-  h1_iJet2PlusiJet1 = 0;
-  delete h1_ptJet1;
-  h1_ptJet1 = 0;
-  delete h1_ptJet2;
-  h1_ptJet2 = 0;
-  delete h1_ptJet2Rel;
-  h1_ptJet2Rel = 0;
-  delete h1_ptJet2OverLead;
-  h1_ptJet2OverLead = 0;
-  delete h1_ptJet2OverJet1;
-  h1_ptJet2OverJet1 = 0;
-  delete h1_etaJet1;
-  h1_etaJet1 = 0;
-  delete h1_etaJet2;
-  h1_etaJet2 = 0;
-  delete h1_RchJet1;
-  h1_RchJet1 = 0;
-  delete h1_RchJet2;
-  h1_RchJet2 = 0;
-  delete h1_massJet1;
-  h1_massJet1 = 0;
-  delete h1_massJet2;
-  h1_massJet2 = 0;
-
-  delete h2_etaPhi_map;
-  h2_etaPhi_map = 0;
-  delete h2_etaPhi_map_cutOnH;
-  h2_etaPhi_map_cutOnH = 0;
-
-  delete h1_deltaRll;
-  h1_deltaRll = 0;
-  delete h1_deltaRll_Nm1;
-  h1_deltaRll_Nm1 = 0;
-  delete h1_deltaRjj;
-  h1_deltaRjj = 0;
-  delete h1_deltaRjj_Nm1;
-  h1_deltaRjj_Nm1 = 0;
-  delete h1_ptHiggs;
-  h1_ptHiggs = 0;
-  delete h1_pzHiggs;
-  h1_pzHiggs = 0;
-  delete h1_etaHiggs;
-  h1_etaHiggs = 0;
-  delete h1_deltaRZZ;
-  h1_deltaRZZ = 0;
-  delete h1_deltaRZZ_Nm1;
-  h1_deltaRZZ_Nm1 = 0;
-  delete h1_deltaEtaZZ;
-  h1_deltaEtaZZ = 0;
-  delete h1_deltaEtaAbsZZ;
-  h1_deltaEtaAbsZZ = 0;
-  delete h1_deltaPhiZZ;
-  h1_deltaPhiZZ = 0;
-  delete h1_deltaPtZZ;
-  h1_deltaPtZZ = 0;
-
-  delete h1_pfMet;
-  h1_pfMet = 0;
-  delete h1_pfMet_minusHiggs;
-  h1_pfMet_minusHiggs = 0;
-
-  delete h1_totalLumi;
-  h1_totalLumi = 0;
-  delete h1_run;
-  h1_run = 0;
-
-  delete h1_ptZjj;
-  h1_ptZjj = 0;
-  delete h1_pzZjj;
-  h1_pzZjj = 0;
-  delete h1_ptZll;
-  h1_ptZll = 0;
-  delete h1_pzZll;
-  h1_pzZll = 0;
-
-  delete h1_massZll;
-  h1_massZll = 0;
-  delete h1_massZll_Nm1;
-  h1_massZll_Nm1 = 0;
-  delete h1_MuMuInvMass;
-  h1_MuMuInvMass = 0;
-  delete h1_EleEleInvMass;
-  h1_EleEleInvMass = 0;
-  delete h1_massZjj;
-  h1_massZjj = 0;
-  delete h1_massZjj_cutOnH;
-  h1_massZjj_cutOnH = 0;
-  delete h1_massZjj_Nm1;
-  h1_massZjj_Nm1 = 0;
-  delete h1_massZjj_Rch2_050;
-  h1_massZjj_Rch2_050 = 0;
-  delete h1_massZjj_Rch2_5070;
-  h1_massZjj_Rch2_5070 = 0;
-  delete h1_massZjj_Rch2_70100;
-  h1_massZjj_Rch2_70100 = 0;
-  delete h1_massZjj_RchHIHI;
-  h1_massZjj_RchHIHI = 0;
-  delete h1_massZjj_RchHILO;
-  h1_massZjj_RchHILO = 0;
-  delete h1_massZjj_RchLOLO;
-  h1_massZjj_RchLOLO = 0;
-  delete h1_ptHardestZ;
-  h1_ptHardestZ = 0;
-
-  delete h1_ZZInvMass_loMass;
-  h1_ZZInvMass_loMass = 0;
-  delete h1_ZZInvMass_medMass;
-  h1_ZZInvMass_medMass = 0;
-  delete h1_ZZInvMass_medMass_FINEBINNING;
-  h1_ZZInvMass_medMass_FINEBINNING = 0;
-  delete h1_ZZInvMass_hiMass;
-  h1_ZZInvMass_hiMass = 0;
-
-  delete h1_ZZInvMass_loMass_ZjjTag;
-  h1_ZZInvMass_loMass_ZjjTag = 0;
-  delete h1_ZZInvMass_hiMass_ZjjTag;
-  h1_ZZInvMass_hiMass_ZjjTag = 0;
-  delete h1_ZZInvMass_hiMass_fullSelection_tightOLD;
-  h1_ZZInvMass_hiMass_fullSelection_tightOLD = 0;
-  delete h1_ZZInvMass_hiMass_fullSelection_tight;
-  h1_ZZInvMass_hiMass_fullSelection_tight = 0;
-  delete h1_ZZInvMass_hiMass_fullSelection_medium;
-  h1_ZZInvMass_hiMass_fullSelection_medium = 0;
-  delete h1_ZZInvMass_hiMass_fullSelection_medium_ZjjMassConstr;
-  h1_ZZInvMass_hiMass_fullSelection_medium_ZjjMassConstr = 0;
-  delete h1_ZZInvMass_hiMass_fullSelection_loose;
-  h1_ZZInvMass_hiMass_fullSelection_loose = 0;
-
-  delete h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass;
-  h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass = 0;
-  delete h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_lept20;
-  h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_lept20 = 0;
-  delete h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_jetLead;
-  h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_jetLead = 0;
-  delete h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_etaJets;
-  h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_etaJets = 0;
-  delete h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_etaJets_Rch;
-  h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_etaJets_Rch = 0;
-  delete h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_jetPt;
-  h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_jetPt = 0;
-  delete h1_ZZInvMass_medMass_fullSelection_nokin;
-  h1_ZZInvMass_medMass_fullSelection_nokin = 0;
-  delete h1_ZZInvMass_medMass_fullSelection;
-  h1_ZZInvMass_medMass_fullSelection = 0;
-  delete h1_ZZInvMass_medMass_fullSelection_FINEBINNING;
-  h1_ZZInvMass_medMass_fullSelection_FINEBINNING = 0;
-  delete h1_ZZInvMass_medMass_fullSelection_tight;
-  h1_ZZInvMass_medMass_fullSelection_tight = 0;
-
-  delete h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag;
-  h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag = 0;
-  delete h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag;
-  h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag = 0;
-
-  delete h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40;
-  h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40 = 0;
-  delete h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40;
-  h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40 = 0;
-  delete tree;
-  tree = 0;
-
-
-  delete hp_ptJetGenMean;
-  hp_ptJetGenMean = 0;
-
-  int nHistos = h1_response_vs_pt.size();
-  for( unsigned iHisto=0; iHisto<nHistos; ++iHisto ) {
-    delete h1_response_vs_pt[nHistos-iHisto-1];
-    h1_response_vs_pt[nHistos-iHisto-1]=0;
-    delete h1_response_vs_pt_Rch050[nHistos-iHisto-1];
-    h1_response_vs_pt_Rch050[nHistos-iHisto-1]=0;
-    delete h1_response_vs_pt_Rch5070[nHistos-iHisto-1];
-    h1_response_vs_pt_Rch5070[nHistos-iHisto-1]=0;
-    delete h1_response_vs_pt_Rch70100[nHistos-iHisto-1];
-    h1_response_vs_pt_Rch70100[nHistos-iHisto-1]=0;
-  }
-
-
-  totalLumi = 0.;
+  outFile_->Close();
 
 }
 
 
-void addFile( const std::string& dataset ) {
 
-  std::string infileName = "HZZlljj_2ndLevelTreeW_" + dataset + ".root"; //the W is important: means that files have passed treatment (merging and weights)
-  std::string treeName = infileName +"/reducedTree";
-  tree->Add(treeName.c_str());
-  std::cout << "-> Added " << treeName << ". Tree has " << tree->GetEntries() << " entries." << std::endl;
-  TFile* infile = TFile::Open(infileName.c_str(), "READ");
-  TH1F* h1_lumi = (TH1F*)infile->Get("lumi");
-  if( h1_lumi!=0 ) {
-    totalLumi += h1_lumi->GetBinContent(1);
-    std::cout << "\tTotal lumi: " << totalLumi << " ub-1" << std::endl;
-  } else {
-    std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping." << std::endl;
+
+/*
+Double_t ErrEt(Float_t Et, Float_t Eta) {
+  Double_t InvPerr2, N, S, C, m;
+  if(fabs(Eta) < 1.4){
+    N = -0.5;
+    S = 0.5;
+    C = 0.;
+    m = 0.4;
   }
-  infile->Close();
-
-
-} //addFile
-
-
-std::vector<TH1F*> getResponseHistos(const std::string& name, int binArraySize, Double_t* ptBins) {
-
-  std::vector<TH1F*> returnVector;
-
-  for( unsigned i=0; i<(binArraySize-1); ++i ) {
-    char histoName[100];
-    sprintf( histoName, "%s_ptBin_%.0f_%.0f", name.c_str(), ptBins[i], ptBins[i+1]);
-    int nbins = 50;
-    float xmin = 0.5;
-    float xmax = 2.;
-    TH1F* newHisto = new TH1F(histoName, "", nbins, xmin, xmax);
-    newHisto->Sumw2();
-    returnVector.push_back(newHisto);
+  else{
+    N = 1.5;
+    S = 0.3;
+    C = 0.;
+    m = 0.5;
   }
+  InvPerr2 = (N * N * N)/fabs(N) + (S * S) * pow(Et,m-1.) + (C * C) * Et * Et;
+  return InvPerr2;
+}*/
 
-  return returnVector;
 
-}
-
-
-void writeResponseHistos( TFile* file, std::vector<TH1F*> h1_response, std::string dirName ) {
-
-  file->mkdir( dirName.c_str() );
-  file->cd( dirName.c_str() );
-
-  for( unsigned iHisto=0; iHisto<h1_response.size(); ++iHisto ) h1_response[iHisto]->Write();
-
-  file->cd();
-
-}
-
+/*
 Double_t ErrEt(Float_t Et, Float_t Eta) {
   Double_t InvPerr2, a, b, c;
   if(fabs(Eta) < 1.4){
@@ -1545,7 +1200,14 @@ Double_t ErrEt(Float_t Et, Float_t Eta) {
   }
   InvPerr2 = (a * a) + (b * b) * Et + (c * c) * Et * Et;
   return InvPerr2;
+}*/
+
+Double_t ErrEt(Float_t Et, Float_t Eta) {
+  Double_t InvPerr2 = (10. * 10.) * Et * Et;
+  return InvPerr2;
 }
+
+
 
 Double_t ErrEta(Float_t Et, Float_t Eta) {
   Double_t InvPerr2, a, b, c;
@@ -1577,5 +1239,26 @@ Double_t ErrPhi(Float_t Et, Float_t Eta) {
   }
   InvPerr2 = a/(Et * Et) + b/Et + c;
   return InvPerr2;
+}
+
+
+void print(TKinFitter *fitter)
+{
+  std::cout << "=============================================" << std ::endl;
+  std::cout << "-> Number of measured Particles  : " << fitter->nbMeasParticles() << std::endl;
+  std::cout << "-> Number of unmeasured particles: " << fitter->nbUnmeasParticles() << std::endl;
+  std::cout << "-> Number of constraints         : " << fitter->nbConstraints() << std::endl;
+  std::cout << "-> Number of degrees of freedom  : " << fitter->getNDF() << std::endl;
+  std::cout << "-> Number of parameters A        : " << fitter->getNParA() << std::endl;
+  std::cout << "-> Number of parameters B        : " << fitter->getNParB() << std::endl;
+  std::cout << "-> Maximum number of iterations  : " << fitter->getMaxNumberIter() << std::endl;
+  std::cout << "-> Maximum deltaS                : " << fitter->getMaxDeltaS() << std::endl;
+  std::cout << "-> Maximum F                     : " << fitter->getMaxF() << std::endl;
+  std::cout << "+++++++++++++++++++++++++++++++++++++++++++++" << std ::endl;
+  std::cout << "-> Status                        : " << fitter->getStatus() << std::endl;
+  std::cout << "-> Number of iterations          : " << fitter->getNbIter() << std::endl;
+  std::cout << "-> S                             : " << fitter->getS() << std::endl;
+  std::cout << "-> F                             : " << fitter->getF() << std::endl;
+  std::cout << "=============================================" << std ::endl;
 }
 
