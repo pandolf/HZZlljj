@@ -6,6 +6,7 @@
 #include "TRandom3.h"
 #include "TLorentzVector.h"
 
+#include "fitTools.h"
 
 double delta_phi(double phi1, double phi2) {
 
@@ -158,6 +159,13 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nHFHadronsJet1", &nHFHadronsJet1_, "nHFHadronsJet1_/I");
   reducedTree_->Branch("nHFEMJet1", &nHFEMJet1_, "nHFEMJet1_/I");
 
+  reducedTree_->Branch("nPFCand1",  &nPFCand1_,  "nPFCand1_/I");
+  reducedTree_->Branch("ePFCand1",  &ePFCand1_,  "ePFCand1_[nPFCand1_]/F");
+  reducedTree_->Branch("ptPFCand1",  &ptPFCand1_,  "ptPFCand1_[nPFCand1_]/F");
+  reducedTree_->Branch("etaPFCand1",  &etaPFCand1_,  "etaPFCand1_[nPFCand1_]/F");
+  reducedTree_->Branch("phiPFCand1",  &phiPFCand1_,  "phiPFCand1_[nPFCand1_]/F");
+  reducedTree_->Branch("particleTypePFCand1",  &particleTypePFCand1_,  "particleTypePFCand1_[nPFCand1_]/I");
+
   reducedTree_->Branch(   "eJetGen1",    &eJetGen1_,    "eJetGen1_/F");
   reducedTree_->Branch(  "ptJetGen1",   &ptJetGen1_,   "ptJetGen1_/F");
   reducedTree_->Branch( "etaJetGen1",  &etaJetGen1_,  "etaJetGen1_/F");
@@ -190,6 +198,13 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nElectronsJet2", &nElectronsJet2_, "nElectronsJet2_/I");
   reducedTree_->Branch("nHFHadronsJet2", &nHFHadronsJet2_, "nHFHadronsJet2_/I");
   reducedTree_->Branch("nHFEMJet2", &nHFEMJet2_, "nHFEMJet2_/I");
+
+  reducedTree_->Branch("nPFCand2",  &nPFCand2_,  "nPFCand2_/I");
+  reducedTree_->Branch("ePFCand2",  &ePFCand2_,  "ePFCand2_[nPFCand2_]/F");
+  reducedTree_->Branch("ptPFCand2",  &ptPFCand2_,  "ptPFCand2_[nPFCand2_]/F");
+  reducedTree_->Branch("etaPFCand2",  &etaPFCand2_,  "etaPFCand2_[nPFCand2_]/F");
+  reducedTree_->Branch("phiPFCand2",  &phiPFCand2_,  "phiPFCand2_[nPFCand2_]/F");
+  reducedTree_->Branch("particleTypePFCand2",  &particleTypePFCand2_,  "particleTypePFCand2_[nPFCand2_]/I");
 
   reducedTree_->Branch(   "eJetGen2",    &eJetGen2_,    "eJetGen2_/F");
   reducedTree_->Branch(  "ptJetGen2",   &ptJetGen2_,   "ptJetGen2_/F");
@@ -292,7 +307,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      run_ = runNumber;
      LS_ = lumiBlock;
      event_ = eventNumber;
-     ptHat_ = genPtHat;
      eventWeight_ = -1.; //default
 
      if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
@@ -302,6 +316,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      bool isMC = ( runNumber < 5 );
 
+
+     ptHat_ = (isMC) ? genPtHat : ptHat_;
 
      if( isMC ) 
        if( (ptHat_ > ptHatMax_) || (ptHat_ < ptHatMin_) ) continue;
@@ -696,25 +712,20 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      // first save 10 leading jets in event:
      std::vector<AnalysisJet> leadJets;
+     std::vector<int> leadJetsIndex; //index in the event collection (needed afterwards for PFCandidates)
 
      for( unsigned int iJet=0; iJet<nAK5PFJet && leadJets.size()<11; ++iJet ) {
 
        AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
 
        // far away from leptons:
-       Float_t deltaEta1 = thisJet.Eta() - etaLept1_;
-       Float_t deltaPhi1 = delta_phi((Float_t)thisJet.Phi(), phiLept1_);
-       Float_t deltaR1 = sqrt( deltaEta1*deltaEta1 + deltaPhi1*deltaPhi1 );
-       if( deltaR1 <= 0.25 ) continue;
-
-       Float_t deltaEta2 = thisJet.Eta() - etaLept2_;
-       Float_t deltaPhi2 = delta_phi((Float_t)thisJet.Phi(), phiLept2_);
-       Float_t deltaR2 = sqrt( deltaEta2*deltaEta2 + deltaPhi2*deltaPhi2 );
-       if( deltaR2 <= 0.25 ) continue;
+       if( thisJet.DeltaR( leptons[0] ) <= 0.5 ) continue;
+       if( thisJet.DeltaR( leptons[1] ) <= 0.5 ) continue;
 
        thisJet.eChargedHadrons = chargedHadronEnergyAK5PFJet[iJet];
 
        leadJets.push_back(thisJet);
+       leadJetsIndex.push_back(iJet);
 
      }
 
@@ -727,6 +738,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      float bestMass = 0.;
      int best_i=-1;
      int best_j=-1;
+     int best_i_eventIndex=-1;
+     int best_j_eventIndex=-1;
 
 
      for( unsigned iJet=0; iJet<leadJets.size(); ++iJet ) {
@@ -756,6 +769,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            bestMass = invMass;
            best_i = iJet;
            best_j = jJet;
+           best_i_eventIndex = leadJetsIndex[iJet];
+           best_j_eventIndex = leadJetsIndex[jJet];
          }
        } //for j
      } //for i
@@ -764,18 +779,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      //if( jets.size() < 2 ) continue;
      if( best_i==-1 || best_j==-1 ) continue; //means that less than 2 jets were found
 
-
-//   for( unsigned i=0; i<jets.size(); ++i ) {
-//     for( unsigned j=i+1; j<jets.size(); ++j ) {
-//       TLorentzVector dijet = jets[i]+jets[j];
-//       float invMass = dijet.M();
-//       if( (best_i==-1 && best_j==-1 ) || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
-//         bestMass = invMass;
-//         best_i = i;
-//         best_j = j;
-//       }
-//     } //jets j
-//   } //jets i
 
      
      // look for hardest jet in event which is not already picked as best-Z pair (but no pt cut):
@@ -839,7 +842,56 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      eChargedHadronsJet2_ = leadJets[best_j].eChargedHadrons;
     // ePhotonsJet2_ = leadJets[best_j];
 
-      
+
+     nPFCand1_=0;
+     nPFCand2_=0;
+   
+     // get the candidates for 2 candidate jets:
+     for( unsigned iCand=0; iCand<nPFCand; ++iCand) {
+
+       TLorentzVector thisCand( pxPFCand[iCand], pyPFCand[iCand], pzPFCand[iCand], energyPFCand[iCand] );
+
+       if( iPFJetPFCand[iCand]==best_i_eventIndex ) {
+
+         nPFCand1_++;
+
+         if( nPFCand1_>=100 ) {
+
+           std::cout << "More than 100 candidates found. Skipping" << std::endl;
+
+         } else {
+
+           ePFCand1_[nPFCand1_] = thisCand.Energy();
+           ptPFCand1_[nPFCand1_] = thisCand.Pt();
+           etaPFCand1_[nPFCand1_] = thisCand.Eta();
+           phiPFCand1_[nPFCand1_] = thisCand.Phi();
+           particleTypePFCand1_[nPFCand1_] = particleTypePFCand[iCand];
+
+         }
+
+       } // if best_i
+
+       if( iPFJetPFCand[iCand]==best_j_eventIndex ) {
+
+         nPFCand2_++;
+
+         if( nPFCand2_>=100 ) {
+
+           std::cout << "More than 100 candidates found. Skipping" << std::endl;
+
+         } else {
+
+           ePFCand2_[nPFCand2_] = thisCand.Energy();
+           ptPFCand2_[nPFCand2_] = thisCand.Pt();
+           etaPFCand2_[nPFCand2_] = thisCand.Eta();
+           phiPFCand2_[nPFCand2_] = thisCand.Phi();
+           particleTypePFCand2_[nPFCand2_] = particleTypePFCand[iCand];
+
+         }
+
+       } // if best_j
+
+     }  // for candidates
      
      std::vector<TLorentzVector> jets;
      jets.push_back(leadJets[best_i]);
