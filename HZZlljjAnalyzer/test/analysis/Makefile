@@ -6,14 +6,17 @@ ROOTFLAG = `${ROOTSYS}/bin/root-config --cflags --libs`
 merge_and_setWeights: merge_and_setWeights.cpp
 	$(CC) -Wall -o merge_and_setWeights merge_and_setWeights.cpp $(ROOTFLAG)
 
-do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o do2ndLevel_HZZlljj.cpp
-	$(CC) -Wall -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o $(ROOTFLAG)
+do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o fitTools.o do2ndLevel_HZZlljj.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o fitTools.o $(ROOTFLAG)
 
 finalize_HZZlljj: Ntp1Finalizer.o Ntp1Finalizer_HZZlljj.o finalize_HZZlljj.cpp fitTools.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_HZZlljj finalize_HZZlljj.cpp Ntp1Finalizer.o Ntp1Finalizer_HZZlljj.o fitTools.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o $(ROOTFLAG)
 
 do2ndLevel_JetStudies: Ntp1Analyzer.o Ntp1Analyzer_JetStudies.o 
 	$(CC) -Wall -o do2ndLevel_JetStudies do2ndLevel_JetStudies.cpp Ntp1Analyzer.o Ntp1Analyzer_JetStudies.o $(ROOTFLAG)
+
+do2ndLevel_ZGamma: Ntp1Analyzer.o Ntp1Analyzer_ZGamma.o 
+	$(CC) -Wall -o do2ndLevel_ZGamma do2ndLevel_ZGamma.cpp Ntp1Analyzer.o Ntp1Analyzer_ZGamma.o $(ROOTFLAG)
 
 drawHZZlljj: DrawBase.o fitTools.o drawHZZlljj.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawHZZlljj drawHZZlljj.cpp DrawBase.o fitTools.o $(ROOTFLAG)
@@ -39,10 +42,13 @@ Ntp1Analyzer.o: Ntp1Analyzer.C
 	$(CC) $(CFLAGS) Ntp1Analyzer.C $(ROOTFLAG)
 
 Ntp1Analyzer_HZZlljj.o: Ntp1Analyzer_HZZlljj.C
-	$(CC) $(CFLAGS) Ntp1Analyzer_HZZlljj.C $(ROOTFLAG)
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_HZZlljj.C $(ROOTFLAG)
 
 Ntp1Analyzer_JetStudies.o: Ntp1Analyzer_JetStudies.C
 	$(CC) $(CFLAGS) Ntp1Analyzer_JetStudies.C $(ROOTFLAG)
+
+Ntp1Analyzer_ZGamma.o: Ntp1Analyzer_ZGamma.C
+	$(CC) $(CFLAGS) Ntp1Analyzer_ZGamma.C $(ROOTFLAG)
 
 Ntp1Finalizer.o: Ntp1Finalizer.C
 	$(CC) $(CFLAGS) Ntp1Finalizer.C $(ROOTFLAG)
