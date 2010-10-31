@@ -853,8 +853,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        if( iPFJetPFCand[iCand]==best_i_eventIndex ) {
 
-         nPFCand1_++;
-
          if( nPFCand1_>=100 ) {
 
            std::cout << "More than 100 candidates found. Skipping" << std::endl;
@@ -867,13 +865,14 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            phiPFCand1_[nPFCand1_] = thisCand.Phi();
            particleTypePFCand1_[nPFCand1_] = particleTypePFCand[iCand];
 
+           nPFCand1_++;
+
          }
+
 
        } // if best_i
 
        if( iPFJetPFCand[iCand]==best_j_eventIndex ) {
-
-         nPFCand2_++;
 
          if( nPFCand2_>=100 ) {
 
@@ -886,6 +885,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            etaPFCand2_[nPFCand2_] = thisCand.Eta();
            phiPFCand2_[nPFCand2_] = thisCand.Phi();
            particleTypePFCand2_[nPFCand2_] = particleTypePFCand[iCand];
+
+           nPFCand2_++;
 
          }
 
