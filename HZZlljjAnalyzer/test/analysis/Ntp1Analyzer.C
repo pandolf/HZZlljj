@@ -47,18 +47,26 @@ void Ntp1Analyzer::LoadInput() {
    std::string treeDir;
    char treePath[400];
    TChain * chain = new TChain("ntp1","");
-   if( dataset_=="Wenu_Summer10_START37_V5_S09_v1" ) {
-     treeDir = "/cmsrm/pc21_2/pandolf/MC/Wenu_Summer10_START37_V5_S09_v1";
-   } else if( dataset_=="HZZ_qqll_gluonfusion_M200" ) {
-     treeDir = "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M200";
-   } else if( dataset_=="HZZ_qqll_gluonfusion_M300" ) {
-     treeDir = "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M300";
-   } else if( dataset_=="HZZ_qqll_gluonfusion_M400" ) {
-     treeDir = "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M400";
+// if( dataset_=="Wenu_Summer10_START37_V5_S09_v1" ) {
+//   treeDir = "/cmsrm/pc21_2/pandolf/MC/Wenu_Summer10_START37_V5_S09_v1";
+// } else if( dataset_=="HZZ_qqll_gluonfusion_M200" ) {
+//   treeDir = "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M200";
+// } else if( dataset_=="HZZ_qqll_gluonfusion_M300" ) {
+//   treeDir = "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M300";
+// } else if( dataset_=="HZZ_qqll_gluonfusion_M400" ) {
+//   treeDir = "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M400";
 // } else {
-   }
+// }
+
 
    sprintf(treePath, "%s/default_*.root/ntp1", treeDir.c_str());
+
+   if( dataset_=="HZZ_qqll_gluonfusion_M300_CANDS") {
+     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M300/default_CANDS_1000ev.root");
+   } else if( dataset_=="HZZ_qqll_gluonfusion_M400_CANDS") {
+     sprintf(treePath, "/cmsrm/pc21_2/pandolf/MC/HZZ_qqll_gluonfusion_M400/default_CANDS_1000ev.root");
+   } 
+
 
    int addInt = chain->Add(treePath);
 
@@ -73,6 +81,8 @@ void Ntp1Analyzer::LoadInput() {
      Init(tree);
      //load trigger mask:
      std::string firstFileName = treeDir + "/default_1.root";
+     if( dataset_=="HZZ_qqll_gluonfusion_M300_CANDS" || dataset_=="HZZ_qqll_gluonfusion_M400_CANDS" )
+       firstFileName = treePath;
      TFile* firstFile = TFile::Open( firstFileName.c_str(), "read" );
      this->LoadTrigger(firstFile);
    }
@@ -99,11 +109,11 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
      std::string treeName_str = singleLine_str + "/ntp1";
      std::cout << "-> Adding " << treeName_str << std::endl;
      chain->Add(treeName_str.c_str());
-     if( firstFile ) {
-       TFile* firstFile = TFile::Open(singleLine_str.c_str(), "read");
-       this->LoadTrigger(firstFile);
-       firstFile=false;
-     }
+  // if( firstFile ) {
+  //   TFile* firstFile = TFile::Open(singleLine_str.c_str(), "read");
+  //   this->LoadTrigger(firstFile);
+  //   firstFile=false;
+  // }
 
    }
    fclose(iff);
@@ -764,6 +774,20 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("vertexXGenMet", vertexXGenMet, &b_vertexXGenMet);
    fChain->SetBranchAddress("vertexYGenMet", vertexYGenMet, &b_vertexYGenMet);
    fChain->SetBranchAddress("vertexZGenMet", vertexZGenMet, &b_vertexZGenMet);
+   fChain->SetBranchAddress("nPFCand", &nPFCand, &b_nPFCand);
+   fChain->SetBranchAddress("chargePFCand", chargePFCand, &b_chargePFCand);
+   fChain->SetBranchAddress("energyPFCand", energyPFCand, &b_energyPFCand);
+   fChain->SetBranchAddress("thetaPFCand", thetaPFCand, &b_thetaPFCand);
+   fChain->SetBranchAddress("etaPFCand", etaPFCand, &b_etaPFCand);
+   fChain->SetBranchAddress("phiPFCand", phiPFCand, &b_phiPFCand);
+   fChain->SetBranchAddress("pxPFCand", pxPFCand, &b_pxPFCand);
+   fChain->SetBranchAddress("pyPFCand", pyPFCand, &b_pyPFCand);
+   fChain->SetBranchAddress("pzPFCand", pzPFCand, &b_pzPFCand);
+   fChain->SetBranchAddress("vertexXPFCand", vertexXPFCand, &b_vertexXPFCand);
+   fChain->SetBranchAddress("vertexYPFCand", vertexYPFCand, &b_vertexYPFCand);
+   fChain->SetBranchAddress("vertexZPFCand", vertexZPFCand, &b_vertexZPFCand);
+   fChain->SetBranchAddress("particleTypePFCand", particleTypePFCand, &b_particleTypePFCand);
+   fChain->SetBranchAddress("iPFJetPFCand", iPFJetPFCand, &b_iPFJetPFCand);
    fChain->SetBranchAddress("nAK5Jet", &nAK5Jet, &b_nAK5Jet);
    fChain->SetBranchAddress("chargeAK5Jet", chargeAK5Jet, &b_chargeAK5Jet);
    fChain->SetBranchAddress("energyAK5Jet", energyAK5Jet, &b_energyAK5Jet);
