@@ -44,7 +44,9 @@ void Ntp1Finalizer::createOutputFile() {
 
 
    if( flags_!="" )
-     outfileName = outfileName + "_" + flags_ + ".root";
+     outfileName = outfileName + "_" + flags_;
+
+   outfileName = outfileName + ".root";
 
    outFile_ = TFile::Open(outfileName.c_str(), "RECREATE");
    
