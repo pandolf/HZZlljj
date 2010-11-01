@@ -57,6 +57,8 @@ int main( int argc, char* argv[] ) {
 
   TH1F* h1_lumi = new TH1F("lumi", "", 1, 0., 1.);
   h1_lumi->SetBinContent(1, evlu.totalLumi);
+  TH1F* h1_nCounter = new TH1F("nCounter", "", 1, 0., 1.);
+  h1_nCounter->SetBinContent(1, evlu.nTotalEvents);
 
   TTree* newTree = tree->CloneTree(0);
   Float_t newWeight;
@@ -71,11 +73,14 @@ int main( int argc, char* argv[] ) {
 
     newWeight = weight;
 
+    if( dataset=="MU_Run2010B_PromptReco_v2_runs146240_146733" ) newWeight = 0.5;
+
     newTree->Fill();
 
   } //for entries
 
   h1_lumi->Write();
+  h1_nCounter->Write();
   newTree->Write();
   outfile->Write();
   outfile->Close();
@@ -122,6 +127,7 @@ EventsAndLumi addInput( const std::string& dataset ) {
   } else { //if file is good:
 
     char singleLine[500];
+    std::cout << "-> Correctly opened file: '" << infileName << "'." << std::endl;
 
     while( fscanf(iff, "%s", singleLine) !=EOF ) {
 
@@ -210,21 +216,30 @@ float getWeight( const std::string& dataset, int nEvents ) {
   } else if( dataset=="Z5Jets_Pt800to1600-alpgen_Spring10" ) {
     xSection = 0.000588*0.109; // sigma x filter efficiency
   } else if( dataset=="HZZ_qqll_gluonfusion_M130" ) {
-    xSection = 25.560*0.03913*0.0674*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+    xSection = 25.560*0.03913*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M150" ) {
-    xSection = 19.568*0.08234*0.0674*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+    xSection = 19.568*0.08234*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M200" ) {
-    xSection = 10.361*0.2537*0.0674*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+    //xSection = 10.361*0.2537*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+    xSection = 10.361*0.2537*0.10097*0.7*2.*40.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2 ENHANCE SIGMA BY 40!!!!!
   } else if( dataset=="HZZ_qqll_gluonfusion_M300" ) {
-    xSection = 5.2728*0.3053*0.0674*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+    xSection = 5.2728*0.3053*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M400" ) {
-    xSection = 4.8236*0.2664*0.0674*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+    xSection = 4.8236*0.2664*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M500" ) {
-    xSection = 2.1914*0.2602*0.0674*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+    xSection = 2.1914*0.2602*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM300_2l2j_FASTSIM" ) {
+    xSection = (5.2728+0.69730+0.012839+0.021755+0.040722)*0.3053*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM400_2l2j_FASTSIM" ) {
+    xSection = (4.8236+0.39567+0.0054837+0.0065911+0.012495)*0.2664*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM500_2l2j"|| dataset=="JHUgen_HiggsSM500_2l2j_FASTSIM" ) {
+    xSection = (2.1914+0.23884+0.0028020+0.0024635+0.0047436)*0.2602*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="TTbar_2l_Spring10" ) {
     xSection = 157.4*0.1080*2.; //NLO x BR(W->lnu) see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="ZZ_Spring10" ) {
     xSection = 5.9; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
+  } else if( dataset=="Zmumu_Pythia" ) {
+    xSection = 3048./3.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else {
     std::cout << std::endl;
     std::cout << "-> WARNING!! Dataset: '" << dataset << "' not present in database. Cross section unknown." << std::endl;
@@ -237,6 +252,8 @@ float getWeight( const std::string& dataset, int nEvents ) {
   if( dataset_tstr.Contains(re) ) {
     std::cout << "-> Scaling LO alpgen cross-section to NNLO." << std::endl;
     xSection*=(3048./2054.);
+    //trying to make them equal by hand:
+    xSection/=1.2;
   }
 
 
