@@ -517,6 +517,20 @@ public :
    Float_t         vertexXGenMet[1];   //[nGenMet]
    Float_t         vertexYGenMet[1];   //[nGenMet]
    Float_t         vertexZGenMet[1];   //[nGenMet]
+   Int_t           nPFCand;
+   Int_t           chargePFCand[430];   //[nPFCand]
+   Float_t         energyPFCand[430];   //[nPFCand]
+   Float_t         thetaPFCand[430];   //[nPFCand]
+   Float_t         etaPFCand[430];   //[nPFCand]
+   Float_t         phiPFCand[430];   //[nPFCand]
+   Float_t         pxPFCand[430];   //[nPFCand]
+   Float_t         pyPFCand[430];   //[nPFCand]
+   Float_t         pzPFCand[430];   //[nPFCand]
+   Float_t         vertexXPFCand[430];   //[nPFCand]
+   Float_t         vertexYPFCand[430];   //[nPFCand]
+   Float_t         vertexZPFCand[430];   //[nPFCand]
+   Int_t           particleTypePFCand[430];   //[nPFCand]
+   Int_t           iPFJetPFCand[430];   //[nPFCand]
    Int_t           nAK5Jet;
    Int_t           chargeAK5Jet[100];   //[nAK5Jet]
    Float_t         energyAK5Jet[100];   //[nAK5Jet]
@@ -1123,6 +1137,20 @@ public :
    TBranch        *b_vertexXGenMet;   //!
    TBranch        *b_vertexYGenMet;   //!
    TBranch        *b_vertexZGenMet;   //!
+   TBranch        *b_nPFCand;   //!
+   TBranch        *b_chargePFCand;   //!
+   TBranch        *b_energyPFCand;   //!
+   TBranch        *b_thetaPFCand;   //!
+   TBranch        *b_etaPFCand;   //!
+   TBranch        *b_phiPFCand;   //!
+   TBranch        *b_pxPFCand;   //!
+   TBranch        *b_pyPFCand;   //!
+   TBranch        *b_pzPFCand;   //!
+   TBranch        *b_vertexXPFCand;   //!
+   TBranch        *b_vertexYPFCand;   //!
+   TBranch        *b_vertexZPFCand;   //!
+   TBranch        *b_particleTypePFCand;   //!
+   TBranch        *b_iPFJetPFCand;   //!
    TBranch        *b_nAK5Jet;   //!
    TBranch        *b_chargeAK5Jet;   //!
    TBranch        *b_energyAK5Jet;   //!
