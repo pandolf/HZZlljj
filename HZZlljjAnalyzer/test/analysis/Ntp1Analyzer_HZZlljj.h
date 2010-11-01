@@ -85,11 +85,13 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t phiJetLead3_;
    Float_t etaJetLead3_;
 
-   Int_t  iJet1_;
-   Float_t  ptJet1_;
-   Float_t   eJet1_;
-   Float_t phiJet1_;
-   Float_t etaJet1_;
+   Int_t nPairs_;
+
+   Int_t  iJet1_[20];
+   Float_t  ptJet1_[20];
+   Float_t   eJet1_[20];
+   Float_t phiJet1_[20];
+   Float_t etaJet1_[20];
 
    Float_t   ptJetGen1_;
    Float_t    eJetGen1_;
@@ -102,21 +104,21 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t  phiPart1_;
    Float_t  etaPart1_;
 
-   Float_t  eChargedHadronsJet1_;
-   Float_t  ePhotonsJet1_;
-   Float_t  eNeutralHadronsJet1_;
-   Float_t  eMuonsJet1_;
-   Float_t  eElectronsJet1_;
-   Float_t  eHFHadronsJet1_;
-   Float_t  eHFEMJet1_;
+   Float_t  eChargedHadronsJet1_[20];
+   Float_t  ePhotonsJet1_[20];
+   Float_t  eNeutralHadronsJet1_[20];
+   Float_t  eMuonsJet1_[20];
+   Float_t  eElectronsJet1_[20];
+   Float_t  eHFHadronsJet1_[20];
+   Float_t  eHFEMJet1_[20];
 
-   Int_t  nChargedHadronsJet1_;
-   Int_t  nPhotonsJet1_;
-   Int_t  nNeutralHadronsJet1_;
-   Int_t  nMuonsJet1_;
-   Int_t  nElectronsJet1_;
-   Int_t  nHFHadronsJet1_;
-   Int_t  nHFEMJet1_;
+   Int_t  nChargedHadronsJet1_[20];
+   Int_t  nPhotonsJet1_[20];
+   Int_t  nNeutralHadronsJet1_[20];
+   Int_t  nMuonsJet1_[20];
+   Int_t  nElectronsJet1_[20];
+   Int_t  nHFHadronsJet1_[20];
+   Int_t  nHFEMJet1_[20];
 
    Int_t  nPFCand1_;
    Float_t  ePFCand1_[100];
@@ -125,11 +127,11 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t  phiPFCand1_[100];
    Int_t  particleTypePFCand1_[100];
 
-   Int_t  iJet2_;
-   Float_t  ptJet2_;
-   Float_t   eJet2_;
-   Float_t phiJet2_;
-   Float_t etaJet2_;
+   Int_t  iJet2_[20];
+   Float_t  ptJet2_[20];
+   Float_t   eJet2_[20];
+   Float_t phiJet2_[20];
+   Float_t etaJet2_[20];
 
    Float_t   ptJetGen2_;
    Float_t    eJetGen2_;
@@ -142,21 +144,21 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t  phiPart2_;
    Float_t  etaPart2_;
 
-   Float_t  eChargedHadronsJet2_;
-   Float_t  ePhotonsJet2_;
-   Float_t  eNeutralHadronsJet2_;
-   Float_t  eMuonsJet2_;
-   Float_t  eElectronsJet2_;
-   Float_t  eHFHadronsJet2_;
-   Float_t  eHFEMJet2_;
+   Float_t  eChargedHadronsJet2_[20];
+   Float_t  ePhotonsJet2_[20];
+   Float_t  eNeutralHadronsJet2_[20];
+   Float_t  eMuonsJet2_[20];
+   Float_t  eElectronsJet2_[20];
+   Float_t  eHFHadronsJet2_[20];
+   Float_t  eHFEMJet2_[20];
 
-   Int_t  nChargedHadronsJet2_;
-   Int_t  nPhotonsJet2_;
-   Int_t  nNeutralHadronsJet2_;
-   Int_t  nMuonsJet2_;
-   Int_t  nElectronsJet2_;
-   Int_t  nHFHadronsJet2_;
-   Int_t  nHFEMJet2_;
+   Int_t  nChargedHadronsJet2_[20];
+   Int_t  nPhotonsJet2_[20];
+   Int_t  nNeutralHadronsJet2_[20];
+   Int_t  nMuonsJet2_[20];
+   Int_t  nElectronsJet2_[20];
+   Int_t  nHFHadronsJet2_[20];
+   Int_t  nHFEMJet2_[20];
 
    Int_t  nPFCand2_;
    Float_t  ePFCand2_[100];

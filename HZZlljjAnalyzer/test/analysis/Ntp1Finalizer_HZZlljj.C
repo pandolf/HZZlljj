@@ -22,6 +22,9 @@ void print(TKinFitter *fitter);
 Double_t ErrEt(Float_t Et, Float_t Eta);
 Double_t ErrEta(Float_t Et, Float_t Eta);
 Double_t ErrPhi(Float_t Et, Float_t Eta);
+Double_t ErrEt(Float_t Et, Float_t Eta, int particleType);
+Double_t ErrEta(Float_t Et, Float_t Eta, int particleType);
+Double_t ErrPhi(Float_t Et, Float_t Eta, int particleType);
 
 
 
@@ -165,7 +168,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1F* h1_pfMet_minusHiggs = new TH1F("pfMet_minusHiggs", "", 50, 0., 120.);
   h1_pfMet_minusHiggs->Sumw2();
 
-  int nBins_invMass = 20;
+  int nBins_invMass = 40;
   float invMassMin = 0.;
   float invMassMax = 120.;
 
@@ -179,8 +182,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_EleEleInvMass->Sumw2();
   TH1D* h1_massZjj = new TH1D("massZjj", "", nBins_invMass, 20., 200.);
   h1_massZjj->Sumw2();
-  TH1D* h1_massZjj_kinfit = new TH1D("massZjj_kinfit", "", nBins_invMass, 20., 200.);
-  h1_massZjj_kinfit->Sumw2();
+  TH1D* h1_massZjj_kinfit_jets = new TH1D("massZjj_kinfit_jets", "", nBins_invMass, 20., 200.);
+  h1_massZjj_kinfit_jets->Sumw2();
   TH1D* h1_massZjj_MCassoc = new TH1D("massZjj_MCassoc", "", nBins_invMass, 20., 200.);
   h1_massZjj_MCassoc->Sumw2();
   TH1D* h1_massZjj_MCassoc_kinfit = new TH1D("massZjj_MCassoc_kinfit", "", nBins_invMass, 20., 200.);
@@ -207,26 +210,39 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_ZZInvMass_loMass_ZjjTag = new TH1D("ZZInvMass_loMass_ZjjTag", "", nBins_invMass, 90., 190.);
   h1_ZZInvMass_loMass_ZjjTag->Sumw2();
 
-  TH1D* h1_ZZInvMass_hiMass = new TH1D("ZZInvMass_hiMass", "", nBins_invMass, 250., 600.);
+  TH1D* h1_ZZInvMass_hiMass = new TH1D("ZZInvMass_hiMass", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_kinfit = new TH1D("ZZInvMass_hiMass_kinfit", "", nBins_invMass, 250., 600.);
-  h1_ZZInvMass_hiMass_kinfit->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_MCassoc = new TH1D("ZZInvMass_hiMass_MCassoc", "", nBins_invMass, 250., 600.);
+  TH1D* h1_ZZInvMass_hiMass_MCassoc_ZjjMassConstr = new TH1D("ZZInvMass_hiMass_MCassoc_ZjjMassConstr", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_MCassoc_ZjjMassConstr->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_kinfit_jets = new TH1D("ZZInvMass_hiMass_kinfit_jets", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_kinfit_jets->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_kinfit_cands = new TH1D("ZZInvMass_hiMass_kinfit_cands", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_kinfit_cands->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_MCassoc = new TH1D("ZZInvMass_hiMass_MCassoc", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_MCassoc->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_MCassoc_kinfit = new TH1D("ZZInvMass_hiMass_MCassoc_kinfit", "", nBins_invMass, 250., 600.);
-  h1_ZZInvMass_hiMass_MCassoc_kinfit->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_ZjjTag = new TH1D("ZZInvMass_hiMass_ZjjTag", "", nBins_invMass, 250., 600.);
+  TH1D* h1_ZZInvMass_hiMass_MCassoc_kinfit_jets = new TH1D("ZZInvMass_hiMass_MCassoc_kinfit_jets", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_MCassoc_kinfit_jets->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_MCassoc_kinfit_cands = new TH1D("ZZInvMass_hiMass_MCassoc_kinfit_cands", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_MCassoc_kinfit_cands->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_ZjjTag = new TH1D("ZZInvMass_hiMass_ZjjTag", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_ZjjTag->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_fullSelection_tightOLD = new TH1D("ZZInvMass_hiMass_fullSelection_tightOLD", "", nBins_invMass, 250., 600.);
+  TH1D* h1_ZZInvMass_hiMass_fullSelection_tightOLD = new TH1D("ZZInvMass_hiMass_fullSelection_tightOLD", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_fullSelection_tightOLD->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_fullSelection_tight = new TH1D("ZZInvMass_hiMass_fullSelection_tight", "", nBins_invMass, 250., 600.);
+  TH1D* h1_ZZInvMass_hiMass_fullSelection_tight = new TH1D("ZZInvMass_hiMass_fullSelection_tight", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_fullSelection_tight->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_fullSelection_medium = new TH1D("ZZInvMass_hiMass_fullSelection_medium", "", nBins_invMass, 250., 600.);
+  TH1D* h1_ZZInvMass_hiMass_fullSelection_tight_lead = new TH1D("ZZInvMass_hiMass_fullSelection_tight_lead", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_fullSelection_tight_lead->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_fullSelection_medium = new TH1D("ZZInvMass_hiMass_fullSelection_medium", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_fullSelection_medium->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_fullSelection_medium_ZjjMassConstr = new TH1D("ZZInvMass_hiMass_fullSelection_medium_ZjjMassConstr", "", nBins_invMass, 250., 600.);
+  TH1D* h1_ZZInvMass_hiMass_fullSelection_medium_ZjjMassConstr = new TH1D("ZZInvMass_hiMass_fullSelection_medium_ZjjMassConstr", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_fullSelection_medium_ZjjMassConstr->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_fullSelection_loose = new TH1D("ZZInvMass_hiMass_fullSelection_loose", "", nBins_invMass, 250., 600.);
+  TH1D* h1_ZZInvMass_hiMass_fullSelection_loose = new TH1D("ZZInvMass_hiMass_fullSelection_loose", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_fullSelection_loose->Sumw2();
+
+  TH1D* h1_ZZInvMass_hiMass_JHU = new TH1D("ZZInvMass_hiMass_JHU", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_JHU->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_RomeUCSD = new TH1D("ZZInvMass_hiMass_RomeUCSD", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_RomeUCSD->Sumw2();
 
   TH1D* h1_ZZInvMass_medMass = new TH1D("ZZInvMass_medMass", "", nBins_invMass, 100., 350.);
   h1_ZZInvMass_medMass->Sumw2();
@@ -255,12 +271,12 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag = new TH1D("ZZInvMass_loMass_ZjjTag_ZllAntiTag", "", nBins_invMass, 90., 190.);
   h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag = new TH1D("ZZInvMass_hiMass_ZjjTag_ZllAntiTag", "", nBins_invMass, 250., 600.);
+  TH1D* h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag = new TH1D("ZZInvMass_hiMass_ZjjTag_ZllAntiTag", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag->Sumw2();
 
   TH1D* h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40 = new TH1D("ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40", "", nBins_invMass, 90., 190.);
   h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40 = new TH1D("ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40", "", nBins_invMass, 250., 600.);
+  TH1D* h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40 = new TH1D("ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40->Sumw2();
 
 
@@ -352,16 +368,34 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   Float_t phiJetRecoil;
   tree_->SetBranchAddress("phiJetRecoil", &phiJetRecoil);
 
-  Int_t iJet1;
-  tree_->SetBranchAddress("iJet1", &iJet1);
-  Float_t eJet1;
-  tree_->SetBranchAddress("eJet1", &eJet1);
-  Float_t ptJet1;
-  tree_->SetBranchAddress("ptJet1", &ptJet1);
-  Float_t etaJet1;
-  tree_->SetBranchAddress("etaJet1", &etaJet1);
-  Float_t phiJet1;
-  tree_->SetBranchAddress("phiJet1", &phiJet1);
+
+  Int_t nPairs;
+  tree_->SetBranchAddress("nPairs", &nPairs);
+
+//Int_t iJet1;
+//tree_->SetBranchAddress("iJet1", &iJet1);
+//Float_t eJet1;
+//tree_->SetBranchAddress("eJet1", &eJet1);
+//Float_t ptJet1;
+//tree_->SetBranchAddress("ptJet1", &ptJet1);
+//Float_t etaJet1;
+//tree_->SetBranchAddress("etaJet1", &etaJet1);
+//Float_t phiJet1;
+//tree_->SetBranchAddress("phiJet1", &phiJet1);
+//Float_t eChargedHadronsJet1;
+//tree_->SetBranchAddress("eChargedHadronsJet1", &eChargedHadronsJet1);
+  Int_t iJet1[50];
+  tree_->SetBranchAddress("iJet1", iJet1);
+  Float_t eJet1[50];
+  tree_->SetBranchAddress("eJet1", eJet1);
+  Float_t ptJet1[50];
+  tree_->SetBranchAddress("ptJet1", ptJet1);
+  Float_t etaJet1[50];
+  tree_->SetBranchAddress("etaJet1", etaJet1);
+  Float_t phiJet1[50];
+  tree_->SetBranchAddress("phiJet1", phiJet1);
+  Float_t eChargedHadronsJet1[50];
+  tree_->SetBranchAddress("eChargedHadronsJet1", eChargedHadronsJet1);
   Float_t eJetGen1;
   tree_->SetBranchAddress("eJetGen1", &eJetGen1);
   Float_t ptJetGen1;
@@ -378,19 +412,32 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("etaPart1", &etaPart1);
   Float_t phiPart1;
   tree_->SetBranchAddress("phiPart1", &phiPart1);
-  Float_t eChargedHadronsJet1;
-  tree_->SetBranchAddress("eChargedHadronsJet1", &eChargedHadronsJet1);
 
-  Int_t iJet2;
-  tree_->SetBranchAddress("iJet2", &iJet2);
-  Float_t eJet2;
-  tree_->SetBranchAddress("eJet2", &eJet2);
-  Float_t ptJet2;
-  tree_->SetBranchAddress("ptJet2", &ptJet2);
-  Float_t etaJet2;
-  tree_->SetBranchAddress("etaJet2", &etaJet2);
-  Float_t phiJet2;
-  tree_->SetBranchAddress("phiJet2", &phiJet2);
+  Int_t nPFCand1;
+  tree_->SetBranchAddress("nPFCand1", &nPFCand1);
+  Float_t ePFCand1[100];
+  tree_->SetBranchAddress("ePFCand1", ePFCand1);
+  Float_t ptPFCand1[100];
+  tree_->SetBranchAddress("ptPFCand1", ptPFCand1);
+  Float_t etaPFCand1[100];
+  tree_->SetBranchAddress("etaPFCand1", etaPFCand1);
+  Float_t phiPFCand1[100];
+  tree_->SetBranchAddress("phiPFCand1", phiPFCand1);
+  Int_t particleTypePFCand1[100];
+  tree_->SetBranchAddress("particleTypePFCand1", particleTypePFCand1);
+
+  Int_t iJet2[50];
+  tree_->SetBranchAddress("iJet2", iJet2);
+  Float_t eJet2[50];
+  tree_->SetBranchAddress("eJet2", eJet2);
+  Float_t ptJet2[50];
+  tree_->SetBranchAddress("ptJet2", ptJet2);
+  Float_t etaJet2[50];
+  tree_->SetBranchAddress("etaJet2", etaJet2);
+  Float_t phiJet2[50];
+  tree_->SetBranchAddress("phiJet2", phiJet2);
+  Float_t eChargedHadronsJet2[50];
+  tree_->SetBranchAddress("eChargedHadronsJet2", eChargedHadronsJet2);
   Float_t eJetGen2;
   tree_->SetBranchAddress("eJetGen2", &eJetGen2);
   Float_t ptJetGen2;
@@ -407,8 +454,20 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("etaPart2", &etaPart2);
   Float_t phiPart2;
   tree_->SetBranchAddress("phiPart2", &phiPart2);
-  Float_t eChargedHadronsJet2;
-  tree_->SetBranchAddress("eChargedHadronsJet2", &eChargedHadronsJet2);
+
+  Int_t nPFCand2;
+  tree_->SetBranchAddress("nPFCand2", &nPFCand2);
+  Float_t ePFCand2[100];
+  tree_->SetBranchAddress("ePFCand2", ePFCand2);
+  Float_t ptPFCand2[100];
+  tree_->SetBranchAddress("ptPFCand2", ptPFCand2);
+  Float_t etaPFCand2[100];
+  tree_->SetBranchAddress("etaPFCand2", etaPFCand2);
+  Float_t phiPFCand2[100];
+  tree_->SetBranchAddress("phiPFCand2", phiPFCand2);
+  Int_t particleTypePFCand2[100];
+  tree_->SetBranchAddress("particleTypePFCand2", particleTypePFCand2);
+
 
   float nEvents400_pre=0.;
   float nEvents400_pre_leptPt=0.;
@@ -506,8 +565,94 @@ void Ntp1Finalizer_HZZlljj::finalize() {
     lept1.SetPtEtaPhiE( ptLept1, etaLept1, phiLept1, eLept1 );
     lept2.SetPtEtaPhiE( ptLept2, etaLept2, phiLept2, eLept2 );
 
-    if( lept1.Pt() < 15. || lept2.Pt()<15. ) continue;
+    TLorentzVector diLepton = lept1+lept2;
 
+    TLorentzVector jetLead;
+    jetLead.SetPtEtaPhiE( ptJetLead, etaJetLead, phiJetLead, eJetLead );
+    TLorentzVector jetLead2;
+    jetLead2.SetPtEtaPhiE( ptJetLead2, etaJetLead2, phiJetLead2, eJetLead2 );
+
+    TLorentzVector jetRecoil;
+    jetRecoil.SetPtEtaPhiE( ptJetRecoil, etaJetRecoil, phiJetRecoil, eJetRecoil );
+
+  //TLorentzVector jet1, jet2;
+  //jet1.SetPtEtaPhiE( ptJet1, etaJet1, phiJet1, eJet1 );
+  //jet2.SetPtEtaPhiE( ptJet2, etaJet2, phiJet2, eJet2 );
+
+
+    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_looseSelection;
+    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_tightSelection;
+
+    for( unsigned iJetPair=0; iJetPair<nPairs; ++iJetPair ) {
+
+      TLorentzVector jet1, jet2;
+      jet1.SetPtEtaPhiE( ptJet1[iJetPair], etaJet1[iJetPair], phiJet1[iJetPair], eJet1[iJetPair]);
+      jet2.SetPtEtaPhiE( ptJet2[iJetPair], etaJet2[iJetPair], phiJet2[iJetPair], eJet2[iJetPair]);
+
+      TLorentzVector diJet = jet1 + jet2;
+
+      if( jet1.Pt()>40. && jet2.Pt()>30. && fabs(jet1.Eta())<2.5 && fabs(jet2.Eta())<2.5 && diJet.M()>70. && diJet.M()<120. )
+        jetPairs_looseSelection.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+
+      if( jet1.Pt()>100. && jet2.Pt()>50. && jet1.DeltaR(jet2)<1.5 && diJet.M()>80. && diJet.M()<105. )
+        jetPairs_tightSelection.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+
+    }
+
+
+    if( jetPairs_looseSelection.size()>0. ) {
+
+      // now look for best Z mass jet pair:
+      float Zmass = 91.19;
+      float bestMass = 0.;
+      int bestPair=-1;
+      
+      for( unsigned iPair=0; iPair<jetPairs_looseSelection.size(); ++iPair ) {
+
+        TLorentzVector dijet = jetPairs_looseSelection[iPair].first + jetPairs_looseSelection[iPair].second;
+        float invMass = dijet.M();
+        if( bestPair==-1 || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
+          bestMass = invMass;
+          bestPair = iPair;
+        }
+
+      } //for pairs
+
+      TLorentzVector bestZDiJet = jetPairs_looseSelection[bestPair].first + jetPairs_looseSelection[bestPair].second;
+      TLorentzVector ZZ_JHU = diLepton + bestZDiJet; 
+  
+      if( lept1.Pt()>10. && lept2.Pt()>10. && diLepton.M() > 70. && diLepton.M() < 110. )
+        h1_ZZInvMass_hiMass_JHU->Fill(ZZ_JHU.M(), eventWeight);
+
+    }
+
+    if( jetPairs_tightSelection.size()>0. ) {
+
+      // now look for best Z mass jet pair:
+      float Zmass = 91.19;
+      float bestMass = 0.;
+      int bestPair=-1;
+      
+      for( unsigned iPair=0; iPair<jetPairs_tightSelection.size(); ++iPair ) {
+
+        TLorentzVector dijet = jetPairs_tightSelection[iPair].first + jetPairs_tightSelection[iPair].second;
+        float invMass = dijet.M();
+        if( bestPair==-1 || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
+          bestMass = invMass;
+          bestPair = iPair;
+        }
+
+      } //for pairs
+
+      TLorentzVector bestZDiJet = jetPairs_tightSelection[bestPair].first + jetPairs_tightSelection[bestPair].second;
+      TLorentzVector ZZ_RomeUCSD = diLepton + bestZDiJet; 
+  
+      if( lept1.Pt()>100. && lept2.Pt()>50. && diLepton.M() > 86. && diLepton.M() < 96. )
+        h1_ZZInvMass_hiMass_RomeUCSD->Fill(ZZ_RomeUCSD.M(), eventWeight);
+
+    }
+
+/*
     h1_ptLept1->Fill( lept1.Pt(), eventWeight );
     h1_ptLept2->Fill( lept2.Pt(), eventWeight );
 
@@ -522,24 +667,13 @@ void Ntp1Finalizer_HZZlljj::finalize() {
     h1_pzZll->Fill( Zll.Pz(), eventWeight );
 
 
-    TLorentzVector jetLead;
-    jetLead.SetPtEtaPhiE( ptJetLead, etaJetLead, phiJetLead, eJetLead );
-    TLorentzVector jetLead2;
-    jetLead2.SetPtEtaPhiE( ptJetLead2, etaJetLead2, phiJetLead2, eJetLead2 );
-
-    TLorentzVector jetRecoil;
-    jetRecoil.SetPtEtaPhiE( ptJetRecoil, etaJetRecoil, phiJetRecoil, eJetRecoil );
-
-    TLorentzVector jet1, jet2;
-    jet1.SetPtEtaPhiE( ptJet1, etaJet1, phiJet1, eJet1 );
-    jet2.SetPtEtaPhiE( ptJet2, etaJet2, phiJet2, eJet2 );
 
     bool jet1_is_lead = false;
     if( iJet1==0 ) jet1_is_lead=true;
     float Rch1 = eChargedHadronsJet1/eJet1;
     float Rch2 = eChargedHadronsJet2/eJet2;
-    if( fabs(jet1.Eta())<2.5 && Rch1<0.1 ) continue;
-    if( fabs(jet2.Eta())<2.5 && Rch2<0.1 ) continue;
+  //if( fabs(jet1.Eta())<2.5 && Rch1<0.1 ) continue;
+  //if( fabs(jet2.Eta())<2.5 && Rch2<0.1 ) continue;
   //float Rnh1 = eNeutralHadronsJet1/eJet1;
   //float Rnh2 = eNeutralHadronsJet2/eJet2;
   //float Rgamma1 = ePhotonsJet1/eJet1;
@@ -607,6 +741,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
     else h1_massZjj_Rch2_70100->Fill( Zjj.M(), eventWeight );
 
 
+    TLorentzVector Zjj_lead = jetLead + jetLead2;
+
     h1_deltaPhi_ZllRecoil->Fill( Zll.DeltaPhi(jetRecoil), eventWeight );
     h1_deltaPhi_ZjjRecoil->Fill( Zjj.DeltaPhi(jetRecoil), eventWeight );
     h1_deltaR_ZjjRecoil->Fill( Zjj.DeltaR(jetRecoil), eventWeight );
@@ -641,6 +777,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
     TLorentzVector ZZ = Zll + Zjj;
     TLorentzVector ZZ_constr = Zll + Zjj_constr;
+    TLorentzVector ZZ_lead = Zjj_lead + Zll;
 
     float ptHiggs = ZZ.Pt();
     h1_ptHiggs->Fill( ptHiggs, eventWeight );
@@ -694,32 +831,145 @@ void Ntp1Finalizer_HZZlljj::finalize() {
     m_jet2(1,1) = ErrEta(jet2.Et(), jet2.Eta()); // eta
     m_jet2(2,2) = ErrPhi(jet2.Et(), jet2.Eta()); // phi
 
-    TFitParticleEtEtaPhi *fitJet1 = new TFitParticleEtEtaPhi( "Jet1", "Jet1", &jet1, &m_jet2 );
+    TFitParticleEtEtaPhi *fitJet1 = new TFitParticleEtEtaPhi( "Jet1", "Jet1", &jet1, &m_jet1 );
     TFitParticleEtEtaPhi *fitJet2 = new TFitParticleEtEtaPhi( "Jet2", "Jet2", &jet2, &m_jet2 );
     
-    TFitConstraintM *mCons1 = new TFitConstraintM( "ZMassConstraint", "ZMass-Constraint", 0, 0 , 91.19);
-    mCons1->addParticles1( fitJet1, fitJet2 );
+    TFitConstraintM *mCons_jets = new TFitConstraintM( "ZMassConstraint_jets", "ZMass-Constraint", 0, 0 , 91.19);
+    mCons_jets->addParticles1( fitJet1, fitJet2 );
 
-    TKinFitter* fitter = new TKinFitter("fitter", "fitter");
-    fitter->addMeasParticle( fitJet1 );
-    fitter->addMeasParticle( fitJet2 );
-    fitter->addConstraint( mCons1 );
+    TKinFitter* fitter_jets = new TKinFitter("fitter_jets", "fitter_jets");
+    fitter_jets->addMeasParticle( fitJet1 );
+    fitter_jets->addMeasParticle( fitJet2 );
+    fitter_jets->addConstraint( mCons_jets );
 
     //Set convergence criteria
-    fitter->setMaxNbIter( 30 );
-    fitter->setMaxDeltaS( 1e-2 );
-    fitter->setMaxF( 1e-1 );
-    fitter->setVerbosity(0);
+    fitter_jets->setMaxNbIter( 30 );
+    fitter_jets->setMaxDeltaS( 1e-2 );
+    fitter_jets->setMaxF( 1e-1 );
+    fitter_jets->setVerbosity(0);
 
     //Perform the fit
-    fitter->fit();
+    fitter_jets->fit();
+
+
 
     TLorentzVector jet1_kinfit(*fitJet1->getCurr4Vec());
     TLorentzVector jet2_kinfit(*fitJet2->getCurr4Vec());
-    TLorentzVector Zjj_kinfit = jet1_kinfit + jet2_kinfit;
+    TLorentzVector Zjj_kinfit_jets = jet1_kinfit + jet2_kinfit;
 
-    TLorentzVector ZZ_kinfit = Zll + Zjj_kinfit;
+    TLorentzVector ZZ_kinfit_jets = Zll + Zjj_kinfit_jets;
 
+
+
+    // and now full kinematic fit with PFCands:
+    TLorentzVector ZZ_kinfit_cands;
+if( dataset_=="HZZ_qqll_gluonfusion_M300_CANDS" || dataset_=="HZZ_qqll_gluonfusion_M400_CANDS" ) {
+
+    std::vector<TFitParticleEtEtaPhi*> fitCands;
+    TFitConstraintM *mCons_cands = new TFitConstraintM( "ZMassConstraint_cands", "ZMass-Constraint", 0, 0 , 91.19);
+
+
+
+    // loop on PFCands of first jet
+    TLorentzVector candJet1(0., 0., 0., 0.);
+    for( unsigned iPFCand=0; iPFCand<nPFCand1; ++iPFCand ) {
+      TLorentzVector thisCand;
+      thisCand.SetPtEtaPhiE( ptPFCand1[iPFCand], etaPFCand1[iPFCand], phiPFCand1[iPFCand], ePFCand1[iPFCand] );
+      char candName[100];
+      sprintf( candName, "PFCand_1_%d", iPFCand );
+
+      if( particleTypePFCand1[iPFCand]==0 ) {
+        std::cout << "FOUND PARTICLE TYPE=0!!!! SKIPPING!" << std::endl;
+        continue;
+      }
+
+      TMatrixD m_PFCand(3,3);
+      m_PFCand(0,0) = ErrEt ( thisCand.Et(), thisCand.Eta(), particleTypePFCand1[iPFCand] );
+      m_PFCand(1,1) = ErrEta( thisCand.Et(), thisCand.Eta(), particleTypePFCand1[iPFCand] );
+      m_PFCand(2,2) = ErrPhi( thisCand.Et(), thisCand.Eta(), particleTypePFCand1[iPFCand] );
+      TFitParticleEtEtaPhi* fitCand = new TFitParticleEtEtaPhi( candName, candName, &thisCand, &m_PFCand );
+
+      mCons_cands->addParticle1( fitCand );
+      fitCands.push_back(fitCand);
+
+      candJet1 += thisCand;
+
+    }
+
+    TLorentzVector cand_add1 = jet1 - candJet1;
+    // make it worse-resolution case:
+    int particleType_add1 = (fabs(cand_add1.Eta())<3.) ? 5 : 6; 
+    TMatrixD m_PFCand_add1(3,3);
+    m_PFCand_add1(0,0) = ErrEt ( cand_add1.Et(), cand_add1.Eta(), particleType_add1 );
+    m_PFCand_add1(1,1) = ErrEta( cand_add1.Et(), cand_add1.Eta(), particleType_add1 );
+    m_PFCand_add1(2,2) = ErrPhi( cand_add1.Et(), cand_add1.Eta(), particleType_add1 );
+    TFitParticleEtEtaPhi* fitCand_add1 = new TFitParticleEtEtaPhi( "PFCand_add1", "PFCand_add1", &cand_add1, &m_PFCand_add1 );
+
+    mCons_cands->addParticle1( fitCand_add1 );
+    fitCands.push_back(fitCand_add1);
+
+
+    // loop on PFCands of second jet
+    TLorentzVector candJet2(0., 0., 0., 0.);
+    for( unsigned iPFCand=0; iPFCand<nPFCand2; ++iPFCand ) {
+      TLorentzVector thisCand;
+      thisCand.SetPtEtaPhiE( ptPFCand2[iPFCand], etaPFCand2[iPFCand], phiPFCand2[iPFCand], ePFCand2[iPFCand] );
+      char candName[100];
+      sprintf( candName, "PFCand_2_%d", iPFCand );
+
+      if( particleTypePFCand2[iPFCand]==0 ) {
+        std::cout << "FOUND PARTICLE TYPE=0!!!! SKIPPING!" << std::endl;
+        continue;
+      }
+
+      TMatrixD m_PFCand(3,3);
+      m_PFCand(0,0) = ErrEt ( thisCand.Et(), thisCand.Eta(), particleTypePFCand2[iPFCand] );
+      m_PFCand(1,1) = ErrEta( thisCand.Et(), thisCand.Eta(), particleTypePFCand2[iPFCand] );
+      m_PFCand(2,2) = ErrPhi( thisCand.Et(), thisCand.Eta(), particleTypePFCand2[iPFCand] );
+      TFitParticleEtEtaPhi* fitCand = new TFitParticleEtEtaPhi( candName, candName, &thisCand, &m_PFCand );
+
+      mCons_cands->addParticle1( fitCand );
+      fitCands.push_back(fitCand);
+
+      candJet2 += thisCand;
+
+    }
+
+
+    TLorentzVector cand_add2 = jet2 - candJet2;
+    // make it worse-resolution case:
+    int particleType_add2 = (fabs(cand_add2.Eta())<3.) ? 5 : 6; 
+    TMatrixD m_PFCand_add2(3,3);
+    m_PFCand_add2(0,0) = ErrEt ( cand_add2.Et(), cand_add2.Eta(), particleType_add2 );
+    m_PFCand_add2(1,1) = ErrEta( cand_add2.Et(), cand_add2.Eta(), particleType_add2 );
+    m_PFCand_add2(2,2) = ErrPhi( cand_add2.Et(), cand_add2.Eta(), particleType_add2 );
+    TFitParticleEtEtaPhi* fitCand_add2 = new TFitParticleEtEtaPhi( "PFCand_add2", "PFCand_add2", &cand_add2, &m_PFCand_add2 );
+
+    mCons_cands->addParticle2( fitCand_add2 );
+    fitCands.push_back(fitCand_add2);
+
+    TKinFitter* fitter_cands = new TKinFitter("fitter_cands", "fitter_cands");
+    for( unsigned iCand=0; iCand<fitCands.size(); ++iCand )
+      fitter_cands->addMeasParticle( fitCands[iCand] );
+    fitter_cands->addConstraint( mCons_cands );
+
+    //Set convergence criteria
+    fitter_cands->setMaxNbIter( 30 );
+    fitter_cands->setMaxDeltaS( 1e-2 );
+    fitter_cands->setMaxF( 1e-1 );
+    fitter_cands->setVerbosity(0);
+
+    //Perform the fit
+    fitter_cands->fit();
+
+    // recreate Zqq vector:
+    TLorentzVector Zqq_kinfit_cands;
+    for( unsigned iCand=0; iCand<fitCands.size(); ++iCand )
+      Zqq_kinfit_cands += *(fitCands[iCand]->getCurr4Vec());
+
+    ZZ_kinfit_cands = Zll + Zqq_kinfit_cands;
+}
+ 
 
     // ------------------------
     //   KINEMATIC FIT: END
@@ -733,6 +983,10 @@ void Ntp1Finalizer_HZZlljj::finalize() {
     else
       std::cout << "WARNING!! found incredible leptType: '" << leptType << "'." << std::endl;
     h1_massZll->Fill( Zll.M(), eventWeight );
+
+    if( jetLead.Pt()>40. && jetLead2.Pt()>30. && fabs(jetLead.Eta())<2.5 && fabs(jetLead.Eta())<2.5 && lept1.Pt()>20. && lept2.Pt()>20. && Zll.M()>70. && Zll.M()<110. && Zjj_lead.M()>70. && Zjj_lead.M()<120. ) {
+      h1_ZZInvMass_hiMass_JHU->Fill( ZZ_lead.M(), eventWeight );
+    }
 
     // require Z->ll mass:
     if( Zll.M()<86. || Zll.M()>96. ) continue;
@@ -785,12 +1039,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
     h1_ZZInvMass_medMass->Fill( ZZ.M(), eventWeight );
     h1_ZZInvMass_medMass_FINEBINNING->Fill( ZZ.M(), eventWeight );
     h1_ZZInvMass_hiMass->Fill( ZZ.M(), eventWeight );
-    h1_ZZInvMass_hiMass_kinfit->Fill( ZZ_kinfit.M(), eventWeight );
+    h1_ZZInvMass_hiMass_kinfit_jets->Fill( ZZ_kinfit_jets.M(), eventWeight );
+    h1_ZZInvMass_hiMass_kinfit_cands->Fill( ZZ_kinfit_cands.M(), eventWeight );
+
 
 
 
     h1_massZjj->Fill( Zjj.M(), eventWeight );
-    h1_massZjj_kinfit->Fill( Zjj_kinfit.M(), eventWeight );
+    h1_massZjj_kinfit_jets->Fill( Zjj_kinfit_jets.M(), eventWeight );
 
     // MC association for signal only:
     bool isSignal=false;
@@ -810,10 +1066,12 @@ void Ntp1Finalizer_HZZlljj::finalize() {
         else  h1_massZjj_RchLOLO->Fill( Zjj.M(), eventWeight );
 
         h1_massZjj_MCassoc->Fill( Zjj.M(), eventWeight );
-        h1_massZjj_MCassoc_kinfit->Fill( Zjj_kinfit.M(), eventWeight );
+        h1_massZjj_MCassoc_kinfit->Fill( Zjj_kinfit_jets.M(), eventWeight );
 
         h1_ZZInvMass_hiMass_MCassoc->Fill( ZZ.M(), eventWeight );
-        h1_ZZInvMass_hiMass_MCassoc_kinfit->Fill( ZZ_kinfit.M(), eventWeight );
+        h1_ZZInvMass_hiMass_MCassoc_kinfit_jets->Fill( ZZ_kinfit_jets.M(), eventWeight );
+        h1_ZZInvMass_hiMass_MCassoc_kinfit_cands->Fill( ZZ_kinfit_cands.M(), eventWeight );
+        h1_ZZInvMass_hiMass_MCassoc_ZjjMassConstr->Fill( ZZ_constr.M(), eventWeight );
       }
     } //if signal
 
@@ -848,8 +1106,6 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
       if( lept1.Pt()>20. && lept2.Pt()>20. ) h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_lept20->Fill( ZZ.M(), eventWeight );
       
-      TLorentzVector Zjj_lead = jetLead + jetLead2;
-      TLorentzVector ZZ_lead = Zjj_lead + Zll;
       h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_jetLead->Fill( ZZ_lead.M(), eventWeight );
 
 
@@ -956,6 +1212,28 @@ void Ntp1Finalizer_HZZlljj::finalize() {
       }
     }
 
+    if( ptLept1 > 100. &&
+        ptLept2 > 50. ) {
+
+      if( Zll.M() > 86. &&
+          Zll.M() < 96. ) {
+
+        if( ptJetLead > 100. &&
+            ptJetLead2 > 60. ) {
+      
+          if( Zjj_lead.M() > 80. &&
+              Zjj_lead.M() < 105. ) {
+        
+              if( deltaRjj < 1.5 ) {
+
+                  h1_ZZInvMass_hiMass_fullSelection_tight_lead->Fill( ZZ_lead.M(), eventWeight );
+
+            }
+          }
+        }
+      }
+    }
+
 
     if( ptJetLead > 80. &&
         ptJetRecoil > 15. &&
@@ -1007,32 +1285,35 @@ void Ntp1Finalizer_HZZlljj::finalize() {
     }
 
 
+*/
+
+
   } //for entries
 
 
-  std::string ofs400_name = "effTable400_tight_"+dataset_+".txt";
-  ofstream ofs400(ofs400_name.c_str());
-  ofs400 << "DATASET\tPreselection\tLepton pt\tLepton mass\tjet pt\tdijet mass\tjet deltaR" << std::endl;
-  ofs400 << dataset_ << "\t"
-      << nEvents400_pre*1000. << "\t"
-      << nEvents400_pre_leptPt*1000. << "\t"
-      << nEvents400_pre_leptPt_leptMass*1000. << "\t"
-      << nEvents400_pre_leptPt_leptMass_jetPt*1000. << "\t"
-      << nEvents400_pre_leptPt_leptMass_jetPt_jetMass*1000. << "\t"
-      << nEvents400_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj*1000. << "\t"
-      << std::endl;
+//std::string ofs400_name = "effTable400_tight_"+dataset_+".txt";
+//ofstream ofs400(ofs400_name.c_str());
+//ofs400 << "DATASET\tPreselection\tLepton pt\tLepton mass\tjet pt\tdijet mass\tjet deltaR" << std::endl;
+//ofs400 << dataset_ << "\t"
+//    << nEvents400_pre*1000. << "\t"
+//    << nEvents400_pre_leptPt*1000. << "\t"
+//    << nEvents400_pre_leptPt_leptMass*1000. << "\t"
+//    << nEvents400_pre_leptPt_leptMass_jetPt*1000. << "\t"
+//    << nEvents400_pre_leptPt_leptMass_jetPt_jetMass*1000. << "\t"
+//    << nEvents400_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj*1000. << "\t"
+//    << std::endl;
 
-  std::string ofs500_name = "effTable500_tight_"+dataset_+".txt";
-  ofstream ofs500(ofs500_name.c_str());
-  ofs500 << "DATASET\tPreselection\tLepton pt\tLepton mass\tjet pt\tdijet mass\tjet deltaR" << std::endl;
-  ofs500 << dataset_ << "\t"
-      << nEvents500_pre*1000. << "\t"
-      << nEvents500_pre_leptPt*1000. << "\t"
-      << nEvents500_pre_leptPt_leptMass*1000. << "\t"
-      << nEvents500_pre_leptPt_leptMass_jetPt*1000. << "\t"
-      << nEvents500_pre_leptPt_leptMass_jetPt_jetMass*1000. << "\t"
-      << nEvents500_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj*1000. << "\t"
-      << std::endl;
+//std::string ofs500_name = "effTable500_tight_"+dataset_+".txt";
+//ofstream ofs500(ofs500_name.c_str());
+//ofs500 << "DATASET\tPreselection\tLepton pt\tLepton mass\tjet pt\tdijet mass\tjet deltaR" << std::endl;
+//ofs500 << dataset_ << "\t"
+//    << nEvents500_pre*1000. << "\t"
+//    << nEvents500_pre_leptPt*1000. << "\t"
+//    << nEvents500_pre_leptPt_leptMass*1000. << "\t"
+//    << nEvents500_pre_leptPt_leptMass_jetPt*1000. << "\t"
+//    << nEvents500_pre_leptPt_leptMass_jetPt_jetMass*1000. << "\t"
+//    << nEvents500_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj*1000. << "\t"
+//    << std::endl;
 
 
   outFile_->cd();
@@ -1040,6 +1321,10 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_totalLumi->Write();
   h1_run->Write();
 
+  h1_ZZInvMass_hiMass_JHU->Write();
+  h1_ZZInvMass_hiMass_RomeUCSD->Write();
+
+/*
   h1_ptLept1->Write();
   h1_ptLept2->Write();
   h1_ptLept2OverLept1->Write();
@@ -1101,7 +1386,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_EleEleInvMass->Write();
 
   h1_massZjj->Write();
-  h1_massZjj_kinfit->Write();
+  h1_massZjj_kinfit_jets->Write();
   h1_massZjj_MCassoc->Write();
   h1_massZjj_MCassoc_kinfit->Write();
   h1_massZjj_cutOnH->Write();
@@ -1120,18 +1405,24 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_ZZInvMass_medMass->Write();
   h1_ZZInvMass_medMass_FINEBINNING->Write();
   h1_ZZInvMass_hiMass->Write();
-  h1_ZZInvMass_hiMass_kinfit->Write();
+  h1_ZZInvMass_hiMass_kinfit_jets->Write();
+  h1_ZZInvMass_hiMass_kinfit_cands->Write();
   h1_ZZInvMass_hiMass_MCassoc->Write();
-  h1_ZZInvMass_hiMass_MCassoc_kinfit->Write();
+  h1_ZZInvMass_hiMass_MCassoc_kinfit_jets->Write();
+  h1_ZZInvMass_hiMass_MCassoc_kinfit_cands->Write();
+  h1_ZZInvMass_hiMass_MCassoc_ZjjMassConstr->Write();
+
 
   h1_ZZInvMass_loMass_ZjjTag->Write();
   h1_ZZInvMass_medMass->Write();
   h1_ZZInvMass_hiMass_ZjjTag->Write();
   h1_ZZInvMass_hiMass_fullSelection_tightOLD->Write();
   h1_ZZInvMass_hiMass_fullSelection_tight->Write();
+  h1_ZZInvMass_hiMass_fullSelection_tight_lead->Write();
   h1_ZZInvMass_hiMass_fullSelection_medium->Write();
   h1_ZZInvMass_hiMass_fullSelection_medium_ZjjMassConstr->Write();
   h1_ZZInvMass_hiMass_fullSelection_loose->Write();
+  h1_ZZInvMass_hiMass_JHU->Write();
 
   h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass->Write();
   h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_lept20->Write();
@@ -1156,7 +1447,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   this->writeResponseHistos( outFile_, h1_response_vs_pt_Rch050, "response_Rch050" );
   this->writeResponseHistos( outFile_, h1_response_vs_pt_Rch5070, "response_Rch5070" );
   this->writeResponseHistos( outFile_, h1_response_vs_pt_Rch70100, "response_Rch70100" );
-
+*/
 
   outFile_->Close();
 
@@ -1164,28 +1455,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
 
 
+// error functions for jets:
 
-/*
-Double_t ErrEt(Float_t Et, Float_t Eta) {
-  Double_t InvPerr2, N, S, C, m;
-  if(fabs(Eta) < 1.4){
-    N = -0.5;
-    S = 0.5;
-    C = 0.;
-    m = 0.4;
-  }
-  else{
-    N = 1.5;
-    S = 0.3;
-    C = 0.;
-    m = 0.5;
-  }
-  InvPerr2 = (N * N * N)/fabs(N) + (S * S) * pow(Et,m-1.) + (C * C) * Et * Et;
-  return InvPerr2;
-}*/
-
-
-/*
 Double_t ErrEt(Float_t Et, Float_t Eta) {
   Double_t InvPerr2, a, b, c;
   if(fabs(Eta) < 1.4){
@@ -1199,11 +1470,6 @@ Double_t ErrEt(Float_t Et, Float_t Eta) {
     c = 0.043;
   }
   InvPerr2 = (a * a) + (b * b) * Et + (c * c) * Et * Et;
-  return InvPerr2;
-}*/
-
-Double_t ErrEt(Float_t Et, Float_t Eta) {
-  Double_t InvPerr2 = (10. * 10.) * Et * Et;
   return InvPerr2;
 }
 
@@ -1238,6 +1504,132 @@ Double_t ErrPhi(Float_t Et, Float_t Eta) {
     c = 2.59 * 0.0001;
   }
   InvPerr2 = a/(Et * Et) + b/Et + c;
+  return InvPerr2;
+}
+
+
+
+// error functions for PFCands:
+
+Double_t ErrEt(Float_t Et, Float_t Eta, int particleType) {
+  Double_t InvPerr2, S, N, C;
+
+  // following values taken from PFMet significance code: 
+  // RecoMET/METProducers/python/METSigParams_cfi.py
+  if( particleType==1 ) { // charged hadrons
+    N = 0.05;
+    S = 0.;
+    C = 0.;
+  } else if( particleType==2 ) { // electrons
+    N = 0.05;
+    S = 0.;
+    C = 0.;
+  } else if( particleType==3 ) { // muons
+    N = 0.05;
+    S = 0.;
+    C = 0.;
+  } else if( particleType==4 ) { // photons
+    N = 0.25; //slightly more conservative:
+    S = 0.03;
+    C = 0.01;
+  } else if( particleType==5 ) { // neutral hadrons
+    N = 0.;
+    S = 1.22;
+    C = 0.05;
+  } else if( particleType==6 ) { // HF hadrons
+    N = 0.;
+    S = 1.22;
+    C = 0.05;
+  } else if( particleType==7 ) { // HF EM
+    N = 0.;
+    S = 1.22;
+    C = 0.05;
+  } else {
+    std::cout << "IMPROBABLE particleType '" << particleType << "' found! PROBLEM!!" << std::endl;
+    return 0.;
+  }
+  InvPerr2 = (N * N) + (S * S) * Et + (C * C) * Et * Et;
+  return InvPerr2;
+}
+
+
+
+
+
+Double_t ErrEta(Float_t Et, Float_t Eta, int particleType) {
+
+  Double_t E = Et*cosh(Eta);
+  Double_t InvPerr2, a, b, c;
+
+  InvPerr2 = ErrPhi( Et, Eta, particleType );
+  // ErrPhi is in radians,
+  // have to convert it to pseudorapidity:
+  InvPerr2 = -log( tan (0.5*(InvPerr2) ) );
+
+//if( particleType==1 ) { // charged hadrons
+//} else if( particleType==2 ) { // electrons
+//} else if( particleType==3 ) { // muons
+//} else if( particleType==4 ) { // photons
+//} else if( particleType==5 ) { // neutral hadrons
+//} else if( particleType==6 ) { // HF hadrons
+//} else if( particleType==7 ) { // HF EM
+//}
+
+  return InvPerr2;
+}
+
+Double_t ErrPhi(Float_t Et, Float_t Eta, int particleType) {
+
+  Double_t E = Et*cosh(Eta);
+  Double_t InvPerr2, a, b, c;
+
+
+  if( particleType==1 ) { // charged hadrons
+
+    InvPerr2 = 0.002*Et;
+
+  } else if( particleType==2 ) { // electrons
+
+    InvPerr2 = 0.002*Et;
+
+  } else if( particleType==3 ) { // muons
+
+    InvPerr2 = 0.002*Et;
+
+  } else if( particleType==4 ) { // photons
+
+    a = 4.; // see DN 2007-011
+    b = 11.;
+    c = 0.6;
+    if(fabs(Eta) > 1.475) {
+      float crystalScaleFactor = 28.6/22.;
+      a *= crystalScaleFactor;
+      b *= crystalScaleFactor;
+      c *= crystalScaleFactor;
+    }
+    // this is error in mm's:
+    InvPerr2 = a/(E * E) + b/E + c;
+    // have to convert it to radians:
+    float ECAL_radius = 1300.; //in mm
+    InvPerr2 = TMath::Pi()/2. - atan( InvPerr2/ECAL_radius );
+
+  } else if( particleType==5 ) { // neutral hadrons
+
+    InvPerr2 = 0.0251*Et;
+
+  } else if( particleType==6 ) { // HF hadrons
+
+    InvPerr2 = 0.0251*Et;
+
+  } else if( particleType==7 ) { // HF EM
+
+    InvPerr2 = 0.0251*Et;
+
+  } else {
+    std::cout << "IMPROBABLE particleType '" << particleType << "' found! PROBLEM!!" << std::endl;
+  }
+
+
   return InvPerr2;
 }
 
