@@ -304,6 +304,7 @@ void Ntp1Analyzer_HZZlljj::Loop()
 
 if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
+std::cout << "new event" << std::endl;
      if( (jentry%100000) == 0 ) std::cout << "Event #" << jentry  << " of " << nentries << std::endl;
 
      run_ = runNumber;
@@ -454,7 +455,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      } //if isMC
 
-     if( !noLeptons && lept1MC.Pt() < lept2MC.Pt() ) std::cout << "WARNING MC leptons not ordered in pt!!" << std::endl;
+     if( !noLeptons )
+       if( lept1MC.Pt() < lept2MC.Pt() ) std::cout << "WARNING MC leptons not ordered in pt!!" << std::endl;
 
 
 
@@ -833,10 +835,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
          
 
-     eJetRecoil_ = recoilJet.Energy();
-     ptJetRecoil_ = recoilJet.Pt();
-     etaJetRecoil_ = recoilJet.Eta();
-     phiJetRecoil_ = recoilJet.Phi();
+     eJetRecoil_ = (recoilJet.Energy()==0.) ? 0. : recoilJet.Energy();
+     ptJetRecoil_ = (recoilJet.Energy()==0.) ? 0. : recoilJet.Pt();
+     etaJetRecoil_ = (recoilJet.Energy()==0.) ? 20. : recoilJet.Eta();
+     phiJetRecoil_ = (recoilJet.Energy()==0.) ? 0. : recoilJet.Phi();
    //eChargedHadronsJetRecoil_ = recoilJet.eChargedHadrons;
    //eNeutralHadronsJetRecoil_ = recoilJet.eNeutralHadrons;
    //ePhotonsJetRecoil_ = recoilJet.ePhotons;
