@@ -215,7 +215,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        nJets_total_++;
 
-       if( nJet_<10 ) {
+       if( nJet_<10 && thisJet.Pt()>20. ) {
          ptJet_[nJet_] = thisJet.Pt();
          etaJet_[nJet_] = thisJet.Eta();
          phiJet_[nJet_] = thisJet.Phi();
