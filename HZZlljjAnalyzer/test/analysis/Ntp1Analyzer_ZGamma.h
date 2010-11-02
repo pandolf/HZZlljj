@@ -36,10 +36,10 @@ class Ntp1Analyzer_ZGamma : public Ntp1Analyzer {
    Int_t nJets_total_;
 
    Int_t nJet_;
-   Float_t eJet_[5];
-   Float_t ptJet_[5];
-   Float_t etaJet_[5];
-   Float_t phiJet_[5];
+   Float_t eJet_[10];
+   Float_t ptJet_[10];
+   Float_t etaJet_[10];
+   Float_t phiJet_[10];
 
 
    bool DEBUG_VERBOSE_;

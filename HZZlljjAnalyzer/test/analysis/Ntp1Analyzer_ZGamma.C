@@ -42,7 +42,7 @@ class AnalysisJet : public TLorentzVector {
 
 
 Ntp1Analyzer_ZGamma::Ntp1Analyzer_ZGamma( const std::string& dataset, const std::string& flags, TTree* tree ) :
-     Ntp1Analyzer( "HZZlljj", dataset, flags, tree ) {
+     Ntp1Analyzer( "ZGamma", dataset, flags, tree ) {
 
 
   //nothing to do here
@@ -191,7 +191,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      }
 
 
-     if( !noLeptons ) continue;
+     if( noLeptons ) continue;
 
      TLorentzVector ZGamma;
      ZGamma.SetPtEtaPhiE( pMc[zIndexll]*sin(thetaMc[zIndexll]), etaMc[zIndexll], phiMc[zIndexll], energyMc[zIndexll] );
@@ -215,7 +215,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        nJets_total_++;
 
-       if( nJet_<5 ) {
+       if( nJet_<10 ) {
          ptJet_[nJet_] = thisJet.Pt();
          etaJet_[nJet_] = thisJet.Eta();
          phiJet_[nJet_] = thisJet.Phi();
