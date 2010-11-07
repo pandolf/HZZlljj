@@ -643,8 +643,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      h1_mZjj_closestPair->Fill( diJet_closestPair.M() );
 
 
-
-     reducedTree_->Fill(); 
+     TLorentzVector diJet = jet1 + jet2;
+     TLorentzVector diLepton = leptons[0] + leptons[1];
+     TLorentzVector ZZ = diJet + diLepton;
+     
+     if( ZZ.M()<450. && ZZ.M()>350. )
+       reducedTree_->Fill(); 
 
 
    } //for entries
