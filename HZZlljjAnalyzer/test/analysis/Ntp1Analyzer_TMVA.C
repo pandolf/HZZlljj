@@ -32,23 +32,23 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
 
   reducedTree_->Branch("ptLept1",  &ptLept1_,  "ptLept1_/F");
-  reducedTree_->Branch("absetaLept1",  &absetaLept1_,  "absetaLept1_/F");
+  reducedTree_->Branch("absEtaLept1",  &absetaLept1_,  "absetaLept1_/F");
 
   reducedTree_->Branch("ptLept2",  &ptLept2_,  "ptLept2_/F");
-  reducedTree_->Branch("absetaLept2",  &absetaLept2_,  "absetaLept2_/F");
+  reducedTree_->Branch("absEtaLept2",  &absetaLept2_,  "absetaLept2_/F");
 
   reducedTree_->Branch("mZll",  &mZll_,  "mZll_/F");
   reducedTree_->Branch("ptZll",  &ptZll_,  "ptZll_/F");
   reducedTree_->Branch("deltaRll",  &deltaRll_,  "deltaRll_/F");
 
   reducedTree_->Branch( "ptJet1",  &ptJet1_,  "ptJet1_/F");
-  reducedTree_->Branch("absetaJet1", &absetaJet1_, "absetaJet1_/F");
+  reducedTree_->Branch("absEtaJet1", &absetaJet1_, "absetaJet1_/F");
 
   reducedTree_->Branch( "ptJet2",  &ptJet2_,  "ptJet2_/F");
-  reducedTree_->Branch("absetaJet2", &absetaJet2_, "absetaJet2_/F");
+  reducedTree_->Branch("absEtaJet2", &absetaJet2_, "absetaJet2_/F");
 
   reducedTree_->Branch( "ptJetRecoil",  &ptJetRecoil_,  "ptJetRecoil_/F");
-  reducedTree_->Branch("absetaJetRecoil", &absetaJetRecoil_, "absetaJetRecoil_/F");
+  reducedTree_->Branch("absEtaJetRecoil", &absetaJetRecoil_, "absetaJetRecoil_/F");
   reducedTree_->Branch("deltaR_recoil_jet1", &deltaR_recoil_jet1_, "deltaR_recoil_jet1_/F");
   reducedTree_->Branch("deltaR_recoil_Zjj", &deltaR_recoil_Zjj_, "deltaR_recoil_Zjj_/F");
   reducedTree_->Branch("deltaR_recoil_Higgs", &deltaR_recoil_Higgs_, "deltaR_recoil_Higgs_/F");
@@ -60,7 +60,7 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("deltaRZZ",  &deltaRZZ_,  "deltaRZZ_/F");
   reducedTree_->Branch("deltaAbsEtaZZ",  &deltaAbsEtaZZ_,  "deltaAbsEtaZZ_/F");
   reducedTree_->Branch("absDeltaEtaZZ",  &absDeltaEtaZZ_,  "absDeltaEtaZZ_/F");
-  reducedTree_->Branch("deltaPhiZZ",  &deltaPhiZZ_,  "deltaPhiZZ_/F");
+  reducedTree_->Branch("absDeltaPhiZZ",  &absDeltaPhiZZ_,  "absDeltaPhiZZ_/F");
   reducedTree_->Branch("ptZZ",  &ptZZ_,  "ptZZ_/F");
   reducedTree_->Branch("absEtaZZ",  &absEtaZZ_,  "absEtaZZ_/F");
 
@@ -659,7 +659,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      TLorentzVector diJet = jet1 + jet2;
      TLorentzVector ZZ = diJet + diLepton;
 
+     deltaRjj_ = jet1.DeltaR(jet2);
      mZjj_ = diJet.M();
+     ptZjj_ = diJet.Pt();
 
      deltaR_recoil_Zjj_ = (jetRecoil.E()>0.) ? jetRecoil.DeltaR(diJet) : -1.;
      deltaR_recoil_Higgs_ = (jetRecoil.E()>0.) ? jetRecoil.DeltaR(ZZ) : -1.;
@@ -667,7 +669,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      deltaRZZ_ = diLepton.DeltaR(diJet);
      deltaAbsEtaZZ_ = fabs(diLepton.Eta()) - fabs(diJet.Eta());
      absDeltaEtaZZ_ = fabs(diLepton.Eta() - diJet.Eta());
-     deltaPhiZZ_ = diJet.DeltaPhi(diLepton);
+     absDeltaPhiZZ_ = fabs(diJet.DeltaPhi(diLepton));
      ptZZ_ = ZZ.Pt();
      absEtaZZ_ = fabs(ZZ.Eta());
 
