@@ -13,8 +13,8 @@
 
 
 
-Ntp1Analyzer_TMVA::Ntp1Analyzer_TMVA( const std::string& dataset, const std::string& jetChoice, TTree* tree ) :
-     Ntp1Analyzer( "TMVA", dataset, jetChoice, tree ) {
+Ntp1Analyzer_TMVA::Ntp1Analyzer_TMVA( const std::string& dataset, const std::string& jetChoice, const std::string& flags, TTree* tree ) :
+     Ntp1Analyzer( "TMVA", dataset, flags, tree ) {
 
 
   jetChoice_ = jetChoice;
@@ -59,6 +59,8 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
 
   reducedTree_->Branch("deltaRZZ",  &deltaRZZ_,  "deltaRZZ_/F");
   reducedTree_->Branch("deltaAbsEtaZZ",  &deltaAbsEtaZZ_,  "deltaAbsEtaZZ_/F");
+  reducedTree_->Branch("absDeltaEtaZZ",  &absDeltaEtaZZ_,  "absDeltaEtaZZ_/F");
+  reducedTree_->Branch("deltaPhiZZ",  &deltaPhiZZ_,  "deltaPhiZZ_/F");
   reducedTree_->Branch("ptZZ",  &ptZZ_,  "ptZZ_/F");
 
   reducedTree_->Branch("pfMet",  &epfMet_,  "epfMet_/F");
@@ -221,11 +223,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        noLeptons = true;
      }
 
-
-     if( noLeptons ) {
-       std::cout << "NO LEPTONS FOUND. Electron size: " << electronsMC.size() << ", Muon size: " << muonsMC.size() << ". Skipping Event!" << std::endl;
-       continue;
-     }
 
      if( !noLeptons )
        if( lept1MC.Pt() < lept2MC.Pt() ) std::cout << "WARNING MC leptons not ordered in pt!!" << std::endl;
@@ -430,6 +427,11 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      ptLept2_ = leptons[1].Pt();
      absetaLept2_ = fabs(leptons[1].Eta());
 
+     TLorentzVector diLepton = leptons[0] + leptons[1];
+
+     mZll_ = diLepton.M();
+     ptZll_ = diLepton.Pt();
+     deltaRll_ = leptons[0].DeltaR(leptons[1]);
 
 
 
@@ -545,7 +547,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          }
 
 
-         // once jet 1 and 2 are defined, define recoil jet as hardest jet in event excludinh 1 and 2
+         // once jet 1 and 2 are defined, define recoil jet as hardest jet in event excluding 1 and 2
          int i_recoil = -1;
          for( unsigned ii =0; ii<leadJets.size(); ++ii ) {
            if( ii!=iJet && ii!=jJet ) {
@@ -642,10 +644,29 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      h1_mZjj_bestH->Fill( diJet_bestH.M() );
      h1_mZjj_closestPair->Fill( diJet_closestPair.M() );
 
+     ptJet1_ = jet1.Pt();
+     absetaJet1_ = fabs(jet1.Eta());
+     
+     ptJet2_ = jet2.Pt();
+     absetaJet2_ = fabs(jet2.Eta());
+
+
+     ptJetRecoil_ = jetRecoil.Pt();
+     absetaJetRecoil_ = fabs(jetRecoil.Eta());
+     deltaR_recoil_jet1_ = jetRecoil.DeltaR(jet1);
 
      TLorentzVector diJet = jet1 + jet2;
-     TLorentzVector diLepton = leptons[0] + leptons[1];
      TLorentzVector ZZ = diJet + diLepton;
+
+     deltaR_recoil_Zjj_ = jetRecoil.DeltaR(diJet);
+     deltaR_recoil_Higgs_ = jetRecoil.DeltaR(ZZ);
+
+     deltaRZZ_ = diLepton.DeltaR(diJet);
+     deltaAbsEtaZZ_ = fabs(diLepton.Eta()) - fabs(diJet.Eta());
+     absDeltaEtaZZ_ = fabs(diLepton.Eta() - diJet.Eta());
+     deltaPhiZZ_ = diJet.DeltaPhi(diLepton);
+     ptZZ_ = ZZ.Pt();
+
      
      if( ZZ.M()<450. && ZZ.M()>350. )
        reducedTree_->Fill(); 

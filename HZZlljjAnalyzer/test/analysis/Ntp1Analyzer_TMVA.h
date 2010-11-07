@@ -18,7 +18,7 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
 
  public:
 
-   Ntp1Analyzer_TMVA( const std::string& dataset, const std::string& jetChoice="BESTZ", TTree* tree=0);
+   Ntp1Analyzer_TMVA( const std::string& dataset, const std::string& jetChoice="BESTZ", const std::string& flags="", TTree* tree=0);
    virtual ~Ntp1Analyzer_TMVA();
 
    virtual void CreateOutputFile();
@@ -61,6 +61,8 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Float_t ptZZ_;
    Float_t deltaRZZ_;
    Float_t deltaAbsEtaZZ_;
+   Float_t absDeltaEtaZZ_;
+   Float_t deltaPhiZZ_;
 
    TH1F* h1_mZjj; 
    TH1F* h1_mZjj_matched; 
