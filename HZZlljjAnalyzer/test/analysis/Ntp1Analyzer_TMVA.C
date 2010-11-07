@@ -659,6 +659,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      TLorentzVector diJet = jet1 + jet2;
      TLorentzVector ZZ = diJet + diLepton;
 
+     mZjj_ = diJet.M();
+
      deltaR_recoil_Zjj_ = (jetRecoil.E()>0.) ? jetRecoil.DeltaR(diJet) : -1.;
      deltaR_recoil_Higgs_ = (jetRecoil.E()>0.) ? jetRecoil.DeltaR(ZZ) : -1.;
 
