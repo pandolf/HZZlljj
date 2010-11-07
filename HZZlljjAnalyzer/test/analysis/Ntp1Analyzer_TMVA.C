@@ -62,6 +62,7 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("absDeltaEtaZZ",  &absDeltaEtaZZ_,  "absDeltaEtaZZ_/F");
   reducedTree_->Branch("deltaPhiZZ",  &deltaPhiZZ_,  "deltaPhiZZ_/F");
   reducedTree_->Branch("ptZZ",  &ptZZ_,  "ptZZ_/F");
+  reducedTree_->Branch("absEtaZZ",  &absEtaZZ_,  "absEtaZZ_/F");
 
   reducedTree_->Branch("pfMet",  &epfMet_,  "epfMet_/F");
 
@@ -651,21 +652,22 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      absetaJet2_ = fabs(jet2.Eta());
 
 
-     ptJetRecoil_ = jetRecoil.Pt();
-     absetaJetRecoil_ = fabs(jetRecoil.Eta());
-     deltaR_recoil_jet1_ = jetRecoil.DeltaR(jet1);
+     ptJetRecoil_ = (jetRecoil.E()>0.) ? jetRecoil.Pt() : 0.;
+     absetaJetRecoil_ = (jetRecoil.E()>0.) ? fabs(jetRecoil.Eta()) : -1.;
+     deltaR_recoil_jet1_ = (jetRecoil.E()>0.) ? jetRecoil.DeltaR(jet1) : -1.;
 
      TLorentzVector diJet = jet1 + jet2;
      TLorentzVector ZZ = diJet + diLepton;
 
-     deltaR_recoil_Zjj_ = jetRecoil.DeltaR(diJet);
-     deltaR_recoil_Higgs_ = jetRecoil.DeltaR(ZZ);
+     deltaR_recoil_Zjj_ = (jetRecoil.E()>0.) ? jetRecoil.DeltaR(diJet) : -1.;
+     deltaR_recoil_Higgs_ = (jetRecoil.E()>0.) ? jetRecoil.DeltaR(ZZ) : -1.;
 
      deltaRZZ_ = diLepton.DeltaR(diJet);
      deltaAbsEtaZZ_ = fabs(diLepton.Eta()) - fabs(diJet.Eta());
      absDeltaEtaZZ_ = fabs(diLepton.Eta() - diJet.Eta());
      deltaPhiZZ_ = diJet.DeltaPhi(diLepton);
      ptZZ_ = ZZ.Pt();
+     absEtaZZ_ = fabs(ZZ.Eta());
 
      
      if( ZZ.M()<450. && ZZ.M()>350. )
