@@ -72,7 +72,7 @@ void Ntp1Analyzer::LoadInput() {
 
    if( addInt==0 ) {
      std::cout << "Didn't find files to add for dataset: '" << dataset_ << "'. Looking for a list..." << std::endl;
-     std::string fileName = "files_" + analyzerType_ + "_" + dataset_ + ".txt";
+     std::string fileName = "files_HZZlljj_" + dataset_ + ".txt";
      this->LoadInputFromFile(fileName);
    } else {
      TTree* tree = chain;
@@ -101,7 +101,9 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
    TChain * chain = new TChain("ntp1","");
 
    char singleLine[500];
-   bool firstFile=true;
+   bool isFirstFile=true;
+
+   TFile* firstFile = 0;
 
    while( fscanf(iff, "%s", singleLine) !=EOF ) {
    
@@ -109,11 +111,10 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
      std::string treeName_str = singleLine_str + "/ntp1";
      std::cout << "-> Adding " << treeName_str << std::endl;
      chain->Add(treeName_str.c_str());
-  // if( firstFile ) {
-  //   TFile* firstFile = TFile::Open(singleLine_str.c_str(), "read");
-  //   this->LoadTrigger(firstFile);
-  //   firstFile=false;
-  // }
+     if( isFirstFile ) {
+       firstFile = TFile::Open(singleLine_str.c_str(), "read");
+       isFirstFile=false;
+     }
 
    }
    fclose(iff);
@@ -122,6 +123,7 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
    std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
    this->CreateOutputFile();
    Init(tree);
+   this->LoadTrigger(firstFile);
 
 }
 
@@ -136,6 +138,8 @@ void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
 
   //new version: trigger loaded from ntp1 tree:
   if( treeCond==0 ) { 
+
+    fChain->GetEntry(0);
 
     std::vector<int> triggerMask;
     for (std::vector< std::string >::const_iterator fIter=requiredTriggers_.begin();fIter!=requiredTriggers_.end();++fIter)
@@ -231,7 +235,9 @@ void Ntp1Analyzer::CreateOutputFile() {
    }
 
 
-   outfileName = outfileName + flags_ + ".root";
+   if( flags_!="" )
+     outfileName = outfileName + "_" + flags_;
+   outfileName = outfileName + ".root";
 
    outfile_ = TFile::Open(outfileName.c_str(), "RECREATE");
    
