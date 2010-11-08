@@ -219,6 +219,13 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch( "etaPart2",  &etaPart2_,  "etaPart2_/F");
   reducedTree_->Branch( "phiPart2",  &phiPart2_,  "phiPart2_/F");
 
+  reducedTree_->Branch("nPart", &nPart_, "nPart_/I");
+  reducedTree_->Branch("ePart",  ePart_,  "ePart_[nPart_]/F");
+  reducedTree_->Branch( "ptPart",  ptPart_,  "ptPart_[nPart_]/F");
+  reducedTree_->Branch("etaPart", etaPart_, "etaPart_[nPart_]/F");
+  reducedTree_->Branch("phiPart", phiPart_, "phiPart_[nPart_]/F");
+  reducedTree_->Branch("pdgIdPart", pdgIdPart_, "pdgIdPart_[nPart_]/I");
+
 
   reducedTree_->Branch("epfMet",&epfMet_,"epfMet_/F");
   reducedTree_->Branch("phipfMet",&phipfMet_,"phipfMet_/F");
@@ -304,7 +311,6 @@ void Ntp1Analyzer_HZZlljj::Loop()
 
 if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
-std::cout << "new event" << std::endl;
      if( (jentry%100000) == 0 ) std::cout << "Event #" << jentry  << " of " << nentries << std::endl;
 
      run_ = runNumber;
@@ -715,6 +721,7 @@ std::cout << "new event" << std::endl;
      // JETS
      // ------------------
 
+     float jetPt_thresh = 30.;
 
      // first save leading jets in event:
      std::vector<AnalysisJet> leadJets;
@@ -724,8 +731,8 @@ std::cout << "new event" << std::endl;
 
        AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
 
-       // save at least 3 lead jets (if event has them) and all jets with pt>30 gev:
-       if( leadJets.size()>=3 && thisJet.Pt()<30. ) break;
+       // save at least 3 lead jets (if event has them) and all jets with pt>thresh:
+       if( leadJets.size()>=3 && thisJet.Pt()<jetPt_thresh ) break;
 
        // far away from leptons:
        if( thisJet.DeltaR( leptons[0] ) <= 0.5 ) continue;
@@ -739,6 +746,8 @@ std::cout << "new event" << std::endl;
      }
 
      if( leadJets.size()<2 ) continue;
+     if( leadJets[1].Pt()<jetPt_thresh ) continue; //at least 2 jets over thresh
+
 
 
      // now look for best invariant mass jet pair 
@@ -750,6 +759,7 @@ std::cout << "new event" << std::endl;
      int best_j_eventIndex=-1;
 
      nPairs_ = 0;
+     nPart_ = 0;
 
 
 //std::cout << std::endl;
@@ -760,7 +770,7 @@ std::cout << "new event" << std::endl;
        // --------------
        // kinematics:
        // --------------
-       if( thisJet.Pt() < 30. ) continue;
+       if( thisJet.Pt() < jetPt_thresh ) continue;
 
 //std::cout << "First jet: pt: " << thisJet.Pt() << " eta: " << thisJet.Eta() << " phi: " << thisJet.Phi();
 
@@ -771,7 +781,7 @@ std::cout << "new event" << std::endl;
          // --------------
          // kinematics:
          // --------------
-         if( otherJet.Pt() < 30. ) continue;
+         if( otherJet.Pt() < jetPt_thresh ) continue;
 
 //std::cout << "   Second jet: pt: " << otherJet.Pt() << " eta: " << otherJet.Eta() << " phi: " << otherJet.Phi() << std::endl;
 
@@ -1105,6 +1115,39 @@ std::cout << "new event" << std::endl;
      ptPart2_ = (matchedPartons[1].Energy()>0.) ? matchedPartons[1].Pt() : 0.;
      etaPart2_ = (matchedPartons[1].Energy()>0.) ? matchedPartons[1].Eta() : 0.;
      phiPart2_ = (matchedPartons[1].Energy()>0.) ? matchedPartons[1].Phi() : 0.;
+
+
+
+     // store event partons in tree:
+     for( unsigned iMc=0; iMc<nMc; ++iMc ) {
+
+       if( statusMc[iMc]==3 && (fabs(idMc[iMc])<=6 || idMc[iMc]==21) ) {
+
+         TLorentzVector* thisParticle = new TLorentzVector();
+         thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
+
+         if( nPart_<20 ) {
+
+           ptPart_[nPart_] = thisParticle->Pt();
+           etaPart_[nPart_] = thisParticle->Eta();
+           phiPart_[nPart_] = thisParticle->Phi();
+           ePart_[nPart_] = thisParticle->Energy();
+           pdgIdPart_[nPart_] = idMc[iMc];
+
+           nPart_++;
+
+         } else {
+    
+           std::cout << "Found more than 20 partons, skipping." << std::endl;
+
+         }
+
+         delete thisParticle;
+         thisParticle = 0;
+
+       } //if correct id mc
+
+     } // for i mc
 
 
      reducedTree_->Fill(); 

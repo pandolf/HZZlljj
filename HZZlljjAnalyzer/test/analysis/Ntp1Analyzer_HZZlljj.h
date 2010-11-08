@@ -167,6 +167,12 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t  phiPFCand2_[100];
    Int_t  particleTypePFCand2_[100];
 
+   Int_t nPart_;
+   Float_t  ptPart_[20];
+   Float_t   ePart_[20];
+   Float_t phiPart_[20];
+   Float_t etaPart_[20];
+   Int_t pdgIdPart_[20];
 
    Int_t   pdgIdPartJet1_;
    Int_t   pdgIdPartJet2_;
