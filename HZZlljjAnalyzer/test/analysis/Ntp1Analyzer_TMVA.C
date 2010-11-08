@@ -62,7 +62,9 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("absDeltaEtaZZ",  &absDeltaEtaZZ_,  "absDeltaEtaZZ_/F");
   reducedTree_->Branch("absDeltaPhiZZ",  &absDeltaPhiZZ_,  "absDeltaPhiZZ_/F");
   reducedTree_->Branch("ptZZ",  &ptZZ_,  "ptZZ_/F");
+  reducedTree_->Branch("mZZ",  &mZZ_,  "mZZ_/F");
   reducedTree_->Branch("absEtaZZ",  &absEtaZZ_,  "absEtaZZ_/F");
+  reducedTree_->Branch("mZZ",  &mZZ_,  "mZZ_/F");
 
   reducedTree_->Branch("pfMet",  &epfMet_,  "epfMet_/F");
 
@@ -671,11 +673,11 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      absDeltaEtaZZ_ = fabs(diLepton.Eta() - diJet.Eta());
      absDeltaPhiZZ_ = fabs(diJet.DeltaPhi(diLepton));
      ptZZ_ = ZZ.Pt();
+     mZZ_ = ZZ.M();
      absEtaZZ_ = fabs(ZZ.Eta());
 
      
-     if( ZZ.M()<450. && ZZ.M()>350. )
-       reducedTree_->Fill(); 
+     reducedTree_->Fill(); 
 
 
    } //for entries
