@@ -520,7 +520,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
          sigmaIetaIeta_thresh = 0.03;
          deltaPhiAtVtx_thresh = 0.7;
-         deltaEtaAtVtx_thresh = 10.; //no cut
+         deltaEtaAtVtx_thresh = 1000.; //no cut
          hOverE_thresh = 0.07;
        }
 
@@ -528,9 +528,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // isolation:
        // --------------
-       if( dr03TkSumPtEle[iEle]/thisEle.Pt() > dr03TkSumPt_thresh ) continue;
-       if( dr03EcalRecHitSumEtEle[iEle]/thisEle.Pt() > dr03EcalRecHitSumEt_thresh ) continue;
-       if( dr03HcalTowerSumEtEle[iEle]/thisEle.Pt() > dr03HcalTowerSumEt_thresh ) continue;
+       // no relative iso, using combined
+     //if( dr03TkSumPtEle[iEle]/thisEle.Pt() > dr03TkSumPt_thresh ) continue;
+     //if( dr03EcalRecHitSumEtEle[iEle]/thisEle.Pt() > dr03EcalRecHitSumEt_thresh ) continue;
+     //if( dr03HcalTowerSumEtEle[iEle]/thisEle.Pt() > dr03HcalTowerSumEt_thresh ) continue;
 
        Float_t combinedIsoRel;
        if( fabs(thisEle.Eta())<1.4442 )
