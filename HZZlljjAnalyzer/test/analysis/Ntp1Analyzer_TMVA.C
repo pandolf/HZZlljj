@@ -27,8 +27,10 @@ Ntp1Analyzer_TMVA::Ntp1Analyzer_TMVA( const std::string& dataset, const std::str
 
 void Ntp1Analyzer_TMVA::CreateOutputFile() {
 
-  if( PRESEL_ )
-    flags_ += "_PRESEL";
+  if( PRESEL_ ) {
+    if( flags_=="" ) flags_ = "PRESEL";
+    else flags_ += "_PRESEL";
+  }
 
   Ntp1Analyzer::CreateOutputFile();
 
