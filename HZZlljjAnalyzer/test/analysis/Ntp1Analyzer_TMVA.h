@@ -21,6 +21,8 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Ntp1Analyzer_TMVA( const std::string& dataset, const std::string& jetChoice="BESTZ", const std::string& flags="", TTree* tree=0);
    virtual ~Ntp1Analyzer_TMVA();
 
+   void SetPresel( bool presel ) { PRESEL_ = presel; };
+
    virtual void CreateOutputFile();
    virtual void Loop();
 
@@ -33,19 +35,19 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Float_t epfMet_;
 
    Float_t ptLept1_;
-   Float_t absetaLept1_;
+   Float_t absEtaLept1_;
 
    Float_t ptLept2_;
-   Float_t absetaLept2_;
+   Float_t absEtaLept2_;
 
    Float_t  ptJet1_;
-   Float_t absetaJet1_;
+   Float_t absEtaJet1_;
 
    Float_t  ptJet2_;
-   Float_t absetaJet2_;
+   Float_t absEtaJet2_;
 
    Float_t ptJetRecoil_;
-   Float_t absetaJetRecoil_;
+   Float_t absEtaJetRecoil_;
    Float_t deltaR_recoil_jet1_;
    Float_t deltaR_recoil_Zjj_;
    Float_t deltaR_recoil_Higgs_;
@@ -62,7 +64,7 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Float_t mZZ_;
    Float_t absEtaZZ_;
    Float_t deltaRZZ_;
-   Float_t deltaAbsEtaZZ_;
+   Float_t deltaabsEtaZZ_;
    Float_t absDeltaEtaZZ_;
    Float_t absDeltaPhiZZ_;
 
@@ -74,6 +76,7 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
 
 
    std::string jetChoice_;
+   bool PRESEL_;
 
    bool DEBUG_VERBOSE_;
 

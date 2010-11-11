@@ -18,6 +18,7 @@ Ntp1Analyzer_TMVA::Ntp1Analyzer_TMVA( const std::string& dataset, const std::str
 
 
   jetChoice_ = jetChoice;
+  PRESEL_ = false;
 
 
 } //constructor
@@ -26,29 +27,32 @@ Ntp1Analyzer_TMVA::Ntp1Analyzer_TMVA( const std::string& dataset, const std::str
 
 void Ntp1Analyzer_TMVA::CreateOutputFile() {
 
+  if( PRESEL_ )
+    flags_ += "_PRESEL";
+
   Ntp1Analyzer::CreateOutputFile();
 
   
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
 
   reducedTree_->Branch("ptLept1",  &ptLept1_,  "ptLept1_/F");
-  reducedTree_->Branch("absEtaLept1",  &absetaLept1_,  "absetaLept1_/F");
+  reducedTree_->Branch("absEtaLept1",  &absEtaLept1_,  "absEtaLept1_/F");
 
   reducedTree_->Branch("ptLept2",  &ptLept2_,  "ptLept2_/F");
-  reducedTree_->Branch("absEtaLept2",  &absetaLept2_,  "absetaLept2_/F");
+  reducedTree_->Branch("absEtaLept2",  &absEtaLept2_,  "absEtaLept2_/F");
 
   reducedTree_->Branch("mZll",  &mZll_,  "mZll_/F");
   reducedTree_->Branch("ptZll",  &ptZll_,  "ptZll_/F");
   reducedTree_->Branch("deltaRll",  &deltaRll_,  "deltaRll_/F");
 
   reducedTree_->Branch( "ptJet1",  &ptJet1_,  "ptJet1_/F");
-  reducedTree_->Branch("absEtaJet1", &absetaJet1_, "absetaJet1_/F");
+  reducedTree_->Branch("absEtaJet1", &absEtaJet1_, "absEtaJet1_/F");
 
   reducedTree_->Branch( "ptJet2",  &ptJet2_,  "ptJet2_/F");
-  reducedTree_->Branch("absEtaJet2", &absetaJet2_, "absetaJet2_/F");
+  reducedTree_->Branch("absEtaJet2", &absEtaJet2_, "absEtaJet2_/F");
 
   reducedTree_->Branch( "ptJetRecoil",  &ptJetRecoil_,  "ptJetRecoil_/F");
-  reducedTree_->Branch("absEtaJetRecoil", &absetaJetRecoil_, "absetaJetRecoil_/F");
+  reducedTree_->Branch("absEtaJetRecoil", &absEtaJetRecoil_, "absEtaJetRecoil_/F");
   reducedTree_->Branch("deltaR_recoil_jet1", &deltaR_recoil_jet1_, "deltaR_recoil_jet1_/F");
   reducedTree_->Branch("deltaR_recoil_Zjj", &deltaR_recoil_Zjj_, "deltaR_recoil_Zjj_/F");
   reducedTree_->Branch("deltaR_recoil_Higgs", &deltaR_recoil_Higgs_, "deltaR_recoil_Higgs_/F");
@@ -58,7 +62,7 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("deltaRjj",  &deltaRjj_,  "deltaRjj_/F");
 
   reducedTree_->Branch("deltaRZZ",  &deltaRZZ_,  "deltaRZZ_/F");
-  reducedTree_->Branch("deltaAbsEtaZZ",  &deltaAbsEtaZZ_,  "deltaAbsEtaZZ_/F");
+  reducedTree_->Branch("deltaabsEtaZZ",  &deltaabsEtaZZ_,  "deltaabsEtaZZ_/F");
   reducedTree_->Branch("absDeltaEtaZZ",  &absDeltaEtaZZ_,  "absDeltaEtaZZ_/F");
   reducedTree_->Branch("absDeltaPhiZZ",  &absDeltaPhiZZ_,  "absDeltaPhiZZ_/F");
   reducedTree_->Branch("ptZZ",  &ptZZ_,  "ptZZ_/F");
@@ -425,10 +429,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      }
 
      ptLept1_ = leptons[0].Pt();
-     absetaLept1_ = fabs(leptons[0].Eta());
+     absEtaLept1_ = fabs(leptons[0].Eta());
      
      ptLept2_ = leptons[1].Pt();
-     absetaLept2_ = fabs(leptons[1].Eta());
+     absEtaLept2_ = fabs(leptons[1].Eta());
 
      TLorentzVector diLepton = leptons[0] + leptons[1];
 
@@ -539,7 +543,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          } else {
 
    //      ptJet1_[nPairs_] = leadJets[iJet].Pt();
-   //      absetaJet1_[nPairs_] = fabs(leadJets[iJet].Eta());
+   //      absEtaJet1_[nPairs_] = fabs(leadJets[iJet].Eta());
    //       
    //      ptJet2_[nPairs_] = leadJets[jJet].Pt();
    //      etaJet2_[nPairs_] = leadJets[jJet].Eta();
@@ -648,14 +652,14 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      h1_mZjj_closestPair->Fill( diJet_closestPair.M() );
 
      ptJet1_ = jet1.Pt();
-     absetaJet1_ = fabs(jet1.Eta());
+     absEtaJet1_ = fabs(jet1.Eta());
      
      ptJet2_ = jet2.Pt();
-     absetaJet2_ = fabs(jet2.Eta());
+     absEtaJet2_ = fabs(jet2.Eta());
 
 
      ptJetRecoil_ = (jetRecoil.E()>0.) ? jetRecoil.Pt() : 0.;
-     absetaJetRecoil_ = (jetRecoil.E()>0.) ? fabs(jetRecoil.Eta()) : -1.;
+     absEtaJetRecoil_ = (jetRecoil.E()>0.) ? fabs(jetRecoil.Eta()) : -1.;
      deltaR_recoil_jet1_ = (jetRecoil.E()>0.) ? jetRecoil.DeltaR(jet1) : -1.;
 
      TLorentzVector diJet = jet1 + jet2;
@@ -669,15 +673,29 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      deltaR_recoil_Higgs_ = (jetRecoil.E()>0.) ? jetRecoil.DeltaR(ZZ) : -1.;
 
      deltaRZZ_ = diLepton.DeltaR(diJet);
-     deltaAbsEtaZZ_ = fabs(diLepton.Eta()) - fabs(diJet.Eta());
+     deltaabsEtaZZ_ = fabs(diLepton.Eta()) - fabs(diJet.Eta());
      absDeltaEtaZZ_ = fabs(diLepton.Eta() - diJet.Eta());
      absDeltaPhiZZ_ = fabs(diJet.DeltaPhi(diLepton));
      ptZZ_ = ZZ.Pt();
      mZZ_ = ZZ.M();
      absEtaZZ_ = fabs(ZZ.Eta());
 
+     bool eventOK = true;
+
+     if( PRESEL_ ) {
+       if( ptLept1_ < 50. ) eventOK = false;
+       if( absEtaLept1_ > 2.1 ) eventOK = false;
+       if( deltaRll_ > 2. ) eventOK = false;
+       if( ptJet1_ < 50. ) eventOK = false;
+       if( ptLept1_ < 50. ) eventOK = false;
+       if( mZjj_ < 60. ) eventOK = false;
+       if( mZjj_ > 200. ) eventOK = false;
+       if( mZZ_ < 300. ) eventOK = false;
+       if( mZZ_ > 500. ) eventOK = false;
+     }
      
-     reducedTree_->Fill(); 
+     if( eventOK )
+       reducedTree_->Fill(); 
 
 
    } //for entries
