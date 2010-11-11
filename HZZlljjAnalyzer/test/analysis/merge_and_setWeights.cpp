@@ -11,6 +11,7 @@
 
 TChain* tree = 0;
 std::string analysisType_;
+std::string flags_;
 
 struct EventsAndLumi {
   int nTotalEvents;
@@ -25,17 +26,23 @@ float getWeight( const std::string& dataset, int nEvents );
 
 int main( int argc, char* argv[] ) {
 
-  if( argc!=2 && argc!=3 ) {
-    std::cout << "USAGE: ./merge_and_setWeights [dataset] [analysisType=\"HZZlljj\"]" << std::endl;
+  if( argc!=2 && argc!=3 && argc!=4 ) {
+    std::cout << "USAGE: ./merge_and_setWeights [dataset] [analysisType=\"HZZlljj\"] [flags=\"\"]" << std::endl;
     exit(917);
   }
 
   std::string dataset = argv[1];
 
   analysisType_ = "HZZlljj";
-  if( argc==3 ) {
+  if( argc>=3 ) {
     std::string analysisType_str(argv[2]);
     analysisType_ = analysisType_str;
+  }
+
+  flags_ = "";
+  if( argc==4 ) {
+    std::string flags_str(argv[3]);
+    flags_ = flags_str;
   }
 
 
@@ -51,7 +58,9 @@ int main( int argc, char* argv[] ) {
   // and now set the weights
   tree->SetBranchStatus( "eventWeight", 0 );
   
-  std::string outfilename = analysisType_ + "_2ndLevelTreeW_"+dataset+".root";
+  std::string outfilename = analysisType_ + "_2ndLevelTreeW_"+dataset;
+  if( flags_!="" ) outfilename += "_" + flags_;
+  outfilename += +".root";
   TFile* outfile = new TFile(outfilename.c_str(), "recreate");
   outfile->cd();
 
@@ -92,7 +101,9 @@ int main( int argc, char* argv[] ) {
 
 EventsAndLumi addInput( const std::string& dataset ) {
 
-  std::string infileName = "files_"+analysisType_+"_2ndLevel_" + dataset + ".txt";
+  std::string infileName = "files_"+analysisType_+"_2ndLevel_" + dataset;
+  if( flags_!="" ) infileName += "_" + flags_;
+  infileName += ".txt";
   TH1F* h1_lumi;
   TH1F* h1_nCounter;
 
@@ -103,7 +114,9 @@ EventsAndLumi addInput( const std::string& dataset ) {
   FILE* iff = fopen(infileName.c_str(),"r");
   if(iff == 0) {
     std::cout << "cannot open input file '" << infileName << "' ... adding single file." << std::endl;
-    infileName = analysisType_+"_2ndLevelTree_" + dataset + ".root";
+    infileName = analysisType_+"_2ndLevelTree_" + dataset;
+    if( flags_!="" ) infileName += "_" + flags_;
+    infileName += ".root";
     std::string treeName = infileName +"/reducedTree";
     tree->Add(treeName.c_str());
     std::cout << "-> Added " << treeName << ". Tree has " << tree->GetEntries() << " entries." << std::endl;
@@ -235,11 +248,31 @@ float getWeight( const std::string& dataset, int nEvents ) {
   } else if( dataset=="JHUgen_HiggsSM500_2l2j"|| dataset=="JHUgen_HiggsSM500_2l2j_FASTSIM" ) {
     xSection = (2.1914+0.23884+0.0028020+0.0024635+0.0047436)*0.2602*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="TTbar_2l_Spring10" ) {
-    xSection = 157.4*0.1080*2.; //NLO x BR(W->lnu) see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
+    xSection = 157.4*0.1080*0.1080*3.*3.; //NLO x BR(W->lnu) see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="ZZ_Spring10" ) {
-    xSection = 5.9; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
+    xSection = 5.9*1.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt plus factor 1.3 to account for glu-glu
   } else if( dataset=="Zmumu_Pythia" ) {
     xSection = 3048./3.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
+  } else if( dataset=="PhotonJet_Summer1036X_Pt5to15_pfakt5" ) {
+    xSection = 4030000.;
+  } else if( dataset=="PhotonJet_Summer1036X_Pt15to20_pfakt5" ) {
+    xSection = 114700.;
+  } else if( dataset=="PhotonJet_Summer1036X_Pt20to30_pfakt5" ) {
+    xSection = 57180.;
+  } else if( dataset=="PhotonJet_Summer1036X_Pt30to50_pfakt5" ) { 
+    xSection = 16520.;
+  } else if( dataset=="PhotonJet_Summer1036X_Pt50to80_pfakt5" ) {
+    xSection = 2723.;
+  } else if( dataset=="PhotonJet_Summer1036X_Pt80to120_pfakt5" ) {
+    xSection = 446.2;
+  } else if( dataset=="PhotonJet_Summer1036X_Pt120to170_pfakt5" ) {
+    xSection = 84.43;
+  } else if( dataset=="PhotonJet_Summer1036X_Pt170to300_pfakt5" ) {
+    xSection = 22.55;
+  } else if( dataset=="PhotonJet_Summer1036X_Pt300to500_pfakt5" ) {
+    xSection = 1.545;
+  } else if( dataset=="PhotonJet_Summer1036X_Pt500toInf_pfakt5" ) {
+    xSection = 0.0923;
   } else {
     std::cout << std::endl;
     std::cout << "-> WARNING!! Dataset: '" << dataset << "' not present in database. Cross section unknown." << std::endl;
