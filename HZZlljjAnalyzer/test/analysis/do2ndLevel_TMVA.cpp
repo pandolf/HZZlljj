@@ -23,6 +23,7 @@ int main( int argc, char* argv[]) {
     na = new Ntp1Analyzer_TMVA(dataset, "BESTZ", flags);
   }
 
+  na->SetPresel((bool)true);
 
 //na->AddRequiredTrigger( "HLT_Ele15_LW_L1R" );
 //na->AddRequiredTrigger( "HLT_Mu9" );

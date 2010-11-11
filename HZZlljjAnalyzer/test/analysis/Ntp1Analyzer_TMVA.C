@@ -300,9 +300,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // isolation:
        // --------------
-       if( dr03TkSumPtEle[iEle]/thisEle.Pt() > dr03TkSumPt_thresh ) continue;
-       if( dr03EcalRecHitSumEtEle[iEle]/thisEle.Pt() > dr03EcalRecHitSumEt_thresh ) continue;
-       if( dr03HcalTowerSumEtEle[iEle]/thisEle.Pt() > dr03HcalTowerSumEt_thresh ) continue;
+       // no rel isolation. only combined
+     //if( dr03TkSumPtEle[iEle]/thisEle.Pt() > dr03TkSumPt_thresh ) continue;
+     //if( dr03EcalRecHitSumEtEle[iEle]/thisEle.Pt() > dr03EcalRecHitSumEt_thresh ) continue;
+     //if( dr03HcalTowerSumEtEle[iEle]/thisEle.Pt() > dr03HcalTowerSumEt_thresh ) continue;
 
        Float_t combinedIsoRel;
        if( fabs(thisEle.Eta())<1.4442 )
@@ -688,12 +689,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( ptLept1_ < 50. ) eventOK = false;
        if( absEtaLept1_ > 2.1 ) eventOK = false;
        if( deltaRll_ > 2. ) eventOK = false;
-       if( ptJet1_ < 50. ) eventOK = false;
-       if( ptLept1_ < 50. ) eventOK = false;
+       if( ptJet1_ < 70. ) eventOK = false;
        if( mZjj_ < 60. ) eventOK = false;
        if( mZjj_ > 200. ) eventOK = false;
-       if( mZZ_ < 300. ) eventOK = false;
-       if( mZZ_ > 500. ) eventOK = false;
+       if( deltaRjj_ > 2. ) eventOK = false;
+       if( mZZ_ < 320. ) eventOK = false;
+       if( mZZ_ > 480. ) eventOK = false;
      }
      
      if( eventOK )
