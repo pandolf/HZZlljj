@@ -284,9 +284,10 @@ float getWeight( const std::string& dataset, int nEvents ) {
   TRegexp re("alpgen");
   if( dataset_tstr.Contains(re) ) {
     std::cout << "-> Scaling LO alpgen cross-section to NNLO." << std::endl;
-    xSection*=(3048./2054.);
-    //trying to make them equal by hand:
-    xSection/=1.2;
+    xSection*=1.31; // K factor
+  //xSection*=(3048./2054.);
+  ////trying to make them equal by hand:
+  //xSection/=1.2;
   }
 
 
