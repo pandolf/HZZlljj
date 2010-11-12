@@ -21,7 +21,7 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Ntp1Analyzer_TMVA( const std::string& dataset, const std::string& jetChoice="BESTZ", const std::string& flags="", TTree* tree=0);
    virtual ~Ntp1Analyzer_TMVA();
 
-   void SetPresel( bool presel ) { PRESEL_ = presel; };
+   void SetPresel( int presel ) { PRESEL_ = presel; };
 
    virtual void CreateOutputFile();
    virtual void Loop();
@@ -76,7 +76,7 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
 
 
    std::string jetChoice_;
-   bool PRESEL_;
+   int PRESEL_;
 
    bool DEBUG_VERBOSE_;
 

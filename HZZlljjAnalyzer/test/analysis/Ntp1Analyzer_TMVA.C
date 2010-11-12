@@ -18,7 +18,7 @@ Ntp1Analyzer_TMVA::Ntp1Analyzer_TMVA( const std::string& dataset, const std::str
 
 
   jetChoice_ = jetChoice;
-  PRESEL_ = false;
+  PRESEL_ = 0;
 
 
 } //constructor
@@ -27,9 +27,14 @@ Ntp1Analyzer_TMVA::Ntp1Analyzer_TMVA( const std::string& dataset, const std::str
 
 void Ntp1Analyzer_TMVA::CreateOutputFile() {
 
-  if( PRESEL_ ) {
-    if( flags_=="" ) flags_ = "PRESEL";
-    else flags_ += "_PRESEL";
+  if( PRESEL_!=0 ) {
+
+    char presel[50];
+    sprintf( presel, "%dPRESEL", PRESEL_);
+    std::string preselstr(presel);
+
+    if( flags_=="" ) flags_ = preselstr;
+    else flags_ += ("_" + preselstr);
   }
 
   Ntp1Analyzer::CreateOutputFile();
@@ -685,7 +690,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      bool eventOK = true;
 
-     if( PRESEL_ ) {
+     if( PRESEL_!=0 ) {
        if( ptLept1_ < 50. ) eventOK = false;
        if( absEtaLept1_ > 2.1 ) eventOK = false;
        if( deltaRll_ > 2. ) eventOK = false;
@@ -693,8 +698,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( mZjj_ < 60. ) eventOK = false;
        if( mZjj_ > 200. ) eventOK = false;
        if( deltaRjj_ > 2. ) eventOK = false;
-       if( mZZ_ < 320. ) eventOK = false;
-       if( mZZ_ > 480. ) eventOK = false;
+       if( PRESEL_==400 ) {
+         if( mZZ_ < 320. ) eventOK = false;
+         if( mZZ_ > 480. ) eventOK = false;
+       } else if( PRESEL_==500 ) {
+         if( mZZ_ < 420. ) eventOK = false;
+         if( mZZ_ > 580. ) eventOK = false;
+       }
      }
      
      if( eventOK )
