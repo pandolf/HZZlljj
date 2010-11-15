@@ -528,7 +528,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // isolation:
        // --------------
-       // no relative iso, using combined
+     //// no relative iso, using combined
      //if( dr03TkSumPtEle[iEle]/thisEle.Pt() > dr03TkSumPt_thresh ) continue;
      //if( dr03EcalRecHitSumEtEle[iEle]/thisEle.Pt() > dr03EcalRecHitSumEt_thresh ) continue;
      //if( dr03HcalTowerSumEtEle[iEle]/thisEle.Pt() > dr03HcalTowerSumEt_thresh ) continue;
@@ -543,7 +543,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        
        // --------------
-       // cluster shape:
+       // electron ID:
        // --------------
        if( covIEtaIEtaSC[iEle] > sigmaIetaIeta_thresh ) continue;
        if( fabs(deltaPhiAtVtxEle[iEle]) > deltaPhiAtVtx_thresh ) continue;

@@ -21,7 +21,7 @@ do2ndLevel_JetStudies: Ntp1Analyzer.o Ntp1Analyzer_JetStudies.o
 do2ndLevel_ZGamma: Ntp1Analyzer.o Ntp1Analyzer_ZGamma.o 
 	$(CC) -Wall -o do2ndLevel_ZGamma do2ndLevel_ZGamma.cpp Ntp1Analyzer.o Ntp1Analyzer_ZGamma.o $(ROOTFLAG)
 
-do2ndLevel_TMVA: Ntp1Analyzer.o Ntp1Analyzer_TMVA.o 
+do2ndLevel_TMVA: Ntp1Analyzer.o Ntp1Analyzer_TMVA.o do2ndLevel_TMVA.cpp
 	$(CC) -Wall -o do2ndLevel_TMVA do2ndLevel_TMVA.cpp Ntp1Analyzer.o Ntp1Analyzer_TMVA.o $(ROOTFLAG)
 
 drawHZZlljj: DrawBase.o fitTools.o drawHZZlljj.cpp

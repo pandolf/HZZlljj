@@ -89,7 +89,7 @@ void Ntp1Finalizer::set_outFile( const std::string& fileName, const std::string&
 
 void Ntp1Finalizer::addFile(const std::string& dataset) {
 
-  std::string infileName = "HZZlljj_2ndLevelTreeW_" + dataset + ".root"; //the W is important: means that files have passed treatment (merging and weights)
+  std::string infileName = analyzerType_ + "_2ndLevelTreeW_" + dataset + ".root"; //the W is important: means that files have passed treatment (merging and weights)
   std::string treeName = infileName +"/reducedTree";
   tree_->Add(treeName.c_str());
   std::cout << "-> Added " << treeName << ". Tree has " << tree_->GetEntries() << " entries." << std::endl;

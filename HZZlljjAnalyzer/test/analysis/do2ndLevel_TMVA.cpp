@@ -14,6 +14,9 @@ int main( int argc, char* argv[]) {
 
   Ntp1Analyzer_TMVA* na;
 
+  na = new Ntp1Analyzer_TMVA(dataset, "BESTZ");
+
+
   std::string flags = "";
   if( argc<4 ) {
     na = new Ntp1Analyzer_TMVA(dataset, "BESTZ");
@@ -23,7 +26,9 @@ int main( int argc, char* argv[]) {
     na = new Ntp1Analyzer_TMVA(dataset, "BESTZ", flags);
   }
 
-  na->SetPresel((bool)true);
+  //na->SetPresel(400);
+  //na->SetPresel(500);
+  
 
 //na->AddRequiredTrigger( "HLT_Ele15_LW_L1R" );
 //na->AddRequiredTrigger( "HLT_Mu9" );

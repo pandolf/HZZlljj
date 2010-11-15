@@ -239,10 +239,66 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_ZZInvMass_hiMass_fullSelection_loose = new TH1D("ZZInvMass_hiMass_fullSelection_loose", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_fullSelection_loose->Sumw2();
 
-  TH1D* h1_ZZInvMass_hiMass_JHU = new TH1D("ZZInvMass_hiMass_JHU", "", nBins_invMass, 200., 600.);
-  h1_ZZInvMass_hiMass_JHU->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_RomeUCSD = new TH1D("ZZInvMass_hiMass_RomeUCSD", "", nBins_invMass, 200., 600.);
-  h1_ZZInvMass_hiMass_RomeUCSD->Sumw2();
+  TH1D* h1_ptJet_all = new TH1D("ptJet_all", "", 50, 30., 300.);
+  h1_ptJet_all->Sumw2();
+
+  TH1D* h1_ptJet1_loose = new TH1D("ptJet1_loose", "", 50, 30., 300.);
+  h1_ptJet1_loose->Sumw2();
+  TH1D* h1_ptJet1_tight = new TH1D("ptJet1_tight", "", 50, 30., 300.);
+  h1_ptJet1_tight->Sumw2();
+
+  TH1D* h1_ptJet2_loose = new TH1D("ptJet2_loose", "", 50, 30., 300.);
+  h1_ptJet2_loose->Sumw2();
+  TH1D* h1_ptJet2_tight = new TH1D("ptJet2_tight", "", 50, 30., 300.);
+  h1_ptJet2_tight->Sumw2();
+
+  TH1D* h1_mZll_loose = new TH1D("mZll_loose", "", nBins_invMass, 70., 120.);
+  h1_mZll_loose->Sumw2();
+  TH1D* h1_mZll_tight = new TH1D("mZll_tight", "", nBins_invMass, 70., 120.);
+  h1_mZll_tight->Sumw2();
+  TH1D* h1_mZll_opt400_LowEff = new TH1D("mZll_opt400_LowEff", "", nBins_invMass, 70., 120.);
+  h1_mZll_opt400_LowEff->Sumw2();
+  TH1D* h1_mZll_opt400_HighEff = new TH1D("mZll_opt400_HighEff", "", nBins_invMass, 70., 120.);
+  h1_mZll_opt400_HighEff->Sumw2();
+  TH1D* h1_mZll_opt500 = new TH1D("mZll_opt500", "", nBins_invMass, 70., 120.);
+  h1_mZll_opt500->Sumw2();
+
+  TH1D* h1_mZqq_loose = new TH1D("mZqq_loose", "", nBins_invMass, 70., 120.);
+  h1_mZqq_loose->Sumw2();
+  TH1D* h1_mZqq_tight = new TH1D("mZqq_tight", "", nBins_invMass, 70., 120.);
+  h1_mZqq_tight->Sumw2();
+  TH1D* h1_mZqq_opt400_LowEff = new TH1D("mZqq_opt400_LowEff", "", nBins_invMass, 70., 120.);
+  h1_mZqq_opt400_LowEff->Sumw2();
+  TH1D* h1_mZqq_opt400_HighEff = new TH1D("mZqq_opt400_HighEff", "", nBins_invMass, 70., 120.);
+  h1_mZqq_opt400_HighEff->Sumw2();
+  TH1D* h1_mZqq_opt500 = new TH1D("mZqq_opt500", "", nBins_invMass, 70., 120.);
+  h1_mZqq_opt500->Sumw2();
+
+  TH1D* h1_ZZInvMass_hiMass_loose = new TH1D("ZZInvMass_hiMass_loose", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_loose->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_loose_FINEBINNING = new TH1D("ZZInvMass_hiMass_loose_FINEBINNING", "", 800, 200., 1000.);
+  h1_ZZInvMass_hiMass_loose_FINEBINNING->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_tight = new TH1D("ZZInvMass_hiMass_tight", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_tight->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_tight_FINEBINNING = new TH1D("ZZInvMass_hiMass_tight_FINEBINNING", "", 800, 200., 1000.);
+  h1_ZZInvMass_hiMass_tight_FINEBINNING->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_opt400_LowEff = new TH1D("ZZInvMass_hiMass_opt400_LowEff", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_opt400_LowEff->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_opt400_LowEff_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt400_LowEff_FINEBINNING", "", 800, 200., 1000.);
+  h1_ZZInvMass_hiMass_opt400_LowEff_FINEBINNING->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_opt400_HighEff = new TH1D("ZZInvMass_hiMass_opt400_HighEff", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_opt400_HighEff->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_opt400_HighEff_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt400_HighEff_FINEBINNING", "", 800, 200., 1000.);
+  h1_ZZInvMass_hiMass_opt400_HighEff_FINEBINNING->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_opt500 = new TH1D("ZZInvMass_hiMass_opt500", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_opt500->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_opt500_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt500_FINEBINNING", "", 800, 200., 1000.);
+  h1_ZZInvMass_hiMass_opt500_FINEBINNING->Sumw2();
+
+  TH1D* h1_partFlavor_tight = new TH1D("partFlavor_tight", "", 31, -8.5, 22.5);
+
+  TH2D* h2_mZjj_vs_mZZ = new TH2D("mZjj_vs_mZZ", "", 100, 200., 400., 100, 70., 120.);
+  h2_mZjj_vs_mZZ->Sumw2();
 
   TH1D* h1_ZZInvMass_medMass = new TH1D("ZZInvMass_medMass", "", nBins_invMass, 100., 350.);
   h1_ZZInvMass_medMass->Sumw2();
@@ -468,6 +524,19 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   Int_t particleTypePFCand2[100];
   tree_->SetBranchAddress("particleTypePFCand2", particleTypePFCand2);
 
+  Int_t nPart;
+  tree_->SetBranchAddress("nPart", &nPart);
+  Float_t ePart[20];
+  tree_->SetBranchAddress("ePart", ePart);
+  Float_t ptPart[20];
+  tree_->SetBranchAddress("ptPart", ptPart);
+  Float_t etaPart[20];
+  tree_->SetBranchAddress("etaPart", etaPart);
+  Float_t phiPart[20];
+  tree_->SetBranchAddress("phiPart", phiPart);
+  Int_t pdgIdPart[20];
+  tree_->SetBranchAddress("pdgIdPart", pdgIdPart);
+
 
   float nEvents400_pre=0.;
   float nEvents400_pre_leptPt=0.;
@@ -486,6 +555,10 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   int nEntries = tree_->GetEntries();
   std::map< int, std::map<int, std::vector<int> > > run_lumi_ev_map;
+
+ofstream ofs_loose("bonato_loose.txt");
+ofstream ofs_tight("bonato_tight.txt");
+
 
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
 
@@ -582,6 +655,11 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
     std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_looseSelection;
     std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_tightSelection;
+    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt400_LowEff;
+    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt400_HighEff;
+    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt500;
+
+    float cached_jetpt = 0.;
 
     for( unsigned iJetPair=0; iJetPair<nPairs; ++iJetPair ) {
 
@@ -596,6 +674,25 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
       if( jet1.Pt()>100. && jet2.Pt()>50. && jet1.DeltaR(jet2)<1.5 && diJet.M()>80. && diJet.M()<105. )
         jetPairs_tightSelection.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+
+      //if( jet1.Pt()>115.066 && jet2.Pt()>74.7815 && jet1.DeltaR(jet2)<1.15812 && diJet.M()>79.7606 && diJet.M()<122.326 )
+      if( jet1.Pt()>115.066 && jet2.Pt()>74.7815 && jet1.DeltaR(jet2)<1.15812 && diJet.M()>80. && diJet.M()<105. )
+        jetPairs_opt400_LowEff.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+
+      ////if( jet1.Pt()>77.4283 && jet2.Pt()>75.0579 && jet1.DeltaR(jet2)<1.03499 && diJet.M()>81.5827 && diJet.M()<109.255 )
+      //if( jet1.Pt()>82.9536 && jet2.Pt()>52.9691 && jet1.DeltaR(jet2)<1.70124 && diJet.M()>80.615 && diJet.M()<105.073 )
+      if( jet1.Pt()>83. && jet2.Pt()>53. && jet1.DeltaR(jet2)<1.7&& diJet.M()>81.&& diJet.M()<101.)
+        jetPairs_opt400_HighEff.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+
+      //if( jet1.Pt()>128.265 && jet2.Pt()>73.8435 && jet1.DeltaR(jet2)<1.83623 && diJet.M()>80.4499 && diJet.M()<101.08 )
+      if( jet1.Pt()>130. && jet2.Pt()>75. && jet1.DeltaR(jet2)<1.7 && diJet.M()>81. && diJet.M()<101. )
+        jetPairs_opt500.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+
+
+      if( jet1.Pt()!=cached_jetpt ) {
+        h1_ptJet_all->Fill( jet1.Pt(), eventWeight );
+        cached_jetpt = jet1.Pt();
+      }
 
     }
 
@@ -619,10 +716,25 @@ void Ntp1Finalizer_HZZlljj::finalize() {
       } //for pairs
 
       TLorentzVector bestZDiJet = jetPairs_looseSelection[bestPair].first + jetPairs_looseSelection[bestPair].second;
-      TLorentzVector ZZ_JHU = diLepton + bestZDiJet; 
+      TLorentzVector ZZ_loose = diLepton + bestZDiJet; 
   
-      if( lept1.Pt()>10. && lept2.Pt()>10. && diLepton.M() > 70. && diLepton.M() < 110. )
-        h1_ZZInvMass_hiMass_JHU->Fill(ZZ_JHU.M(), eventWeight);
+
+
+      if( lept1.Pt()>10. && lept2.Pt()>10. && diLepton.M() > 70. && diLepton.M() < 110. ) {
+        if( jetPairs_looseSelection[bestPair].first.Pt()>jetPairs_looseSelection[bestPair].second.Pt() ) {
+          h1_ptJet1_loose->Fill( jetPairs_looseSelection[bestPair].first.Pt(), eventWeight );
+          h1_ptJet2_loose->Fill( jetPairs_looseSelection[bestPair].second.Pt(), eventWeight );
+        } else {
+          h1_ptJet1_loose->Fill( jetPairs_looseSelection[bestPair].second.Pt(), eventWeight );
+          h1_ptJet2_loose->Fill( jetPairs_looseSelection[bestPair].first.Pt(), eventWeight );
+        }
+        h1_mZll_loose->Fill( diLepton.M(), eventWeight);
+        h1_mZqq_loose->Fill( bestZDiJet.M(), eventWeight);
+        h2_mZjj_vs_mZZ->Fill( ZZ_loose.M(), bestZDiJet.M(), eventWeight );
+        h1_ZZInvMass_hiMass_loose->Fill(ZZ_loose.M(), eventWeight);
+        h1_ZZInvMass_hiMass_loose_FINEBINNING->Fill(ZZ_loose.M(), eventWeight);
+ofs_loose << run << " " << event << " " << ZZ_loose.M() << " " <<  diLepton.M() << " " << bestZDiJet.M() << " " << lept1.Pt() << " " << lept2.Pt() << " " << jetPairs_looseSelection[bestPair].first.Pt() << " " << jetPairs_looseSelection[bestPair].second.Pt() << std::endl;
+      }
 
     }
 
@@ -644,13 +756,170 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
       } //for pairs
 
-      TLorentzVector bestZDiJet = jetPairs_tightSelection[bestPair].first + jetPairs_tightSelection[bestPair].second;
-      TLorentzVector ZZ_RomeUCSD = diLepton + bestZDiJet; 
+      TLorentzVector jet1 = jetPairs_tightSelection[bestPair].first;
+      TLorentzVector jet2 = jetPairs_tightSelection[bestPair].second;
+
+      TLorentzVector bestZDiJet = jet1 + jet2;
+      TLorentzVector ZZ_tight = diLepton + bestZDiJet; 
   
-      if( lept1.Pt()>100. && lept2.Pt()>50. && diLepton.M() > 86. && diLepton.M() < 96. )
-        h1_ZZInvMass_hiMass_RomeUCSD->Fill(ZZ_RomeUCSD.M(), eventWeight);
+      if( lept1.Pt()>100. && lept2.Pt()>50. && diLepton.M() > 86. && diLepton.M() < 96. ) {
+        if( jet1.Pt()>jet2.Pt() ) {
+          h1_ptJet1_tight->Fill( jet1.Pt(), eventWeight );
+          h1_ptJet2_tight->Fill( jet2.Pt(), eventWeight );
+        } else {
+          h1_ptJet1_tight->Fill( jet1.Pt(), eventWeight );
+          h1_ptJet2_tight->Fill( jet2.Pt(), eventWeight );
+        }
+        h1_mZll_tight->Fill( diLepton.M(), eventWeight);
+        h1_mZqq_tight->Fill( bestZDiJet.M(), eventWeight);
+        h1_ZZInvMass_hiMass_tight->Fill(ZZ_tight.M(), eventWeight);
+        h1_ZZInvMass_hiMass_tight_FINEBINNING->Fill(ZZ_tight.M(), eventWeight);
+
+/*
+        // match to parton:
+        int partFlavor=0;
+        float deltaRmin=999.;
+        for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+          TLorentzVector thisPart;
+          thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+          float thisDeltaR = jet1.DeltaR(thisPart);
+          if( thisDeltaR<deltaRmin ) {
+            partFlavor = pdgIdPart[iPart];
+            deltaRmin = thisDeltaR;
+          }
+        }
+        if( deltaRmin<0.5 && partFlavor!=0 )
+          h1_partFlavor_tight->Fill(partFlavor);
+if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
+
+        deltaRmin=999.;
+        partFlavor=0;
+        for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+          TLorentzVector thisPart;
+          thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+          float thisDeltaR = jet2.DeltaR(thisPart);
+          if( thisDeltaR<deltaRmin ) {
+            partFlavor = pdgIdPart[iPart];
+            deltaRmin = thisDeltaR;
+          }
+        }
+        if( deltaRmin<0.5 && partFlavor !=0 )
+          h1_partFlavor_tight->Fill(partFlavor);
+if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
+
+ofs_tight << run << " " << event << " " << ZZ_tight.M() << " "  << diLepton.M() << " " << bestZDiJet.M() << " " << lept1.Pt() << " " << lept2.Pt() << " " << jet1.Pt() << " " << jet2.Pt() << std::endl;
+*/
+      }
 
     }
+
+
+    if( jetPairs_opt400_LowEff.size()>0. ) {
+
+      // now look for best Z mass jet pair:
+      float Zmass = 91.19;
+      float bestMass = 0.;
+      int bestPair=-1;
+      
+      for( unsigned iPair=0; iPair<jetPairs_opt400_LowEff.size(); ++iPair ) {
+
+        TLorentzVector dijet = jetPairs_opt400_LowEff[iPair].first + jetPairs_opt400_LowEff[iPair].second;
+        float invMass = dijet.M();
+        if( bestPair==-1 || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
+          bestMass = invMass;
+          bestPair = iPair;
+        }
+
+      } //for pairs
+
+      TLorentzVector jet1 = jetPairs_opt400_LowEff[bestPair].first;
+      TLorentzVector jet2 = jetPairs_opt400_LowEff[bestPair].second;
+
+      TLorentzVector bestZDiJet = jet1 + jet2;
+      TLorentzVector ZZ_opt400_LowEff = diLepton + bestZDiJet; 
+      
+  
+      if( lept1.Pt()>51.4373 && lept1.DeltaR(lept2)<1.85932 ) {
+        h1_mZll_opt400_LowEff->Fill( diLepton.M(), eventWeight);
+        h1_mZqq_opt400_LowEff->Fill( bestZDiJet.M(), eventWeight);
+        h1_ZZInvMass_hiMass_opt400_LowEff->Fill(ZZ_opt400_LowEff.M(), eventWeight);
+        h1_ZZInvMass_hiMass_opt400_LowEff_FINEBINNING->Fill(ZZ_opt400_LowEff.M(), eventWeight);
+      }
+
+    }
+
+    if( jetPairs_opt400_HighEff.size()>0. ) {
+
+      // now look for best Z mass jet pair:
+      float Zmass = 91.19;
+      float bestMass = 0.;
+      int bestPair=-1;
+      
+      for( unsigned iPair=0; iPair<jetPairs_opt400_HighEff.size(); ++iPair ) {
+
+        TLorentzVector dijet = jetPairs_opt400_HighEff[iPair].first + jetPairs_opt400_HighEff[iPair].second;
+        float invMass = dijet.M();
+        if( bestPair==-1 || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
+          bestMass = invMass;
+          bestPair = iPair;
+        }
+
+      } //for pairs
+
+      TLorentzVector jet1 = jetPairs_opt400_HighEff[bestPair].first;
+      TLorentzVector jet2 = jetPairs_opt400_HighEff[bestPair].second;
+
+      TLorentzVector bestZDiJet = jet1 + jet2;
+      TLorentzVector ZZ_opt400_HighEff = diLepton + bestZDiJet; 
+      
+  
+      if( lept1.Pt()>67.&& lept1.DeltaR(lept2)<1.4) {
+        h1_mZll_opt400_HighEff->Fill( diLepton.M(), eventWeight);
+        h1_mZqq_opt400_HighEff->Fill( bestZDiJet.M(), eventWeight);
+        h1_ZZInvMass_hiMass_opt400_HighEff->Fill(ZZ_opt400_HighEff.M(), eventWeight);
+        h1_ZZInvMass_hiMass_opt400_HighEff_FINEBINNING->Fill(ZZ_opt400_HighEff.M(), eventWeight);
+      }
+
+    }
+
+
+
+    if( jetPairs_opt500.size()>0. ) {
+
+      // now look for best Z mass jet pair:
+      float Zmass = 91.19;
+      float bestMass = 0.;
+      int bestPair=-1;
+      
+      for( unsigned iPair=0; iPair<jetPairs_opt500.size(); ++iPair ) {
+
+        TLorentzVector dijet = jetPairs_opt500[iPair].first + jetPairs_opt500[iPair].second;
+        float invMass = dijet.M();
+        if( bestPair==-1 || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
+          bestMass = invMass;
+          bestPair = iPair;
+        }
+
+      } //for pairs
+
+      TLorentzVector jet1 = jetPairs_opt500[bestPair].first;
+      TLorentzVector jet2 = jetPairs_opt500[bestPair].second;
+
+      TLorentzVector bestZDiJet = jet1 + jet2;
+      TLorentzVector ZZ_opt500 = diLepton + bestZDiJet; 
+      
+      //if( fabs(lept1.Eta())<2.1 && lept1.Pt()>50. && lept1.DeltaR(lept2)<1.4) {
+      if( lept1.Pt()>50. && lept1.DeltaR(lept2)<1.4) {
+        h1_mZll_opt500->Fill( diLepton.M(), eventWeight);
+        h1_mZqq_opt500->Fill( bestZDiJet.M(), eventWeight);
+        h1_ZZInvMass_hiMass_opt500->Fill(ZZ_opt500.M(), eventWeight);
+        h1_ZZInvMass_hiMass_opt500_FINEBINNING->Fill(ZZ_opt500.M(), eventWeight);
+      }
+
+
+    }
+
+    
 
 /*
     h1_ptLept1->Fill( lept1.Pt(), eventWeight );
@@ -985,7 +1254,7 @@ if( dataset_=="HZZ_qqll_gluonfusion_M300_CANDS" || dataset_=="HZZ_qqll_gluonfusi
     h1_massZll->Fill( Zll.M(), eventWeight );
 
     if( jetLead.Pt()>40. && jetLead2.Pt()>30. && fabs(jetLead.Eta())<2.5 && fabs(jetLead.Eta())<2.5 && lept1.Pt()>20. && lept2.Pt()>20. && Zll.M()>70. && Zll.M()<110. && Zjj_lead.M()>70. && Zjj_lead.M()<120. ) {
-      h1_ZZInvMass_hiMass_JHU->Fill( ZZ_lead.M(), eventWeight );
+      h1_ZZInvMass_hiMass_loose->Fill( ZZ_lead.M(), eventWeight );
     }
 
     // require Z->ll mass:
@@ -1321,8 +1590,39 @@ if( dataset_=="HZZ_qqll_gluonfusion_M300_CANDS" || dataset_=="HZZ_qqll_gluonfusi
   h1_totalLumi->Write();
   h1_run->Write();
 
-  h1_ZZInvMass_hiMass_JHU->Write();
-  h1_ZZInvMass_hiMass_RomeUCSD->Write();
+  h1_ptJet_all->Write();
+
+  h1_ptJet1_loose->Write();
+  h1_ptJet1_tight->Write();
+
+  h1_ptJet2_loose->Write();
+  h1_ptJet2_tight->Write();
+
+  h1_mZll_loose->Write();
+  h1_mZll_tight->Write();
+  h1_mZll_opt400_LowEff->Write();
+  h1_mZll_opt400_HighEff->Write();
+  h1_mZll_opt500->Write();
+
+  h1_mZqq_loose->Write();
+  h1_mZqq_tight->Write();
+  h1_mZqq_opt400_LowEff->Write();
+  h1_mZqq_opt400_HighEff->Write();
+  h1_mZqq_opt500->Write();
+
+  h1_ZZInvMass_hiMass_loose->Write();
+  h1_ZZInvMass_hiMass_loose_FINEBINNING->Write();
+  h1_ZZInvMass_hiMass_tight->Write();
+  h1_ZZInvMass_hiMass_tight_FINEBINNING->Write();
+  h1_ZZInvMass_hiMass_opt400_LowEff->Write();
+  h1_ZZInvMass_hiMass_opt400_LowEff_FINEBINNING->Write();
+  h1_ZZInvMass_hiMass_opt400_HighEff->Write();
+  h1_ZZInvMass_hiMass_opt400_HighEff_FINEBINNING->Write();
+  h1_ZZInvMass_hiMass_opt500->Write();
+  h1_ZZInvMass_hiMass_opt500_FINEBINNING->Write();
+  h1_partFlavor_tight->Write();
+
+  h2_mZjj_vs_mZZ->Write();
 
 /*
   h1_ptLept1->Write();
@@ -1422,7 +1722,7 @@ if( dataset_=="HZZ_qqll_gluonfusion_M300_CANDS" || dataset_=="HZZ_qqll_gluonfusi
   h1_ZZInvMass_hiMass_fullSelection_medium->Write();
   h1_ZZInvMass_hiMass_fullSelection_medium_ZjjMassConstr->Write();
   h1_ZZInvMass_hiMass_fullSelection_loose->Write();
-  h1_ZZInvMass_hiMass_JHU->Write();
+  h1_ZZInvMass_hiMass_loose->Write();
 
   h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass->Write();
   h1_ZZInvMass_medMass_fullSelection_nokin_lowInvMass_lept20->Write();
