@@ -241,12 +241,24 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 4.8236*0.2664*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M500" ) {
     xSection = 2.1914*0.2602*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM200_2l2j_FASTSIM" ) {
+    xSection = (10.361+1.3490+0.046141+0.10275+0.19199)*0.2537*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM250_2l2j_FASTSIM" ) {
+    xSection = (6.8754+0.95634+0.022568+0.044552+0.083131)*0.2951*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="JHUgen_HiggsSM300_2l2j_FASTSIM" ) {
     xSection = (5.2728+0.69730+0.012839+0.021755+0.040722)*0.3053*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM350_2l2j_FASTSIM" ) {
+    xSection = (5.4155+0.52045+0.0081239+0.011586+0.021809)*0.3023*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="JHUgen_HiggsSM400_2l2j_FASTSIM" ) {
     xSection = (4.8236+0.39567+0.0054837+0.0065911+0.012495)*0.2664*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM450_2l2j_FASTSIM" ) {
+    xSection = (3.3475+0.30550+0.0038672+0.0039457+0.0075381)*0.2582*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="JHUgen_HiggsSM500_2l2j"|| dataset=="JHUgen_HiggsSM500_2l2j_FASTSIM" ) {
     xSection = (2.1914+0.23884+0.0028020+0.0024635+0.0047436)*0.2602*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM550_2l2j_FASTSIM" ) {
+    xSection = (1.4188+0.18886+0.0020647+0.0015901+0.0030869)*0.2657*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM600_2l2j_FASTSIM" ) {
+    xSection = (0.92356+0.15073+0.0015419+0.0010553+0.0020650)*0.2724*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="TTbar_2l_Spring10" ) {
     xSection = 157.4*0.1080*0.1080*3.*3.; //NLO x BR(W->lnu) see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="ZZ_Spring10" ) {
@@ -285,7 +297,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
   if( dataset_tstr.Contains(re) ) {
     std::cout << "-> Scaling LO alpgen cross-section to NNLO." << std::endl;
     xSection*=1.31; // K factor
-  //xSection*=(3048./2054.);
+  //xSection*=(3048./2540.);
   ////trying to make them equal by hand:
   //xSection/=1.2;
   }
