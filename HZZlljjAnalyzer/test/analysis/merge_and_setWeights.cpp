@@ -228,6 +228,48 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 0.164*0.103; // sigma x filter efficiency
   } else if( dataset=="Z5Jets_Pt800to1600-alpgen_Spring10" ) {
     xSection = 0.000588*0.109; // sigma x filter efficiency
+  } else if( dataset=="Z0Jets_ptZ-0to100_TuneD6T" ) {
+    xSection = 1929. ; // cross sections taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/ProductionFall2010#ALPGEN
+  } else if( dataset=="Z1Jets_ptZ-0to100_TuneD6T" ) {
+    xSection = 380.8; 
+  } else if( dataset=="Z1Jets_ptZ-100to300_TuneD6T" ) {
+    xSection = 8.721;
+  } else if( dataset=="Z1Jets_ptZ-300to800_TuneD6T" ) {
+    xSection = 0.07386;
+  } else if( dataset=="Z1Jets_ptZ-800to1600_TuneD6T" ) {
+    xSection = 0.0001374;
+  } else if( dataset=="Z2Jets_ptZ-0to100_TuneD6T" ) {
+    xSection = 103.5;
+  } else if( dataset=="Z2Jets_ptZ-100to300_TuneD6T" ) {
+    xSection = 8.534;
+  } else if( dataset=="Z2Jets_ptZ-300to800_TuneD6T" ) {
+    xSection = 0.1151;
+  } else if( dataset=="Z2Jets_ptZ-800to1600_TuneD6T" ) {
+    xSection = 0.0003023;
+  } else if( dataset=="Z3Jets_ptZ-0to100_TuneD6T" ) {
+    xSection = 22.89; 
+  } else if( dataset=="Z3Jets_ptZ-100to300_TuneD6T" ) {
+    xSection = 3.951;
+  } else if( dataset=="Z3Jets_ptZ-300to800_TuneD6T" ) {
+    xSection = 0.08344;
+  } else if( dataset=="Z3Jets_ptZ-800to1600_TuneD6T" ) {
+    xSection = 0.0002480;
+  } else if( dataset=="Z4Jets_ptZ-0to100_TuneD6T" ) {
+    xSection = 4.619;
+  } else if( dataset=="Z4Jets_ptZ-100to300_TuneD6T" ) {
+    xSection = 1.298;
+  } else if( dataset=="Z4Jets_ptZ-300to800_TuneD6T" ) {
+    xSection = 0.03935;
+  } else if( dataset=="Z4Jets_ptZ-800to1600_TuneD6T" ) {
+    xSection = 0.0001394;
+  } else if( dataset=="Z5Jets_ptZ-0to100_TuneD6T" ) {
+    xSection = 1.135;
+  } else if( dataset=="Z5Jets_ptZ-100to300_TuneD6T" ) {
+    xSection = 0.4758;
+  } else if( dataset=="Z5Jets_ptZ-300to800_TuneD6T" ) {
+    xSection = 0.01946;
+  } else if( dataset=="Z5Jets_ptZ-800to1600_TuneD6T" ) {
+    xSection = 0.00007195;
   } else if( dataset=="HZZ_qqll_gluonfusion_M130" ) {
     xSection = 25.560*0.03913*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M150" ) {
