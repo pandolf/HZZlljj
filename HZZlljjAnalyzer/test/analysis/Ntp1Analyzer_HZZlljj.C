@@ -786,9 +786,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 //std::cout << "   Second jet: pt: " << otherJet.Pt() << " eta: " << otherJet.Eta() << " phi: " << otherJet.Phi() << std::endl;
 
-         if( nPairs_>=20 ) {
+         if( nPairs_>=50 ) {
         
-           std::cout << "MORE than 20 jet pairs found. SKIPPING!!" << std::endl;
+           std::cout << "MORE than 50 jet pairs found. SKIPPING!!" << std::endl;
 
          } else {
 

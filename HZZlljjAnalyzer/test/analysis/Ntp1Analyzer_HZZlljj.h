@@ -87,11 +87,11 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
 
    Int_t nPairs_;
 
-   Int_t  iJet1_[20];
-   Float_t  ptJet1_[20];
-   Float_t   eJet1_[20];
-   Float_t phiJet1_[20];
-   Float_t etaJet1_[20];
+   Int_t  iJet1_[50];
+   Float_t  ptJet1_[50];
+   Float_t   eJet1_[50];
+   Float_t phiJet1_[50];
+   Float_t etaJet1_[50];
 
    Float_t   ptJetGen1_;
    Float_t    eJetGen1_;
@@ -104,21 +104,21 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t  phiPart1_;
    Float_t  etaPart1_;
 
-   Float_t  eChargedHadronsJet1_[20];
-   Float_t  ePhotonsJet1_[20];
-   Float_t  eNeutralHadronsJet1_[20];
-   Float_t  eMuonsJet1_[20];
-   Float_t  eElectronsJet1_[20];
-   Float_t  eHFHadronsJet1_[20];
-   Float_t  eHFEMJet1_[20];
+   Float_t  eChargedHadronsJet1_[50];
+   Float_t  ePhotonsJet1_[50];
+   Float_t  eNeutralHadronsJet1_[50];
+   Float_t  eMuonsJet1_[50];
+   Float_t  eElectronsJet1_[50];
+   Float_t  eHFHadronsJet1_[50];
+   Float_t  eHFEMJet1_[50];
 
-   Int_t  nChargedHadronsJet1_[20];
-   Int_t  nPhotonsJet1_[20];
-   Int_t  nNeutralHadronsJet1_[20];
-   Int_t  nMuonsJet1_[20];
-   Int_t  nElectronsJet1_[20];
-   Int_t  nHFHadronsJet1_[20];
-   Int_t  nHFEMJet1_[20];
+   Int_t  nChargedHadronsJet1_[50];
+   Int_t  nPhotonsJet1_[50];
+   Int_t  nNeutralHadronsJet1_[50];
+   Int_t  nMuonsJet1_[50];
+   Int_t  nElectronsJet1_[50];
+   Int_t  nHFHadronsJet1_[50];
+   Int_t  nHFEMJet1_[50];
 
    Int_t  nPFCand1_;
    Float_t  ePFCand1_[100];
@@ -127,11 +127,11 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t  phiPFCand1_[100];
    Int_t  particleTypePFCand1_[100];
 
-   Int_t  iJet2_[20];
-   Float_t  ptJet2_[20];
-   Float_t   eJet2_[20];
-   Float_t phiJet2_[20];
-   Float_t etaJet2_[20];
+   Int_t  iJet2_[50];
+   Float_t  ptJet2_[50];
+   Float_t   eJet2_[50];
+   Float_t phiJet2_[50];
+   Float_t etaJet2_[50];
 
    Float_t   ptJetGen2_;
    Float_t    eJetGen2_;
@@ -144,21 +144,21 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t  phiPart2_;
    Float_t  etaPart2_;
 
-   Float_t  eChargedHadronsJet2_[20];
-   Float_t  ePhotonsJet2_[20];
-   Float_t  eNeutralHadronsJet2_[20];
-   Float_t  eMuonsJet2_[20];
-   Float_t  eElectronsJet2_[20];
-   Float_t  eHFHadronsJet2_[20];
-   Float_t  eHFEMJet2_[20];
+   Float_t  eChargedHadronsJet2_[50];
+   Float_t  ePhotonsJet2_[50];
+   Float_t  eNeutralHadronsJet2_[50];
+   Float_t  eMuonsJet2_[50];
+   Float_t  eElectronsJet2_[50];
+   Float_t  eHFHadronsJet2_[50];
+   Float_t  eHFEMJet2_[50];
 
-   Int_t  nChargedHadronsJet2_[20];
-   Int_t  nPhotonsJet2_[20];
-   Int_t  nNeutralHadronsJet2_[20];
-   Int_t  nMuonsJet2_[20];
-   Int_t  nElectronsJet2_[20];
-   Int_t  nHFHadronsJet2_[20];
-   Int_t  nHFEMJet2_[20];
+   Int_t  nChargedHadronsJet2_[50];
+   Int_t  nPhotonsJet2_[50];
+   Int_t  nNeutralHadronsJet2_[50];
+   Int_t  nMuonsJet2_[50];
+   Int_t  nElectronsJet2_[50];
+   Int_t  nHFHadronsJet2_[50];
+   Int_t  nHFEMJet2_[50];
 
    Int_t  nPFCand2_;
    Float_t  ePFCand2_[100];
