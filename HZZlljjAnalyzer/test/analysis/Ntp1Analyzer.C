@@ -72,7 +72,7 @@ void Ntp1Analyzer::LoadInput() {
 
    if( addInt==0 ) {
      std::cout << "Didn't find files to add for dataset: '" << dataset_ << "'. Looking for a list..." << std::endl;
-     std::string fileName = "files_HZZlljj_" + dataset_ + ".txt";
+     std::string fileName = "files_" + dataset_ + ".txt";
      this->LoadInputFromFile(fileName);
    } else {
      TTree* tree = chain;
