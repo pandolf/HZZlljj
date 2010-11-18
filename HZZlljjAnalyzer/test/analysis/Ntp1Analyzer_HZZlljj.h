@@ -93,16 +93,11 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t phiJet1_[50];
    Float_t etaJet1_[50];
 
-   Float_t   ptJetGen1_;
-   Float_t    eJetGen1_;
-   Float_t  phiJetGen1_;
-   Float_t  etaJetGen1_;
-   Int_t    partIdJetGen1_;
-
-   Float_t   ptPart1_;
-   Float_t    ePart1_;
-   Float_t  phiPart1_;
-   Float_t  etaPart1_;
+// Float_t   ptJetGen1_;
+// Float_t    eJetGen1_;
+// Float_t  phiJetGen1_;
+// Float_t  etaJetGen1_;
+// Int_t    partIdJetGen1_;
 
    Float_t  eChargedHadronsJet1_[50];
    Float_t  ePhotonsJet1_[50];
@@ -133,16 +128,16 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t phiJet2_[50];
    Float_t etaJet2_[50];
 
-   Float_t   ptJetGen2_;
-   Float_t    eJetGen2_;
-   Float_t  phiJetGen2_;
-   Float_t  etaJetGen2_;
-   Int_t    partIdJetGen2_;
+// Float_t   ptJetGen2_;
+// Float_t    eJetGen2_;
+// Float_t  phiJetGen2_;
+// Float_t  etaJetGen2_;
+// Int_t    partIdJetGen2_;
 
-   Float_t   ptPart2_;
-   Float_t    ePart2_;
-   Float_t  phiPart2_;
-   Float_t  etaPart2_;
+// Float_t   ptPart2_;
+// Float_t    ePart2_;
+// Float_t  phiPart2_;
+// Float_t  etaPart2_;
 
    Float_t  eChargedHadronsJet2_[50];
    Float_t  ePhotonsJet2_[50];
@@ -174,8 +169,6 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t etaPart_[20];
    Int_t pdgIdPart_[20];
 
-   Int_t   pdgIdPartJet1_;
-   Int_t   pdgIdPartJet2_;
 
    Float_t epfMet_;
    Float_t phipfMet_;
@@ -190,12 +183,11 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    TH1F* h1_deltaRmatching_genjet_parton; 
    TH1F* h1_deltaRmatching_jet_genjet; 
    TH1F* h1_deltaRmatching_jet_leptonParton;
-   TH1F* h1_indexMatchedJet;
-   TH1F* h1_indexMatched05Jet;
-   TH1F* h1_nMatched_per_event;
-   TH1F* h1_nMatched05_per_event;
-   TH1F* h1_pdgIdParton1;
-   TH1F* h1_pdgIdParton2;
+// TH1F* h1_indexMatchedJet;
+// TH1F* h1_indexMatched05Jet;
+// TH1F* h1_nMatched_per_event;
+// TH1F* h1_nMatched05_per_event;
+// TH1F* h1_pdgIdParton2;
 // TH1F* h1_ptHadronicZ; 
 // TH1F* h1_deltaRqq; 
 

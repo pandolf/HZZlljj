@@ -168,16 +168,16 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("phiPFCand1",  &phiPFCand1_,  "phiPFCand1_[nPFCand1_]/F");
   reducedTree_->Branch("particleTypePFCand1",  &particleTypePFCand1_,  "particleTypePFCand1_[nPFCand1_]/I");
 
-  reducedTree_->Branch(   "eJetGen1",    &eJetGen1_,    "eJetGen1_/F");
-  reducedTree_->Branch(  "ptJetGen1",   &ptJetGen1_,   "ptJetGen1_/F");
-  reducedTree_->Branch( "etaJetGen1",  &etaJetGen1_,  "etaJetGen1_/F");
-  reducedTree_->Branch( "phiJetGen1",  &phiJetGen1_,  "phiJetGen1_/F");
-  reducedTree_->Branch("partIdJetGen1", &partIdJetGen1_, "partIdJetGen1_/I");
+//reducedTree_->Branch(   "eJetGen1",    &eJetGen1_,    "eJetGen1_/F");
+//reducedTree_->Branch(  "ptJetGen1",   &ptJetGen1_,   "ptJetGen1_/F");
+//reducedTree_->Branch( "etaJetGen1",  &etaJetGen1_,  "etaJetGen1_/F");
+//reducedTree_->Branch( "phiJetGen1",  &phiJetGen1_,  "phiJetGen1_/F");
+//reducedTree_->Branch("partIdJetGen1", &partIdJetGen1_, "partIdJetGen1_/I");
 
-  reducedTree_->Branch(   "ePart1",    &ePart1_,    "ePart1_/F");
-  reducedTree_->Branch(  "ptPart1",   &ptPart1_,   "ptPart1_/F");
-  reducedTree_->Branch( "etaPart1",  &etaPart1_,  "etaPart1_/F");
-  reducedTree_->Branch( "phiPart1",  &phiPart1_,  "phiPart1_/F");
+//reducedTree_->Branch(   "ePart1",    &ePart1_,    "ePart1_/F");
+//reducedTree_->Branch(  "ptPart1",   &ptPart1_,   "ptPart1_/F");
+//reducedTree_->Branch( "etaPart1",  &etaPart1_,  "etaPart1_/F");
+//reducedTree_->Branch( "phiPart1",  &phiPart1_,  "phiPart1_/F");
 
   reducedTree_->Branch("iJet2",  iJet2_,  "iJet2_[nPairs_]/I");
   reducedTree_->Branch("eJet2",  eJet2_,  "eJet2_[nPairs_]/F");
@@ -208,16 +208,16 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("phiPFCand2",  &phiPFCand2_,  "phiPFCand2_[nPFCand2_]/F");
   reducedTree_->Branch("particleTypePFCand2",  &particleTypePFCand2_,  "particleTypePFCand2_[nPFCand2_]/I");
 
-  reducedTree_->Branch(   "eJetGen2",    &eJetGen2_,    "eJetGen2_/F");
-  reducedTree_->Branch(  "ptJetGen2",   &ptJetGen2_,   "ptJetGen2_/F");
-  reducedTree_->Branch( "etaJetGen2",  &etaJetGen2_,  "etaJetGen2_/F");
-  reducedTree_->Branch( "phiJetGen2",  &phiJetGen2_,  "phiJetGen2_/F");
-  reducedTree_->Branch("partIdJetGen2", &partIdJetGen2_, "partIdJetGen2_/I");
+//reducedTree_->Branch(   "eJetGen2",    &eJetGen2_,    "eJetGen2_/F");
+//reducedTree_->Branch(  "ptJetGen2",   &ptJetGen2_,   "ptJetGen2_/F");
+//reducedTree_->Branch( "etaJetGen2",  &etaJetGen2_,  "etaJetGen2_/F");
+//reducedTree_->Branch( "phiJetGen2",  &phiJetGen2_,  "phiJetGen2_/F");
+//reducedTree_->Branch("partIdJetGen2", &partIdJetGen2_, "partIdJetGen2_/I");
 
-  reducedTree_->Branch(   "ePart2",    &ePart2_,    "ePart2_/F");
-  reducedTree_->Branch(  "ptPart2",   &ptPart2_,   "ptPart2_/F");
-  reducedTree_->Branch( "etaPart2",  &etaPart2_,  "etaPart2_/F");
-  reducedTree_->Branch( "phiPart2",  &phiPart2_,  "phiPart2_/F");
+//reducedTree_->Branch(   "ePart2",    &ePart2_,    "ePart2_/F");
+//reducedTree_->Branch(  "ptPart2",   &ptPart2_,   "ptPart2_/F");
+//reducedTree_->Branch( "etaPart2",  &etaPart2_,  "etaPart2_/F");
+//reducedTree_->Branch( "phiPart2",  &phiPart2_,  "phiPart2_/F");
 
   reducedTree_->Branch("nPart", &nPart_, "nPart_/I");
   reducedTree_->Branch("ePart",  ePart_,  "ePart_[nPart_]/F");
@@ -244,12 +244,12 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   h1_deltaRmatching_genjet_parton = new TH1F("deltaRmatching_genjet_parton", "", 100, 0., 0.6);
   h1_deltaRmatching_jet_genjet = new TH1F("deltaRmatching_jet_genjet", "", 100, 0., 0.6);
   h1_deltaRmatching_jet_leptonParton = new TH1F("deltaRmatching_leptonParton", "", 100, 0., 4.);
-  h1_indexMatchedJet = new TH1F("indexMatchedJet", "", 6, -0.5, 5.5);
-  h1_indexMatched05Jet = new TH1F("indexMatched05Jet", "", 6, -0.5, 5.5);
-  h1_nMatched_per_event = new TH1F("nMatched_per_event", "", 6, -0.5, 5.5);
-  h1_nMatched05_per_event = new TH1F("nMatched05_per_event", "", 6, -0.5, 5.5);
-  h1_pdgIdParton1 = new TH1F("pdgIdParton1", "", 36, -10.5, 25.5);
-  h1_pdgIdParton2 = new TH1F("pdgIdParton2", "", 36, -10.5, 25.5);
+//h1_indexMatchedJet = new TH1F("indexMatchedJet", "", 6, -0.5, 5.5);
+//h1_indexMatched05Jet = new TH1F("indexMatched05Jet", "", 6, -0.5, 5.5);
+//h1_nMatched_per_event = new TH1F("nMatched_per_event", "", 6, -0.5, 5.5);
+//h1_nMatched05_per_event = new TH1F("nMatched05_per_event", "", 6, -0.5, 5.5);
+//h1_pdgIdParton1 = new TH1F("pdgIdParton1", "", 36, -10.5, 25.5);
+//h1_pdgIdParton2 = new TH1F("pdgIdParton2", "", 36, -10.5, 25.5);
 //h1_ptHadronicZ = new TH1F("ptHadronicZ", "", 50, 0., 400.);
 //h1_deltaRqq = new TH1F("deltaRqq", "", 50, 0., 3.);
 
@@ -270,12 +270,12 @@ Ntp1Analyzer_HZZlljj::~Ntp1Analyzer_HZZlljj() {
   h1_deltaRmatching_genjet_parton->Write();
   h1_deltaRmatching_jet_genjet->Write();
   h1_deltaRmatching_jet_leptonParton->Write();
-  h1_indexMatchedJet->Write();
-  h1_indexMatched05Jet->Write();
-  h1_nMatched_per_event->Write();
-  h1_nMatched05_per_event->Write();
-  h1_pdgIdParton1->Write();
-  h1_pdgIdParton2->Write();
+//h1_indexMatchedJet->Write();
+//h1_indexMatched05Jet->Write();
+//h1_nMatched_per_event->Write();
+//h1_nMatched05_per_event->Write();
+//h1_pdgIdParton1->Write();
+//h1_pdgIdParton2->Write();
 //h1_ptHadronicZ->Write();
 //h1_deltaRqq->Write();
   
@@ -943,179 +943,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      }  // for candidates
      
 */
-
-     std::vector<TLorentzVector> jets;
-     jets.push_back(leadJets[best_i]);
-     jets.push_back(leadJets[best_j]);
-
-
-     // --------------------
-     // match jets to MC:
-     // --------------------
-     std::vector<TLorentzVector> matchedGenJets;
-     std::vector<TLorentzVector> matchedPartons;
-     std::vector<int> pdgIdPartonGenJets;
-
-     int nMatched_per_event = 0;
-     int nMatched05_per_event = 0;
-
-     for( unsigned iJet=0; iJet<jets.size(); ++iJet ) {
-
-       float deltaRmin = 100.;
-       TLorentzVector matchedPartonMC;
-
-       //if( iJet!=0 && iJet!=1 ) continue;
-       //if( iJet!=best_i && iJet!=best_j ) continue;
-       
-       // first match to partons (only for signal):
-       for( unsigned iMc=0; iMc<nMc; ++iMc ) {
-
-         if( statusMc[iMc]==3 && fabs(idMc[iMc])<=6 && idMc[mothMc[iMc]]==23 ) { //partons from Z
-
-           TLorentzVector* thisParticle = new TLorentzVector();
-           thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
-           float thisDeltaR = jets[iJet].DeltaR( *thisParticle );
-           if( thisDeltaR < deltaRmin ) {
-             deltaRmin = thisDeltaR;
-             matchedPartonMC = *thisParticle;
-           }
-
-           delete thisParticle;
-           thisParticle = 0;
-
-         } //if correct id mc
-
-       } // for i mc
-
-       h1_deltaRmatching_jet_parton->Fill( deltaRmin );
-       if( deltaRmin < 0.25 )  { //matched
-         h1_indexMatchedJet->Fill( iJet );
-         nMatched_per_event++;
-       }
-       if( deltaRmin < 0.5 )  { //matched
-         h1_indexMatched05Jet->Fill( iJet );
-         nMatched05_per_event++;
-       }
-       matchedPartons.push_back(matchedPartonMC);
-
-
-
-
-
-       // now match to genjet (general mc case):
-
-       float deltaRmin_genjet = 100.;
-       TLorentzVector matchedGenJet;
-
-       for( unsigned iGenJet=0; iGenJet<nAK5GenJet; ++iGenJet ) {
-
-         TLorentzVector* thisGenJet = new TLorentzVector( pxAK5GenJet[iGenJet], pyAK5GenJet[iGenJet], pzAK5GenJet[iGenJet], energyAK5GenJet[iGenJet]);
-         float thisDeltaR = jets[iJet].DeltaR( *thisGenJet );
-         if( thisDeltaR < deltaRmin_genjet ) {
-           deltaRmin_genjet = thisDeltaR;
-           matchedGenJet = *thisGenJet;
-         }
-
-         delete thisGenJet;
-         thisGenJet = 0;
-
-       } // for i GenJet
-
-       h1_deltaRmatching_jet_genjet->Fill( deltaRmin_genjet );
-       matchedGenJets.push_back(matchedGenJet);
-
-
-
-       // match genjet to parton:
-
-       float deltaRmin_parton = 100.;
-       int foundPdgId;
-
-       for( unsigned iMc=0; iMc<nMc; ++iMc ) {
-
-         if( statusMc[iMc]==3 && (fabs(idMc[iMc])<=6 || idMc[iMc]==21) ) {
-
-           TLorentzVector* thisParticle = new TLorentzVector();
-           thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
-           float thisDeltaR = matchedGenJet.DeltaR( *thisParticle );
-           if( thisDeltaR < deltaRmin_parton ) {
-             deltaRmin_parton = thisDeltaR;
-             foundPdgId = idMc[iMc];
-           }
-
-           delete thisParticle;
-           thisParticle = 0;
-
-         } //if correct id mc
-
-       } // for i mc
-
-       h1_deltaRmatching_genjet_parton->Fill( deltaRmin_parton );
-       pdgIdPartonGenJets.push_back(foundPdgId); 
-
-
-     } //for i jets
-
-     h1_nMatched_per_event->Fill( nMatched_per_event );
-     h1_nMatched05_per_event->Fill( nMatched05_per_event );
-
-     if( nMatched_per_event==0 ) {
-
-       for( unsigned iMc=0; iMc<nMc; ++iMc ) {
-
-         if( statusMc[mothMc[iMc]]==3 && (fabs(idMc[iMc])==11 || fabs(idMc[iMc])==13) ) {
-           TLorentzVector lepton;
-           lepton.SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
-           h1_deltaRmatching_jet_leptonParton->Fill( lepton.DeltaR(jets[0]) );
-           h1_deltaRmatching_jet_leptonParton->Fill( lepton.DeltaR(jets[1]) );
-         }
-
-       }
-     }
-
-
-
-     int iPart1 = -1;
-     int iPart2 = -1;
-     float ptPartMax=0.;
-
-     for( unsigned iMc=0; iMc<nMc; ++iMc ) {
-
-       if( statusMc[iMc]==3 && (fabs(idMc[iMc])<=6 || idMc[iMc]==21) ) {
-
-         if( pMc[iMc]*sin(thetaMc[iMc])>ptPartMax ) {
-           iPart2 = iPart1;
-           iPart1 = iMc;
-         }
-
-       }          
-
-     }
-
-     if( iPart1>=0 ) h1_pdgIdParton1->Fill( idMc[iPart1] );
-     if( iPart2>=0 ) h1_pdgIdParton2->Fill( idMc[iPart2] );
-
-     eJetGen1_ = (matchedGenJets[0].Energy()>0.) ? matchedGenJets[0].Energy() : 0.;
-     ptJetGen1_ = (matchedGenJets[0].Energy()>0.) ? matchedGenJets[0].Pt() : 0.;
-     etaJetGen1_ = (matchedGenJets[0].Energy()>0.) ? matchedGenJets[0].Eta() : 0.;
-     phiJetGen1_ = (matchedGenJets[0].Energy()>0.) ? matchedGenJets[0].Phi() : 0.;
-     partIdJetGen1_ = (matchedGenJets[0].Energy()>0.) ? pdgIdPartonGenJets[0] : 0.;
-
-     eJetGen2_ = (matchedGenJets[1].Energy()>0.) ? matchedGenJets[1].Energy() : 0.;
-     ptJetGen2_ = (matchedGenJets[1].Energy()>0.) ? matchedGenJets[1].Pt() : 0.;
-     etaJetGen2_ = (matchedGenJets[1].Energy()>0.) ? matchedGenJets[1].Eta() : 0.;
-     phiJetGen2_ = (matchedGenJets[1].Energy()>0.) ? matchedGenJets[1].Phi() : 0.;
-     partIdJetGen2_ = (matchedGenJets[1].Energy()>0.) ? pdgIdPartonGenJets[1] : 0.;
-
-     ePart1_ = (matchedPartons[0].Energy()>0.) ? matchedPartons[0].Energy() : 0.;
-     ptPart1_ = (matchedPartons[0].Energy()>0.) ? matchedPartons[0].Pt() : 0.;
-     etaPart1_ = (matchedPartons[0].Energy()>0.) ? matchedPartons[0].Eta() : 0.;
-     phiPart1_ = (matchedPartons[0].Energy()>0.) ? matchedPartons[0].Phi() : 0.;
-
-     ePart2_ = (matchedPartons[1].Energy()>0.) ? matchedPartons[1].Energy() : 0.;
-     ptPart2_ = (matchedPartons[1].Energy()>0.) ? matchedPartons[1].Pt() : 0.;
-     etaPart2_ = (matchedPartons[1].Energy()>0.) ? matchedPartons[1].Eta() : 0.;
-     phiPart2_ = (matchedPartons[1].Energy()>0.) ? matchedPartons[1].Phi() : 0.;
 
 
 

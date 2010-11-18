@@ -568,11 +568,34 @@ public :
    Float_t         vertexZAK5PFJet[100];   //[nAK5PFJet]
    Float_t         chargedHadronEnergyAK5PFJet[100];   //[nAK5PFJet]
    Float_t         neutralHadronEnergyAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         photonEnergyAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         electronEnergyAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         muonEnergyAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         HFHadronEnergyAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         HFEMEnergyAK5PFJet[100];   //[nAK5PFJet]
+   Int_t           chargedHadronMultiplicityAK5PFJet[100];   //[nAK5PFJet]
+   Int_t           neutralHadronMultiplicityAK5PFJet[100];   //[nAK5PFJet]
+   Int_t           photonMultiplicityAK5PFJet[100];   //[nAK5PFJet]
+   Int_t           electronMultiplicityAK5PFJet[100];   //[nAK5PFJet]
+   Int_t           muonMultiplicityAK5PFJet[100];   //[nAK5PFJet]
+   Int_t           HFHadronMultiplicityAK5PFJet[100];   //[nAK5PFJet]
+   Int_t           HFEMMultiplicityAK5PFJet[100];   //[nAK5PFJet]
    Float_t         chargedEmEnergyAK5PFJet[100];   //[nAK5PFJet]
    Float_t         neutralEmEnergyAK5PFJet[100];   //[nAK5PFJet]
-   Float_t         neutralMultiplicityAK5PFJet[100];   //[nAK5PFJet]
-   Float_t         chargedMultiplicityAK5PFJet[100];   //[nAK5PFJet]
-   Float_t         muonMultiplicityAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         combinedSecondaryVertexBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         combinedSecondaryVertexMVABJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         jetBProbabilityBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         jetProbabilityBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         simpleSecondaryVertexHighEffBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         simpleSecondaryVertexHighPurBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         softMuonBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         softMuonByIP3dBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         softMuonByPtBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         softElectronBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         softElectronByIP3dBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         softElectronByPtBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         trackCountingHighPurBJetTagsAK5PFJet[100];   //[nAK5PFJet]
+   Float_t         trackCountingHighEffBJetTagsAK5PFJet[100];   //[nAK5PFJet]
    Float_t         uncorrEnergyAK5PFJet[100];   //[nAK5PFJet]
    Int_t           nAK5JPTJet;
    Int_t           chargeAK5JPTJet[100];   //[nAK5JPTJet]
@@ -1188,11 +1211,34 @@ public :
    TBranch        *b_vertexZAK5PFJet;   //!
    TBranch        *b_chargedHadronEnergyAK5PFJet;   //!
    TBranch        *b_neutralHadronEnergyAK5PFJet;   //!
+   TBranch        *b_photonEnergyAK5PFJet;   //!
+   TBranch        *b_electronEnergyAK5PFJet;   //!
+   TBranch        *b_muonEnergyAK5PFJet;   //!
+   TBranch        *b_HFHadronEnergyAK5PFJet;   //!
+   TBranch        *b_HFEMEnergyAK5PFJet;   //!
+   TBranch        *b_chargedHadronMultiplicityAK5PFJet;   //!
+   TBranch        *b_neutralHadronMultiplicityAK5PFJet;   //!
+   TBranch        *b_photonMultiplicityAK5PFJet;   //!
+   TBranch        *b_electronMultiplicityAK5PFJet;   //!
+   TBranch        *b_muonMultiplicityAK5PFJet;   //!
+   TBranch        *b_HFHadronMultiplicityAK5PFJet;   //!
+   TBranch        *b_HFEMMultiplicityAK5PFJet;   //!
    TBranch        *b_chargedEmEnergyAK5PFJet;   //!
    TBranch        *b_neutralEmEnergyAK5PFJet;   //!
-   TBranch        *b_neutralMultiplicityAK5PFJet;   //!
-   TBranch        *b_chargedMultiplicityAK5PFJet;   //!
-   TBranch        *b_muonMultiplicityAK5PFJet;   //!
+   TBranch        *b_combinedSecondaryVertexBJetTagsAK5PFJet;   //!
+   TBranch        *b_combinedSecondaryVertexMVABJetTagsAK5PFJet;   //!
+   TBranch        *b_jetBProbabilityBJetTagsAK5PFJet;   //!
+   TBranch        *b_jetProbabilityBJetTagsAK5PFJet;   //!
+   TBranch        *b_simpleSecondaryVertexHighEffBJetTagsAK5PFJet;   //!
+   TBranch        *b_simpleSecondaryVertexHighPurBJetTagsAK5PFJet;   //!
+   TBranch        *b_softMuonBJetTagsAK5PFJet;   //!
+   TBranch        *b_softMuonByIP3dBJetTagsAK5PFJet;   //!
+   TBranch        *b_softMuonByPtBJetTagsAK5PFJet;   //!
+   TBranch        *b_softElectronBJetTagsAK5PFJet;   //!
+   TBranch        *b_softElectronByIP3dBJetTagsAK5PFJet;   //!
+   TBranch        *b_softElectronByPtBJetTagsAK5PFJet;   //!
+   TBranch        *b_trackCountingHighPurBJetTagsAK5PFJet;   //!
+   TBranch        *b_trackCountingHighEffBJetTagsAK5PFJet;   //!
    TBranch        *b_uncorrEnergyAK5PFJet;   //!
    TBranch        *b_nAK5JPTJet;   //!
    TBranch        *b_chargeAK5JPTJet;   //!
