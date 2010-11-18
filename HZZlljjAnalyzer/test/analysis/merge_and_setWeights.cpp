@@ -228,47 +228,47 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 0.164*0.103; // sigma x filter efficiency
   } else if( dataset=="Z5Jets_Pt800to1600-alpgen_Spring10" ) {
     xSection = 0.000588*0.109; // sigma x filter efficiency
-  } else if( dataset=="Z0Jets_ptZ-0to100_TuneD6T" ) {
+  } else if( dataset=="Z0Jets_TuneD6T" || dataset_=="Z0Jets_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 1929. ; // cross sections taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/ProductionFall2010#ALPGEN
-  } else if( dataset=="Z1Jets_ptZ-0to100_TuneD6T" ) {
+  } else if( dataset=="Z1Jets_ptZ-0to100_TuneD6T" || dataset_=="Z1Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 380.8; 
-  } else if( dataset=="Z1Jets_ptZ-100to300_TuneD6T" ) {
+  } else if( dataset=="Z1Jets_ptZ-100to300_TuneD6T" || dataset_=="Z1Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 8.721;
-  } else if( dataset=="Z1Jets_ptZ-300to800_TuneD6T" ) {
+  } else if( dataset=="Z1Jets_ptZ-300to800_TuneD6T" || dataset_=="Z1Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.07386;
-  } else if( dataset=="Z1Jets_ptZ-800to1600_TuneD6T" ) {
+  } else if( dataset=="Z1Jets_ptZ-800to1600_TuneD6T" || dataset_=="Z1Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.0001374;
-  } else if( dataset=="Z2Jets_ptZ-0to100_TuneD6T" ) {
+  } else if( dataset=="Z2Jets_ptZ-0to100_TuneD6T" || dataset_=="Z2Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 103.5;
-  } else if( dataset=="Z2Jets_ptZ-100to300_TuneD6T" ) {
+  } else if( dataset=="Z2Jets_ptZ-100to300_TuneD6T" || dataset_=="Z2Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 8.534;
-  } else if( dataset=="Z2Jets_ptZ-300to800_TuneD6T" ) {
+  } else if( dataset=="Z2Jets_ptZ-300to800_TuneD6T" || dataset_=="Z2Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.1151;
-  } else if( dataset=="Z2Jets_ptZ-800to1600_TuneD6T" ) {
+  } else if( dataset=="Z2Jets_ptZ-800to1600_TuneD6T" || dataset_=="Z2Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.0003023;
-  } else if( dataset=="Z3Jets_ptZ-0to100_TuneD6T" ) {
+  } else if( dataset=="Z3Jets_ptZ-0to100_TuneD6T" || dataset_=="Z3Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 22.89; 
-  } else if( dataset=="Z3Jets_ptZ-100to300_TuneD6T" ) {
+  } else if( dataset=="Z3Jets_ptZ-100to300_TuneD6T" || dataset_=="Z3Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 3.951;
-  } else if( dataset=="Z3Jets_ptZ-300to800_TuneD6T" ) {
+  } else if( dataset=="Z3Jets_ptZ-300to800_TuneD6T" || dataset_=="Z3Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.08344;
-  } else if( dataset=="Z3Jets_ptZ-800to1600_TuneD6T" ) {
+  } else if( dataset=="Z3Jets_ptZ-800to1600_TuneD6T" || dataset_=="Z3Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.0002480;
-  } else if( dataset=="Z4Jets_ptZ-0to100_TuneD6T" ) {
+  } else if( dataset=="Z4Jets_ptZ-0to100_TuneD6T" || dataset_=="Z4Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 4.619;
-  } else if( dataset=="Z4Jets_ptZ-100to300_TuneD6T" ) {
+  } else if( dataset=="Z4Jets_ptZ-100to300_TuneD6T" || dataset_=="Z4Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 1.298;
-  } else if( dataset=="Z4Jets_ptZ-300to800_TuneD6T" ) {
+  } else if( dataset=="Z4Jets_ptZ-300to800_TuneD6T" || dataset_=="Z4Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.03935;
-  } else if( dataset=="Z4Jets_ptZ-800to1600_TuneD6T" ) {
+  } else if( dataset=="Z4Jets_ptZ-800to1600_TuneD6T" || dataset_=="Z4Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.0001394;
-  } else if( dataset=="Z5Jets_ptZ-0to100_TuneD6T" ) {
+  } else if( dataset=="Z5Jets_ptZ-0to100_TuneD6T" || dataset_=="Z5Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 1.135;
-  } else if( dataset=="Z5Jets_ptZ-100to300_TuneD6T" ) {
+  } else if( dataset=="Z5Jets_ptZ-100to300_TuneD6T" || dataset_=="Z5Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.4758;
-  } else if( dataset=="Z5Jets_ptZ-300to800_TuneD6T" ) {
+  } else if( dataset=="Z5Jets_ptZ-300to800_TuneD6T" || dataset_=="Z5Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.01946;
-  } else if( dataset=="Z5Jets_ptZ-800to1600_TuneD6T" ) {
+  } else if( dataset=="Z5Jets_ptZ-800to1600_TuneD6T" || dataset_=="Z5Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" ) {
     xSection = 0.00007195;
   } else if( dataset=="HZZ_qqll_gluonfusion_M130" ) {
     xSection = 25.560*0.03913*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
@@ -303,7 +303,9 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = (0.92356+0.15073+0.0015419+0.0010553+0.0020650)*0.2724*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="TTbar_2l_Spring10" ) {
     xSection = 157.4*0.1080*0.1080*3.*3.; //NLO x BR(W->lnu) see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
-  } else if( dataset=="ZZ_Spring10" ) {
+  } else if( dataset=="TTJets_TuneD6T" ) {
+    xSection = 157.4; //NLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
+  } else if( dataset=="ZZ_Spring10" || dataset_=="ZZtoAnything_TuneZ2" ) {
     xSection = 5.9*1.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt plus factor 1.3 to account for glu-glu
   } else if( dataset=="Zmumu_Pythia" ) {
     xSection = 3048./3.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
@@ -336,12 +338,12 @@ float getWeight( const std::string& dataset, int nEvents ) {
 
   TString dataset_tstr(dataset.c_str());
   TRegexp re("alpgen");
-  if( dataset_tstr.Contains(re) ) {
+  TRegexp re2("Z");
+  TRegexp re3("Jets");
+  TRegexp re4("TuneD6T");
+  if( dataset_tstr.Contains(re)||(dataset_tstr.Contains(re2)&&dataset_tstr.Contains(re3)&&dataset_tstr.Contains(re4)) ) {
     std::cout << "-> Scaling LO alpgen cross-section to NNLO." << std::endl;
     xSection*=1.31; // K factor
-  //xSection*=(3048./2540.);
-  ////trying to make them equal by hand:
-  //xSection/=1.2;
   }
 
 
