@@ -8,21 +8,8 @@
 
 #include "fitTools.h"
 
-double delta_phi(double phi1, double phi2) {
 
-  double dphi = fabs(phi1 - phi2);
-  return (dphi <= TMath::Pi())? dphi : TMath::TwoPi() - dphi;
-}
-
-
-float delta_phi(float phi1, float phi2) {
-
-  float dphi = fabs(phi1 - phi2);
-  float sgn = (phi1 >= phi2 ? +1. : -1.);
-  return sgn * (dphi <= TMath::Pi() ? dphi : TMath::TwoPi() - dphi);
-}
-
-
+double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
 
 
 class AnalysisJet : public TLorentzVector {
@@ -481,6 +468,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      std::vector<TLorentzVector> electrons;
      int chargeFirstEle = 0;
+     bool firstPassedVBTF80 = false;
 
      for( unsigned int iEle=0; (iEle<nEle) && (electrons.size()<2); ++iEle ) {
 
@@ -489,39 +477,68 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // kinematics:
        // --------------
-       if( thisEle.Pt() < 10. ) continue;
+       if( thisEle.Pt() < 20. ) continue;
        if( (fabs(thisEle.Eta()) > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) continue;
 
 
-       Float_t dr03TkSumPt_thresh;
-       Float_t dr03EcalRecHitSumEt_thresh;
-       Float_t dr03HcalTowerSumEt_thresh;
-       Float_t combinedIsoRel_thresh;
-       Float_t sigmaIetaIeta_thresh;
-       Float_t deltaPhiAtVtx_thresh;
-       Float_t deltaEtaAtVtx_thresh;
-       Float_t hOverE_thresh;
+       Float_t dr03TkSumPt_thresh95;
+       Float_t dr03EcalRecHitSumEt_thresh95;
+       Float_t dr03HcalTowerSumEt_thresh95;
+       Float_t combinedIsoRel_thresh95;
+       Float_t sigmaIetaIeta_thresh95;
+       Float_t deltaPhiAtVtx_thresh95;
+       Float_t deltaEtaAtVtx_thresh95;
+       Float_t hOverE_thresh95;
+
+       Float_t dr03TkSumPt_thresh80;
+       Float_t dr03EcalRecHitSumEt_thresh80;
+       Float_t dr03HcalTowerSumEt_thresh80;
+       Float_t combinedIsoRel_thresh80;
+       Float_t sigmaIetaIeta_thresh80;
+       Float_t deltaPhiAtVtx_thresh80;
+       Float_t deltaEtaAtVtx_thresh80;
+       Float_t hOverE_thresh80;
 
        if( fabs(thisEle.Eta())<1.4442 ) {
-         dr03TkSumPt_thresh = 0.15;
-         dr03EcalRecHitSumEt_thresh = 2.;
-         dr03HcalTowerSumEt_thresh = 0.12;
-         combinedIsoRel_thresh = 0.15;
+         dr03TkSumPt_thresh95 = 0.15;
+         dr03EcalRecHitSumEt_thresh95 = 2.;
+         dr03HcalTowerSumEt_thresh95 = 0.12;
+         combinedIsoRel_thresh95 = 0.15;
 
-         sigmaIetaIeta_thresh = 0.01;
-         deltaPhiAtVtx_thresh = 0.8;
-         deltaEtaAtVtx_thresh = 0.007;
-         hOverE_thresh = 0.15;
+         dr03TkSumPt_thresh80 = 0.09;
+         dr03EcalRecHitSumEt_thresh80 = 0.07;
+         dr03HcalTowerSumEt_thresh80 = 0.10;
+         combinedIsoRel_thresh80 = 0.07;
+
+         sigmaIetaIeta_thresh95 = 0.01;
+         deltaPhiAtVtx_thresh95 = 0.8;
+         deltaEtaAtVtx_thresh95 = 0.007;
+         hOverE_thresh95 = 0.15;
+
+         sigmaIetaIeta_thresh80 = 0.01;
+         deltaPhiAtVtx_thresh80 = 0.06;
+         deltaEtaAtVtx_thresh80 = 0.004;
+         hOverE_thresh80 = 0.04;
        } else {
-         dr03TkSumPt_thresh = 0.08;
-         dr03EcalRecHitSumEt_thresh = 0.06;
-         dr03HcalTowerSumEt_thresh = 0.05;
-         combinedIsoRel_thresh = 0.1;
+         dr03TkSumPt_thresh95 = 0.08;
+         dr03EcalRecHitSumEt_thresh95 = 0.06;
+         dr03HcalTowerSumEt_thresh95 = 0.05;
+         combinedIsoRel_thresh95 = 0.1;
 
-         sigmaIetaIeta_thresh = 0.03;
-         deltaPhiAtVtx_thresh = 0.7;
-         deltaEtaAtVtx_thresh = 1000.; //no cut
-         hOverE_thresh = 0.07;
+         dr03TkSumPt_thresh80 = 0.04;
+         dr03EcalRecHitSumEt_thresh80 = 0.05;
+         dr03HcalTowerSumEt_thresh80 = 0.025;
+         combinedIsoRel_thresh80 = 0.06;
+
+         sigmaIetaIeta_thresh80 = 0.03;
+         deltaPhiAtVtx_thresh80 = 0.7;
+         deltaEtaAtVtx_thresh80 = 0.007; //no cut
+         hOverE_thresh80 = 0.025;
+
+         sigmaIetaIeta_thresh95 = 0.03;
+         deltaPhiAtVtx_thresh95 = 0.7;
+         deltaEtaAtVtx_thresh95 = 0.01; //no cut
+         hOverE_thresh95 = 0.07;
        }
 
 
@@ -539,22 +556,35 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        else
          combinedIsoRel = ( dr03TkSumPtEle[iEle] + dr03EcalRecHitSumEtEle[iEle] + dr03HcalTowerSumEtEle[iEle] ) / thisEle.Pt();
 
-       if( combinedIsoRel > combinedIsoRel_thresh ) continue;
+       bool iso_VBTF95 = (combinedIsoRel < combinedIsoRel_thresh95);
+       bool iso_VBTF80 = (combinedIsoRel < combinedIsoRel_thresh80);
 
        
        // --------------
        // electron ID:
        // --------------
-       if( covIEtaIEtaSC[iEle] > sigmaIetaIeta_thresh ) continue;
-       if( fabs(deltaPhiAtVtxEle[iEle]) > deltaPhiAtVtx_thresh ) continue;
-       if( fabs(deltaEtaAtVtxEle[iEle]) > deltaEtaAtVtx_thresh ) continue;
-       if( hOverEEle[iEle] > hOverE_thresh ) continue;
+       bool eleID_VBTF95 = (covIEtaIEtaSC[iEle] < sigmaIetaIeta_thresh95) &&
+                           (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh95) &&
+                           (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh95) &&
+                           (hOverEEle[iEle] < hOverE_thresh95);
+
+       bool eleID_VBTF80 = (covIEtaIEtaSC[iEle] < sigmaIetaIeta_thresh80) &&
+                           (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh80) &&
+                           (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh80) &&
+                           (hOverEEle[iEle] < hOverE_thresh80);
+
+       bool passed_VBTF95 = (iso_VBTF95 && eleID_VBTF95);
+       bool passed_VBTF80 = (iso_VBTF80 && eleID_VBTF80);
+
+
 
        // for now simple selection, will have to optimize this (T&P?)
-       if( electrons.size()==0 ) {
+       // one electron required to pass VBTF80, the other VBTF95
+       if( electrons.size()==0 && passed_VBTF95 ) {
          electrons.push_back( thisEle );
          chargeFirstEle = chargeEle[iEle];
-       } else if( chargeEle[iEle] != chargeFirstEle ) {
+         if( passed_VBTF80 ) firstPassedVBTF80 = true;
+       } else if( chargeEle[iEle] != chargeFirstEle && ( (firstPassedVBTF80&&passed_VBTF95)||passed_VBTF80 ) ) {
          electrons.push_back( thisEle );
        }
 
@@ -576,7 +606,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // kinematics:
        // --------------
-       if( thisMuon.Pt() < 10. ) continue;
+       if( thisMuon.Pt() < 20. ) continue;
 
 
        // --------------
@@ -585,7 +615,33 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
        if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
        if( pixelHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
-       if( transvImpactParTrack[trackIndexMuon[iMuon]] > 0.2 ) continue;    
+
+
+       // to compute dxy, look for primary vertex:
+       int hardestPV = -1;
+       float sumPtMax = 0.0;
+       for(int v=0; v<nPV; v++) {
+         if(SumPtPV[v] > sumPtMax) {
+           sumPtMax = SumPtPV[v];
+           hardestPV = v;
+         }
+       }  
+   
+       float dxy;
+       if( hardestPV==-1 ) {
+         dxy = 0.;
+       } else {
+         dxy = fabs(trackDxyPV(PVxPV[hardestPV], PVyPV[hardestPV], PVzPV[hardestPV],
+                              trackVxTrack[trackIndexMuon[iMuon]], trackVyTrack[trackIndexMuon[iMuon]], trackVzTrack[trackIndexMuon[iMuon]],
+                              pxTrack[trackIndexMuon[iMuon]], pyTrack[trackIndexMuon[iMuon]], pzTrack[trackIndexMuon[iMuon]]));
+       }
+
+       if( dxy > 0.02 ) continue;
+
+
+       float dz = fabs(trackVzTrack[trackIndexMuon[iMuon]]-PVzPV[hardestPV]);
+       if(dz > 1.0) continue;
+
 
 
        // --------------
@@ -986,4 +1042,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 } //loop
 
 
+
+double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz) {
+  float elePt = sqrt(elePx*elePx + elePy*elePy);
+  return ( - (eleVx-PVx)*elePy + (eleVy-PVy)*elePx ) / elePt;
+}
 
