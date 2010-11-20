@@ -70,7 +70,7 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("deltaRjj",  &deltaRjj_,  "deltaRjj_/F");
 
   reducedTree_->Branch("deltaRZZ",  &deltaRZZ_,  "deltaRZZ_/F");
-  reducedTree_->Branch("deltaabsEtaZZ",  &deltaabsEtaZZ_,  "deltaabsEtaZZ_/F");
+  reducedTree_->Branch("deltaAbsEtaZZ",  &deltaAbsEtaZZ_,  "deltaAbsEtaZZ_/F");
   reducedTree_->Branch("absDeltaEtaZZ",  &absDeltaEtaZZ_,  "absDeltaEtaZZ_/F");
   reducedTree_->Branch("absDeltaPhiZZ",  &absDeltaPhiZZ_,  "absDeltaPhiZZ_/F");
   reducedTree_->Branch("ptZZ",  &ptZZ_,  "ptZZ_/F");
@@ -752,7 +752,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      deltaR_recoil_Higgs_ = (jetRecoil.E()>0.) ? jetRecoil.DeltaR(ZZ) : -1.;
 
      deltaRZZ_ = diLepton.DeltaR(diJet);
-     deltaabsEtaZZ_ = fabs(diLepton.Eta()) - fabs(diJet.Eta());
+     deltaAbsEtaZZ_ = fabs(diLepton.Eta()) - fabs(diJet.Eta());
      absDeltaEtaZZ_ = fabs(diLepton.Eta() - diJet.Eta());
      absDeltaPhiZZ_ = fabs(diJet.DeltaPhi(diLepton));
      ptZZ_ = ZZ.Pt();

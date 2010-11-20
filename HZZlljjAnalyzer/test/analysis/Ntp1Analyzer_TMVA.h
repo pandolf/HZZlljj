@@ -64,7 +64,7 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Float_t mZZ_;
    Float_t absEtaZZ_;
    Float_t deltaRZZ_;
-   Float_t deltaabsEtaZZ_;
+   Float_t deltaAbsEtaZZ_;
    Float_t absDeltaEtaZZ_;
    Float_t absDeltaPhiZZ_;
 
