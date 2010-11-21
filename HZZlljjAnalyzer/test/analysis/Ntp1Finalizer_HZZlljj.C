@@ -205,6 +205,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_massZjj_Rch2_70100 = new TH1D("massZjj_Rch2_70100", "", nBins_invMass, 20., 200.);
   h1_massZjj_Rch2_70100->Sumw2();
 
+/*
   TH1D* h1_ZZInvMass_loMass = new TH1D("ZZInvMass_loMass", "", nBins_invMass, 90., 190.);
   h1_ZZInvMass_loMass->Sumw2();
   TH1D* h1_ZZInvMass_loMass_ZjjTag = new TH1D("ZZInvMass_loMass_ZjjTag", "", nBins_invMass, 90., 190.);
@@ -238,6 +239,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_ZZInvMass_hiMass_fullSelection_medium_ZjjMassConstr->Sumw2();
   TH1D* h1_ZZInvMass_hiMass_fullSelection_loose = new TH1D("ZZInvMass_hiMass_fullSelection_loose", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_fullSelection_loose->Sumw2();
+*/
 
   TH1D* h1_ptJet_all = new TH1D("ptJet_all", "", 50, 30., 300.);
   h1_ptJet_all->Sumw2();
@@ -282,23 +284,47 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_ZZInvMass_hiMass_tight->Sumw2();
   TH1D* h1_ZZInvMass_hiMass_tight_FINEBINNING = new TH1D("ZZInvMass_hiMass_tight_FINEBINNING", "", 800, 200., 1000.);
   h1_ZZInvMass_hiMass_tight_FINEBINNING->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_opt400_LowEff = new TH1D("ZZInvMass_hiMass_opt400_LowEff", "", nBins_invMass, 200., 600.);
-  h1_ZZInvMass_hiMass_opt400_LowEff->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_opt400_LowEff_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt400_LowEff_FINEBINNING", "", 800, 200., 1000.);
-  h1_ZZInvMass_hiMass_opt400_LowEff_FINEBINNING->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_opt400_HighEff = new TH1D("ZZInvMass_hiMass_opt400_HighEff", "", nBins_invMass, 200., 600.);
-  h1_ZZInvMass_hiMass_opt400_HighEff->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_opt400_HighEff_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt400_HighEff_FINEBINNING", "", 800, 200., 1000.);
-  h1_ZZInvMass_hiMass_opt400_HighEff_FINEBINNING->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_opt500 = new TH1D("ZZInvMass_hiMass_opt500", "", nBins_invMass, 200., 600.);
+
+  TH1D* h1_ZZInvMass_hiMass_opt200= new TH1D("ZZInvMass_hiMass_opt200", "", nBins_invMass, 100., 300.);
+  h1_ZZInvMass_hiMass_opt200->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_opt200_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt200_FINEBINNING", "", 900, 100., 1000.);
+  h1_ZZInvMass_hiMass_opt200_FINEBINNING->Sumw2();
+
+  TH1D* h1_ZZInvMass_hiMass_opt300= new TH1D("ZZInvMass_hiMass_opt300", "", nBins_invMass, 200., 500.);
+  h1_ZZInvMass_hiMass_opt300->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_opt300_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt300_FINEBINNING", "", 900, 100., 1000.);
+  h1_ZZInvMass_hiMass_opt300_FINEBINNING->Sumw2();
+
+  TH1D* h1_ZZInvMass_hiMass_opt400= new TH1D("ZZInvMass_hiMass_opt400", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_opt400->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_opt400_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt400_FINEBINNING", "", 900, 100., 1000.);
+  h1_ZZInvMass_hiMass_opt400_FINEBINNING->Sumw2();
+
+  TH1D* h1_ZZInvMass_hiMass_opt500= new TH1D("ZZInvMass_hiMass_opt500", "", nBins_invMass, 300., 700.);
   h1_ZZInvMass_hiMass_opt500->Sumw2();
-  TH1D* h1_ZZInvMass_hiMass_opt500_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt500_FINEBINNING", "", 800, 200., 1000.);
+  TH1D* h1_ZZInvMass_hiMass_opt500_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt500_FINEBINNING", "", 900, 100., 1000.);
   h1_ZZInvMass_hiMass_opt500_FINEBINNING->Sumw2();
+
+  TH1D* h1_ZZInvMass_hiMass_opt600= new TH1D("ZZInvMass_hiMass_opt600", "", nBins_invMass, 400., 800.);
+  h1_ZZInvMass_hiMass_opt600->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_opt600_FINEBINNING = new TH1D("ZZInvMass_hiMass_opt600_FINEBINNING", "", 900, 100., 1000.);
+  h1_ZZInvMass_hiMass_opt600_FINEBINNING->Sumw2();
+
+  TH1D* h1_ZZInvMass_MCassoc  = new TH1D("ZZInvMass_MCassoc", "", 100, 200., 600.);
+  h1_ZZInvMass_MCassoc->Sumw2();
+  TH1D* h1_ZZInvMass_MCassoc_ZjjMassConstr  = new TH1D("ZZInvMass_MCassoc_ZjjMassConstr", "", 100, 200., 600.);
+  h1_ZZInvMass_MCassoc_ZjjMassConstr->Sumw2();
+  TH1D* h1_ZZInvMass_MCassoc_kinfit_jets  = new TH1D("ZZInvMass_MCassoc_kinfit_jets", "", 100, 200., 600.);
+  h1_ZZInvMass_MCassoc_kinfit_jets->Sumw2();
+  TH1D* h1_ZZInvMass_MCassoc_kinfit_cands  = new TH1D("ZZInvMass_MCassoc_kinfit_cands", "", 100, 200., 600.);
+  h1_ZZInvMass_MCassoc_kinfit_cands->Sumw2();
 
   TH1D* h1_partFlavor_tight = new TH1D("partFlavor_tight", "", 31, -8.5, 22.5);
 
-  TH2D* h2_mZjj_vs_mZZ = new TH2D("mZjj_vs_mZZ", "", 100, 200., 400., 100, 70., 120.);
+  TH2D* h2_mZjj_vs_mZZ = new TH2D("mZjj_vs_mZZ", "", 100, 200., 600., 100, 70., 120.);
   h2_mZjj_vs_mZZ->Sumw2();
+  TH2D* h2_mZjj_vs_mZZ_kinfit = new TH2D("mZjj_vs_mZZ_kinfit", "", 100, 200., 600., 100, 70., 120.);
+  h2_mZjj_vs_mZZ_kinfit->Sumw2();
 
   TH1D* h1_ZZInvMass_medMass = new TH1D("ZZInvMass_medMass", "", nBins_invMass, 100., 350.);
   h1_ZZInvMass_medMass->Sumw2();
@@ -335,6 +361,21 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40 = new TH1D("ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40->Sumw2();
 
+  TH1D* h1_deltaE_ch = new TH1D("deltaE_ch", "", 100, -1., 1.);
+  TH1D* h1_deltaE_gamma = new TH1D("deltaE_gamma", "", 100, -1., 1.);
+  TH1D* h1_deltaE_nh = new TH1D("deltaE_nh", "", 100, -1., 1.);
+
+  TH1D* h1_deltaEta_ch    = new TH1D("deltaEta_ch", "", 100, -1., 1.);
+  TH1D* h1_deltaEta_gamma = new TH1D("deltaEta_gamma", "", 100, -1., 1.);
+  TH1D* h1_deltaEta_nh    = new TH1D("deltaEta_nh", "", 100, -1., 1.);
+
+  TH1D* h1_deltaPhi_ch    = new TH1D("deltaPhi_ch", "", 100, -1., 1.);
+  TH1D* h1_deltaPhi_gamma = new TH1D("deltaPhi_gamma", "", 100, -1., 1.);
+  TH1D* h1_deltaPhi_nh    = new TH1D("deltaPhi_nh", "", 100, -1., 1.);
+
+  TH1D* h1_deltaPt_ch = new TH1D("deltaPt_ch", "", 100, -1., 1.);
+  TH1D* h1_deltaPt_gamma = new TH1D("deltaPt_gamma", "", 100, -1., 1.);
+  TH1D* h1_deltaPt_nh = new TH1D("deltaPt_nh", "", 100, -1., 1.);
 
   Double_t ptBins[16];
   fitTools::getBins_int( 16, ptBins, 20., 500.);
@@ -556,8 +597,6 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   int nEntries = tree_->GetEntries();
   std::map< int, std::map<int, std::vector<int> > > run_lumi_ev_map;
 
-ofstream ofs_loose("bonato_loose.txt");
-ofstream ofs_tight("bonato_tight.txt");
 
 
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
@@ -655,9 +694,11 @@ ofstream ofs_tight("bonato_tight.txt");
 
     std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_looseSelection;
     std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_tightSelection;
-    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt400_LowEff;
-    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt400_HighEff;
+    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt200;
+    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt300;
+    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt400;
     std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt500;
+    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt600;
 
     float cached_jetpt = 0.;
 
@@ -675,18 +716,22 @@ ofstream ofs_tight("bonato_tight.txt");
       if( jet1.Pt()>100. && jet2.Pt()>50. && jet1.DeltaR(jet2)<1.5 && diJet.M()>80. && diJet.M()<105. )
         jetPairs_tightSelection.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
 
-      //if( jet1.Pt()>115.066 && jet2.Pt()>74.7815 && jet1.DeltaR(jet2)<1.15812 && diJet.M()>79.7606 && diJet.M()<122.326 )
-      if( jet1.Pt()>115.066 && jet2.Pt()>74.7815 && jet1.DeltaR(jet2)<1.15812 && diJet.M()>80. && diJet.M()<105. )
-        jetPairs_opt400_LowEff.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
 
-      ////if( jet1.Pt()>77.4283 && jet2.Pt()>75.0579 && jet1.DeltaR(jet2)<1.03499 && diJet.M()>81.5827 && diJet.M()<109.255 )
-      //if( jet1.Pt()>82.9536 && jet2.Pt()>52.9691 && jet1.DeltaR(jet2)<1.70124 && diJet.M()>80.615 && diJet.M()<105.073 )
-      if( jet1.Pt()>83. && jet2.Pt()>53. && jet1.DeltaR(jet2)<1.7&& diJet.M()>81.&& diJet.M()<101.)
-        jetPairs_opt400_HighEff.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+      if( jet1.Pt()>35. && jet2.Pt()>30. && jet1.DeltaR(jet2)<2.8 && diJet.M()>81. && diJet.M()<101. )
+        jetPairs_opt200.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
 
-      //if( jet1.Pt()>128.265 && jet2.Pt()>73.8435 && jet1.DeltaR(jet2)<1.83623 && diJet.M()>80.4499 && diJet.M()<101.08 )
-      if( jet1.Pt()>130. && jet2.Pt()>75. && jet1.DeltaR(jet2)<1.7 && diJet.M()>81. && diJet.M()<101. )
+      if( jet1.Pt()>45. && jet2.Pt()>35. && jet1.DeltaR(jet2)<1.7 && diJet.M()>81. && diJet.M()<101. )
+        jetPairs_opt300.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+
+      if( jet1.Pt()>85. && jet2.Pt()>55. && jet1.DeltaR(jet2)<1.2 && diJet.M()>81. && diJet.M()<101. )
+        jetPairs_opt400.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+
+      if( jet1.Pt()>125. && jet2.Pt()>95. && jet1.DeltaR(jet2)<1.5 && diJet.M()>81. && diJet.M()<101. )
         jetPairs_opt500.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+
+      if( jet1.Pt()>160. && jet2.Pt()>95. && jet1.DeltaR(jet2)<1.0 && diJet.M()>81. && diJet.M()<101. )
+        jetPairs_opt600.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+
 
 
       if( jet1.Pt()!=cached_jetpt ) {
@@ -696,6 +741,8 @@ ofstream ofs_tight("bonato_tight.txt");
 
     }
 
+
+    TLorentzVector jet1_presel, jet2_presel;
 
     if( jetPairs_looseSelection.size()>0. ) {
 
@@ -715,6 +762,10 @@ ofstream ofs_tight("bonato_tight.txt");
 
       } //for pairs
 
+      // jet1_presel and jet2_presel are used in the kinfitter
+      jet1_presel = jetPairs_looseSelection[bestPair].first;
+      jet2_presel = jetPairs_looseSelection[bestPair].second;
+
       TLorentzVector bestZDiJet = jetPairs_looseSelection[bestPair].first + jetPairs_looseSelection[bestPair].second;
       TLorentzVector ZZ_loose = diLepton + bestZDiJet; 
   
@@ -730,10 +781,9 @@ ofstream ofs_tight("bonato_tight.txt");
         }
         h1_mZll_loose->Fill( diLepton.M(), eventWeight);
         h1_mZqq_loose->Fill( bestZDiJet.M(), eventWeight);
-        h2_mZjj_vs_mZZ->Fill( ZZ_loose.M(), bestZDiJet.M(), eventWeight );
+        //h2_mZjj_vs_mZZ->Fill( ZZ_loose.M(), bestZDiJet.M(), eventWeight );
         h1_ZZInvMass_hiMass_loose->Fill(ZZ_loose.M(), eventWeight);
         h1_ZZInvMass_hiMass_loose_FINEBINNING->Fill(ZZ_loose.M(), eventWeight);
-ofs_loose << run << " " << event << " " << ZZ_loose.M() << " " <<  diLepton.M() << " " << bestZDiJet.M() << " " << lept1.Pt() << " " << lept2.Pt() << " " << jetPairs_looseSelection[bestPair].first.Pt() << " " << jetPairs_looseSelection[bestPair].second.Pt() << std::endl;
       }
 
     }
@@ -756,19 +806,19 @@ ofs_loose << run << " " << event << " " << ZZ_loose.M() << " " <<  diLepton.M() 
 
       } //for pairs
 
-      TLorentzVector jet1 = jetPairs_tightSelection[bestPair].first;
-      TLorentzVector jet2 = jetPairs_tightSelection[bestPair].second;
+      TLorentzVector jet1_tight = jetPairs_tightSelection[bestPair].first;
+      TLorentzVector jet2_tight = jetPairs_tightSelection[bestPair].second;
 
-      TLorentzVector bestZDiJet = jet1 + jet2;
+      TLorentzVector bestZDiJet = jet1_tight + jet2_tight;
       TLorentzVector ZZ_tight = diLepton + bestZDiJet; 
   
       if( lept1.Pt()>100. && lept2.Pt()>50. && diLepton.M() > 86. && diLepton.M() < 96. ) {
-        if( jet1.Pt()>jet2.Pt() ) {
-          h1_ptJet1_tight->Fill( jet1.Pt(), eventWeight );
-          h1_ptJet2_tight->Fill( jet2.Pt(), eventWeight );
+        if( jet1_tight.Pt()>jet2_tight.Pt() ) {
+          h1_ptJet1_tight->Fill( jet1_tight.Pt(), eventWeight );
+          h1_ptJet2_tight->Fill( jet2_tight.Pt(), eventWeight );
         } else {
-          h1_ptJet1_tight->Fill( jet1.Pt(), eventWeight );
-          h1_ptJet2_tight->Fill( jet2.Pt(), eventWeight );
+          h1_ptJet1_tight->Fill( jet1_tight.Pt(), eventWeight );
+          h1_ptJet2_tight->Fill( jet2_tight.Pt(), eventWeight );
         }
         h1_mZll_tight->Fill( diLepton.M(), eventWeight);
         h1_mZqq_tight->Fill( bestZDiJet.M(), eventWeight);
@@ -807,23 +857,22 @@ if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
           h1_partFlavor_tight->Fill(partFlavor);
 if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
 
-ofs_tight << run << " " << event << " " << ZZ_tight.M() << " "  << diLepton.M() << " " << bestZDiJet.M() << " " << lept1.Pt() << " " << lept2.Pt() << " " << jet1.Pt() << " " << jet2.Pt() << std::endl;
 */
       }
 
     }
 
 
-    if( jetPairs_opt400_LowEff.size()>0. ) {
+    if( jetPairs_opt200.size()>0. ) {
 
       // now look for best Z mass jet pair:
       float Zmass = 91.19;
       float bestMass = 0.;
       int bestPair=-1;
       
-      for( unsigned iPair=0; iPair<jetPairs_opt400_LowEff.size(); ++iPair ) {
+      for( unsigned iPair=0; iPair<jetPairs_opt200.size(); ++iPair ) {
 
-        TLorentzVector dijet = jetPairs_opt400_LowEff[iPair].first + jetPairs_opt400_LowEff[iPair].second;
+        TLorentzVector dijet = jetPairs_opt200[iPair].first + jetPairs_opt200[iPair].second;
         float invMass = dijet.M();
         if( bestPair==-1 || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
           bestMass = invMass;
@@ -832,32 +881,30 @@ ofs_tight << run << " " << event << " " << ZZ_tight.M() << " "  << diLepton.M() 
 
       } //for pairs
 
-      TLorentzVector jet1 = jetPairs_opt400_LowEff[bestPair].first;
-      TLorentzVector jet2 = jetPairs_opt400_LowEff[bestPair].second;
+      TLorentzVector jet1 = jetPairs_opt200[bestPair].first;
+      TLorentzVector jet2 = jetPairs_opt200[bestPair].second;
 
       TLorentzVector bestZDiJet = jet1 + jet2;
-      TLorentzVector ZZ_opt400_LowEff = diLepton + bestZDiJet; 
+      TLorentzVector ZZ_opt200= diLepton + bestZDiJet; 
       
   
-      if( lept1.Pt()>51.4373 && lept1.DeltaR(lept2)<1.85932 ) {
-        h1_mZll_opt400_LowEff->Fill( diLepton.M(), eventWeight);
-        h1_mZqq_opt400_LowEff->Fill( bestZDiJet.M(), eventWeight);
-        h1_ZZInvMass_hiMass_opt400_LowEff->Fill(ZZ_opt400_LowEff.M(), eventWeight);
-        h1_ZZInvMass_hiMass_opt400_LowEff_FINEBINNING->Fill(ZZ_opt400_LowEff.M(), eventWeight);
+      if( lept1.Pt()>40. && lept1.DeltaR(lept2)<2.8&& diLepton.M() > 86. && diLepton.M() < 96. ) {
+        h1_ZZInvMass_hiMass_opt200->Fill(ZZ_opt200.M(), eventWeight);
+        h1_ZZInvMass_hiMass_opt200->Fill(ZZ_opt200.M(), eventWeight);
       }
 
     }
 
-    if( jetPairs_opt400_HighEff.size()>0. ) {
+    if( jetPairs_opt300.size()>0. ) {
 
       // now look for best Z mass jet pair:
       float Zmass = 91.19;
       float bestMass = 0.;
       int bestPair=-1;
       
-      for( unsigned iPair=0; iPair<jetPairs_opt400_HighEff.size(); ++iPair ) {
+      for( unsigned iPair=0; iPair<jetPairs_opt300.size(); ++iPair ) {
 
-        TLorentzVector dijet = jetPairs_opt400_HighEff[iPair].first + jetPairs_opt400_HighEff[iPair].second;
+        TLorentzVector dijet = jetPairs_opt300[iPair].first + jetPairs_opt300[iPair].second;
         float invMass = dijet.M();
         if( bestPair==-1 || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
           bestMass = invMass;
@@ -866,22 +913,52 @@ ofs_tight << run << " " << event << " " << ZZ_tight.M() << " "  << diLepton.M() 
 
       } //for pairs
 
-      TLorentzVector jet1 = jetPairs_opt400_HighEff[bestPair].first;
-      TLorentzVector jet2 = jetPairs_opt400_HighEff[bestPair].second;
+      TLorentzVector jet1 = jetPairs_opt300[bestPair].first;
+      TLorentzVector jet2 = jetPairs_opt300[bestPair].second;
 
       TLorentzVector bestZDiJet = jet1 + jet2;
-      TLorentzVector ZZ_opt400_HighEff = diLepton + bestZDiJet; 
+      TLorentzVector ZZ_opt300= diLepton + bestZDiJet; 
       
   
-      if( lept1.Pt()>67.&& lept1.DeltaR(lept2)<1.4) {
-        h1_mZll_opt400_HighEff->Fill( diLepton.M(), eventWeight);
-        h1_mZqq_opt400_HighEff->Fill( bestZDiJet.M(), eventWeight);
-        h1_ZZInvMass_hiMass_opt400_HighEff->Fill(ZZ_opt400_HighEff.M(), eventWeight);
-        h1_ZZInvMass_hiMass_opt400_HighEff_FINEBINNING->Fill(ZZ_opt400_HighEff.M(), eventWeight);
+      if( lept1.Pt()>40. && lept1.DeltaR(lept2)<2.1 && diLepton.M() > 86. && diLepton.M() < 96. ) {
+        h1_ZZInvMass_hiMass_opt300->Fill(ZZ_opt300.M(), eventWeight);
+        h1_ZZInvMass_hiMass_opt300->Fill(ZZ_opt300.M(), eventWeight);
       }
 
     }
 
+
+    if( jetPairs_opt400.size()>0. ) {
+
+      // now look for best Z mass jet pair:
+      float Zmass = 91.19;
+      float bestMass = 0.;
+      int bestPair=-1;
+      
+      for( unsigned iPair=0; iPair<jetPairs_opt400.size(); ++iPair ) {
+
+        TLorentzVector dijet = jetPairs_opt400[iPair].first + jetPairs_opt400[iPair].second;
+        float invMass = dijet.M();
+        if( bestPair==-1 || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
+          bestMass = invMass;
+          bestPair = iPair;
+        }
+
+      } //for pairs
+
+      TLorentzVector jet1 = jetPairs_opt400[bestPair].first;
+      TLorentzVector jet2 = jetPairs_opt400[bestPair].second;
+
+      TLorentzVector bestZDiJet = jet1 + jet2;
+      TLorentzVector ZZ_opt400= diLepton + bestZDiJet; 
+      
+  
+      if( lept1.Pt()>40. && lept1.DeltaR(lept2)<1.7 && diLepton.M() > 86. && diLepton.M() < 96. ) {
+        h1_ZZInvMass_hiMass_opt400->Fill(ZZ_opt400.M(), eventWeight);
+        h1_ZZInvMass_hiMass_opt400->Fill(ZZ_opt400.M(), eventWeight);
+      }
+
+    }
 
 
     if( jetPairs_opt500.size()>0. ) {
@@ -908,12 +985,45 @@ ofs_tight << run << " " << event << " " << ZZ_tight.M() << " "  << diLepton.M() 
       TLorentzVector bestZDiJet = jet1 + jet2;
       TLorentzVector ZZ_opt500 = diLepton + bestZDiJet; 
       
-      //if( fabs(lept1.Eta())<2.1 && lept1.Pt()>50. && lept1.DeltaR(lept2)<1.4) {
-      if( lept1.Pt()>50. && lept1.DeltaR(lept2)<1.4) {
+      if( lept1.Pt()>40. && lept1.DeltaR(lept2)<1.4 && diLepton.M() > 86. && diLepton.M() < 96. ) {
         h1_mZll_opt500->Fill( diLepton.M(), eventWeight);
         h1_mZqq_opt500->Fill( bestZDiJet.M(), eventWeight);
         h1_ZZInvMass_hiMass_opt500->Fill(ZZ_opt500.M(), eventWeight);
         h1_ZZInvMass_hiMass_opt500_FINEBINNING->Fill(ZZ_opt500.M(), eventWeight);
+      }
+
+
+    }
+
+    
+
+    if( jetPairs_opt600.size()>0. ) {
+
+      // now look for best Z mass jet pair:
+      float Zmass = 91.19;
+      float bestMass = 0.;
+      int bestPair=-1;
+      
+      for( unsigned iPair=0; iPair<jetPairs_opt600.size(); ++iPair ) {
+
+        TLorentzVector dijet = jetPairs_opt600[iPair].first + jetPairs_opt600[iPair].second;
+        float invMass = dijet.M();
+        if( bestPair==-1 || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
+          bestMass = invMass;
+          bestPair = iPair;
+        }
+
+      } //for pairs
+
+      TLorentzVector jet1 = jetPairs_opt600[bestPair].first;
+      TLorentzVector jet2 = jetPairs_opt600[bestPair].second;
+
+      TLorentzVector bestZDiJet = jet1 + jet2;
+      TLorentzVector ZZ_opt600 = diLepton + bestZDiJet; 
+      
+      if( lept1.Pt()>40. && lept1.DeltaR(lept2)<1.2) {
+        h1_ZZInvMass_hiMass_opt600->Fill(ZZ_opt600.M(), eventWeight);
+        h1_ZZInvMass_hiMass_opt600_FINEBINNING->Fill(ZZ_opt600.M(), eventWeight);
       }
 
 
@@ -1061,10 +1171,14 @@ ofs_tight << run << " " << event << " " << ZZ_tight.M() << " "  << diLepton.M() 
     h1_ptRecoilOverJet2->Fill( jetRecoil.Pt()/jet2.Pt(), eventWeight);
     h1_ptHiggsOverRecoil->Fill( ZZ.Pt()/jetRecoil.Pt(), eventWeight);
     h1_deltaPhi_HiggsRecoil->Fill( ZZ.DeltaPhi(jetRecoil), eventWeight );
+*/
 
     // ------------------------
     //   KINEMATIC FIT: BEGIN
     // ------------------------
+
+    if( jet1_presel.Pt()>30. && jet2_presel.Pt()>30. ) {
+
 //  TLorentzVector chjet1( jet1*Rch1 );
 //  TLorentzVector nhjet1( jet1*Rnh1 );
 //  TLorentzVector gammajet1( jet1*Rgamma1 );
@@ -1090,156 +1204,250 @@ ofs_tight << run << " " << event << " " << ZZ_tight.M() << " "  << diLepton.M() 
 //  m_chJet1(1,1) = ErrEta(chjet1.Et(), chjet1.Eta()); // eta
 //  m_chJet1(2,2) = ErrPhi(chjet1.Et(), chjet1.Eta()); // phi
 
-    TMatrixD m_jet1(3,3);
-    TMatrixD m_jet2(3,3);
+      TMatrixD m_jet1(3,3);
+      TMatrixD m_jet2(3,3);
 
-    m_jet1(0,0) = ErrEt (jet1.Et(), jet1.Eta()); // et
-    m_jet1(1,1) = ErrEta(jet1.Et(), jet1.Eta()); // eta
-    m_jet1(2,2) = ErrPhi(jet1.Et(), jet1.Eta()); // phi
-    m_jet2(0,0) = ErrEt (jet2.Et(), jet2.Eta()); // et
-    m_jet2(1,1) = ErrEta(jet2.Et(), jet2.Eta()); // eta
-    m_jet2(2,2) = ErrPhi(jet2.Et(), jet2.Eta()); // phi
+      m_jet1(0,0) = 0.5*ErrEt (jet1_presel.Et(), jet1_presel.Eta()); // et
+      m_jet1(1,1) = 0.5*ErrEta(jet1_presel.Et(), jet1_presel.Eta()); // eta
+      m_jet1(2,2) = 0.5*ErrPhi(jet1_presel.Et(), jet1_presel.Eta()); // phi
+      m_jet2(0,0) = 0.5*ErrEt (jet2_presel.Et(), jet2_presel.Eta()); // et
+      m_jet2(1,1) = 0.5*ErrEta(jet2_presel.Et(), jet2_presel.Eta()); // eta
+      m_jet2(2,2) = 0.5*ErrPhi(jet2_presel.Et(), jet2_presel.Eta()); // phi
 
-    TFitParticleEtEtaPhi *fitJet1 = new TFitParticleEtEtaPhi( "Jet1", "Jet1", &jet1, &m_jet1 );
-    TFitParticleEtEtaPhi *fitJet2 = new TFitParticleEtEtaPhi( "Jet2", "Jet2", &jet2, &m_jet2 );
+      TFitParticleEtEtaPhi *fitJet1 = new TFitParticleEtEtaPhi( "Jet1", "Jet1", &jet1_presel, &m_jet1 );
+      TFitParticleEtEtaPhi *fitJet2 = new TFitParticleEtEtaPhi( "Jet2", "Jet2", &jet2_presel, &m_jet2 );
+      
+      TFitConstraintM *mCons_jets = new TFitConstraintM( "ZMassConstraint_jets", "ZMass-Constraint", 0, 0 , 91.19);
+      mCons_jets->addParticles1( fitJet1, fitJet2 );
+
+      TKinFitter* fitter_jets = new TKinFitter("fitter_jets", "fitter_jets");
+      fitter_jets->addMeasParticle( fitJet1 );
+      fitter_jets->addMeasParticle( fitJet2 );
+      fitter_jets->addConstraint( mCons_jets );
+
+      //Set convergence criteria
+      fitter_jets->setMaxNbIter( 30 );
+      fitter_jets->setMaxDeltaS( 1e-2 );
+      fitter_jets->setMaxF( 1e-1 );
+      fitter_jets->setVerbosity(0);
+
+      //Perform the fit
+      fitter_jets->fit();
+
+
+      TLorentzVector Zjj = jet1_presel + jet2_presel;
+      TLorentzVector Zjj_constr;
+      Zjj_constr.SetXYZM( Zjj.Px(), Zjj.Py(), Zjj.Pz(), 91.1876);
+
+
+      TLorentzVector jet1_kinfit(*fitJet1->getCurr4Vec());
+      TLorentzVector jet2_kinfit(*fitJet2->getCurr4Vec());
+      TLorentzVector Zjj_kinfit_jets = jet1_kinfit + jet2_kinfit;
+
+      TLorentzVector Zll = lept1+lept2;
+
+      TLorentzVector ZZ = Zjj + Zll;
+      TLorentzVector ZZ_constr = Zll + Zjj_constr;
+      TLorentzVector ZZ_kinfit_jets = Zll + Zjj_kinfit_jets;
+
+      h2_mZjj_vs_mZZ->Fill( ZZ.M(), Zjj.M() );
+      h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit_jets.M(), Zjj.M() );
+
+
+      // and now full kinematic fit with PFCands:
+      TLorentzVector ZZ_kinfit_cands;
+      TRegexp cands_tstr("CANDS");
+      TString dataset_tstr(dataset_);
+  if( dataset_tstr.Contains(cands_tstr) ) {
+
+      std::vector<TFitParticleEtEtaPhi*> fitCands;
+      std::vector<int> fitCandTypes;
+      TFitConstraintM *mCons_cands = new TFitConstraintM( "ZMassConstraint_cands", "ZMass-Constraint", 0, 0 , 91.19);
+
+
+      float testFactor = 1.;
+
+      // loop on PFCands of first jet
+      TLorentzVector candJet1(0., 0., 0., 0.);
+      for( unsigned iPFCand=0; iPFCand<nPFCand1; ++iPFCand ) {
+        TLorentzVector thisCand;
+        thisCand.SetPtEtaPhiE( ptPFCand1[iPFCand], etaPFCand1[iPFCand], phiPFCand1[iPFCand], ePFCand1[iPFCand] );
+        char candName[100];
+        sprintf( candName, "PFCand_1_%d", iPFCand );
+
+        if( particleTypePFCand1[iPFCand]==0 ) {
+          std::cout << "FOUND PARTICLE TYPE=0!!!! SKIPPING!" << std::endl;
+          continue;
+        }
+
+        if( particleTypePFCand1[iPFCand]==5 ) // neutral hadrons
+          testFactor=10.;
+        else
+          testFactor=1.;
+
+        TMatrixD m_PFCand(3,3);
+        m_PFCand(0,0) = testFactor*ErrEt ( thisCand.Et(), thisCand.Eta(), particleTypePFCand1[iPFCand] );
+        m_PFCand(1,1) = testFactor*ErrEta( thisCand.Et(), thisCand.Eta(), particleTypePFCand1[iPFCand] );
+        m_PFCand(2,2) = testFactor*ErrPhi( thisCand.Et(), thisCand.Eta(), particleTypePFCand1[iPFCand] );
+        TFitParticleEtEtaPhi* fitCand = new TFitParticleEtEtaPhi( candName, candName, &thisCand, &m_PFCand );
+
+        mCons_cands->addParticle1( fitCand );
+        fitCands.push_back(fitCand);
+        fitCandTypes.push_back(particleTypePFCand1[iPFCand]);
+
+        candJet1 += thisCand;
+
+      }
+
+      TLorentzVector cand_add1 = jet1_presel - candJet1;
+      // make it worse-resolution case:
+      int particleType_add1 = (fabs(cand_add1.Eta())<3.) ? 5 : 6; 
+      TMatrixD m_PFCand_add1(3,3);
+      m_PFCand_add1(0,0) = testFactor*ErrEt ( cand_add1.Et(), cand_add1.Eta(), particleType_add1 );
+      m_PFCand_add1(1,1) = testFactor*ErrEta( cand_add1.Et(), cand_add1.Eta(), particleType_add1 );
+      m_PFCand_add1(2,2) = testFactor*ErrPhi( cand_add1.Et(), cand_add1.Eta(), particleType_add1 );
+      TFitParticleEtEtaPhi* fitCand_add1 = new TFitParticleEtEtaPhi( "PFCand_add1", "PFCand_add1", &cand_add1, &m_PFCand_add1 );
+
+    //mCons_cands->addParticle1( fitCand_add1 );
+    //fitCands.push_back(fitCand_add1);
+    //fitCandTypes.push_back(particleType_add1 );
+
+
+      // loop on PFCands of second jet
+      TLorentzVector candJet2(0., 0., 0., 0.);
+      for( unsigned iPFCand=0; iPFCand<nPFCand2; ++iPFCand ) {
+        TLorentzVector thisCand;
+        thisCand.SetPtEtaPhiE( ptPFCand2[iPFCand], etaPFCand2[iPFCand], phiPFCand2[iPFCand], ePFCand2[iPFCand] );
+        char candName[100];
+        sprintf( candName, "PFCand_2_%d", iPFCand );
+
+        if( particleTypePFCand2[iPFCand]==0 ) {
+          std::cout << "FOUND PARTICLE TYPE=0!!!! SKIPPING!" << std::endl;
+          continue;
+        }
+
+        if( particleTypePFCand1[iPFCand]==5 ) // neutral hadrons
+          testFactor=10.;
+        else
+          testFactor=1.;
+
+        TMatrixD m_PFCand(3,3);
+        m_PFCand(0,0) = testFactor*ErrEt ( thisCand.Et(), thisCand.Eta(), particleTypePFCand2[iPFCand] );
+        m_PFCand(1,1) = testFactor*ErrEta( thisCand.Et(), thisCand.Eta(), particleTypePFCand2[iPFCand] );
+        m_PFCand(2,2) = testFactor*ErrPhi( thisCand.Et(), thisCand.Eta(), particleTypePFCand2[iPFCand] );
+        TFitParticleEtEtaPhi* fitCand = new TFitParticleEtEtaPhi( candName, candName, &thisCand, &m_PFCand );
+
+        mCons_cands->addParticle1( fitCand );
+        fitCands.push_back(fitCand);
+        fitCandTypes.push_back(particleTypePFCand2[iPFCand]);
+
+        candJet2 += thisCand;
+
+      }
+
+
+      TLorentzVector cand_add2 = jet2_presel - candJet2;
+      // make it worse-resolution case:
+      int particleType_add2 = (fabs(cand_add2.Eta())<3.) ? 5 : 6; 
+      TMatrixD m_PFCand_add2(3,3);
+      m_PFCand_add2(0,0) = testFactor*ErrEt ( cand_add2.Et(), cand_add2.Eta(), particleType_add2 );
+      m_PFCand_add2(1,1) = testFactor*ErrEta( cand_add2.Et(), cand_add2.Eta(), particleType_add2 );
+      m_PFCand_add2(2,2) = testFactor*ErrPhi( cand_add2.Et(), cand_add2.Eta(), particleType_add2 );
+      TFitParticleEtEtaPhi* fitCand_add2 = new TFitParticleEtEtaPhi( "PFCand_add2", "PFCand_add2", &cand_add2, &m_PFCand_add2 );
+
+    //mCons_cands->addParticle2( fitCand_add2 );
+    //fitCands.push_back(fitCand_add2);
+    //fitCandTypes.push_back(particleType_add2 );
+
+      TKinFitter* fitter_cands = new TKinFitter("fitter_cands", "fitter_cands");
+      for( unsigned iCand=0; iCand<fitCands.size(); ++iCand )
+        fitter_cands->addMeasParticle( fitCands[iCand] );
+      fitter_cands->addConstraint( mCons_cands );
+
+      //Set convergence criteria
+      fitter_cands->setMaxNbIter( 30 );
+      fitter_cands->setMaxDeltaS( 1e-2 );
+      fitter_cands->setMaxF( 1e-1 );
+      fitter_cands->setVerbosity(0);
+
+      //Perform the fit
+      fitter_cands->fit();
+
+      // recreate Zqq vector:
+      TLorentzVector Zqq_kinfit_cands;
+      for( unsigned iCand=0; iCand<fitCands.size(); ++iCand )
+        Zqq_kinfit_cands += *(fitCands[iCand]->getCurr4Vec());
+
+
+      for( unsigned iCand=0; iCand<fitCands.size(); ++iCand ) {
+        if( fitCands[iCand]->getCurr4Vec()->Pt()>0. && fitCands[iCand]->getIni4Vec()->Pt()>0. ) {
+          float deltaE   = (fitCands[iCand]->getCurr4Vec()->Energy() - fitCands[iCand]->getIni4Vec()->Energy())/fitCands[iCand]->getIni4Vec()->Energy();
+          float deltaEta = fitCands[iCand]->getCurr4Vec()->Eta()    - fitCands[iCand]->getIni4Vec()->Eta();
+          float deltaPhi = fitCands[iCand]->getCurr4Vec()->DeltaPhi(fitCands[iCand]->getIni4Vec()->Phi());
+          float deltaPt  = (fitCands[iCand]->getCurr4Vec()->Pt() - fitCands[iCand]->getIni4Vec()->Pt())/fitCands[iCand]->getIni4Vec()->Pt();
+          if( fitCandTypes[iCand]==1 ) { //charged hadrons
+            h1_deltaE_ch->Fill( deltaE ); 
+            h1_deltaEta_ch->Fill( deltaEta ); 
+            h1_deltaPhi_ch->Fill( deltaPhi ); 
+            h1_deltaPt_ch->Fill( deltaPt ); 
+          } else if( fitCandTypes[iCand]==4 ) { //photons
+            h1_deltaE_gamma->Fill( deltaE ); 
+            h1_deltaEta_gamma->Fill( deltaEta ); 
+            h1_deltaPhi_gamma->Fill( deltaPhi ); 
+            h1_deltaPt_gamma->Fill( deltaPt ); 
+          } else if( fitCandTypes[iCand]==5 ) { //neutral hadrons
+            h1_deltaE_nh->Fill( deltaE ); 
+            h1_deltaEta_nh->Fill( deltaEta ); 
+            h1_deltaPhi_nh->Fill( deltaPhi ); 
+            h1_deltaPt_nh->Fill( deltaPt ); 
+          }
+        }
+      } //for cands
     
-    TFitConstraintM *mCons_jets = new TFitConstraintM( "ZMassConstraint_jets", "ZMass-Constraint", 0, 0 , 91.19);
-    mCons_jets->addParticles1( fitJet1, fitJet2 );
 
-    TKinFitter* fitter_jets = new TKinFitter("fitter_jets", "fitter_jets");
-    fitter_jets->addMeasParticle( fitJet1 );
-    fitter_jets->addMeasParticle( fitJet2 );
-    fitter_jets->addConstraint( mCons_jets );
-
-    //Set convergence criteria
-    fitter_jets->setMaxNbIter( 30 );
-    fitter_jets->setMaxDeltaS( 1e-2 );
-    fitter_jets->setMaxF( 1e-1 );
-    fitter_jets->setVerbosity(0);
-
-    //Perform the fit
-    fitter_jets->fit();
+      ZZ_kinfit_cands = Zll + Zqq_kinfit_cands;
 
 
-
-    TLorentzVector jet1_kinfit(*fitJet1->getCurr4Vec());
-    TLorentzVector jet2_kinfit(*fitJet2->getCurr4Vec());
-    TLorentzVector Zjj_kinfit_jets = jet1_kinfit + jet2_kinfit;
-
-    TLorentzVector ZZ_kinfit_jets = Zll + Zjj_kinfit_jets;
-
-
-
-    // and now full kinematic fit with PFCands:
-    TLorentzVector ZZ_kinfit_cands;
-if( dataset_=="HZZ_qqll_gluonfusion_M300_CANDS" || dataset_=="HZZ_qqll_gluonfusion_M400_CANDS" ) {
-
-    std::vector<TFitParticleEtEtaPhi*> fitCands;
-    TFitConstraintM *mCons_cands = new TFitConstraintM( "ZMassConstraint_cands", "ZMass-Constraint", 0, 0 , 91.19);
-
-
-
-    // loop on PFCands of first jet
-    TLorentzVector candJet1(0., 0., 0., 0.);
-    for( unsigned iPFCand=0; iPFCand<nPFCand1; ++iPFCand ) {
-      TLorentzVector thisCand;
-      thisCand.SetPtEtaPhiE( ptPFCand1[iPFCand], etaPFCand1[iPFCand], phiPFCand1[iPFCand], ePFCand1[iPFCand] );
-      char candName[100];
-      sprintf( candName, "PFCand_1_%d", iPFCand );
-
-      if( particleTypePFCand1[iPFCand]==0 ) {
-        std::cout << "FOUND PARTICLE TYPE=0!!!! SKIPPING!" << std::endl;
-        continue;
+      // match to parton:
+      int partFlavor1=0;
+      float deltaRmin1=999.;
+      for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+        TLorentzVector thisPart;
+        thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+        float thisDeltaR = jet1_presel.DeltaR(thisPart);
+        if( thisDeltaR<deltaRmin1 ) {
+          partFlavor1 = pdgIdPart[iPart];
+          deltaRmin1 = thisDeltaR;
+        }
       }
 
-      TMatrixD m_PFCand(3,3);
-      m_PFCand(0,0) = ErrEt ( thisCand.Et(), thisCand.Eta(), particleTypePFCand1[iPFCand] );
-      m_PFCand(1,1) = ErrEta( thisCand.Et(), thisCand.Eta(), particleTypePFCand1[iPFCand] );
-      m_PFCand(2,2) = ErrPhi( thisCand.Et(), thisCand.Eta(), particleTypePFCand1[iPFCand] );
-      TFitParticleEtEtaPhi* fitCand = new TFitParticleEtEtaPhi( candName, candName, &thisCand, &m_PFCand );
-
-      mCons_cands->addParticle1( fitCand );
-      fitCands.push_back(fitCand);
-
-      candJet1 += thisCand;
-
-    }
-
-    TLorentzVector cand_add1 = jet1 - candJet1;
-    // make it worse-resolution case:
-    int particleType_add1 = (fabs(cand_add1.Eta())<3.) ? 5 : 6; 
-    TMatrixD m_PFCand_add1(3,3);
-    m_PFCand_add1(0,0) = ErrEt ( cand_add1.Et(), cand_add1.Eta(), particleType_add1 );
-    m_PFCand_add1(1,1) = ErrEta( cand_add1.Et(), cand_add1.Eta(), particleType_add1 );
-    m_PFCand_add1(2,2) = ErrPhi( cand_add1.Et(), cand_add1.Eta(), particleType_add1 );
-    TFitParticleEtEtaPhi* fitCand_add1 = new TFitParticleEtEtaPhi( "PFCand_add1", "PFCand_add1", &cand_add1, &m_PFCand_add1 );
-
-    mCons_cands->addParticle1( fitCand_add1 );
-    fitCands.push_back(fitCand_add1);
-
-
-    // loop on PFCands of second jet
-    TLorentzVector candJet2(0., 0., 0., 0.);
-    for( unsigned iPFCand=0; iPFCand<nPFCand2; ++iPFCand ) {
-      TLorentzVector thisCand;
-      thisCand.SetPtEtaPhiE( ptPFCand2[iPFCand], etaPFCand2[iPFCand], phiPFCand2[iPFCand], ePFCand2[iPFCand] );
-      char candName[100];
-      sprintf( candName, "PFCand_2_%d", iPFCand );
-
-      if( particleTypePFCand2[iPFCand]==0 ) {
-        std::cout << "FOUND PARTICLE TYPE=0!!!! SKIPPING!" << std::endl;
-        continue;
+      float deltaRmin2=999.;
+      int partFlavor2=0;
+      for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+        TLorentzVector thisPart;
+        thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+        float thisDeltaR = jet2_presel.DeltaR(thisPart);
+        if( thisDeltaR<deltaRmin2 ) {
+          partFlavor2 = pdgIdPart[iPart];
+          deltaRmin2 = thisDeltaR;
+        }
       }
 
-      TMatrixD m_PFCand(3,3);
-      m_PFCand(0,0) = ErrEt ( thisCand.Et(), thisCand.Eta(), particleTypePFCand2[iPFCand] );
-      m_PFCand(1,1) = ErrEta( thisCand.Et(), thisCand.Eta(), particleTypePFCand2[iPFCand] );
-      m_PFCand(2,2) = ErrPhi( thisCand.Et(), thisCand.Eta(), particleTypePFCand2[iPFCand] );
-      TFitParticleEtEtaPhi* fitCand = new TFitParticleEtEtaPhi( candName, candName, &thisCand, &m_PFCand );
+      bool bothMatched = ( deltaRmin1<0.5 && deltaRmin2<0.5 && partFlavor1!=0 && partFlavor2!=0 );
 
-      mCons_cands->addParticle1( fitCand );
-      fitCands.push_back(fitCand);
+      if( bothMatched ) {
+        h1_ZZInvMass_MCassoc->Fill( ZZ.M(), eventWeight );
+        h1_ZZInvMass_MCassoc_ZjjMassConstr->Fill( ZZ_constr.M(), eventWeight );
+        h1_ZZInvMass_MCassoc_kinfit_jets->Fill( ZZ_kinfit_jets.M(), eventWeight );
+        h1_ZZInvMass_MCassoc_kinfit_cands->Fill( ZZ_kinfit_cands.M(), eventWeight );
+      }
 
-      candJet2 += thisCand;
+    } // if dataset
 
-    }
+  } // if jet_presel
+   
 
-
-    TLorentzVector cand_add2 = jet2 - candJet2;
-    // make it worse-resolution case:
-    int particleType_add2 = (fabs(cand_add2.Eta())<3.) ? 5 : 6; 
-    TMatrixD m_PFCand_add2(3,3);
-    m_PFCand_add2(0,0) = ErrEt ( cand_add2.Et(), cand_add2.Eta(), particleType_add2 );
-    m_PFCand_add2(1,1) = ErrEta( cand_add2.Et(), cand_add2.Eta(), particleType_add2 );
-    m_PFCand_add2(2,2) = ErrPhi( cand_add2.Et(), cand_add2.Eta(), particleType_add2 );
-    TFitParticleEtEtaPhi* fitCand_add2 = new TFitParticleEtEtaPhi( "PFCand_add2", "PFCand_add2", &cand_add2, &m_PFCand_add2 );
-
-    mCons_cands->addParticle2( fitCand_add2 );
-    fitCands.push_back(fitCand_add2);
-
-    TKinFitter* fitter_cands = new TKinFitter("fitter_cands", "fitter_cands");
-    for( unsigned iCand=0; iCand<fitCands.size(); ++iCand )
-      fitter_cands->addMeasParticle( fitCands[iCand] );
-    fitter_cands->addConstraint( mCons_cands );
-
-    //Set convergence criteria
-    fitter_cands->setMaxNbIter( 30 );
-    fitter_cands->setMaxDeltaS( 1e-2 );
-    fitter_cands->setMaxF( 1e-1 );
-    fitter_cands->setVerbosity(0);
-
-    //Perform the fit
-    fitter_cands->fit();
-
-    // recreate Zqq vector:
-    TLorentzVector Zqq_kinfit_cands;
-    for( unsigned iCand=0; iCand<fitCands.size(); ++iCand )
-      Zqq_kinfit_cands += *(fitCands[iCand]->getCurr4Vec());
-
-    ZZ_kinfit_cands = Zll + Zqq_kinfit_cands;
-}
- 
-
+/*
     // ------------------------
     //   KINEMATIC FIT: END
     // ------------------------
@@ -1614,15 +1822,27 @@ if( dataset_=="HZZ_qqll_gluonfusion_M300_CANDS" || dataset_=="HZZ_qqll_gluonfusi
   h1_ZZInvMass_hiMass_loose_FINEBINNING->Write();
   h1_ZZInvMass_hiMass_tight->Write();
   h1_ZZInvMass_hiMass_tight_FINEBINNING->Write();
-  h1_ZZInvMass_hiMass_opt400_LowEff->Write();
-  h1_ZZInvMass_hiMass_opt400_LowEff_FINEBINNING->Write();
-  h1_ZZInvMass_hiMass_opt400_HighEff->Write();
-  h1_ZZInvMass_hiMass_opt400_HighEff_FINEBINNING->Write();
+
+  h1_ZZInvMass_hiMass_opt200->Write();
+  h1_ZZInvMass_hiMass_opt200_FINEBINNING->Write();
+  h1_ZZInvMass_hiMass_opt300->Write();
+  h1_ZZInvMass_hiMass_opt300_FINEBINNING->Write();
+  h1_ZZInvMass_hiMass_opt400->Write();
+  h1_ZZInvMass_hiMass_opt400_FINEBINNING->Write();
   h1_ZZInvMass_hiMass_opt500->Write();
   h1_ZZInvMass_hiMass_opt500_FINEBINNING->Write();
+  h1_ZZInvMass_hiMass_opt600->Write();
+  h1_ZZInvMass_hiMass_opt600_FINEBINNING->Write();
+
   h1_partFlavor_tight->Write();
 
+  h1_ZZInvMass_MCassoc->Write();
+  h1_ZZInvMass_MCassoc_ZjjMassConstr->Write();
+  h1_ZZInvMass_MCassoc_kinfit_jets->Write();
+  h1_ZZInvMass_MCassoc_kinfit_cands->Write();
+
   h2_mZjj_vs_mZZ->Write();
+  h2_mZjj_vs_mZZ_kinfit->Write();
 
 /*
   h1_ptLept1->Write();
@@ -1749,6 +1969,19 @@ if( dataset_=="HZZ_qqll_gluonfusion_M300_CANDS" || dataset_=="HZZ_qqll_gluonfusi
   this->writeResponseHistos( outFile_, h1_response_vs_pt_Rch70100, "response_Rch70100" );
 */
 
+  h1_deltaE_ch->Write();
+  h1_deltaE_gamma->Write();
+  h1_deltaE_nh->Write();
+  h1_deltaEta_ch->Write();
+  h1_deltaEta_gamma->Write();
+  h1_deltaEta_nh->Write();
+  h1_deltaPhi_ch->Write();
+  h1_deltaPhi_gamma->Write();
+  h1_deltaPhi_nh->Write();
+  h1_deltaPt_ch->Write();
+  h1_deltaPt_gamma->Write();
+  h1_deltaPt_nh->Write();
+
   outFile_->Close();
 
 }
@@ -1862,9 +2095,12 @@ Double_t ErrEta(Float_t Et, Float_t Eta, int particleType) {
   Double_t InvPerr2, a, b, c;
 
   InvPerr2 = ErrPhi( Et, Eta, particleType );
-  // ErrPhi is in radians,
+  // ErrPhi is in radians^2:
+  InvPerr2 = sqrt(InvPerr2);
   // have to convert it to pseudorapidity:
   InvPerr2 = -log( tan (0.5*(InvPerr2) ) );
+  // go back to sqyared:
+  InvPerr2 *= InvPerr2;
 
 //if( particleType==1 ) { // charged hadrons
 //} else if( particleType==2 ) { // electrons
@@ -1898,20 +2134,29 @@ Double_t ErrPhi(Float_t Et, Float_t Eta, int particleType) {
 
   } else if( particleType==4 ) { // photons
 
+    bool inBarrel = fabs(Eta) < 1.475;
+
     a = 4.; // see DN 2007-011
     b = 11.;
     c = 0.6;
-    if(fabs(Eta) > 1.475) {
+    if(!inBarrel) {
       float crystalScaleFactor = 28.6/22.;
       a *= crystalScaleFactor;
       b *= crystalScaleFactor;
       c *= crystalScaleFactor;
     }
     // this is error in mm's:
-    InvPerr2 = a/(E * E) + b/E + c;
-    // have to convert it to radians:
-    float ECAL_radius = 1300.; //in mm
-    InvPerr2 = TMath::Pi()/2. - atan( InvPerr2/ECAL_radius );
+    InvPerr2 = a*a/E + b*b/(E*E) + c*c;
+    // convert to radians:
+    float crystalSize = (inBarrel) ? 22. : 28.6;
+    InvPerr2 /= (crystalSize*crystalSize);
+    // (one crystal is one degree):
+    float degToRad = 3.14159/180.;
+    InvPerr2 *= (degToRad*degToRad);
+
+  //// have to convert it to radians:
+  //float ECAL_radius = 1300.; //in mm
+  //InvPerr2 = TMath::Pi()/2. - atan( InvPerr2/ECAL_radius );
 
   } else if( particleType==5 ) { // neutral hadrons
 
