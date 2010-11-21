@@ -5,6 +5,7 @@
 #include "TMath.h"
 #include "TRandom3.h"
 #include "TLorentzVector.h"
+#include "TRegexp.h"
 
 #include "fitTools.h"
 
@@ -64,6 +65,12 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("event",&event_,"event_/I");
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
+
+  // triggers:
+  reducedTree_->Branch("HLT_Mu11", &HLT_Mu11_, "HLT_Mu11_/O");
+  reducedTree_->Branch("HLT_Ele17_SW_EleId_L1R", &HLT_Ele17_SW_EleId_L1R_, "HLT_Ele17_SW_EleId_L1R_/O");
+  reducedTree_->Branch("HLT_DoubleMu3", &HLT_DoubleMu3_, "HLT_DoubleMu3_/O");
+
 
   reducedTree_->Branch("ptHat",&ptHat_,"ptHat_/F");
 
@@ -300,12 +307,17 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      if( (jentry%100000) == 0 ) std::cout << "Event #" << jentry  << " of " << nentries << std::endl;
 
+
+     HLT_Mu11_ = this->PassedHLT("HLT_Mu11");
+     HLT_Ele17_SW_EleId_L1R_ = this->PassedHLT("HLT_Ele17_SW_EleId_L1R");
+     HLT_DoubleMu3_ = this->PassedHLT("HLT_DoubleMu3");
+
      run_ = runNumber;
      LS_ = lumiBlock;
      event_ = eventNumber;
      eventWeight_ = -1.; //default
 
-     if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
+     //if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
 
      //trigger:
      // not yet
@@ -606,7 +618,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // kinematics:
        // --------------
-       if( thisMuon.Pt() < 20. ) continue;
+       if( thisMuon.Pt() < 10. ) continue;
 
 
        // --------------
@@ -667,7 +679,16 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      } //for muons
 
 
+
      if( electrons.size() < 2 && muons.size() < 2 ) continue;
+
+     // clean electrons faked by muon MIP in ECAL
+     for( std::vector<TLorentzVector>::iterator iEle=electrons.begin(); iEle!=electrons.end(); ++iEle ) {
+       for( std::vector<TLorentzVector>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu ) {
+         if( iMu->DeltaR(*iEle)<0.1 )
+           electrons.erase(iEle);
+       } //for ele
+     } //for mu
 
 
      std::vector< TLorentzVector > leptons;
@@ -928,77 +949,66 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      etaJetLead3_ = (leadJets.size()>2) ? leadJets[2].Eta() : 0.;
      phiJetLead3_ = (leadJets.size()>2) ? leadJets[2].Phi() : 0.;
 
-//   iJet1_ = best_i;
-//   eJet1_ = leadJets[best_i].Energy();
-//   ptJet1_ = leadJets[best_i].Pt();
-//   etaJet1_ = leadJets[best_i].Eta();
-//   phiJet1_ = leadJets[best_i].Phi();
-//   eChargedHadronsJet1_ = leadJets[best_i].eChargedHadrons;
-//  // ePhotonsJet1_ = leadJets[best_i];
 
 
-//   iJet2_ = best_j;
-//   eJet2_ = leadJets[best_j].Energy();
-//   ptJet2_ = leadJets[best_j].Pt();
-//   etaJet2_ = leadJets[best_j].Eta();
-//   phiJet2_ = leadJets[best_j].Phi();
-//   eChargedHadronsJet2_ = leadJets[best_j].eChargedHadrons;
-//  // ePhotonsJet2_ = leadJets[best_j];
+    // and now full kinematic fit with PFCands:
+    TLorentzVector ZZ_kinfit_cands;
+    TRegexp cands_tstr("CANDS");
+    TString dataset_tstr(dataset_);
+    if( dataset_tstr.Contains(cands_tstr) ) {
+
+      nPFCand1_=0;
+      nPFCand2_=0;
+    
+      // get the candidates for 2 candidate jets:
+      for( unsigned iCand=0; iCand<nPFCand; ++iCand) {
+
+        TLorentzVector thisCand( pxPFCand[iCand], pyPFCand[iCand], pzPFCand[iCand], energyPFCand[iCand] );
+
+        if( iPFJetPFCand[iCand]==best_i_eventIndex ) {
+
+          if( nPFCand1_>=100 ) {
+
+            std::cout << "More than 100 candidates found. Skipping" << std::endl;
+
+          } else {
+
+            ePFCand1_[nPFCand1_] = thisCand.Energy();
+            ptPFCand1_[nPFCand1_] = thisCand.Pt();
+            etaPFCand1_[nPFCand1_] = thisCand.Eta();
+            phiPFCand1_[nPFCand1_] = thisCand.Phi();
+            particleTypePFCand1_[nPFCand1_] = particleTypePFCand[iCand];
+
+            nPFCand1_++;
+
+          }
 
 
-/*
-     nPFCand1_=0;
-     nPFCand2_=0;
-   
-     // get the candidates for 2 candidate jets:
-     for( unsigned iCand=0; iCand<nPFCand; ++iCand) {
+        } // if best_i
 
-       TLorentzVector thisCand( pxPFCand[iCand], pyPFCand[iCand], pzPFCand[iCand], energyPFCand[iCand] );
+        if( iPFJetPFCand[iCand]==best_j_eventIndex ) {
 
-       if( iPFJetPFCand[iCand]==best_i_eventIndex ) {
+          if( nPFCand2_>=100 ) {
 
-         if( nPFCand1_>=100 ) {
+            std::cout << "More than 100 candidates found. Skipping" << std::endl;
 
-           std::cout << "More than 100 candidates found. Skipping" << std::endl;
+          } else {
 
-         } else {
+            ePFCand2_[nPFCand2_] = thisCand.Energy();
+            ptPFCand2_[nPFCand2_] = thisCand.Pt();
+            etaPFCand2_[nPFCand2_] = thisCand.Eta();
+            phiPFCand2_[nPFCand2_] = thisCand.Phi();
+            particleTypePFCand2_[nPFCand2_] = particleTypePFCand[iCand];
 
-           ePFCand1_[nPFCand1_] = thisCand.Energy();
-           ptPFCand1_[nPFCand1_] = thisCand.Pt();
-           etaPFCand1_[nPFCand1_] = thisCand.Eta();
-           phiPFCand1_[nPFCand1_] = thisCand.Phi();
-           particleTypePFCand1_[nPFCand1_] = particleTypePFCand[iCand];
+            nPFCand2_++;
 
-           nPFCand1_++;
+          }
 
-         }
+        } // if best_j
 
-
-       } // if best_i
-
-       if( iPFJetPFCand[iCand]==best_j_eventIndex ) {
-
-         if( nPFCand2_>=100 ) {
-
-           std::cout << "More than 100 candidates found. Skipping" << std::endl;
-
-         } else {
-
-           ePFCand2_[nPFCand2_] = thisCand.Energy();
-           ptPFCand2_[nPFCand2_] = thisCand.Pt();
-           etaPFCand2_[nPFCand2_] = thisCand.Eta();
-           phiPFCand2_[nPFCand2_] = thisCand.Phi();
-           particleTypePFCand2_[nPFCand2_] = particleTypePFCand[iCand];
-
-           nPFCand2_++;
-
-         }
-
-       } // if best_j
-
-     }  // for candidates
+      }  // for candidates
      
-*/
+     }
 
 
 
