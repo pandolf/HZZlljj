@@ -172,14 +172,28 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   float invMassMin = 0.;
   float invMassMax = 120.;
 
-  TH1D* h1_massZll = new TH1D("massZll", "", nBins_invMass, 55., invMassMax);
-  h1_massZll->Sumw2();
-  TH1D* h1_massZll_Nm1 = new TH1D("massZll_Nm1", "", nBins_invMass, 55., invMassMax);
-  h1_massZll_Nm1->Sumw2();
-  TH1D* h1_MuMuInvMass = new TH1D("MuMuInvMass", "", nBins_invMass, 40., invMassMax);
-  h1_MuMuInvMass->Sumw2();
-  TH1D* h1_EleEleInvMass = new TH1D("EleEleInvMass", "", nBins_invMass, 40., invMassMax);
-  h1_EleEleInvMass->Sumw2();
+  TH1D* h1_mZll = new TH1D("mZll", "", nBins_invMass, 40., invMassMax);
+  h1_mZll->Sumw2();
+  TH1D* h1_mZll_presel = new TH1D("mZll_presel", "", nBins_invMass, 40., invMassMax);
+  h1_mZll_presel->Sumw2();
+  TH1D* h1_mZll_presel_0jets = new TH1D("mZll_presel_0jets", "", nBins_invMass, 40., invMassMax);
+  h1_mZll_presel_0jets->Sumw2();
+  TH1D* h1_mZll_Nm1 = new TH1D("mZll_Nm1", "", nBins_invMass, 40., invMassMax);
+  h1_mZll_Nm1->Sumw2();
+
+  TH1D* h1_mZmumu = new TH1D("mZmumu", "", nBins_invMass, 40., invMassMax);
+  h1_mZmumu->Sumw2();
+  TH1D* h1_mZmumu_presel = new TH1D("mZmumu_presel", "", nBins_invMass, 40., invMassMax);
+  h1_mZmumu_presel->Sumw2();
+  TH1D* h1_mZmumu_presel_0jets = new TH1D("mZmumu_presel_0jets", "", nBins_invMass, 40., invMassMax);
+  h1_mZmumu_presel_0jets->Sumw2();
+  TH1D* h1_mZee = new TH1D("mZee", "", nBins_invMass, 40., invMassMax);
+  h1_mZee->Sumw2();
+  TH1D* h1_mZee_presel = new TH1D("mZee_presel", "", nBins_invMass, 40., invMassMax);
+  h1_mZee_presel->Sumw2();
+  TH1D* h1_mZee_presel_0jets = new TH1D("mZee_presel_0jets", "", nBins_invMass, 40., invMassMax);
+  h1_mZee_presel_0jets->Sumw2();
+
   TH1D* h1_massZjj = new TH1D("massZjj", "", nBins_invMass, 20., 200.);
   h1_massZjj->Sumw2();
   TH1D* h1_massZjj_kinfit_jets = new TH1D("massZjj_kinfit_jets", "", nBins_invMass, 20., 200.);
@@ -493,22 +507,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("phiJet1", phiJet1);
   Float_t eChargedHadronsJet1[50];
   tree_->SetBranchAddress("eChargedHadronsJet1", eChargedHadronsJet1);
-  Float_t eJetGen1;
-  tree_->SetBranchAddress("eJetGen1", &eJetGen1);
-  Float_t ptJetGen1;
-  tree_->SetBranchAddress("ptJetGen1", &ptJetGen1);
-  Float_t etaJetGen1;
-  tree_->SetBranchAddress("etaJetGen1", &etaJetGen1);
-  Float_t phiJetGen1;
-  tree_->SetBranchAddress("phiJetGen1", &phiJetGen1);
-  Float_t ePart1;
-  tree_->SetBranchAddress("ePart1", &ePart1);
-  Float_t ptPart1;
-  tree_->SetBranchAddress("ptPart1", &ptPart1);
-  Float_t etaPart1;
-  tree_->SetBranchAddress("etaPart1", &etaPart1);
-  Float_t phiPart1;
-  tree_->SetBranchAddress("phiPart1", &phiPart1);
+//Float_t eJetGen1;
+//tree_->SetBranchAddress("eJetGen1", &eJetGen1);
+//Float_t ptJetGen1;
+//tree_->SetBranchAddress("ptJetGen1", &ptJetGen1);
+//Float_t etaJetGen1;
+//tree_->SetBranchAddress("etaJetGen1", &etaJetGen1);
+//Float_t phiJetGen1;
+//tree_->SetBranchAddress("phiJetGen1", &phiJetGen1);
 
   Int_t nPFCand1;
   tree_->SetBranchAddress("nPFCand1", &nPFCand1);
@@ -535,22 +541,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("phiJet2", phiJet2);
   Float_t eChargedHadronsJet2[50];
   tree_->SetBranchAddress("eChargedHadronsJet2", eChargedHadronsJet2);
-  Float_t eJetGen2;
-  tree_->SetBranchAddress("eJetGen2", &eJetGen2);
-  Float_t ptJetGen2;
-  tree_->SetBranchAddress("ptJetGen2", &ptJetGen2);
-  Float_t etaJetGen2;
-  tree_->SetBranchAddress("etaJetGen2", &etaJetGen2);
-  Float_t phiJetGen2;
-  tree_->SetBranchAddress("phiJetGen2", &phiJetGen2);
-  Float_t ePart2;
-  tree_->SetBranchAddress("ePart2", &ePart2);
-  Float_t ptPart2;
-  tree_->SetBranchAddress("ptPart2", &ptPart2);
-  Float_t etaPart2;
-  tree_->SetBranchAddress("etaPart2", &etaPart2);
-  Float_t phiPart2;
-  tree_->SetBranchAddress("phiPart2", &phiPart2);
+//Float_t eJetGen2;
+//tree_->SetBranchAddress("eJetGen2", &eJetGen2);
+//Float_t ptJetGen2;
+//tree_->SetBranchAddress("ptJetGen2", &ptJetGen2);
+//Float_t etaJetGen2;
+//tree_->SetBranchAddress("etaJetGen2", &etaJetGen2);
+//Float_t phiJetGen2;
+//tree_->SetBranchAddress("phiJetGen2", &phiJetGen2);
 
   Int_t nPFCand2;
   tree_->SetBranchAddress("nPFCand2", &nPFCand2);
@@ -738,6 +736,25 @@ void Ntp1Finalizer_HZZlljj::finalize() {
         h1_ptJet_all->Fill( jet1.Pt(), eventWeight );
         cached_jetpt = jet1.Pt();
       }
+
+    }
+
+
+    if( nPairs>0 ) {
+
+      h1_mZll_presel->Fill( diLepton.M(), eventWeight );
+      if( leptType==0 )
+        h1_mZmumu_presel->Fill( diLepton.M(), eventWeight );
+      else
+        h1_mZee_presel->Fill( diLepton.M(), eventWeight );
+
+    } else {
+
+      h1_mZll_presel_0jets->Fill( diLepton.M(), eventWeight );
+      if( leptType==0 )
+        h1_mZmumu_presel_0jets->Fill( diLepton.M(), eventWeight );
+      else
+        h1_mZee_presel_0jets->Fill( diLepton.M(), eventWeight );
 
     }
 
@@ -1454,9 +1471,9 @@ if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
 
 
     if( leptType==0 )
-      h1_MuMuInvMass->Fill( Zll.M(), eventWeight );
+      h1_mZmumu->Fill( Zll.M(), eventWeight );
     else if( leptType==1 )
-      h1_EleEleInvMass->Fill( Zll.M(), eventWeight );
+      h1_mZee->Fill( Zll.M(), eventWeight );
     else
       std::cout << "WARNING!! found incredible leptType: '" << leptType << "'." << std::endl;
     h1_massZll->Fill( Zll.M(), eventWeight );
@@ -1806,6 +1823,14 @@ if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
   h1_ptJet2_loose->Write();
   h1_ptJet2_tight->Write();
 
+  h1_mZll_presel->Write();
+  h1_mZmumu->Write();
+  h1_mZmumu_presel->Write();
+  h1_mZmumu_presel_0jets->Write();
+  h1_mZee->Write();
+  h1_mZee_presel->Write();
+  h1_mZee_presel_0jets->Write();
+
   h1_mZll_loose->Write();
   h1_mZll_tight->Write();
   h1_mZll_opt400_LowEff->Write();
@@ -1902,8 +1927,8 @@ if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
 
   h1_massZll->Write();
   h1_massZll_Nm1->Write();
-  h1_MuMuInvMass->Write();
-  h1_EleEleInvMass->Write();
+  h1_mZmumu->Write();
+  h1_mZee->Write();
 
   h1_massZjj->Write();
   h1_massZjj_kinfit_jets->Write();
