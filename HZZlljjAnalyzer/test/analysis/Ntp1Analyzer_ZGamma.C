@@ -233,10 +233,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          nJetsGen_total_++;
 
          if( nJetGen_<10 && thisJet.Pt()>30. ) {
-           ptJet_[nJetGen_] = thisJet.Pt();
-           etaJet_[nJetGen_] = thisJet.Eta();
-           phiJet_[nJetGen_] = thisJet.Phi();
-           eJet_[nJetGen_] = thisJet.Energy();
+           ptJetGen_[nJetGen_] = thisJet.Pt();
+           etaJetGen_[nJetGen_] = thisJet.Eta();
+           phiJetGen_[nJetGen_] = thisJet.Phi();
+           eJetGen_[nJetGen_] = thisJet.Energy();
            nJetGen_++;
          }
 
