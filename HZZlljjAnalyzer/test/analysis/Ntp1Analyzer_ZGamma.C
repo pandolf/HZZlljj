@@ -8,6 +8,7 @@
 
 
 
+double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
 
 
 class AnalysisJet : public TLorentzVector {
@@ -502,7 +503,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      bool foundZ = false;
      if( diLepton.M() > 70. && diLepton.M() < 110. ) foundZ=true;
 
-     // for now, if no Z is found continue (photon for now done in other framework)
+     // for now, if no Z is found continue (photon done in GammaJet framework)
      if( !foundZ ) continue;
 
 
@@ -520,8 +521,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
 
        // far away from leptons:
-       if( thisJet.DeltaR(lept1MC) <= 0.5 ) continue;
-       if( thisJet.DeltaR(lept2MC) <= 0.5 ) continue;
+       if( thisJet.DeltaR(leptons[0]) <= 0.5 ) continue;
+       if( thisJet.DeltaR(leptons[1]) <= 0.5 ) continue;
 
        nJets_total_++;
 
@@ -535,6 +536,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      } //for jets
 
+
+
+
      reducedTree_->Fill(); 
 
 
@@ -542,5 +546,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 } //loop
 
+
+double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz) {
+  float elePt = sqrt(elePx*elePx + elePy*elePy);
+  return ( - (eleVx-PVx)*elePy + (eleVy-PVy)*elePx ) / elePt;
+}
 
 
