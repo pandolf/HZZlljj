@@ -71,6 +71,11 @@ void Ntp1Analyzer_ZGamma::CreateOutputFile() {
   reducedTree_->Branch("etaZGamma",  &etaZGamma_,  "etaZGamma_/F");
   reducedTree_->Branch("phiZGamma",  &phiZGamma_,  "phiZGamma_/F");
 
+  reducedTree_->Branch(  "eZGammaGen",    &eZGammaGen_,    "eZGammaGen_/F");
+  reducedTree_->Branch( "ptZGammaGen",   &ptZGammaGen_,   "ptZGammaGen_/F");
+  reducedTree_->Branch("etaZGammaGen",  &etaZGammaGen_,  "etaZGammaGen_/F");
+  reducedTree_->Branch("phiZGammaGen",  &phiZGammaGen_,  "phiZGammaGen_/F");
+
   reducedTree_->Branch("nJets_total",  &nJets_total_,  "nJets_total_/I");
 
   reducedTree_->Branch("nJet",  &nJet_,  "nJet_/I");
@@ -78,6 +83,14 @@ void Ntp1Analyzer_ZGamma::CreateOutputFile() {
   reducedTree_->Branch("ptJet",  &ptJet_,  "ptJet_[nJet_]/F");
   reducedTree_->Branch("etaJet",  &etaJet_,  "etaJet_[nJet_]/F");
   reducedTree_->Branch("phiJet",  &phiJet_,  "phiJet_[nJet_]/F");
+
+  reducedTree_->Branch("nJetsGen_total",  &nJetsGen_total_,  "nJetsGen_total_/I");
+
+  reducedTree_->Branch(  "nJetGen",    &nJetGen_,    "nJetGen_/I");
+  reducedTree_->Branch(  "eJetGen",    &eJetGen_,    "eJetGen_[nJetGen_]/F");
+  reducedTree_->Branch( "ptJetGen",   &ptJetGen_,   "ptJetGen_[nJetGen_]/F");
+  reducedTree_->Branch("etaJetGen",  &etaJetGen_,  "etaJetGen_[nJetGen_]/F");
+  reducedTree_->Branch("phiJetGen",  &phiJetGen_,  "phiJetGen_[nJetGen_]/F");
 
 
 } 
