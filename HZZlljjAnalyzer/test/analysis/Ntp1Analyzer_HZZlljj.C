@@ -66,10 +66,10 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
 
-  // triggers:
-  reducedTree_->Branch("HLT_Mu11", &HLT_Mu11_, "HLT_Mu11_/O");
-  reducedTree_->Branch("HLT_Ele17_SW_EleId_L1R", &HLT_Ele17_SW_EleId_L1R_, "HLT_Ele17_SW_EleId_L1R_/O");
-  reducedTree_->Branch("HLT_DoubleMu3", &HLT_DoubleMu3_, "HLT_DoubleMu3_/O");
+//// triggers:
+//reducedTree_->Branch("HLT_Mu11", &HLT_Mu11_, "HLT_Mu11_/O");
+//reducedTree_->Branch("HLT_Ele17_SW_EleId_L1R", &HLT_Ele17_SW_EleId_L1R_, "HLT_Ele17_SW_EleId_L1R_/O");
+//reducedTree_->Branch("HLT_DoubleMu3", &HLT_DoubleMu3_, "HLT_DoubleMu3_/O");
 
 
   reducedTree_->Branch("ptHat",&ptHat_,"ptHat_/F");
@@ -308,9 +308,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      if( (jentry%100000) == 0 ) std::cout << "Event #" << jentry  << " of " << nentries << std::endl;
 
 
-     HLT_Mu11_ = this->PassedHLT("HLT_Mu11");
-     HLT_Ele17_SW_EleId_L1R_ = this->PassedHLT("HLT_Ele17_SW_EleId_L1R");
-     HLT_DoubleMu3_ = this->PassedHLT("HLT_DoubleMu3");
+   //HLT_Mu11_ = this->PassedHLT("HLT_Mu11");
+   //HLT_Ele17_SW_EleId_L1R_ = this->PassedHLT("HLT_Ele17_SW_EleId_L1R");
+   //HLT_DoubleMu3_ = this->PassedHLT("HLT_DoubleMu3");
 
      run_ = runNumber;
      LS_ = lumiBlock;
@@ -322,12 +322,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      //trigger:
      // not yet
 
-     bool isMC = ( runNumber < 5 );
+     //bool isMC = ( runNumber < 5 );
 
 
-     ptHat_ = (isMC) ? genPtHat : ptHat_;
+     ptHat_ = (isMC_) ? genPtHat : ptHat_;
 
-     if( isMC ) 
+     if( isMC_ ) 
        if( (ptHat_ > ptHatMax_) || (ptHat_ < ptHatMin_) ) continue;
 
 
@@ -336,7 +336,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      int zIndexqq=-1;
      int zIndexll=-1;
 
-     if( isMC ) {
+     if( isMC_ ) {
 
 
        // first look for Z->qq
@@ -544,12 +544,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
          sigmaIetaIeta_thresh80 = 0.03;
          deltaPhiAtVtx_thresh80 = 0.7;
-         deltaEtaAtVtx_thresh80 = 0.007; //no cut
+         deltaEtaAtVtx_thresh80 = 0.007;
          hOverE_thresh80 = 0.025;
 
          sigmaIetaIeta_thresh95 = 0.03;
          deltaPhiAtVtx_thresh95 = 0.7;
-         deltaEtaAtVtx_thresh95 = 0.01; //no cut
+         deltaEtaAtVtx_thresh95 = 0.01; 
          hOverE_thresh95 = 0.07;
        }
 
@@ -589,14 +589,15 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        bool passed_VBTF80 = (iso_VBTF80 && eleID_VBTF80);
 
 
+       if( !passed_VBTF95 ) continue;
 
        // for now simple selection, will have to optimize this (T&P?)
        // one electron required to pass VBTF80, the other VBTF95
-       if( electrons.size()==0 && passed_VBTF95 ) {
+       if( electrons.size()==0 ) {
          electrons.push_back( thisEle );
          chargeFirstEle = chargeEle[iEle];
          if( passed_VBTF80 ) firstPassedVBTF80 = true;
-       } else if( chargeEle[iEle] != chargeFirstEle && ( (firstPassedVBTF80&&passed_VBTF95)||passed_VBTF80 ) ) {
+       } else if( chargeEle[iEle] != chargeFirstEle && ( firstPassedVBTF80||passed_VBTF80 ) ) {
          electrons.push_back( thisEle );
        }
 
@@ -689,6 +690,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            electrons.erase(iEle);
        } //for ele
      } //for mu
+
+     if( electrons.size() < 2 && muons.size() < 2 ) continue;
 
 
      std::vector< TLorentzVector > leptons;
