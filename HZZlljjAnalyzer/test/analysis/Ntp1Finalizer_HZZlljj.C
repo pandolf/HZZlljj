@@ -26,6 +26,7 @@ Double_t ErrEt(Float_t Et, Float_t Eta, int particleType);
 Double_t ErrEta(Float_t Et, Float_t Eta, int particleType);
 Double_t ErrPhi(Float_t Et, Float_t Eta, int particleType);
 
+int getNJets( int nPairs );
 
 
 // constructor:
@@ -58,6 +59,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1F* h1_run = new TH1F("run", "", 15149, 132440, 147589);
 
+/*
   TH1D* h1_ptLept1 = new TH1D("ptLept1", "", 50, 10., 220.);
   h1_ptLept1->Sumw2();
   TH1D* h1_ptLept2 = new TH1D("ptLept2", "", 50, 10., 220.);
@@ -167,33 +169,60 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_pfMet->Sumw2();
   TH1F* h1_pfMet_minusHiggs = new TH1F("pfMet_minusHiggs", "", 50, 0., 120.);
   h1_pfMet_minusHiggs->Sumw2();
+*/
+
+  TH1D* h1_ptLept1_presel = new TH1D("ptLept1_presel", "", 25, 20., 300.);
+  h1_ptLept1_presel->Sumw2();
+  TH1D* h1_ptLept2_presel = new TH1D("ptLept2_presel", "", 25, 20., 150.);
+  h1_ptLept2_presel->Sumw2();
+  TH1D* h1_etaLept1_presel = new TH1D("etaLept1_presel", "", 25, -2.5, 2.5);
+  h1_etaLept1_presel->Sumw2();
+  TH1D* h1_etaLept2_presel = new TH1D("etaLept2_presel", "", 25, -2.5, 2.5);
+  h1_etaLept2_presel->Sumw2();
+
+  TH1D* h1_ptJet_all_presel = new TH1D("ptJet_all_presel", "", 27, 30., 400.);
+  h1_ptJet_all_presel->Sumw2();
+  TH1D* h1_etaJet_all_presel = new TH1D("etaJet_all_presel", "", 25, -5., 5.);
+  h1_etaJet_all_presel->Sumw2();
+  TH1D* h1_nJets_presel = new TH1D("nJets_presel", "", 7, 1.5, 8.5);
+  h1_nJets_presel->Sumw2();
+  TH1D* h1_nPairs_presel = new TH1D("nPairs_presel", "", 21, 0.5, 21.5);
+  h1_nPairs_presel->Sumw2();
 
   int nBins_invMass = 40;
-  float invMassMin = 0.;
+  float invMassMin = 30.;
   float invMassMax = 120.;
+  float invMassMin_ll = 60.;
 
-  TH1D* h1_mZll = new TH1D("mZll", "", nBins_invMass, 40., invMassMax);
+  TH1D* h1_mZjj_presel = new TH1D("mZjj_presel", "", 20, invMassMin, 400.);
+  h1_mZjj_presel->Sumw2();
+
+  TH1D* h1_deltaRjj_presel = new TH1D("deltaRjj_presel", "", 18, 0.5, 5.);
+  h1_deltaRjj_presel->Sumw2();
+  TH1D* h1_deltaRll_presel = new TH1D("deltaRll_presel", "", 20, 0., 5.);
+  h1_deltaRll_presel->Sumw2();
+
+  TH1D* h1_mZll = new TH1D("mZll", "", nBins_invMass, invMassMin_ll, invMassMax);
   h1_mZll->Sumw2();
-  TH1D* h1_mZll_presel = new TH1D("mZll_presel", "", nBins_invMass, 40., invMassMax);
+  TH1D* h1_mZll_presel = new TH1D("mZll_presel", "", nBins_invMass, invMassMin_ll, invMassMax);
   h1_mZll_presel->Sumw2();
-  TH1D* h1_mZll_presel_0jets = new TH1D("mZll_presel_0jets", "", nBins_invMass, 40., invMassMax);
+  TH1D* h1_mZll_presel_0jets = new TH1D("mZll_presel_0jets", "", nBins_invMass, invMassMin_ll, invMassMax);
   h1_mZll_presel_0jets->Sumw2();
-  TH1D* h1_mZll_Nm1 = new TH1D("mZll_Nm1", "", nBins_invMass, 40., invMassMax);
-  h1_mZll_Nm1->Sumw2();
 
-  TH1D* h1_mZmumu = new TH1D("mZmumu", "", nBins_invMass, 40., invMassMax);
+  TH1D* h1_mZmumu = new TH1D("mZmumu", "", nBins_invMass, invMassMin_ll, invMassMax);
   h1_mZmumu->Sumw2();
-  TH1D* h1_mZmumu_presel = new TH1D("mZmumu_presel", "", nBins_invMass, 40., invMassMax);
+  TH1D* h1_mZmumu_presel = new TH1D("mZmumu_presel", "", nBins_invMass, invMassMin_ll, invMassMax);
   h1_mZmumu_presel->Sumw2();
-  TH1D* h1_mZmumu_presel_0jets = new TH1D("mZmumu_presel_0jets", "", nBins_invMass, 40., invMassMax);
+  TH1D* h1_mZmumu_presel_0jets = new TH1D("mZmumu_presel_0jets", "", nBins_invMass, invMassMin_ll, invMassMax);
   h1_mZmumu_presel_0jets->Sumw2();
-  TH1D* h1_mZee = new TH1D("mZee", "", nBins_invMass, 40., invMassMax);
+  TH1D* h1_mZee = new TH1D("mZee", "", nBins_invMass, invMassMin_ll, invMassMax);
   h1_mZee->Sumw2();
-  TH1D* h1_mZee_presel = new TH1D("mZee_presel", "", nBins_invMass, 40., invMassMax);
+  TH1D* h1_mZee_presel = new TH1D("mZee_presel", "", nBins_invMass, invMassMin_ll, invMassMax);
   h1_mZee_presel->Sumw2();
-  TH1D* h1_mZee_presel_0jets = new TH1D("mZee_presel_0jets", "", nBins_invMass, 40., invMassMax);
+  TH1D* h1_mZee_presel_0jets = new TH1D("mZee_presel_0jets", "", nBins_invMass, invMassMin_ll, invMassMax);
   h1_mZee_presel_0jets->Sumw2();
 
+/*
   TH1D* h1_massZjj = new TH1D("massZjj", "", nBins_invMass, 20., 200.);
   h1_massZjj->Sumw2();
   TH1D* h1_massZjj_kinfit_jets = new TH1D("massZjj_kinfit_jets", "", nBins_invMass, 20., 200.);
@@ -218,7 +247,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_massZjj_Rch2_5070->Sumw2();
   TH1D* h1_massZjj_Rch2_70100 = new TH1D("massZjj_Rch2_70100", "", nBins_invMass, 20., 200.);
   h1_massZjj_Rch2_70100->Sumw2();
-
+*/
 /*
   TH1D* h1_ZZInvMass_loMass = new TH1D("ZZInvMass_loMass", "", nBins_invMass, 90., 190.);
   h1_ZZInvMass_loMass->Sumw2();
@@ -255,8 +284,6 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_ZZInvMass_hiMass_fullSelection_loose->Sumw2();
 */
 
-  TH1D* h1_ptJet_all = new TH1D("ptJet_all", "", 50, 30., 300.);
-  h1_ptJet_all->Sumw2();
 
   TH1D* h1_ptJet1_loose = new TH1D("ptJet1_loose", "", 50, 30., 300.);
   h1_ptJet1_loose->Sumw2();
@@ -283,6 +310,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_mZqq_loose->Sumw2();
   TH1D* h1_mZqq_tight = new TH1D("mZqq_tight", "", nBins_invMass, 70., 120.);
   h1_mZqq_tight->Sumw2();
+
   TH1D* h1_mZqq_opt400_LowEff = new TH1D("mZqq_opt400_LowEff", "", nBins_invMass, 70., 120.);
   h1_mZqq_opt400_LowEff->Sumw2();
   TH1D* h1_mZqq_opt400_HighEff = new TH1D("mZqq_opt400_HighEff", "", nBins_invMass, 70., 120.);
@@ -340,6 +368,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH2D* h2_mZjj_vs_mZZ_kinfit = new TH2D("mZjj_vs_mZZ_kinfit", "", 100, 200., 600., 100, 70., 120.);
   h2_mZjj_vs_mZZ_kinfit->Sumw2();
 
+/*
   TH1D* h1_ZZInvMass_medMass = new TH1D("ZZInvMass_medMass", "", nBins_invMass, 100., 350.);
   h1_ZZInvMass_medMass->Sumw2();
   TH1D* h1_ZZInvMass_medMass_FINEBINNING = new TH1D("ZZInvMass_medMass_FINEBINNING", "", 20000, 100., 350.);
@@ -374,6 +403,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_ZZInvMass_loMass_ZjjTag_ZllAntiTag_Rch40->Sumw2();
   TH1D* h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40 = new TH1D("ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_ZjjTag_ZllAntiTag_Rch40->Sumw2();
+*/
 
   TH1D* h1_deltaE_ch = new TH1D("deltaE_ch", "", 100, -1., 1.);
   TH1D* h1_deltaE_gamma = new TH1D("deltaE_gamma", "", 100, -1., 1.);
@@ -596,6 +626,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   std::map< int, std::map<int, std::vector<int> > > run_lumi_ev_map;
 
 
+ofstream ofs("run_event.txt");
+
 
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
 
@@ -698,6 +730,38 @@ void Ntp1Finalizer_HZZlljj::finalize() {
     std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt500;
     std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt600;
 
+    if( nPairs>0 ) {
+
+ofs << run << " " << event << " " << diLepton.M() << " " << ptLept1 << " " << etaLept1 << " " << ptLept2 << " " << etaLept2 << std::endl;
+      h1_mZll_presel->Fill( diLepton.M(), eventWeight );
+      if( leptType==0 )
+        h1_mZmumu_presel->Fill( diLepton.M(), eventWeight );
+      else
+        h1_mZee_presel->Fill( diLepton.M(), eventWeight );
+
+      h1_deltaRll_presel->Fill(lept1.DeltaR(lept2), eventWeight );
+
+      h1_ptLept1_presel->Fill( ptLept1, eventWeight );
+      h1_ptLept2_presel->Fill( ptLept2, eventWeight );
+
+      h1_etaLept1_presel->Fill( etaLept1, eventWeight );
+      h1_etaLept2_presel->Fill( etaLept2, eventWeight );
+
+      int nJets = getNJets(nPairs);
+      h1_nJets_presel->Fill( nJets , eventWeight );
+      h1_nPairs_presel->Fill( nPairs , eventWeight );
+
+    } else {
+
+      h1_mZll_presel_0jets->Fill( diLepton.M(), eventWeight );
+      if( leptType==0 )
+        h1_mZmumu_presel_0jets->Fill( diLepton.M(), eventWeight );
+      else
+        h1_mZee_presel_0jets->Fill( diLepton.M(), eventWeight );
+
+    }
+
+
     float cached_jetpt = 0.;
 
     for( unsigned iJetPair=0; iJetPair<nPairs; ++iJetPair ) {
@@ -731,30 +795,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
         jetPairs_opt600.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
 
 
+      h1_mZjj_presel->Fill( diJet.M(), eventWeight );
+      h1_deltaRjj_presel->Fill(jet1.DeltaR(jet2), eventWeight );
 
       if( jet1.Pt()!=cached_jetpt ) {
-        h1_ptJet_all->Fill( jet1.Pt(), eventWeight );
+        h1_ptJet_all_presel->Fill( jet1.Pt(), eventWeight );
+        h1_etaJet_all_presel->Fill( jet1.Eta(), eventWeight );
         cached_jetpt = jet1.Pt();
       }
-
-    }
-
-
-    if( nPairs>0 ) {
-
-      h1_mZll_presel->Fill( diLepton.M(), eventWeight );
-      if( leptType==0 )
-        h1_mZmumu_presel->Fill( diLepton.M(), eventWeight );
-      else
-        h1_mZee_presel->Fill( diLepton.M(), eventWeight );
-
-    } else {
-
-      h1_mZll_presel_0jets->Fill( diLepton.M(), eventWeight );
-      if( leptType==0 )
-        h1_mZmumu_presel_0jets->Fill( diLepton.M(), eventWeight );
-      else
-        h1_mZee_presel_0jets->Fill( diLepton.M(), eventWeight );
 
     }
 
@@ -1271,6 +1319,39 @@ if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
       h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit_jets.M(), Zjj.M() );
 
 
+      // match to parton:
+      int partFlavor1=0;
+      float deltaRmin1=999.;
+      for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+        TLorentzVector thisPart;
+        thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+        float thisDeltaR = jet1_presel.DeltaR(thisPart);
+        if( thisDeltaR<deltaRmin1 ) {
+          partFlavor1 = pdgIdPart[iPart];
+          deltaRmin1 = thisDeltaR;
+        }
+      }
+
+      float deltaRmin2=999.;
+      int partFlavor2=0;
+      for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+        TLorentzVector thisPart;
+        thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+        float thisDeltaR = jet2_presel.DeltaR(thisPart);
+        if( thisDeltaR<deltaRmin2 ) {
+          partFlavor2 = pdgIdPart[iPart];
+          deltaRmin2 = thisDeltaR;
+        }
+      }
+
+      bool bothMatched = ( deltaRmin1<0.5 && deltaRmin2<0.5 && partFlavor1!=0 && partFlavor2!=0 );
+
+      if( bothMatched ) {
+        h1_ZZInvMass_MCassoc->Fill( ZZ.M(), eventWeight );
+        h1_ZZInvMass_MCassoc_ZjjMassConstr->Fill( ZZ_constr.M(), eventWeight );
+        h1_ZZInvMass_MCassoc_kinfit_jets->Fill( ZZ_kinfit_jets.M(), eventWeight );
+      }
+
       // and now full kinematic fit with PFCands:
       TLorentzVector ZZ_kinfit_cands;
       TRegexp cands_tstr("CANDS");
@@ -1424,51 +1505,20 @@ if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
 
       ZZ_kinfit_cands = Zll + Zqq_kinfit_cands;
 
-
-      // match to parton:
-      int partFlavor1=0;
-      float deltaRmin1=999.;
-      for(unsigned iPart=0; iPart<nPart; ++iPart ) {
-        TLorentzVector thisPart;
-        thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
-        float thisDeltaR = jet1_presel.DeltaR(thisPart);
-        if( thisDeltaR<deltaRmin1 ) {
-          partFlavor1 = pdgIdPart[iPart];
-          deltaRmin1 = thisDeltaR;
-        }
-      }
-
-      float deltaRmin2=999.;
-      int partFlavor2=0;
-      for(unsigned iPart=0; iPart<nPart; ++iPart ) {
-        TLorentzVector thisPart;
-        thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
-        float thisDeltaR = jet2_presel.DeltaR(thisPart);
-        if( thisDeltaR<deltaRmin2 ) {
-          partFlavor2 = pdgIdPart[iPart];
-          deltaRmin2 = thisDeltaR;
-        }
-      }
-
-      bool bothMatched = ( deltaRmin1<0.5 && deltaRmin2<0.5 && partFlavor1!=0 && partFlavor2!=0 );
-
-      if( bothMatched ) {
-        h1_ZZInvMass_MCassoc->Fill( ZZ.M(), eventWeight );
-        h1_ZZInvMass_MCassoc_ZjjMassConstr->Fill( ZZ_constr.M(), eventWeight );
-        h1_ZZInvMass_MCassoc_kinfit_jets->Fill( ZZ_kinfit_jets.M(), eventWeight );
+      if( bothMatched )
         h1_ZZInvMass_MCassoc_kinfit_cands->Fill( ZZ_kinfit_cands.M(), eventWeight );
-      }
+      
 
     } // if dataset
 
   } // if jet_presel
    
 
-/*
     // ------------------------
     //   KINEMATIC FIT: END
     // ------------------------
 
+/*
 
     if( leptType==0 )
       h1_mZmumu->Fill( Zll.M(), eventWeight );
@@ -1815,13 +1865,27 @@ if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
   h1_totalLumi->Write();
   h1_run->Write();
 
-  h1_ptJet_all->Write();
+  h1_ptJet_all_presel->Write();
+  h1_etaJet_all_presel->Write();
+  h1_nJets_presel->Write();
+  h1_nPairs_presel->Write();
+
+  h1_deltaRll_presel->Write();
+  h1_deltaRjj_presel->Write();
+
+  h1_ptLept1_presel->Write();
+  h1_ptLept2_presel->Write();
+
+  h1_etaLept1_presel->Write();
+  h1_etaLept2_presel->Write();
 
   h1_ptJet1_loose->Write();
   h1_ptJet1_tight->Write();
 
   h1_ptJet2_loose->Write();
   h1_ptJet2_tight->Write();
+
+  h1_mZjj_presel->Write();
 
   h1_mZll_presel->Write();
   h1_mZmumu->Write();
@@ -2224,3 +2288,19 @@ void print(TKinFitter *fitter)
   std::cout << "=============================================" << std ::endl;
 }
 
+
+int getNJets( int nPairs ) {
+
+  int nJets = 0;
+
+  int i=1;
+  bool found=false;
+  while( !found) {
+    nJets += i;
+    i++;
+    if( nJets== nPairs ) found=true;
+  }
+
+  return i;
+
+}
