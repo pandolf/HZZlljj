@@ -317,7 +317,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      event_ = eventNumber;
      eventWeight_ = -1.; //default
 
-     //if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
+     if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
 
      //trigger:
      // not yet
@@ -475,6 +475,82 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 
      // ------------------
+     // MUONS
+     // ------------------
+
+     std::vector<TLorentzVector> muons;
+     int chargeFirstMuon;
+
+     for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
+
+       TLorentzVector thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
+
+       // --------------
+       // kinematics:
+       // --------------
+       if( thisMuon.Pt() < 20. ) continue;
+
+
+       // --------------
+       // ID:
+       // --------------
+       if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
+       if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
+       if( pixelHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
+
+
+       // to compute dxy, look for primary vertex:
+       int hardestPV = -1;
+       float sumPtMax = 0.0;
+       for(int v=0; v<nPV; v++) {
+         if(SumPtPV[v] > sumPtMax) {
+           sumPtMax = SumPtPV[v];
+           hardestPV = v;
+         }
+       }  
+   
+       float dxy;
+       if( hardestPV==-1 ) {
+         dxy = 0.;
+       } else {
+         dxy = fabs(trackDxyPV(PVxPV[hardestPV], PVyPV[hardestPV], PVzPV[hardestPV],
+                              trackVxTrack[trackIndexMuon[iMuon]], trackVyTrack[trackIndexMuon[iMuon]], trackVzTrack[trackIndexMuon[iMuon]],
+                              pxTrack[trackIndexMuon[iMuon]], pyTrack[trackIndexMuon[iMuon]], pzTrack[trackIndexMuon[iMuon]]));
+       }
+
+       if( dxy > 0.02 ) continue;
+
+
+       float dz = fabs(trackVzTrack[trackIndexMuon[iMuon]]-PVzPV[hardestPV]);
+       if(dz > 1.0) continue;
+
+
+
+       // --------------
+       // isolation:
+       // --------------
+       // (this is sum pt tracks)
+       //if( sumPt03Muon[iMuon] >= 3. ) continue;
+       // combined isolation < 15%:
+       if( (sumPt03Muon[iMuon] + emEt03Muon[iMuon] + hadEt03Muon[iMuon]) >= 0.15*thisMuon.Pt() ) continue;
+
+
+
+       // for now simple selection, will have to optimize this (T&P?)
+       if( muons.size()==0 ) {
+         muons.push_back( thisMuon );
+         chargeFirstMuon = chargeMuon[iMuon];
+       } else {
+         if( chargeMuon[iMuon]==chargeFirstMuon ) continue;
+         if( fabs(muons[0].Eta())>2.1 && fabs(thisMuon.Eta())>2.1 ) continue;
+         muons.push_back(thisMuon);
+       }
+
+     } //for muons
+
+
+
+     // ------------------
      // ELECTRONS
      // ------------------
 
@@ -591,6 +667,14 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        if( !passed_VBTF95 ) continue;
 
+       // check that not matched to muon (clean electrons faked by muon MIP):
+       bool matchedtomuon=false;
+       for( std::vector<TLorentzVector>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu )
+         if( iMu->DeltaR(thisEle)<0.1 ) matchedtomuon=true;
+
+       if( matchedtomuon ) continue;
+
+
        // for now simple selection, will have to optimize this (T&P?)
        // one electron required to pass VBTF80, the other VBTF95
        if( electrons.size()==0 ) {
@@ -605,93 +689,19 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      } //for electrons
 
 
-     // ------------------
-     // MUONS
-     // ------------------
-
-     std::vector<TLorentzVector> muons;
-     int chargeFirstMuon;
-
-     for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
-
-       TLorentzVector thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
-
-       // --------------
-       // kinematics:
-       // --------------
-       if( thisMuon.Pt() < 10. ) continue;
-
-
-       // --------------
-       // ID:
-       // --------------
-       if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
-       if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
-       if( pixelHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
-
-
-       // to compute dxy, look for primary vertex:
-       int hardestPV = -1;
-       float sumPtMax = 0.0;
-       for(int v=0; v<nPV; v++) {
-         if(SumPtPV[v] > sumPtMax) {
-           sumPtMax = SumPtPV[v];
-           hardestPV = v;
-         }
-       }  
-   
-       float dxy;
-       if( hardestPV==-1 ) {
-         dxy = 0.;
-       } else {
-         dxy = fabs(trackDxyPV(PVxPV[hardestPV], PVyPV[hardestPV], PVzPV[hardestPV],
-                              trackVxTrack[trackIndexMuon[iMuon]], trackVyTrack[trackIndexMuon[iMuon]], trackVzTrack[trackIndexMuon[iMuon]],
-                              pxTrack[trackIndexMuon[iMuon]], pyTrack[trackIndexMuon[iMuon]], pzTrack[trackIndexMuon[iMuon]]));
-       }
-
-       if( dxy > 0.02 ) continue;
-
-
-       float dz = fabs(trackVzTrack[trackIndexMuon[iMuon]]-PVzPV[hardestPV]);
-       if(dz > 1.0) continue;
-
-
-
-       // --------------
-       // isolation:
-       // --------------
-       // (this is sum pt tracks)
-       //if( sumPt03Muon[iMuon] >= 3. ) continue;
-       // combined isolation < 15%:
-       if( (sumPt03Muon[iMuon] + emEt03Muon[iMuon] + hadEt03Muon[iMuon]) >= 0.15*thisMuon.Pt() ) continue;
-
-
-
-       // for now simple selection, will have to optimize this (T&P?)
-       if( muons.size()==0 ) {
-         muons.push_back( thisMuon );
-         chargeFirstMuon = chargeMuon[iMuon];
-       } else {
-         if( chargeMuon[iMuon]==chargeFirstMuon ) continue;
-         if( fabs(muons[0].Eta())>2.1 && fabs(thisMuon.Eta())>2.1 ) continue;
-         muons.push_back(thisMuon);
-       }
-
-     } //for muons
-
-
-
      if( electrons.size() < 2 && muons.size() < 2 ) continue;
 
-     // clean electrons faked by muon MIP in ECAL
-     for( std::vector<TLorentzVector>::iterator iEle=electrons.begin(); iEle!=electrons.end(); ++iEle ) {
-       for( std::vector<TLorentzVector>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu ) {
-         if( iMu->DeltaR(*iEle)<0.1 )
-           electrons.erase(iEle);
-       } //for ele
-     } //for mu
+//   // clean electrons faked by muon MIP in ECAL
+//   for( std::vector<TLorentzVector>::iterator iEle=electrons.begin(); iEle!=electrons.end(); ++iEle ) {
+//     for( std::vector<TLorentzVector>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu ) {
+//       if( iMu->DeltaR(*iEle)<0.1 ) {
+//         std::cout << "lll" << std::endl;
+//         electrons.erase(iEle);
+//       }
+//     } //for ele
+//   } //for mu
 
-     if( electrons.size() < 2 && muons.size() < 2 ) continue;
+//   if( electrons.size() < 2 && muons.size() < 2 ) continue;
 
 
      std::vector< TLorentzVector > leptons;
@@ -826,8 +836,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      }
 
-     if( leadJets.size()<2 ) continue;
-     if( leadJets[1].Pt()<jetPt_thresh ) continue; //at least 2 jets over thresh
+    // if( leadJets.size()<2 ) continue;
+    // if( leadJets[1].Pt()<jetPt_thresh ) continue; //at least 2 jets over thresh
 
 
 
@@ -843,7 +853,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      nPart_ = 0;
 
 
-//std::cout << std::endl;
      for( unsigned iJet=0; iJet<leadJets.size(); ++iJet ) {
    
        AnalysisJet thisJet = leadJets[iJet];
@@ -852,8 +861,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // kinematics:
        // --------------
        if( thisJet.Pt() < jetPt_thresh ) continue;
+       if( fabs(thisJet.Eta()) > 2.4 ) continue;
 
-//std::cout << "First jet: pt: " << thisJet.Pt() << " eta: " << thisJet.Eta() << " phi: " << thisJet.Phi();
 
        for( unsigned int jJet=iJet+1; jJet<leadJets.size(); ++jJet ) {
 
@@ -863,8 +872,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          // kinematics:
          // --------------
          if( otherJet.Pt() < jetPt_thresh ) continue;
+         if( fabs(otherJet.Eta()) > 2.4 ) continue;
 
-//std::cout << "   Second jet: pt: " << otherJet.Pt() << " eta: " << otherJet.Eta() << " phi: " << otherJet.Phi() << std::endl;
 
          if( nPairs_>=50 ) {
         
@@ -904,7 +913,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      
      //if( jets.size() < 2 ) continue;
-     if( best_i==-1 || best_j==-1 ) continue; //means that less than 2 jets were found
+     //if( best_i==-1 || best_j==-1 ) continue; //means that less than 2 jets were found
 
 
      
@@ -937,18 +946,18 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
    
 //     TLorentzVector leadJet(pxAK5PFJet[iLeadJet], pyAK5PFJet[iLeadJet], pzAK5PFJet[iLeadJet], energyAK5PFJet[iLeadJet] );
 
-     eJetLead_ = leadJets[0].Energy();
-     ptJetLead_ = leadJets[0].Pt();
-     etaJetLead_ = leadJets[0].Eta();
-     phiJetLead_ = leadJets[0].Phi();
+     eJetLead_   = (leadJets.size()>0) ? leadJets[0].Energy() : 0.;
+     ptJetLead_  = (leadJets.size()>0) ? leadJets[0].Pt() : 0.;
+     etaJetLead_ = (leadJets.size()>0) ? leadJets[0].Eta() : 0.;
+     phiJetLead_ = (leadJets.size()>0) ? leadJets[0].Phi() : 0.;
 
-     eJetLead2_ = leadJets[1].Energy();
-     ptJetLead2_ = leadJets[1].Pt();
-     etaJetLead2_ = leadJets[1].Eta();
-     phiJetLead2_ = leadJets[1].Phi();
+     eJetLead2_   = (leadJets.size()>1) ? leadJets[1].Energy() : 0.;
+     ptJetLead2_  = (leadJets.size()>1) ? leadJets[1].Pt() : 0.;
+     etaJetLead2_ = (leadJets.size()>1) ? leadJets[1].Eta() : 0.;
+     phiJetLead2_ = (leadJets.size()>1) ? leadJets[1].Phi() : 0.;
 
-     eJetLead3_ = (leadJets.size()>2) ? leadJets[2].Energy() : 0.;
-     ptJetLead3_ = (leadJets.size()>2) ? leadJets[2].Pt() : 0.;
+     eJetLead3_   = (leadJets.size()>2) ? leadJets[2].Energy() : 0.;
+     ptJetLead3_  = (leadJets.size()>2) ? leadJets[2].Pt() : 0.;
      etaJetLead3_ = (leadJets.size()>2) ? leadJets[2].Eta() : 0.;
      phiJetLead3_ = (leadJets.size()>2) ? leadJets[2].Phi() : 0.;
 
@@ -1015,36 +1024,40 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 
 
-     // store event partons in tree:
-     for( unsigned iMc=0; iMc<nMc; ++iMc ) {
+     if( isMC_ ) {
 
-       if( statusMc[iMc]==3 && (fabs(idMc[iMc])<=6 || idMc[iMc]==21) ) {
+       // store event partons in tree:
+       for( unsigned iMc=0; iMc<nMc; ++iMc ) {
 
-         TLorentzVector* thisParticle = new TLorentzVector();
-         thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
+         if( statusMc[iMc]==3 && (fabs(idMc[iMc])<=6 || idMc[iMc]==21) ) {
 
-         if( nPart_<20 ) {
+           TLorentzVector* thisParticle = new TLorentzVector();
+           thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
 
-           ptPart_[nPart_] = thisParticle->Pt();
-           etaPart_[nPart_] = thisParticle->Eta();
-           phiPart_[nPart_] = thisParticle->Phi();
-           ePart_[nPart_] = thisParticle->Energy();
-           pdgIdPart_[nPart_] = idMc[iMc];
+           if( nPart_<20 ) {
 
-           nPart_++;
+             ptPart_[nPart_] = thisParticle->Pt();
+             etaPart_[nPart_] = thisParticle->Eta();
+             phiPart_[nPart_] = thisParticle->Phi();
+             ePart_[nPart_] = thisParticle->Energy();
+             pdgIdPart_[nPart_] = idMc[iMc];
 
-         } else {
-    
-           std::cout << "Found more than 20 partons, skipping." << std::endl;
+             nPart_++;
 
-         }
+           } else {
+      
+             std::cout << "Found more than 20 partons, skipping." << std::endl;
 
-         delete thisParticle;
-         thisParticle = 0;
+           }
 
-       } //if correct id mc
+           delete thisParticle;
+           thisParticle = 0;
 
-     } // for i mc
+         } //if correct id mc
+
+       } // for i mc
+
+     } // if is mc
 
 
      reducedTree_->Fill(); 
