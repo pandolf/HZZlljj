@@ -209,21 +209,23 @@ void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
 
 
 
-
-bool Ntp1Analyzer::PassedHLT() { //default is OR of all required triggers
+bool Ntp1Analyzer::PassedHLT( const std::string& HLTName ) { //default is OR of all required triggers
 
   if ( index_requiredTriggers_.size() == 0 ) return true;
   
   // unpack the trigger words
   for( int i=0; i<index_requiredTriggers_.size(); i++ ) {
 
-    int block =  index_requiredTriggers_[i]/30;
-    int pos = index_requiredTriggers_[i]%30;
-    int word = firedTrg[block];
-    
-if(runNumber==148952 &&  lumiBlock==81 && eventNumber==39705524 )
-  std::cout << "indexRequiredTriggers[i]: " << index_requiredTriggers_[i] << " block: " << block << " pos: " << pos << " word: " << word << std::endl;
-    if ( (word >> pos)%2 ) return true;
+    if( HLTName=="" || requiredTriggers_[i]==HLTName ) {
+
+      int block =  index_requiredTriggers_[i]/30;
+      int pos = index_requiredTriggers_[i]%30;
+      int word = firedTrg[block];
+      
+      if ( (word >> pos)%2 ) return true;
+
+    }
+
   }
 
   return false;

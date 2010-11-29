@@ -1295,7 +1295,7 @@ public :
    virtual void SetFlags( const std::string& flags ) { flags_ = flags; };
    virtual void SetRequiredTriggers( const std::vector<std::string>& reqTrigz ) { requiredTriggers_ = reqTrigz; };
    virtual void AddRequiredTrigger( const std::string& trigger ) { requiredTriggers_.push_back(trigger); };
-   virtual bool PassedHLT();
+   virtual bool PassedHLT( const std::string& HLTName="" );
 
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
