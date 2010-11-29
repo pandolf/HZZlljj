@@ -208,45 +208,123 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        }
 
 
-       if( noLeptonsGen ) continue;
+       if( !noLeptonsGen ) {
 
-       TLorentzVector ZGammaGen;
-       ZGammaGen.SetPtEtaPhiE( pMc[zIndexll]*sin(thetaMc[zIndexll]), etaMc[zIndexll], phiMc[zIndexll], energyMc[zIndexll] );
+         TLorentzVector ZGammaGen;
+         ZGammaGen.SetPtEtaPhiE( pMc[zIndexll]*sin(thetaMc[zIndexll]), etaMc[zIndexll], phiMc[zIndexll], energyMc[zIndexll] );
 
-       ptZGammaGen_  = ZGammaGen.Pt();
-       eZGammaGen_   = ZGammaGen.Energy();
-       etaZGammaGen_ = ZGammaGen.Eta();
-       phiZGammaGen_ = ZGammaGen.Phi();
+         ptZGammaGen_  = ZGammaGen.Pt();
+         eZGammaGen_   = ZGammaGen.Energy();
+         etaZGammaGen_ = ZGammaGen.Eta();
+         phiZGammaGen_ = ZGammaGen.Phi();
 
-       nJetGen_ = nJetsGen_total_ = 0;
+         nJetGen_ = nJetsGen_total_ = 0;
 
-       std::vector<AnalysisJet> jets;
+         std::vector<AnalysisJet> jets;
 
-       for( unsigned int iJet=0; iJet<nAK5GenJet; ++iJet ) {
+         for( unsigned int iJet=0; iJet<nAK5GenJet; ++iJet ) {
 
-         AnalysisJet thisJet( pxAK5GenJet[iJet], pyAK5GenJet[iJet], pzAK5GenJet[iJet], energyAK5GenJet[iJet] );
+           AnalysisJet thisJet( pxAK5GenJet[iJet], pyAK5GenJet[iJet], pzAK5GenJet[iJet], energyAK5GenJet[iJet] );
 
-         // far away from leptons:
-         if( thisJet.DeltaR(lept1MC) <= 0.5 ) continue;
-         if( thisJet.DeltaR(lept2MC) <= 0.5 ) continue;
+           // far away from leptons:
+           if( thisJet.DeltaR(lept1MC) <= 0.5 ) continue;
+           if( thisJet.DeltaR(lept2MC) <= 0.5 ) continue;
 
-         nJetsGen_total_++;
+           nJetsGen_total_++;
 
-         if( nJetGen_<10 && thisJet.Pt()>30. ) {
-           ptJetGen_[nJetGen_] = thisJet.Pt();
-           etaJetGen_[nJetGen_] = thisJet.Eta();
-           phiJetGen_[nJetGen_] = thisJet.Phi();
-           eJetGen_[nJetGen_] = thisJet.Energy();
-           nJetGen_++;
-         }
+           if( nJetGen_<10 && thisJet.Pt()>30. ) {
+             ptJetGen_[nJetGen_] = thisJet.Pt();
+             etaJetGen_[nJetGen_] = thisJet.Eta();
+             phiJetGen_[nJetGen_] = thisJet.Phi();
+             eJetGen_[nJetGen_] = thisJet.Energy();
+             nJetGen_++;
+           }
 
-       } //for jets
+         } //for jets
+
+       } // if !noleptonsgen
 
      } // if is MC
 
 
 
      // and now on RECO:
+
+     // ------------------
+     // MUONS
+     // ------------------
+
+     std::vector<TLorentzVector> muons;
+     int chargeFirstMuon;
+
+     for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
+
+       TLorentzVector thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
+
+       // --------------
+       // kinematics:
+       // --------------
+       if( thisMuon.Pt() < 20. ) continue;
+
+
+       // --------------
+       // ID:
+       // --------------
+       if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
+       if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
+       if( pixelHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
+
+
+       // to compute dxy, look for primary vertex:
+       int hardestPV = -1;
+       float sumPtMax = 0.0;
+       for(int v=0; v<nPV; v++) {
+         if(SumPtPV[v] > sumPtMax) {
+           sumPtMax = SumPtPV[v];
+           hardestPV = v;
+         }
+       }  
+   
+       float dxy;
+       if( hardestPV==-1 ) {
+         dxy = 0.;
+       } else {
+         dxy = fabs(trackDxyPV(PVxPV[hardestPV], PVyPV[hardestPV], PVzPV[hardestPV],
+                              trackVxTrack[trackIndexMuon[iMuon]], trackVyTrack[trackIndexMuon[iMuon]], trackVzTrack[trackIndexMuon[iMuon]],
+                              pxTrack[trackIndexMuon[iMuon]], pyTrack[trackIndexMuon[iMuon]], pzTrack[trackIndexMuon[iMuon]]));
+       }
+
+       if( dxy > 0.02 ) continue;
+
+
+       float dz = fabs(trackVzTrack[trackIndexMuon[iMuon]]-PVzPV[hardestPV]);
+       if(dz > 1.0) continue;
+
+
+
+       // --------------
+       // isolation:
+       // --------------
+       // (this is sum pt tracks)
+       //if( sumPt03Muon[iMuon] >= 3. ) continue;
+       // combined isolation < 15%:
+       if( (sumPt03Muon[iMuon] + emEt03Muon[iMuon] + hadEt03Muon[iMuon]) >= 0.15*thisMuon.Pt() ) continue;
+
+
+
+       // for now simple selection, will have to optimize this (T&P?)
+       if( muons.size()==0 ) {
+         muons.push_back( thisMuon );
+         chargeFirstMuon = chargeMuon[iMuon];
+       } else {
+         if( chargeMuon[iMuon]==chargeFirstMuon ) continue;
+         if( fabs(muons[0].Eta())>2.1 && fabs(thisMuon.Eta())>2.1 ) continue;
+         muons.push_back(thisMuon);
+       }
+
+     } //for muons
+
+
 
      // ------------------
      // ELECTRONS
@@ -318,12 +396,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
          sigmaIetaIeta_thresh80 = 0.03;
          deltaPhiAtVtx_thresh80 = 0.7;
-         deltaEtaAtVtx_thresh80 = 0.007; //no cut
+         deltaEtaAtVtx_thresh80 = 0.007;
          hOverE_thresh80 = 0.025;
 
          sigmaIetaIeta_thresh95 = 0.03;
          deltaPhiAtVtx_thresh95 = 0.7;
-         deltaEtaAtVtx_thresh95 = 0.01; //no cut
+         deltaEtaAtVtx_thresh95 = 0.01; 
          hOverE_thresh95 = 0.07;
        }
 
@@ -363,14 +441,23 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        bool passed_VBTF80 = (iso_VBTF80 && eleID_VBTF80);
 
 
+       if( !passed_VBTF95 ) continue;
+
+       // check that not matched to muon (clean electrons faked by muon MIP):
+       bool matchedtomuon=false;
+       for( std::vector<TLorentzVector>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu )
+         if( iMu->DeltaR(thisEle)<0.1 ) matchedtomuon=true;
+
+       if( matchedtomuon ) continue;
+
 
        // for now simple selection, will have to optimize this (T&P?)
        // one electron required to pass VBTF80, the other VBTF95
-       if( electrons.size()==0 && passed_VBTF95 ) {
+       if( electrons.size()==0 ) {
          electrons.push_back( thisEle );
          chargeFirstEle = chargeEle[iEle];
          if( passed_VBTF80 ) firstPassedVBTF80 = true;
-       } else if( chargeEle[iEle] != chargeFirstEle && ( (firstPassedVBTF80&&passed_VBTF95)||passed_VBTF80 ) ) {
+       } else if( chargeEle[iEle] != chargeFirstEle && ( firstPassedVBTF80||passed_VBTF80 ) ) {
          electrons.push_back( thisEle );
        }
 
@@ -378,91 +465,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      } //for electrons
 
 
-     // ------------------
-     // MUONS
-     // ------------------
 
-     std::vector<TLorentzVector> muons;
-     int chargeFirstMuon;
-
-     for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
-
-       TLorentzVector thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
-
-       // --------------
-       // kinematics:
-       // --------------
-       if( thisMuon.Pt() < 10. ) continue;
-
-
-       // --------------
-       // ID:
-       // --------------
-       if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
-       if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
-       if( pixelHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
-
-
-       // to compute dxy, look for primary vertex:
-       int hardestPV = -1;
-       float sumPtMax = 0.0;
-       for(int v=0; v<nPV; v++) {
-         if(SumPtPV[v] > sumPtMax) {
-           sumPtMax = SumPtPV[v];
-           hardestPV = v;
-         }
-       }  
-   
-       float dxy;
-       if( hardestPV==-1 ) {
-         dxy = 0.;
-       } else {
-         dxy = fabs(trackDxyPV(PVxPV[hardestPV], PVyPV[hardestPV], PVzPV[hardestPV],
-                              trackVxTrack[trackIndexMuon[iMuon]], trackVyTrack[trackIndexMuon[iMuon]], trackVzTrack[trackIndexMuon[iMuon]],
-                              pxTrack[trackIndexMuon[iMuon]], pyTrack[trackIndexMuon[iMuon]], pzTrack[trackIndexMuon[iMuon]]));
-       }
-
-       if( dxy > 0.02 ) continue;
-
-
-       float dz = fabs(trackVzTrack[trackIndexMuon[iMuon]]-PVzPV[hardestPV]);
-       if(dz > 1.0) continue;
-
-
-
-       // --------------
-       // isolation:
-       // --------------
-       // (this is sum pt tracks)
-       //if( sumPt03Muon[iMuon] >= 3. ) continue;
-       // combined isolation < 15%:
-       if( (sumPt03Muon[iMuon] + emEt03Muon[iMuon] + hadEt03Muon[iMuon]) >= 0.15*thisMuon.Pt() ) continue;
-
-
-
-       // for now simple selection, will have to optimize this (T&P?)
-       if( muons.size()==0 ) {
-         muons.push_back( thisMuon );
-         chargeFirstMuon = chargeMuon[iMuon];
-       } else {
-         if( chargeMuon[iMuon]==chargeFirstMuon ) continue;
-         if( fabs(muons[0].Eta())>2.1 && fabs(thisMuon.Eta())>2.1 ) continue;
-         muons.push_back(thisMuon);
-       }
-
-     } //for muons
-
-
-
-     if( electrons.size() < 2 && muons.size() < 2 ) continue;
-
-     // clean electrons faked by muon MIP in ECAL
-     for( std::vector<TLorentzVector>::iterator iEle=electrons.begin(); iEle!=electrons.end(); ++iEle ) {
-       for( std::vector<TLorentzVector>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu ) {
-         if( iMu->DeltaR(*iEle)<0.1 )
-           electrons.erase(iEle);
-       } //for ele
-     } //for mu
+     bool noLeptons=false;
+     if( electrons.size() < 2 && muons.size() < 2 ) noLeptons=true;
 
 
      std::vector< TLorentzVector > leptons;
@@ -505,51 +510,124 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      } else {
 
-       std::cout << "There must be an error this is not possible." << std::endl;
-       exit(9101);
+     // do nothing (will look for photon)
+     //std::cout << "There must be an error this is not possible." << std::endl;
+     //exit(9101);
 
      }
 
 
-     TLorentzVector diLepton = leptons[0] + leptons[1];
+     TLorentzVector diLepton;
+     if(leptons.size()==2) diLepton = leptons[0] + leptons[1];
 
      bool foundZ = false;
-     if( diLepton.M() > 70. && diLepton.M() < 110. ) foundZ=true;
+     if( leptons.size()==2 )
+       if( diLepton.M() > 70. && diLepton.M() < 110. ) foundZ=true;
 
-     // for now, if no Z is found continue (photon done in GammaJet framework)
-     if( !foundZ ) continue;
+     // for now, consider only reco Z's (photon done in GammaJet framework)
+     if( foundZ ) {
+
+       eZGamma_ = diLepton.Energy();
+       ptZGamma_ = diLepton.Pt();
+       etaZGamma_ = diLepton.Eta();
+       phiZGamma_ = diLepton.Phi();
+
+       nJet_ = nJets_total_ = 0;
+
+       std::vector<AnalysisJet> jets;
+
+       for( unsigned int iJet=0; iJet<nAK5PFJet; ++iJet ) {
+
+         AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
+
+         // far away from leptons:
+         if( thisJet.DeltaR(leptons[0]) <= 0.5 ) continue;
+         if( thisJet.DeltaR(leptons[1]) <= 0.5 ) continue;
+
+         nJets_total_++;
+
+         if( nJet_<10 && thisJet.Pt()>30. ) {
+           ptJet_[nJet_] = thisJet.Pt();
+           etaJet_[nJet_] = thisJet.Eta();
+           phiJet_[nJet_] = thisJet.Phi();
+           eJet_[nJet_] = thisJet.Energy();
+           nJet_++;
+         }
+
+       } //for jets
+
+     } else { // if not found Z
 
 
-     eZGamma_ = diLepton.Energy();
-     ptZGamma_ = diLepton.Pt();
-     etaZGamma_ = diLepton.Eta();
-     phiZGamma_ = diLepton.Phi();
+       // look for isolated photon
+       TLorentzVector foundPhoton;
+       float maxPtPhot=0.;
+       for( unsigned iSC=0; iSC<nSC; ++iSC ) {
 
-     nJet_ = nJets_total_ = 0;
+         TLorentzVector thisPhoton;
+         thisPhoton.SetPtEtaPhiE( energySC[iSC]*sin(thetaSC[iSC]), etaSC[iSC], phiSC[iSC], energySC[iSC] );
+if( thisPhoton.M()>0. ) std::cout << "mass: " << thisPhoton.M() << std::endl;
 
-     std::vector<AnalysisJet> jets;
+         if( thisPhoton.Pt()<50. ) continue;
 
-     for( unsigned int iJet=0; iJet<nAK5PFJet; ++iJet ) {
+         // cluster shape:
+         if( sMajSC[iSC] > 0.35 ) continue;
+         if( sMinSC[iSC] > 0.3 || sMinSC[iSC]<0.15 ) continue;
 
-       AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
+         // isolation:
+         if( scBasedEcalSum04SC[iSC]/thisPhoton.Energy() > 0.05 && scBasedEcalSum04SC[iSC]>3. ) continue;
+         if( hcalTowerSumEtConeDR04SC[iSC]/thisPhoton.Energy() > 0.05 && hcalTowerSumEtConeDR04SC[iSC]>2.4 ) continue;
+         // compute track isolation with tracks:
+         int nTracks035=0;
+         int ptTracks035=0.;
+         for( unsigned iTrack=0; iTrack<nTrack; ++iTrack ) {
+           TLorentzVector thisTrack;
+           thisTrack.SetXYZM( pxTrack[iTrack], pyTrack[iTrack], pzTrack[iTrack], 0.140 );
+           if( thisTrack.DeltaR(thisPhoton)<0.35 ) {
+             nTracks035++;
+             ptTracks035+=thisTrack.Pt();
+           } // if deltaR
+         } // for tracks
+         
+         if( nTracks035>=3 ) continue;
+         if( ptTracks035/thisPhoton.Pt()>0.1 ) continue;
 
-       // far away from leptons:
-       if( thisJet.DeltaR(leptons[0]) <= 0.5 ) continue;
-       if( thisJet.DeltaR(leptons[1]) <= 0.5 ) continue;
+         if( thisPhoton.Pt() > maxPtPhot ) {
+           foundPhoton = thisPhoton;
+           maxPtPhot = thisPhoton.Pt();
+         }
 
-       nJets_total_++;
-
-       if( nJet_<10 && thisJet.Pt()>30. ) {
-         ptJet_[nJet_] = thisJet.Pt();
-         etaJet_[nJet_] = thisJet.Eta();
-         phiJet_[nJet_] = thisJet.Phi();
-         eJet_[nJet_] = thisJet.Energy();
-         nJet_++;
-       }
-
-     } //for jets
+       } // for SC's
 
 
+       eZGamma_ = (maxPtPhot>0.) ? foundPhoton.Energy() : 0.;
+       ptZGamma_ = (maxPtPhot>0.) ? foundPhoton.Pt() : 0.;
+       etaZGamma_ = (maxPtPhot>0.) ? foundPhoton.Eta() : 10.;
+       phiZGamma_ = (maxPtPhot>0.) ? foundPhoton.Phi() : 0.;
+
+       nJet_ = nJets_total_ = 0;
+
+       std::vector<AnalysisJet> jets;
+
+       for( unsigned int iJet=0; iJet<nAK5PFJet; ++iJet ) {
+
+         AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
+
+         // far away from leptons:
+         if( thisJet.DeltaR(foundPhoton) <= 0.5 ) continue;
+
+         nJets_total_++;
+
+         if( nJet_<10 && thisJet.Pt()>30. ) {
+           ptJet_[nJet_] = thisJet.Pt();
+           etaJet_[nJet_] = thisJet.Eta();
+           phiJet_[nJet_] = thisJet.Phi();
+           eJet_[nJet_] = thisJet.Energy();
+           nJet_++;
+         }
+
+       } //for jets
+     }
 
 
      reducedTree_->Fill(); 
