@@ -21,6 +21,9 @@ Ntp1Analyzer::Ntp1Analyzer(const std::string& analyzerType, const std::string& d
    ptHatMin_ = 0.;
    ptHatMax_ = 10000.;
 
+   cachedLS_ = 0;
+   cachedRun_ = 0;
+
 }
 
 
@@ -74,7 +77,8 @@ void Ntp1Analyzer::LoadInput() {
      std::cout << "Didn't find files to add for dataset: '" << dataset_ << "'. Looking for a list..." << std::endl;
      std::string fileName = "files_" + dataset_ + ".txt";
      this->LoadInputFromFile(fileName);
-   } else {
+   } 
+   /*else {
      TTree* tree = chain;
      std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
      this->CreateOutputFile();
@@ -85,7 +89,7 @@ void Ntp1Analyzer::LoadInput() {
        firstFileName = treePath;
      TFile* firstFile = TFile::Open( firstFileName.c_str(), "read" );
      this->LoadTrigger(firstFile);
-   }
+   }*/
 
 }
 
@@ -123,7 +127,7 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
    std::cout << "-> Tree has " << tree->GetEntries() << " entries." << std::endl;
    this->CreateOutputFile();
    Init(tree);
-   this->LoadTrigger(firstFile);
+   //this->LoadTrigger(firstFile);
 
 }
 
@@ -133,10 +137,10 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
 void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
 
   
-  TTree* treeCond = (TTree*)(condFile->Get("Conditions"));
+  TTree* treeCond = (condFile==0) ? 0 : (TTree*)(condFile->Get("Conditions"));
 
 
-  //new version: trigger loaded from ntp1 tree:
+  //new version: trigger loaded directly from ntp1 tree:
   if( treeCond==0 ) { 
 
     fChain->GetEntry(0);
@@ -154,7 +158,7 @@ void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
                 break;
               }
           }
-        if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+          if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
       }
     index_requiredTriggers_ = triggerMask;
 
@@ -186,12 +190,15 @@ void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
                 break;
               }
           }
-        if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+          if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
       }
     index_requiredTriggers_ = triggerMask;
 
   }
 
+
+  if( requiredTriggers_.size()==0 )
+    std::cout << "-> No trigger selection required." << std::endl;
 
   for (int i=0;i<index_requiredTriggers_.size();++i)
     std::cout << "[ReloadTriggerMask]::Requiring bit " << index_requiredTriggers_[i] << " " << requiredTriggers_[i] << std::endl;
@@ -214,6 +221,8 @@ bool Ntp1Analyzer::PassedHLT() { //default is OR of all required triggers
     int pos = index_requiredTriggers_[i]%30;
     int word = firedTrg[block];
     
+if(runNumber==148952 &&  lumiBlock==81 && eventNumber==39705524 )
+  std::cout << "indexRequiredTriggers[i]: " << index_requiredTriggers_[i] << " block: " << block << " pos: " << pos << " word: " << word << std::endl;
     if ( (word >> pos)%2 ) return true;
   }
 
@@ -284,17 +293,6 @@ void Ntp1Analyzer::Init(TTree *tree)
 
    if (!tree) return;
 
-   GenEventParameters genPars = this->getGenEventParameters();
-   ptHatMin_ = genPars.ptHatMin;
-   ptHatMax_ = genPars.ptHatMax;
-
-   //will cut on pt_hat, so have to divide only by correct number of events:
-   char cutOnPtHat[70];
-   sprintf( cutOnPtHat, "genPtHat>%lf && genPtHat<%lf", (Double_t)ptHatMin_, (Double_t)ptHatMax_);
-   Int_t nEntries_cut = tree->GetEntries(cutOnPtHat);
-   h1_nCounter_->SetBinContent( 1, nEntries_cut );
-
-
    // Set object pointer
    nameHLT = 0;
    // Set branch addresses and branch pointers
@@ -302,26 +300,42 @@ void Ntp1Analyzer::Init(TTree *tree)
    fCurrent = -1;
    fChain->SetMakeClass(1);
 
+   fChain->SetBranchAddress("runNumber", &runNumber, &b_runNumber);
+   fChain->GetEntry(0);
+   isMC_ = (runNumber < 10);
+
+   GenEventParameters genPars = this->getGenEventParameters();
+   ptHatMin_ = genPars.ptHatMin;
+   ptHatMax_ = genPars.ptHatMax;
+
+   //will cut on pt_hat, so have to divide only by correct number of events:
+   char cutOnPtHat[70];
+   sprintf( cutOnPtHat, "genPtHat>%lf && genPtHat<%lf", (Double_t)ptHatMin_, (Double_t)ptHatMax_);
+   Int_t nEntries_cut = (isMC_) ? fChain->GetEntries(cutOnPtHat) : fChain->GetEntries();
+   h1_nCounter_->SetBinContent( 1, nEntries_cut );
+
+
    std::string branchName;
 
    fChain->SetBranchAddress("nl1Technical", &nl1Technical, &b_nl1Technical);
    fChain->SetBranchAddress("l1Technical", l1Technical, &b_l1Technical);
    fChain->SetBranchAddress("nl1Global", &nl1Global, &b_nl1Global);
    fChain->SetBranchAddress("l1Global", l1Global, &b_l1Global);
-   fChain->SetBranchAddress("runNumber", &runNumber, &b_runNumber);
    fChain->SetBranchAddress("eventNumber", &eventNumber, &b_eventNumber);
    fChain->SetBranchAddress("lumiBlock", &lumiBlock, &b_lumiBlock);
    fChain->SetBranchAddress("bunchCrossing", &bunchCrossing, &b_bunchCrossing);
    fChain->SetBranchAddress("orbitNumber", &orbitNumber, &b_orbitNumber);
-   fChain->SetBranchAddress("nMc", &nMc, &b_nMc);
-   fChain->SetBranchAddress("pMc", pMc, &b_pMc);
-   fChain->SetBranchAddress("thetaMc", thetaMc, &b_thetaMc);
-   fChain->SetBranchAddress("etaMc", etaMc, &b_etaMc);
-   fChain->SetBranchAddress("phiMc", phiMc, &b_phiMc);
-   fChain->SetBranchAddress("energyMc", energyMc, &b_energyMc);
-   fChain->SetBranchAddress("idMc", idMc, &b_idMc);
-   fChain->SetBranchAddress("mothMc", mothMc, &b_mothMc);
-   fChain->SetBranchAddress("statusMc", statusMc, &b_statusMc);
+   if( isMC_ ) {
+     fChain->SetBranchAddress("nMc", &nMc, &b_nMc);
+     fChain->SetBranchAddress("pMc", pMc, &b_pMc);
+     fChain->SetBranchAddress("thetaMc", thetaMc, &b_thetaMc);
+     fChain->SetBranchAddress("etaMc", etaMc, &b_etaMc);
+     fChain->SetBranchAddress("phiMc", phiMc, &b_phiMc);
+     fChain->SetBranchAddress("energyMc", energyMc, &b_energyMc);
+     fChain->SetBranchAddress("idMc", idMc, &b_idMc);
+     fChain->SetBranchAddress("mothMc", mothMc, &b_mothMc);
+     fChain->SetBranchAddress("statusMc", statusMc, &b_statusMc);
+   }
    fChain->SetBranchAddress("nTrg", &nTrg, &b_nTrg);
    fChain->SetBranchAddress("firedTrg", firedTrg, &b_firedTrg);
    fChain->SetBranchAddress("nHLT", &nHLT, &b_nHLT);
@@ -459,6 +473,9 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("ecalRecHitSumEtConeDR04SC", ecalRecHitSumEtConeDR04SC, &b_ecalRecHitSumEtConeDR04SC);
    fChain->SetBranchAddress("hcalTowerSumEtConeDR04SC", hcalTowerSumEtConeDR04SC, &b_hcalTowerSumEtConeDR04SC);
    fChain->SetBranchAddress("trkSumPtSolidConeDR04SC", trkSumPtSolidConeDR04SC, &b_trkSumPtSolidConeDR04SC);
+   fChain->SetBranchAddress("sMajSC", sMajSC, &b_sMajSC);
+   fChain->SetBranchAddress("sMinSC", sMinSC, &b_sMinSC);
+   fChain->SetBranchAddress("alphaSC", alphaSC, &b_alphaSC);
    fChain->SetBranchAddress("nPFSC", &nPFSC, &b_nPFSC);
    fChain->SetBranchAddress("nBCPFSC", nBCPFSC, &b_nBCPFSC);
    fChain->SetBranchAddress("nCrystalsPFSC", nCrystalsPFSC, &b_nCrystalsPFSC);
@@ -768,18 +785,20 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("vertexXPFMet", vertexXPFMet, &b_vertexXPFMet);
    fChain->SetBranchAddress("vertexYPFMet", vertexYPFMet, &b_vertexYPFMet);
    fChain->SetBranchAddress("vertexZPFMet", vertexZPFMet, &b_vertexZPFMet);
-   fChain->SetBranchAddress("nGenMet", &nGenMet, &b_nGenMet);
-   fChain->SetBranchAddress("chargeGenMet", chargeGenMet, &b_chargeGenMet);
-   fChain->SetBranchAddress("energyGenMet", energyGenMet, &b_energyGenMet);
-   fChain->SetBranchAddress("thetaGenMet", thetaGenMet, &b_thetaGenMet);
-   fChain->SetBranchAddress("etaGenMet", etaGenMet, &b_etaGenMet);
-   fChain->SetBranchAddress("phiGenMet", phiGenMet, &b_phiGenMet);
-   fChain->SetBranchAddress("pxGenMet", pxGenMet, &b_pxGenMet);
-   fChain->SetBranchAddress("pyGenMet", pyGenMet, &b_pyGenMet);
-   fChain->SetBranchAddress("pzGenMet", pzGenMet, &b_pzGenMet);
-   fChain->SetBranchAddress("vertexXGenMet", vertexXGenMet, &b_vertexXGenMet);
-   fChain->SetBranchAddress("vertexYGenMet", vertexYGenMet, &b_vertexYGenMet);
-   fChain->SetBranchAddress("vertexZGenMet", vertexZGenMet, &b_vertexZGenMet);
+   if( isMC_ ) {
+     fChain->SetBranchAddress("nGenMet", &nGenMet, &b_nGenMet);
+     fChain->SetBranchAddress("chargeGenMet", chargeGenMet, &b_chargeGenMet);
+     fChain->SetBranchAddress("energyGenMet", energyGenMet, &b_energyGenMet);
+     fChain->SetBranchAddress("thetaGenMet", thetaGenMet, &b_thetaGenMet);
+     fChain->SetBranchAddress("etaGenMet", etaGenMet, &b_etaGenMet);
+     fChain->SetBranchAddress("phiGenMet", phiGenMet, &b_phiGenMet);
+     fChain->SetBranchAddress("pxGenMet", pxGenMet, &b_pxGenMet);
+     fChain->SetBranchAddress("pyGenMet", pyGenMet, &b_pyGenMet);
+     fChain->SetBranchAddress("pzGenMet", pzGenMet, &b_pzGenMet);
+     fChain->SetBranchAddress("vertexXGenMet", vertexXGenMet, &b_vertexXGenMet);
+     fChain->SetBranchAddress("vertexYGenMet", vertexYGenMet, &b_vertexYGenMet);
+     fChain->SetBranchAddress("vertexZGenMet", vertexZGenMet, &b_vertexZGenMet);
+   }
    fChain->SetBranchAddress("nPFCand", &nPFCand, &b_nPFCand);
    fChain->SetBranchAddress("chargePFCand", chargePFCand, &b_chargePFCand);
    fChain->SetBranchAddress("energyPFCand", energyPFCand, &b_energyPFCand);
@@ -883,6 +902,25 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("trackCountingHighPurBJetTagsAK5PFJet", trackCountingHighPurBJetTagsAK5PFJet, &b_trackCountingHighPurBJetTagsAK5PFJet);
    fChain->SetBranchAddress("trackCountingHighEffBJetTagsAK5PFJet", trackCountingHighEffBJetTagsAK5PFJet, &b_trackCountingHighEffBJetTagsAK5PFJet);
    fChain->SetBranchAddress("uncorrEnergyAK5PFJet", uncorrEnergyAK5PFJet, &b_uncorrEnergyAK5PFJet);
+   if( isMC_ ) {
+     fChain->SetBranchAddress("nAK5GenJet", &nAK5GenJet, &b_nAK5GenJet);
+     fChain->SetBranchAddress("chargeAK5GenJet", chargeAK5GenJet, &b_chargeAK5GenJet);
+     fChain->SetBranchAddress("energyAK5GenJet", energyAK5GenJet, &b_energyAK5GenJet);
+     fChain->SetBranchAddress("thetaAK5GenJet", thetaAK5GenJet, &b_thetaAK5GenJet);
+     fChain->SetBranchAddress("etaAK5GenJet", etaAK5GenJet, &b_etaAK5GenJet);
+     fChain->SetBranchAddress("phiAK5GenJet", phiAK5GenJet, &b_phiAK5GenJet);
+     fChain->SetBranchAddress("pxAK5GenJet", pxAK5GenJet, &b_pxAK5GenJet);
+     fChain->SetBranchAddress("pyAK5GenJet", pyAK5GenJet, &b_pyAK5GenJet);
+     fChain->SetBranchAddress("pzAK5GenJet", pzAK5GenJet, &b_pzAK5GenJet);
+     fChain->SetBranchAddress("vertexXAK5GenJet", vertexXAK5GenJet, &b_vertexXAK5GenJet);
+     fChain->SetBranchAddress("vertexYAK5GenJet", vertexYAK5GenJet, &b_vertexYAK5GenJet);
+     fChain->SetBranchAddress("vertexZAK5GenJet", vertexZAK5GenJet, &b_vertexZAK5GenJet);
+     fChain->SetBranchAddress("genPtHat", &genPtHat, &b_genPtHat);
+     fChain->SetBranchAddress("genProcessId", &genProcessId, &b_genProcessId);
+     fChain->SetBranchAddress("genWeight", &genWeight, &b_genWeight);
+     fChain->SetBranchAddress("genAlphaQCD", &genAlphaQCD, &b_genAlphaQCD);
+     fChain->SetBranchAddress("genAlphaQED", &genAlphaQED, &b_genAlphaQED);
+   }
 
    Notify();
 }
@@ -1004,17 +1042,26 @@ bool Ntp1Analyzer::isGoodEvent() {
      }
 
      // SECOND STEP: if it's ok in the JSON, check if it has passed the trigger
+     // once per run, reload trigger mask:
+     if( cachedRun_!=runNumber ) {
+       if( cachedRun_==0 )
+         std::cout << "-> Loading Trigger Mask for run " << runNumber << "." << std::endl;
+       else 
+         std::cout << "-> Passing from run " << cachedRun_ << " to run " << runNumber << ". Reloading Trigger Mask." << std::endl;
+       cachedRun_ = runNumber;
+       this->LoadTrigger();
+     }
 
      okForHLT = this->PassedHLT();
 
-     if( okForJSON && okForHLT ) { //will take lumi, so (once per LS) increment luminosity
-   
-       if( currentLS_ != lumiBlock )  {
-          currentLS_ = lumiBlock;
-          RunLumiPair rlpair = (std::pair<int, int>(runNumber,lumiBlock));
-          totalIntLumi_ += LSLumimap_[rlpair];
-       }
-     }
+  // if( okForJSON && okForHLT ) { //will take lumi, so (once per LS) increment luminosity
+  
+  //   if( cachedLS_ != lumiBlock )  {
+  //      cachedLS_ = lumiBlock;
+  //      RunLumiPair rlpair = (std::pair<int, int>(runNumber,lumiBlock));
+  //      totalIntLumi_ += LSLumimap_[rlpair];
+  //   }
+  // }
 
      bool returnBool = ( okForJSON && okForHLT );
      return returnBool;
