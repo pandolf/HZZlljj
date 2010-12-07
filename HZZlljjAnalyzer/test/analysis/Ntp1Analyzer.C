@@ -151,8 +151,10 @@ void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
         bool foundThisTrigger = false;
         for(unsigned int i=0; i<nameHLT->size(); i++) 
           {
+//std::cout << std::endl << nameHLT->at(i);
             if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) ) 
               {
+//std::cout << " <----- HERE IT IS!" << std::endl;
                 foundThisTrigger = true;
                 triggerMask.push_back( indexHLT[i] ) ;
                 break;
@@ -904,6 +906,8 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("trackCountingHighPurBJetTagsAK5PFJet", trackCountingHighPurBJetTagsAK5PFJet, &b_trackCountingHighPurBJetTagsAK5PFJet);
    fChain->SetBranchAddress("trackCountingHighEffBJetTagsAK5PFJet", trackCountingHighEffBJetTagsAK5PFJet, &b_trackCountingHighEffBJetTagsAK5PFJet);
    fChain->SetBranchAddress("uncorrEnergyAK5PFJet", uncorrEnergyAK5PFJet, &b_uncorrEnergyAK5PFJet);
+   fChain->SetBranchAddress("ptDAK5PFJet", ptDAK5PFJet, &b_ptDAK5PFJet);
+   fChain->SetBranchAddress("rmsCandAK5PFJet", rmsCandAK5PFJet, &b_rmsCandAK5PFJet);
    if( isMC_ ) {
      fChain->SetBranchAddress("nAK5GenJet", &nAK5GenJet, &b_nAK5GenJet);
      fChain->SetBranchAddress("chargeAK5GenJet", chargeAK5GenJet, &b_chargeAK5GenJet);

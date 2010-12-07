@@ -600,6 +600,8 @@ public :
    Float_t         trackCountingHighPurBJetTagsAK5PFJet[300];   //[nAK5PFJet]
    Float_t         trackCountingHighEffBJetTagsAK5PFJet[300];   //[nAK5PFJet]
    Float_t         uncorrEnergyAK5PFJet[300];   //[nAK5PFJet]
+   Float_t         ptDAK5PFJet[300];   //[nAK5PFJet]
+   Float_t         rmsCandAK5PFJet[300];   //[nAK5PFJet]
    Int_t           nAK5JPTJet;
    Int_t           chargeAK5JPTJet[300];   //[nAK5JPTJet]
    Float_t         energyAK5JPTJet[300];   //[nAK5JPTJet]
@@ -1248,6 +1250,8 @@ public :
    TBranch        *b_trackCountingHighPurBJetTagsAK5PFJet;   //!
    TBranch        *b_trackCountingHighEffBJetTagsAK5PFJet;   //!
    TBranch        *b_uncorrEnergyAK5PFJet;   //!
+   TBranch        *b_ptDAK5PFJet;   //!
+   TBranch        *b_rmsCandAK5PFJet;   //!
    TBranch        *b_nAK5JPTJet;   //!
    TBranch        *b_chargeAK5JPTJet;   //!
    TBranch        *b_energyAK5JPTJet;   //!
