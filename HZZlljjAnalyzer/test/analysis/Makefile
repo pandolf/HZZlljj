@@ -15,6 +15,12 @@ finalize_HZZlljj: Ntp1Finalizer.o Ntp1Finalizer_HZZlljj.o finalize_HZZlljj.cpp f
 finalize_ZGamma: Ntp1Finalizer.o Ntp1Finalizer_ZGamma.o finalize_ZGamma.cpp fitTools.o
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_ZGamma finalize_ZGamma.cpp Ntp1Finalizer.o Ntp1Finalizer_ZGamma.o fitTools.o $(ROOTFLAG)
 
+finalize_JESsyst: Ntp1Finalizer.o Ntp1Finalizer_JESsyst.o finalize_JESsyst.cpp fitTools.o
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_JESsyst finalize_JESsyst.cpp Ntp1Finalizer.o Ntp1Finalizer_JESsyst.o fitTools.o $(ROOTFLAG)
+
+finalize_QG: Ntp1Finalizer.o Ntp1Finalizer_QG.o finalize_QG.cpp fitTools.o
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_QG finalize_QG.cpp Ntp1Finalizer.o Ntp1Finalizer_QG.o fitTools.o $(ROOTFLAG)
+
 do2ndLevel_JetStudies: Ntp1Analyzer.o Ntp1Analyzer_JetStudies.o 
 	$(CC) -Wall -o do2ndLevel_JetStudies do2ndLevel_JetStudies.cpp Ntp1Analyzer.o Ntp1Analyzer_JetStudies.o $(ROOTFLAG)
 
@@ -24,8 +30,14 @@ do2ndLevel_ZGamma: Ntp1Analyzer.o Ntp1Analyzer_ZGamma.o
 do2ndLevel_TMVA: Ntp1Analyzer.o Ntp1Analyzer_TMVA.o do2ndLevel_TMVA.cpp
 	$(CC) -Wall -o do2ndLevel_TMVA do2ndLevel_TMVA.cpp Ntp1Analyzer.o Ntp1Analyzer_TMVA.o $(ROOTFLAG)
 
+do2ndLevel_QG: Ntp1Analyzer.o Ntp1Analyzer_QG.o do2ndLevel_QG.cpp
+	$(CC) -Wall -o do2ndLevel_QG do2ndLevel_QG.cpp Ntp1Analyzer.o Ntp1Analyzer_QG.o $(ROOTFLAG)
+
 drawHZZlljj: DrawBase.o fitTools.o drawHZZlljj.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawHZZlljj drawHZZlljj.cpp DrawBase.o fitTools.o $(ROOTFLAG)
+
+drawHZZlljj_DATA: DrawBase.o fitTools.o drawHZZlljj_DATA.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawHZZlljj_DATA drawHZZlljj_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG)
 
 drawHZZlljj_kinfit: DrawBase.o fitTools.o drawHZZlljj_kinfit.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawHZZlljj_kinfit drawHZZlljj_kinfit.cpp DrawBase.o fitTools.o $(ROOTFLAG)
@@ -44,6 +56,12 @@ drawJetStudies: DrawBase.o fitTools.o drawJetStudies.cpp
 
 drawZGamma: DrawBase.o fitTools.o drawZGamma.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawZGamma drawZGamma.cpp DrawBase.o fitTools.o $(ROOTFLAG)
+
+drawZGamma_DATA: DrawBase.o fitTools.o drawZGamma_DATA.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawZGamma_DATA drawZGamma_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG)
+
+drawQG: DrawBase.o fitTools.o drawQG.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawQG drawQG.cpp DrawBase.o fitTools.o $(ROOTFLAG)
 
 drawJetStudies_H: DrawBase.o fitTools.o drawJetStudies_H.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawJetStudies_H drawJetStudies_H.cpp DrawBase.o fitTools.o $(ROOTFLAG)
@@ -65,6 +83,9 @@ Ntp1Analyzer_ZGamma.o: Ntp1Analyzer_ZGamma.C
 Ntp1Analyzer_TMVA.o: Ntp1Analyzer_TMVA.C
 	$(CC) $(CFLAGS) Ntp1Analyzer_TMVA.C $(ROOTFLAG)
 
+Ntp1Analyzer_QG.o: Ntp1Analyzer_QG.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_QG.C $(ROOTFLAG)
+
 Ntp1Finalizer.o: Ntp1Finalizer.C
 	$(CC) $(CFLAGS) Ntp1Finalizer.C $(ROOTFLAG)
 
@@ -74,8 +95,11 @@ Ntp1Finalizer_HZZlljj.o: Ntp1Finalizer_HZZlljj.C
 Ntp1Finalizer_ZGamma.o: Ntp1Finalizer_ZGamma.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_ZGamma.C $(ROOTFLAG)
 
-Ntp1Finalizer_HZZlljj_TEST.o: Ntp1Finalizer_HZZlljj_TEST.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_HZZlljj_TEST.C $(ROOTFLAG)
+Ntp1Finalizer_QG.o: Ntp1Finalizer_QG.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_QG.C $(ROOTFLAG)
+
+Ntp1Finalizer_JESsyst.o: Ntp1Finalizer_JESsyst.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_JESsyst.C $(ROOTFLAG)
 
 TFitParticleEtEtaPhi.o: TFitParticleEtEtaPhi.cc
 	$(CC) $(CFLAGS) TFitParticleEtEtaPhi.cc $(ROOTFLAG)
