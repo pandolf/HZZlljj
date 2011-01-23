@@ -73,7 +73,31 @@ int main( int argc, char* argv[] ) {
     nf->addFile("Mu_Run2010B_PromptReco_v2_runs146240_146733");
     nf->addFile("EG_upto146724");
 
-  } else if( dataset=="ZJets_alpgen" ) {
+  } else if( dataset=="ZJets_alpgen_TuneZ2_Fall10" ) {
+
+    nf->addFile( "Z0Jets_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z1Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z1Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z1Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z1Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z2Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z2Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z2Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z2Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z3Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z3Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z3Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z3Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z4Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z4Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z4Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z4Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z5Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z5Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z5Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z5Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" );
+
+  } else if( dataset=="ZJets_alpgen_Spring10" ) {
 
     nf->addFile( "Z0Jets_Pt0to100-alpgen_Spring10" );
     nf->addFile( "Z1Jets_Pt0to100-alpgen_Spring10" );

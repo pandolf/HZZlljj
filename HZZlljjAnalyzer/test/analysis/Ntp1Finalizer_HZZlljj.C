@@ -17,6 +17,31 @@
 #include "fitTools.h"
 
 
+class AnalysisJet : public TLorentzVector {
+
+ public:
+
+  AnalysisJet( float x=0., float y=0., float z=0., float t=0.) : TLorentzVector( x, y, z, t ) {
+    rmsCand=0.;
+    ptD=0.;
+    nCharged=0;
+    nNeutral=0;
+  }
+
+  AnalysisJet( const TLorentzVector &v) : TLorentzVector( v ) {
+    rmsCand=0.;
+    ptD=0.;
+    nCharged=0;
+    nNeutral=0;
+  }
+
+  float rmsCand;
+  float ptD;
+  int nCharged;
+  int nNeutral;
+
+};
+
 
 void print(TKinFitter *fitter);
 Double_t ErrEt(Float_t Et, Float_t Eta);
@@ -184,10 +209,51 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_ptJet_all_presel->Sumw2();
   TH1D* h1_etaJet_all_presel = new TH1D("etaJet_all_presel", "", 25, -5., 5.);
   h1_etaJet_all_presel->Sumw2();
+  TH1D* h1_ptDJet_all_presel = new TH1D("ptDJet_all_presel", "", 50, 0., 1.);
+  h1_ptDJet_all_presel->Sumw2();
+  TH1D* h1_rmsCandJet_all_presel = new TH1D("rmsCandJet_all_presel", "", 50, 0., 0.07);
+  h1_rmsCandJet_all_presel->Sumw2();
+  TH1D* h1_nChargedJet_all_presel = new TH1D("nChargedJet_all_presel", "", 41, -0.5, 40.5);
+  h1_nChargedJet_all_presel->Sumw2();
+  TH1D* h1_nNeutralJet_all_presel = new TH1D("nNeutralJet_all_presel", "", 41, -0.5, 40.5);
+  h1_nNeutralJet_all_presel->Sumw2();
   TH1D* h1_nJets_presel = new TH1D("nJets_presel", "", 7, 1.5, 8.5);
   h1_nJets_presel->Sumw2();
   TH1D* h1_nPairs_presel = new TH1D("nPairs_presel", "", 21, 0.5, 21.5);
   h1_nPairs_presel->Sumw2();
+
+  TH1D* h1_ptJetBest1 = new TH1D("ptJetBest1", "", 27, 30., 400.);
+  h1_ptJetBest1->Sumw2();
+  TH1D* h1_ptDJetBest1 = new TH1D("ptDJetBest1", "", 50, 0., 1.);
+  h1_ptDJetBest1->Sumw2();
+  TH1D* h1_rmsCandJetBest1 = new TH1D("rmsCandJetBest1", "", 50, 0., 0.07);
+  h1_rmsCandJetBest1->Sumw2();
+  TH1D* h1_nChargedJetBest1 = new TH1D("nChargedJetBest1", "", 41, -0.5, 40.5);
+  h1_nChargedJetBest1->Sumw2();
+  TH1D* h1_nNeutralJetBest1 = new TH1D("nNeutralJetBest1", "", 41, -0.5, 40.5);
+  h1_nNeutralJetBest1->Sumw2();
+
+  TH1D* h1_ptJetBest2 = new TH1D("ptJetBest2", "", 27, 30., 400.);
+  h1_ptJetBest2->Sumw2();
+  TH1D* h1_ptDJetBest2 = new TH1D("ptDJetBest2", "", 50, 0., 1.);
+  h1_ptDJetBest2->Sumw2();
+  TH1D* h1_rmsCandJetBest2 = new TH1D("rmsCandJetBest2", "", 50, 0., 0.07);
+  h1_rmsCandJetBest2->Sumw2();
+  TH1D* h1_nChargedJetBest2 = new TH1D("nChargedJetBest2", "", 41, -0.5, 40.5);
+  h1_nChargedJetBest2->Sumw2();
+  TH1D* h1_nNeutralJetBest2 = new TH1D("nNeutralJetBest2", "", 41, -0.5, 40.5);
+  h1_nNeutralJetBest2->Sumw2();
+
+  TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 27, 30., 400.);
+  h1_ptJetRecoil->Sumw2();
+  TH1D* h1_ptDJetRecoil = new TH1D("ptDJetRecoil", "", 50, 0., 1.);
+  h1_ptDJetRecoil->Sumw2();
+  TH1D* h1_rmsCandJetRecoil = new TH1D("rmsCandJetRecoil", "", 50, 0., 0.07);
+  h1_rmsCandJetRecoil->Sumw2();
+  TH1D* h1_nChargedJetRecoil = new TH1D("nChargedJetRecoil", "", 41, -0.5, 40.5);
+  h1_nChargedJetRecoil->Sumw2();
+  TH1D* h1_nNeutralJetRecoil = new TH1D("nNeutralJetRecoil", "", 41, -0.5, 40.5);
+  h1_nNeutralJetRecoil->Sumw2();
 
   int nBins_invMass = 40;
   float invMassMin = 30.;
@@ -305,6 +371,28 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_mZll_opt400_HighEff->Sumw2();
   TH1D* h1_mZll_opt500 = new TH1D("mZll_opt500", "", nBins_invMass, 70., 120.);
   h1_mZll_opt500->Sumw2();
+
+  TH1D* h1_partFlavorJetOpt400_1 = new TH1D("partFlavorJetOpt400_1", "", 30, -7.5, 22.5);
+  h1_partFlavorJetOpt400_1->Sumw2();
+  TH1D* h1_rmsCandJetOpt400_1 = new TH1D("rmsCandJetOpt400_1", "", 50, 0., 0.07);
+  h1_rmsCandJetOpt400_1->Sumw2();
+  TH1D* h1_ptDJetOpt400_1 = new TH1D("ptDJetOpt400_1", "", 50, 0., 1.);
+  h1_ptDJetOpt400_1->Sumw2();
+  TH1D* h1_nChargedJetOpt400_1 = new TH1D("nChargedJetOpt400_1", "", 41, -0.5, 40.5);
+  h1_nChargedJetOpt400_1->Sumw2();
+  TH1D* h1_nNeutralJetOpt400_1 = new TH1D("nNeutralJetOpt400_1", "", 41, -0.5, 40.5);
+  h1_nNeutralJetOpt400_1->Sumw2();
+
+  TH1D* h1_partFlavorJetOpt400_2 = new TH1D("partFlavorJetOpt400_2", "", 30, -7.5, 22.5);
+  h1_partFlavorJetOpt400_2->Sumw2();
+  TH1D* h1_rmsCandJetOpt400_2 = new TH1D("rmsCandJetOpt400_2", "", 50, 0., 0.07);
+  h1_rmsCandJetOpt400_2->Sumw2();
+  TH1D* h1_ptDJetOpt400_2 = new TH1D("ptDJetOpt400_2", "", 50, 0., 1.);
+  h1_ptDJetOpt400_2->Sumw2();
+  TH1D* h1_nChargedJetOpt400_2 = new TH1D("nChargedJetOpt400_2", "", 41, -0.5, 40.5);
+  h1_nChargedJetOpt400_2->Sumw2();
+  TH1D* h1_nNeutralJetOpt400_2 = new TH1D("nNeutralJetOpt400_2", "", 41, -0.5, 40.5);
+  h1_nNeutralJetOpt400_2->Sumw2();
 
   TH1D* h1_mZqq_loose = new TH1D("mZqq_loose", "", nBins_invMass, 70., 120.);
   h1_mZqq_loose->Sumw2();
@@ -500,6 +588,40 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   Float_t phiJetLead3;
   tree_->SetBranchAddress("phiJetLead3", &phiJetLead3);
 
+  Float_t eJetBest1;
+  tree_->SetBranchAddress("eJetBest1", &eJetBest1);
+  Float_t ptJetBest1;
+  tree_->SetBranchAddress("ptJetBest1", &ptJetBest1);
+  Float_t etaJetBest1;
+  tree_->SetBranchAddress("etaJetBest1", &etaJetBest1);
+  Float_t phiJetBest1;
+  tree_->SetBranchAddress("phiJetBest1", &phiJetBest1);
+  Float_t rmsCandJetBest1;
+  tree_->SetBranchAddress("rmsCandJetBest1", &rmsCandJetBest1);
+  Float_t ptDJetBest1;
+  tree_->SetBranchAddress("ptDJetBest1", &ptDJetBest1);
+  Int_t nChargedJetBest1;
+  tree_->SetBranchAddress("nChargedJetBest1", &nChargedJetBest1);
+  Int_t nNeutralJetBest1;
+  tree_->SetBranchAddress("nNeutralJetBest1", &nNeutralJetBest1);
+
+  Float_t eJetBest2;
+  tree_->SetBranchAddress("eJetBest2", &eJetBest2);
+  Float_t ptJetBest2;
+  tree_->SetBranchAddress("ptJetBest2", &ptJetBest2);
+  Float_t etaJetBest2;
+  tree_->SetBranchAddress("etaJetBest2", &etaJetBest2);
+  Float_t phiJetBest2;
+  tree_->SetBranchAddress("phiJetBest2", &phiJetBest2);
+  Float_t rmsCandJetBest2;
+  tree_->SetBranchAddress("rmsCandJetBest2", &rmsCandJetBest2);
+  Float_t ptDJetBest2;
+  tree_->SetBranchAddress("ptDJetBest2", &ptDJetBest2);
+  Int_t nChargedJetBest2;
+  tree_->SetBranchAddress("nChargedJetBest2", &nChargedJetBest2);
+  Int_t nNeutralJetBest2;
+  tree_->SetBranchAddress("nNeutralJetBest2", &nNeutralJetBest2);
+
   Float_t eJetRecoil;
   tree_->SetBranchAddress("eJetRecoil", &eJetRecoil);
   Float_t ptJetRecoil;
@@ -508,6 +630,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("etaJetRecoil", &etaJetRecoil);
   Float_t phiJetRecoil;
   tree_->SetBranchAddress("phiJetRecoil", &phiJetRecoil);
+  Float_t rmsCandJetRecoil;
+  tree_->SetBranchAddress("rmsCandJetRecoil", &rmsCandJetRecoil);
+  Float_t ptDJetRecoil;
+  tree_->SetBranchAddress("ptDJetRecoil", &ptDJetRecoil);
+  Int_t nChargedJetRecoil;
+  tree_->SetBranchAddress("nChargedJetRecoil", &nChargedJetRecoil);
+  Int_t nNeutralJetRecoil;
+  tree_->SetBranchAddress("nNeutralJetRecoil", &nNeutralJetRecoil);
 
 
   Int_t nPairs;
@@ -537,6 +667,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("phiJet1", phiJet1);
   Float_t eChargedHadronsJet1[50];
   tree_->SetBranchAddress("eChargedHadronsJet1", eChargedHadronsJet1);
+  Float_t rmsCandJet1[50];
+  tree_->SetBranchAddress("rmsCandJet1", rmsCandJet1);
+  Float_t ptDJet1[50];
+  tree_->SetBranchAddress("ptDJet1", ptDJet1);
+  Int_t nChargedJet1[50];
+  tree_->SetBranchAddress("nChargedJet1", nChargedJet1);
+  Int_t nNeutralJet1[50];
+  tree_->SetBranchAddress("nNeutralJet1", nNeutralJet1);
 //Float_t eJetGen1;
 //tree_->SetBranchAddress("eJetGen1", &eJetGen1);
 //Float_t ptJetGen1;
@@ -571,6 +709,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("phiJet2", phiJet2);
   Float_t eChargedHadronsJet2[50];
   tree_->SetBranchAddress("eChargedHadronsJet2", eChargedHadronsJet2);
+  Float_t rmsCandJet2[50];
+  tree_->SetBranchAddress("rmsCandJet2", rmsCandJet2);
+  Float_t ptDJet2[50];
+  tree_->SetBranchAddress("ptDJet2", ptDJet2);
+  Int_t nChargedJet2[50];
+  tree_->SetBranchAddress("nChargedJet2", nChargedJet2);
+  Int_t nNeutralJet2[50];
+  tree_->SetBranchAddress("nNeutralJet2", nNeutralJet2);
 //Float_t eJetGen2;
 //tree_->SetBranchAddress("eJetGen2", &eJetGen2);
 //Float_t ptJetGen2;
@@ -714,21 +860,50 @@ ofstream ofs("run_event.txt");
     TLorentzVector jetLead2;
     jetLead2.SetPtEtaPhiE( ptJetLead2, etaJetLead2, phiJetLead2, eJetLead2 );
 
+    TLorentzVector jetBest1;
+    jetBest1.SetPtEtaPhiE( ptJetBest1, etaJetBest1, phiJetBest1, eJetBest1 );
+    TLorentzVector jetBest2;
+    jetBest2.SetPtEtaPhiE( ptJetBest2, etaJetBest2, phiJetBest2, eJetBest2 );
+
     TLorentzVector jetRecoil;
     jetRecoil.SetPtEtaPhiE( ptJetRecoil, etaJetRecoil, phiJetRecoil, eJetRecoil );
+
+    h1_ptJetBest1->Fill(ptJetBest1, eventWeight);
+    if( ptJetBest1>100. && ptJetBest1<150. ) {
+    h1_rmsCandJetBest1->Fill(rmsCandJetBest1, eventWeight);
+    h1_ptDJetBest1->Fill(ptDJetBest1, eventWeight);
+    h1_nChargedJetBest1->Fill(nChargedJetBest1, eventWeight);
+    h1_nNeutralJetBest1->Fill(nNeutralJetBest1, eventWeight);
+    }
+
+    h1_ptJetBest2->Fill(ptJetBest2, eventWeight);
+    if( ptJetBest2>50. && ptJetBest2<80. ) {
+    h1_rmsCandJetBest2->Fill(rmsCandJetBest2, eventWeight);
+    h1_ptDJetBest2->Fill(ptDJetBest2, eventWeight);
+    h1_nChargedJetBest2->Fill(nChargedJetBest2, eventWeight);
+    h1_nNeutralJetBest2->Fill(nNeutralJetBest2, eventWeight);
+    }
+
+    h1_ptJetRecoil->Fill(ptJetRecoil, eventWeight);
+    if( ptJetRecoil>0. ) {
+    h1_rmsCandJetRecoil->Fill(rmsCandJetRecoil, eventWeight);
+    h1_ptDJetRecoil->Fill(ptDJetRecoil, eventWeight);
+    h1_nChargedJetRecoil->Fill(nChargedJetRecoil, eventWeight);
+    h1_nNeutralJetRecoil->Fill(nNeutralJetRecoil, eventWeight);
+    }
 
   //TLorentzVector jet1, jet2;
   //jet1.SetPtEtaPhiE( ptJet1, etaJet1, phiJet1, eJet1 );
   //jet2.SetPtEtaPhiE( ptJet2, etaJet2, phiJet2, eJet2 );
 
 
-    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_looseSelection;
-    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_tightSelection;
-    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt200;
-    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt300;
-    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt400;
-    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt500;
-    std::vector< std::pair< TLorentzVector, TLorentzVector > > jetPairs_opt600;
+    std::vector< std::pair< AnalysisJet, AnalysisJet > > jetPairs_looseSelection;
+    std::vector< std::pair< AnalysisJet, AnalysisJet > > jetPairs_tightSelection;
+    std::vector< std::pair< AnalysisJet, AnalysisJet > > jetPairs_opt200;
+    std::vector< std::pair< AnalysisJet, AnalysisJet > > jetPairs_opt300;
+    std::vector< std::pair< AnalysisJet, AnalysisJet > > jetPairs_opt400;
+    std::vector< std::pair< AnalysisJet, AnalysisJet > > jetPairs_opt500;
+    std::vector< std::pair< AnalysisJet, AnalysisJet > > jetPairs_opt600;
 
     if( nPairs>0 ) {
 
@@ -766,33 +941,43 @@ ofs << run << " " << event << " " << diLepton.M() << " " << ptLept1 << " " << et
 
     for( unsigned iJetPair=0; iJetPair<nPairs; ++iJetPair ) {
 
-      TLorentzVector jet1, jet2;
+      AnalysisJet jet1, jet2;
       jet1.SetPtEtaPhiE( ptJet1[iJetPair], etaJet1[iJetPair], phiJet1[iJetPair], eJet1[iJetPair]);
       jet2.SetPtEtaPhiE( ptJet2[iJetPair], etaJet2[iJetPair], phiJet2[iJetPair], eJet2[iJetPair]);
+
+      jet1.rmsCand = rmsCandJet1[iJetPair];
+      jet1.ptD = ptDJet1[iJetPair];
+      jet1.nCharged = nChargedJet1[iJetPair];
+      jet1.nNeutral = nNeutralJet1[iJetPair];
+
+      jet2.rmsCand = rmsCandJet2[iJetPair];
+      jet2.ptD = ptDJet2[iJetPair];
+      jet2.nCharged = nChargedJet2[iJetPair];
+      jet2.nNeutral = nNeutralJet2[iJetPair];
 
       TLorentzVector diJet = jet1 + jet2;
 
       if( jet1.Pt()>40. && jet2.Pt()>30. && fabs(jet1.Eta())<2.5 && fabs(jet2.Eta())<2.5 && diJet.M()>70. && diJet.M()<120. )
-        jetPairs_looseSelection.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+        jetPairs_looseSelection.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
       if( jet1.Pt()>100. && jet2.Pt()>50. && jet1.DeltaR(jet2)<1.5 && diJet.M()>80. && diJet.M()<105. )
-        jetPairs_tightSelection.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+        jetPairs_tightSelection.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
 
       if( jet1.Pt()>35. && jet2.Pt()>30. && jet1.DeltaR(jet2)<2.8 && diJet.M()>81. && diJet.M()<101. )
-        jetPairs_opt200.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+        jetPairs_opt200.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
       if( jet1.Pt()>45. && jet2.Pt()>35. && jet1.DeltaR(jet2)<1.7 && diJet.M()>81. && diJet.M()<101. )
-        jetPairs_opt300.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+        jetPairs_opt300.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
-      if( jet1.Pt()>85. && jet2.Pt()>55. && jet1.DeltaR(jet2)<1.2 && diJet.M()>81. && diJet.M()<101. )
-        jetPairs_opt400.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+      if( jet1.Pt()>90. && jet2.Pt()>55. && jet1.DeltaR(jet2)<1.2 && diJet.M()>81. && diJet.M()<101. )
+        jetPairs_opt400.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
       if( jet1.Pt()>125. && jet2.Pt()>95. && jet1.DeltaR(jet2)<1.5 && diJet.M()>81. && diJet.M()<101. )
-        jetPairs_opt500.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+        jetPairs_opt500.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
       if( jet1.Pt()>160. && jet2.Pt()>95. && jet1.DeltaR(jet2)<1.0 && diJet.M()>81. && diJet.M()<101. )
-        jetPairs_opt600.push_back( std::pair<TLorentzVector,TLorentzVector>(jet1,jet2) );
+        jetPairs_opt600.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
 
       h1_mZjj_presel->Fill( diJet.M(), eventWeight );
@@ -801,6 +986,12 @@ ofs << run << " " << event << " " << diLepton.M() << " " << ptLept1 << " " << et
       if( jet1.Pt()!=cached_jetpt ) {
         h1_ptJet_all_presel->Fill( jet1.Pt(), eventWeight );
         h1_etaJet_all_presel->Fill( jet1.Eta(), eventWeight );
+        if( jet1.Pt()>100. && jet1.Pt()<150. ) {
+        h1_rmsCandJet_all_presel->Fill( rmsCandJet1[iJetPair], eventWeight );
+        h1_ptDJet_all_presel->Fill( ptDJet1[iJetPair], eventWeight );
+        h1_nChargedJet_all_presel->Fill( nChargedJet1[iJetPair], eventWeight );
+        h1_nNeutralJet_all_presel->Fill( nNeutralJet1[iJetPair], eventWeight );
+        }
         cached_jetpt = jet1.Pt();
       }
 
@@ -1011,16 +1202,54 @@ if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
 
       } //for pairs
 
-      TLorentzVector jet1 = jetPairs_opt400[bestPair].first;
-      TLorentzVector jet2 = jetPairs_opt400[bestPair].second;
+      AnalysisJet jet1 = jetPairs_opt400[bestPair].first;
+      AnalysisJet jet2 = jetPairs_opt400[bestPair].second;
 
       TLorentzVector bestZDiJet = jet1 + jet2;
       TLorentzVector ZZ_opt400= diLepton + bestZDiJet; 
       
   
-      if( lept1.Pt()>40. && lept1.DeltaR(lept2)<1.7 && diLepton.M() > 86. && diLepton.M() < 96. ) {
+      if( lept1.Pt()>40. && diLepton.Pt()>95. && diLepton.M() > 86. && diLepton.M() < 96. ) {
         h1_ZZInvMass_hiMass_opt400->Fill(ZZ_opt400.M(), eventWeight);
         h1_ZZInvMass_hiMass_opt400->Fill(ZZ_opt400.M(), eventWeight);
+        //match to partons:
+        int partFlavor1=0;
+        float deltaRmin1=999.;
+        for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+          TLorentzVector thisPart;
+          thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+          float thisDeltaR = jet1.DeltaR(thisPart);
+          if( thisDeltaR<deltaRmin1 ) {
+            partFlavor1 = pdgIdPart[iPart];
+            deltaRmin1 = thisDeltaR;
+          }
+        }
+        if( deltaRmin1<0.5 ) {
+          h1_partFlavorJetOpt400_1->Fill( partFlavor1, eventWeight );
+          h1_rmsCandJetOpt400_1->Fill( jet1.rmsCand, eventWeight );
+          h1_ptDJetOpt400_1->Fill( jet1.ptD, eventWeight );
+          h1_nChargedJetOpt400_1->Fill( jet1.nCharged, eventWeight );
+          h1_nNeutralJetOpt400_1->Fill( jet1.nNeutral, eventWeight );
+        }
+      
+        float deltaRmin2=999.;
+        int partFlavor2=0;
+        for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+          TLorentzVector thisPart;
+          thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+          float thisDeltaR = jet2.DeltaR(thisPart);
+          if( thisDeltaR<deltaRmin2 ) {
+            partFlavor2 = pdgIdPart[iPart];
+            deltaRmin2 = thisDeltaR;
+          }
+        }
+        if( deltaRmin2<0.5 ) {
+          h1_partFlavorJetOpt400_2->Fill( partFlavor2, eventWeight );
+          h1_rmsCandJetOpt400_2->Fill( jet2.rmsCand, eventWeight );
+          h1_ptDJetOpt400_2->Fill( jet2.ptD, eventWeight );
+          h1_nChargedJetOpt400_2->Fill( jet2.nCharged, eventWeight );
+          h1_nNeutralJetOpt400_2->Fill( jet2.nNeutral, eventWeight );
+        }
       }
 
     }
@@ -1867,8 +2096,30 @@ if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
 
   h1_ptJet_all_presel->Write();
   h1_etaJet_all_presel->Write();
+  h1_rmsCandJet_all_presel->Write();
+  h1_ptDJet_all_presel->Write();
+  h1_nChargedJet_all_presel->Write();
+  h1_nNeutralJet_all_presel->Write();
   h1_nJets_presel->Write();
   h1_nPairs_presel->Write();
+
+  h1_ptJetBest1->Write();
+  h1_ptDJetBest1->Write();
+  h1_rmsCandJetBest1->Write();
+  h1_nChargedJetBest1->Write();
+  h1_nNeutralJetBest1->Write();
+
+  h1_ptJetBest2->Write();
+  h1_ptDJetBest2->Write();
+  h1_rmsCandJetBest2->Write();
+  h1_nChargedJetBest2->Write();
+  h1_nNeutralJetBest2->Write();
+
+  h1_ptJetRecoil->Write();
+  h1_ptDJetRecoil->Write();
+  h1_rmsCandJetRecoil->Write();
+  h1_nChargedJetRecoil->Write();
+  h1_nNeutralJetRecoil->Write();
 
   h1_deltaRll_presel->Write();
   h1_deltaRjj_presel->Write();
@@ -1922,6 +2173,18 @@ if( partFlavor==21 ) std::cout << deltaRmin << std::endl;
   h1_ZZInvMass_hiMass_opt500_FINEBINNING->Write();
   h1_ZZInvMass_hiMass_opt600->Write();
   h1_ZZInvMass_hiMass_opt600_FINEBINNING->Write();
+
+  h1_partFlavorJetOpt400_1->Write();
+  h1_rmsCandJetOpt400_1->Write();
+  h1_ptDJetOpt400_1->Write();
+  h1_nChargedJetOpt400_1->Write();
+  h1_nNeutralJetOpt400_1->Write();
+
+  h1_partFlavorJetOpt400_2->Write();
+  h1_rmsCandJetOpt400_2->Write();
+  h1_ptDJetOpt400_2->Write();
+  h1_nChargedJetOpt400_2->Write();
+  h1_nNeutralJetOpt400_2->Write();
 
   h1_partFlavor_tight->Write();
 
