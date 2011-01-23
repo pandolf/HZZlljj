@@ -12,15 +12,15 @@ int main(int argc, char* argv[]) {
 
   if(  argc != 2 && argc != 3 ) {
     //std::cout << "USAGE: ./drawHZZlljj [(string) LO/HI/MED] [(string) ZJets dataset=\"ZJets_alpgen\"]" << std::endl;
-    std::cout << "USAGE: ./drawHZZlljj [(string) LO/HI/MED] [(string) LEPT_TYPE=\"ALL\"]" << std::endl;
+    std::cout << "USAGE: ./drawHZZlljj [(string) selectionType] [(string) LEPT_TYPE=\"ALL\"]" << std::endl;
     exit(23);
   }
 
-  std::string lohi(argv[1]);
-  if( lohi != "LO" && lohi != "HI" && lohi != "MED" && lohi!="400" && lohi!="500") {
-    std::cout << "LO/HI/MED must be set to 'LO' or 'HI' or 'MED' or '400' or '500'. Exiting." << std::endl;
-    exit(33);
-  }
+  std::string selType(argv[1]);
+//if( selType != "LO" && selType != "HI" && selType != "MED" && selType!="400" && selType!="500") {
+//  std::cout << "LO/HI/MED must be set to 'LO' or 'HI' or 'MED' or '400' or '500'. Exiting." << std::endl;
+//  exit(33);
+//}
 
   std::string zJets_dataset = "ZJets_alpgen";
   //std::string zJets_dataset = "ZJets_madgraph";
@@ -38,27 +38,30 @@ int main(int argc, char* argv[]) {
   DrawBase* db = new DrawBase("HZZlljj");
   db->set_pdf_aussi((bool)false);
 
-  std::string outputdir_str = "HZZlljjPlots_"+lohi+"mass_vs_"+zJets_dataset;
+  std::string outputdir_str = "HZZlljjPlots_"+selType;
   //if( lept_type!="ALL" ) outputdir_str += "_" + lept_type;
   outputdir_str += "_" + lept_type;
   db->set_outputdir(outputdir_str);
 
+  std::string lohi;
+  if( selType=="opt400" || selType=="opt500" || selType=="opt600" || selType=="tight" ) lohi="HI"; //temp solution
+  else lohi="LO";
 
   std::string flags;
   if( lohi=="LO" ) {
     
     flags = "loMass";
 
-    std::string mcSignal130FileName = "HZZlljj_HZZ_qqll_gluonfusion_M130";
-    //if( lept_type!="ALL" ) mcSignal130FileName += "_" + lept_type;
+    std::string mcSignal130FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-130_7TeV-jhu-pythia6";
+    mcSignal130FileName += "_" + selType;
     mcSignal130FileName += "_" + lept_type;
     mcSignal130FileName += ".root";
     TFile* mcSignal130File = TFile::Open(mcSignal130FileName.c_str());
     std::cout << "Opened mc file '" << mcSignal130FileName << "'." << std::endl;
     db->add_mcFile( mcSignal130File, "HZZ_qqll_gluonfusion_M130", "HZZlljj (130)", kRed+1);
 
-    std::string mcSignal150FileName = "HZZlljj_HZZ_qqll_gluonfusion_M150";
-    //if( lept_type!="ALL" ) mcSignal150FileName += "_" + lept_type;
+    std::string mcSignal150FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-150_7TeV-jhu-pythia6";
+    mcSignal150FileName += "_" + selType;
     mcSignal150FileName += "_" + lept_type;
     mcSignal150FileName += ".root";
     TFile* mcSignal150File = TFile::Open(mcSignal150FileName.c_str());
@@ -69,8 +72,9 @@ int main(int argc, char* argv[]) {
 
     flags = "medMass";
 
-    std::string mcSignal200FileName = "HZZlljj_HZZ_qqll_gluonfusion_M200";
+    std::string mcSignal200FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-200_7TeV-jhu-pythia6";
     //if( lept_type!="ALL" ) mcSignal200FileName += "_" + lept_type;
+    mcSignal200FileName += "_" + selType;
     mcSignal200FileName += "_" + lept_type;
     mcSignal200FileName += ".root";
     TFile* mcSignal200File = TFile::Open("HZZlljj_HZZ_qqll_gluonfusion_M200.root");
@@ -82,16 +86,16 @@ int main(int argc, char* argv[]) {
     flags = "hiMass";
     if( lohi=="400" || lohi=="500" ) flags=lohi;
 
-    //std::string mcSignal300FileName = "HZZlljj_HZZ_qqll_gluonfusion_M300";
-    std::string mcSignal300FileName = "HZZlljj_JHUgen_HiggsSM300_2l2j_FASTSIM";
+    std::string mcSignal300FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6";
+    mcSignal300FileName += "_" + selType;
     mcSignal300FileName += "_" + lept_type;
     mcSignal300FileName += ".root";
   //TFile* mcSignal300File = TFile::Open(mcSignal300FileName.c_str());
   //std::cout << "Opened mc file '" << mcSignal300FileName << "'." << std::endl;
   //db->add_mcFile( mcSignal300File, "HZZ_qqll_gluonfusion_M300", "HZZlljj (300)", kRed+3);
 
-    //std::string mcSignal400FileName = "HZZlljj_HZZ_qqll_gluonfusion_M400";
-    std::string mcSignal400FileName = "HZZlljj_JHUgen_HiggsSM400_2l2j_FASTSIM";
+    std::string mcSignal400FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-400_7TeV-jhu-pythia6";
+    mcSignal400FileName += "_" + selType;
     mcSignal400FileName += "_" + lept_type;
     mcSignal400FileName += ".root";
     TFile* mcSignal400File = TFile::Open(mcSignal400FileName.c_str());
@@ -100,8 +104,8 @@ int main(int argc, char* argv[]) {
       db->add_mcFile( mcSignal400File, "HZZ_qqll_gluonfusion_M400", "HZZlljj (400)", kOrange);
     }
 
-    //std::string mcSignal500FileName = "HZZlljj_HZZ_qqll_gluonfusion_M500";
-    std::string mcSignal500FileName = "HZZlljj_JHUgen_HiggsSM500_2l2j_FASTSIM";
+    std::string mcSignal500FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-500_7TeV-jhu-pythia6";
+    mcSignal500FileName += "_" + selType;
     mcSignal500FileName += "_" + lept_type;
     mcSignal500FileName += ".root";
     TFile* mcSignal500File = TFile::Open(mcSignal500FileName.c_str());
@@ -151,29 +155,30 @@ int main(int argc, char* argv[]) {
 
   // then add bg:
 
-  std::string mcZJetsFileName = "HZZlljj_" + zJets_dataset;
+  std::string mcZJetsFileName = "HZZlljj_ZJets_alpgen_TuneZ2_Fall10";
   //if( lept_type!="ALL" ) mcZJetsFileName += "_" + lept_type;
+  mcZJetsFileName += "_" + selType;
   mcZJetsFileName += "_" + lept_type;
   mcZJetsFileName += ".root";
   TFile* mcZJetsFile = TFile::Open(mcZJetsFileName.c_str());
   std::cout << "Opened mc file '" << mcZJetsFileName << "'." << std::endl;
   db->add_mcFile( mcZJetsFile, zJets_dataset, "Z + Jets", 38, 3001);
 
-  std::string mcZZFileName = "HZZlljj_ZZ_Spring10";
-  //if( lept_type!="ALL" ) mcZZFileName += "_" + lept_type;
-  mcZZFileName += "_" + lept_type;
-  mcZZFileName += ".root";
-  TFile* mcZZFile = TFile::Open(mcZZFileName.c_str());
-  std::cout << "Opened mc file '" << mcZZFileName << "'." << std::endl;
-  db->add_mcFile( mcZZFile, "ZZ_Spring10", "ZZ", kCyan+1, 3003);
+//std::string mcZZFileName = "HZZlljj_ZZ_Spring10";
+////if( lept_type!="ALL" ) mcZZFileName += "_" + lept_type;
+//mcZZFileName += "_" + lept_type;
+//mcZZFileName += ".root";
+//TFile* mcZZFile = TFile::Open(mcZZFileName.c_str());
+//std::cout << "Opened mc file '" << mcZZFileName << "'." << std::endl;
+//db->add_mcFile( mcZZFile, "ZZ_Spring10", "ZZ", kCyan+1, 3003);
 
-  std::string mcTTbarFileName = "HZZlljj_TTbar_2l_Spring10";
-  //if( lept_type!="ALL" ) mcTTbarFileName += "_" + lept_type;
-  mcTTbarFileName += "_" + lept_type;
-  mcTTbarFileName += ".root";
-  TFile* mcTTbarFile = TFile::Open(mcTTbarFileName.c_str());
-  std::cout << "Opened mc file '" << mcTTbarFileName << "'." << std::endl;
-  db->add_mcFile( mcTTbarFile, "TTbar_2l_Spring10", "t#bar{t}", 30, 3002);
+//std::string mcTTbarFileName = "HZZlljj_TTbar_2l_Spring10";
+////if( lept_type!="ALL" ) mcTTbarFileName += "_" + lept_type;
+//mcTTbarFileName += "_" + lept_type;
+//mcTTbarFileName += ".root";
+//TFile* mcTTbarFile = TFile::Open(mcTTbarFileName.c_str());
+//std::cout << "Opened mc file '" << mcTTbarFileName << "'." << std::endl;
+//db->add_mcFile( mcTTbarFile, "TTbar_2l_Spring10", "t#bar{t}", 30, 3002);
 
 
 
@@ -230,19 +235,58 @@ int main(int argc, char* argv[]) {
   db->drawHisto("ptRecoilOverJet2", "", "", "Recoil p_{T} / Second Jet p_{T}", 1);
 
 */
-  db->set_noStack( (bool)false );
-  db->set_lumiNormalization( 1000. ); //1 fb-1
+  //db->set_noStack( (bool)false );
+  db->set_shapeNormalization();
+  //db->set_lumiNormalization( 1000. ); //1 fb-1
   //db->set_lumiNormalization( 7. ); //1 fb-1
 
 
 
-  db->set_rebin(2);
+  //db->set_rebin(2);
 
-  db->drawHisto("ZZInvMass_hiMass_loose", "", "", "ZZ Invariant Mass [GeV/c^{2}]", 1);
-  db->drawHisto("ZZInvMass_hiMass_tight", "", "", "ZZ Invariant Mass [GeV/c^{2}]", 1);
-  db->drawHisto("ZZInvMass_hiMass_opt400_LowEff", "", "", "ZZ Invariant Mass [GeV/c^{2}]", 1);
-  db->drawHisto("ZZInvMass_hiMass_opt400_HighEff", "", "", "ZZ Invariant Mass [GeV/c^{2}]", 1);
-  db->drawHisto("ZZInvMass_hiMass_opt500", "", "", "ZZ Invariant Mass [GeV/c^{2}]", 1);
+  db->drawHisto("ptJet_all_presel", "Jet Transverse Momentum", "GeV/c", "Jets", log);
+  db->drawHisto("ptDJet_all_presel", "ptD", "", "Jets", log);
+  db->drawHisto("rmsCandJet_all_presel", "PFCandidate RMS", "", "Jets", log);
+  db->drawHisto("nChargedJet_all_presel", "Charged Multiplicity", "", "Jets", log);
+  db->drawHisto("nNeutralJet_all_presel", "Neutral Multiplicity", "", "Jets", log);
+
+//db->drawHisto("ptJetBest1", "Jet Transverse Momentum", "GeV/c", "Jets", log);
+//db->drawHisto("ptDJetBest1", "ptD", "", "Jets", log);
+//db->drawHisto("rmsCandJetBest1", "PFCandidate RMS", "", "Jets", log);
+//db->drawHisto("nChargedJetBest1", "Charged Multiplicity", "", "Jets", log);
+//db->drawHisto("nNeutralJetBest1", "Neutral Multiplicity", "", "Jets", log);
+
+//db->drawHisto("ptJetBest2", "Jet Transverse Momentum", "GeV/c", "Jets", log);
+//db->drawHisto("ptDJetBest2", "ptD", "", "Jets", log);
+//db->drawHisto("rmsCandJetBest2", "PFCandidate RMS", "", "Jets", log);
+//db->drawHisto("nChargedJetBest2", "Charged Multiplicity", "", "Jets", log);
+//db->drawHisto("nNeutralJetBest2", "Neutral Multiplicity", "", "Jets", log);
+
+  db->drawHisto("ptJetRecoil", "Recoil Jet Jet Transverse Momentum", "GeV/c", "Jets", log);
+  db->drawHisto("ptDJetRecoil", "Recoil Jet ptD", "", "Jets", log);
+  db->drawHisto("rmsCandJetRecoil", "Recoil Jet PFCandidate RMS", "", "Jets", log);
+  db->drawHisto("nChargedJetRecoil", "Recoil Jet Charged Multiplicity", "", "Jets", log);
+  db->drawHisto("nNeutralJetRecoil", "Recoil Jet Neutral Multiplicity", "", "Jets", log);
+
+  db->drawHisto("ptDJet1_partMatched", "First Jet ptD", "", "Jets", log);
+  db->drawHisto("rmsCandJet1_partMatched", "First Jet PFCandidate RMS", "", "Jets", log);
+  db->drawHisto("nChargedJet1_partMatched", "First Jet Charged Multiplicity", "", "Jets", log);
+  db->drawHisto("nNeutralJet1_partMatched", "First Jet Neutral Multiplicity", "", "Jets", log);
+
+  db->drawHisto("ptDJet2_partMatched", "Second Jet ptD", "", "Jets", log);
+  db->drawHisto("rmsCandJet2_partMatched", "Second Jet PFCandidate RMS", "", "Jets", log);
+  db->drawHisto("nChargedJet2_partMatched", "Second Jet Charged Multiplicity", "", "Jets", log);
+  db->drawHisto("nNeutralJet2_partMatched", "Second Jet Neutral Multiplicity", "", "Jets", log);
+
+  db->drawHisto("partFlavorJet1_partMatched", "First Jet Parton Flavour", "", "Jets", log);
+  db->drawHisto("partFlavorJet2_partMatched", "Second Jet Parton Flavour", "", "Jets", log);
+
+
+//db->drawHisto("ZZInvMass_hiMass_loose", "", "", "ZZ Invariant Mass [GeV/c^{2}]", 1);
+//db->drawHisto("ZZInvMass_hiMass_tight", "", "", "ZZ Invariant Mass [GeV/c^{2}]", 1);
+//db->drawHisto("ZZInvMass_hiMass_opt400_LowEff", "", "", "ZZ Invariant Mass [GeV/c^{2}]", 1);
+//db->drawHisto("ZZInvMass_hiMass_opt400_HighEff", "", "", "ZZ Invariant Mass [GeV/c^{2}]", 1);
+//db->drawHisto("ZZInvMass_hiMass_opt500", "", "", "ZZ Invariant Mass [GeV/c^{2}]", 1);
 
 /*
   db->drawHisto( "ZZInvMass", "", flags, "ZZ Invariant Mass [GeV/c^{2}]", 1, log);

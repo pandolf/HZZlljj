@@ -25,23 +25,24 @@ float delta_phi(float phi1, float phi2) {
 
 int main( int argc, char* argv[] ) {
 
-  if( argc!=2 && argc!=3 ) {
-    std::cout << "USAGE: ./finalize_HZZlljj [dataset] [leptType=\"ALL\"]" <<std::endl;
+  if( argc!=3 && argc!=4 ) {
+    std::cout << "USAGE: ./finalize_HZZlljj [dataset] [selectionType] [leptType=\"ALL\"]" <<std::endl;
     return 13;
   }
 
 
   std::string dataset(argv[1]);
+  std::string selectionType(argv[2]);
 
   std::string leptType="ALL";
-  if( argc==3 ) {
-    std::string leptType_str(argv[2]);
+  if( argc==4 ) {
+    std::string leptType_str(argv[3]);
     leptType = leptType_str;
   }
 
 
 
-  Ntp1Finalizer_HZZlljj* nf = new Ntp1Finalizer_HZZlljj( dataset, leptType );
+  Ntp1Finalizer_HZZlljj* nf = new Ntp1Finalizer_HZZlljj( dataset, selectionType, leptType );
 
 
 
