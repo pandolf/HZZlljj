@@ -32,11 +32,11 @@ class AnalysisJet : public TLorentzVector {
 
 
 
-Ntp1Analyzer_QG::Ntp1Analyzer_QG( const std::string& dataset, const std::string& flags, TTree* tree ) :
+Ntp1Analyzer_QG::Ntp1Analyzer_QG( const std::string& dataset, bool requireLeptons, const std::string& flags, TTree* tree ) :
      Ntp1Analyzer( "QG", dataset, flags, tree ) {
 
 
-  //nothing to do here
+  requireLeptons_ = requireLeptons;
 
 
 } //constructor
@@ -367,7 +367,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      } //for electrons
 
 
-     //if( electrons.size() < 2 && muons.size() < 2 ) continue;
+     if( requireLeptons_ )
+       if( electrons.size() < 2 && muons.size() < 2 ) continue;
 
 
      std::vector< TLorentzVector > leptons;
