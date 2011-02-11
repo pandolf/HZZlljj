@@ -9,8 +9,8 @@ merge_and_setWeights: merge_and_setWeights.cpp
 do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o fitTools.o do2ndLevel_HZZlljj.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o fitTools.o $(ROOTFLAG)
 
-finalize_HZZlljj: Ntp1Finalizer.o Ntp1Finalizer_HZZlljj.o finalize_HZZlljj.cpp fitTools.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_HZZlljj finalize_HZZlljj.cpp Ntp1Finalizer.o Ntp1Finalizer_HZZlljj.o fitTools.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o $(ROOTFLAG) -lMinuit
+finalize_HZZlljj: Ntp1Finalizer.o Ntp1Finalizer_HZZlljj.o finalize_HZZlljj.cpp fitTools.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o QGLikelihoodCalculator.o
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_HZZlljj finalize_HZZlljj.cpp Ntp1Finalizer.o Ntp1Finalizer_HZZlljj.o fitTools.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o QGLikelihoodCalculator.o $(ROOTFLAG) -lMinuit
 
 finalize_ZGamma: Ntp1Finalizer.o Ntp1Finalizer_ZGamma.o finalize_ZGamma.cpp fitTools.o
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_ZGamma finalize_ZGamma.cpp Ntp1Finalizer.o Ntp1Finalizer_ZGamma.o fitTools.o $(ROOTFLAG)
@@ -20,6 +20,9 @@ finalize_JESsyst: Ntp1Finalizer.o Ntp1Finalizer_JESsyst.o finalize_JESsyst.cpp f
 
 finalize_QG: Ntp1Finalizer.o Ntp1Finalizer_QG.o finalize_QG.cpp fitTools.o
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_QG finalize_QG.cpp Ntp1Finalizer.o Ntp1Finalizer_QG.o fitTools.o $(ROOTFLAG) -lMinuit
+
+finalize_ComputeQGLikelihood: Ntp1Finalizer.o Ntp1Finalizer_ComputeQGLikelihood.o QGLikelihoodCalculator.o finalize_ComputeQGLikelihood.cpp fitTools.o
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_ComputeQGLikelihood finalize_ComputeQGLikelihood.cpp Ntp1Finalizer.o Ntp1Finalizer_ComputeQGLikelihood.o QGLikelihoodCalculator.o fitTools.o $(ROOTFLAG) -lMinuit
 
 finalize_GG: Ntp1Finalizer.o Ntp1Finalizer_GG.o finalize_GG.cpp fitTools.o
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_GG finalize_GG.cpp Ntp1Finalizer.o Ntp1Finalizer_GG.o fitTools.o $(ROOTFLAG) -lMinuit
@@ -40,7 +43,7 @@ drawHZZlljj: DrawBase.o fitTools.o drawHZZlljj.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawHZZlljj drawHZZlljj.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 drawHZZlljj_DATA: DrawBase.o fitTools.o drawHZZlljj_DATA.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawHZZlljj_DATA drawHZZlljj_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG)
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawHZZlljj_DATA drawHZZlljj_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 drawGG_DATA: DrawBase.o fitTools.o drawGG_DATA.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawGG_DATA drawGG_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
@@ -92,6 +95,9 @@ Ntp1Analyzer_TMVA.o: Ntp1Analyzer_TMVA.C
 Ntp1Analyzer_QG.o: Ntp1Analyzer_QG.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_QG.C $(ROOTFLAG)
 
+QGLikelihoodCalculator.o: QGLikelihoodCalculator.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools QGLikelihoodCalculator.C $(ROOTFLAG)
+
 Ntp1Finalizer.o: Ntp1Finalizer.C
 	$(CC) $(CFLAGS) Ntp1Finalizer.C $(ROOTFLAG)
 
@@ -103,6 +109,9 @@ Ntp1Finalizer_ZGamma.o: Ntp1Finalizer_ZGamma.C
 
 Ntp1Finalizer_QG.o: Ntp1Finalizer_QG.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_QG.C $(ROOTFLAG)
+
+Ntp1Finalizer_ComputeQGLikelihood.o: Ntp1Finalizer_ComputeQGLikelihood.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_ComputeQGLikelihood.C $(ROOTFLAG)
 
 Ntp1Finalizer_GG.o: Ntp1Finalizer_GG.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_GG.C $(ROOTFLAG)

@@ -78,7 +78,7 @@ int main( int argc, char* argv[] ) {
 
     tree->GetEntry(ientry);
 
-    if( (ientry % 10000) ==0 ) std::cout << "Entry: " << ientry << " /" << nentries << std::endl;
+    if( (ientry % 100000) ==0 ) std::cout << "Entry: " << ientry << " /" << nentries << std::endl;
 
     newWeight = weight;
 
@@ -283,30 +283,34 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 4.8236*0.2664*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M500" ) {
     xSection = 2.1914*0.2602*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM200_2l2j_FASTSIM" ) {
+  } else if( dataset=="JHUgen_HiggsSM200_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-200_7TeV-jhu-pythia6" ) {
     xSection = (5.4218+0.64243+0.015972+0.056746+0.10830)*0.2537*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM250_2l2j_FASTSIM" ) {
+  } else if( dataset=="JHUgen_HiggsSM250_2l2j_FASTSIM"  || dataset=="SMHiggsToZZTo2L2Q_M-250_7TeV-jhu-pythia6") {
     xSection = (3.4120+0.43490+0.0073067+0.023553+0.044954)*0.2951*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM300_2l2j_FASTSIM" ) {
+  } else if( dataset=="JHUgen_HiggsSM300_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6" ) {
     xSection = (2.5001+0.30317+0.0038098+0.010992+0.021079)*0.3053*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM350_2l2j_FASTSIM" ) {
+  } else if( dataset=="JHUgen_HiggsSM350_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-350_7TeV-jhu-pythia6" ) {
     xSection = (2.4983+0.21635+0.0021911+0.0055876+0.010794)*0.3023*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM400_2l2j_FASTSIM" ) {
+  } else if( dataset=="JHUgen_HiggsSM400_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-400_7TeV-jhu-pythia6" ) {
     xSection = (2.0608+0.15739+0.0054837+0.00030308+0.0059045)*0.2664*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM450_2l2j_FASTSIM" ) {
+  } else if( dataset=="JHUgen_HiggsSM450_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-450_7TeV-jhu-pythia6" ) {
     xSection = (1.3445+0.11630+0.00087374+0.0017291+0.00033991)*0.2582*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM500_2l2j"|| dataset=="JHUgen_HiggsSM500_2l2j_FASTSIM" ) {
+  } else if( dataset=="JHUgen_HiggsSM500_2l2j"|| dataset=="JHUgen_HiggsSM500_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-500_7TeV-jhu-pythia6" ) {
     xSection = (0.83396+0.087068+0.00058401+0.0010272+0.0020377)*0.2602*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM550_2l2j_FASTSIM" ) {
+  } else if( dataset=="JHUgen_HiggsSM550_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-550_7TeV-jhu-pythia6" ) {
     xSection = (0.51418+0.065912+0.00039969+0.00063066+0.0012623)*0.2657*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM600_2l2j_FASTSIM" ) {
+  } else if( dataset=="JHUgen_HiggsSM600_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-600_7TeV-jhu-pythia6" ) {
     xSection = (0.31942+0.050376+0.00027833+0.00039795+0.00080323)*0.2724*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="TTbar_2l_Spring10" ) {
     xSection = 157.4*0.1080*0.1080*3.*3.; //NLO x BR(W->lnu) see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
-  } else if( dataset=="TTJets_TuneD6T" ) {
+  } else if( dataset=="TTJets_TuneD6T" || dataset=="TTJets_TuneZ2_7TeV-madgraph-tauola_Fall10" ) {
     xSection = 157.4; //NLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
-  } else if( dataset=="ZZ_Spring10" || dataset=="ZZtoAnything_TuneZ2" ) {
+  } else if( dataset=="ZZ_Spring10" || dataset=="ZZtoAnything_TuneZ2" || dataset=="ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" ) {
     xSection = 5.9*1.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt plus factor 1.3 to account for glu-glu
+  } else if( dataset=="WZtoAnything_TuneZ2" || dataset=="WZtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" ) {
+    xSection = 18.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
+  } else if( dataset=="WWtoAnything_TuneZ2" || dataset=="WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" ) {
+    xSection = 42.9; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
   } else if( dataset=="Zmumu_Pythia" ) {
     xSection = 3048./3.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="PhotonJet_Summer1036X_Pt5to15_pfakt5" ) {
@@ -329,6 +333,10 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 1.545;
   } else if( dataset=="PhotonJet_Summer1036X_Pt500toInf_pfakt5" ) {
     xSection = 0.0923;
+  } else if( dataset=="QCD_Pt_120to170_TuneZ2_7TeV_pythia6" ) {
+    xSection = 1.151e+05;
+  } else if( dataset=="QCD_Pt_170to300_TuneZ2_7TeV_pythia6" ) {
+    xSection = 2.426e+04;
   } else {
     std::cout << std::endl;
     std::cout << "-> WARNING!! Dataset: '" << dataset << "' not present in database. Cross section unknown." << std::endl;

@@ -1,7 +1,8 @@
 // ------------------------------------------------------------
 //  
 //    Ntp1Finalizer_QG - Derived class 
-//    for the finalization of the H->ZZ->lljj analysis.
+//    for the computation of the basic quark-gluon
+//    discrimination variables.
 //
 // ------------------------------------------------------------
 

@@ -74,6 +74,11 @@ int main( int argc, char* argv[] ) {
     nf->addFile("Mu_Run2010B_PromptReco_v2_runs146240_146733");
     nf->addFile("EG_upto146724");
 
+  } else if( dataset=="EleMu_Nov4ReReco_PU" ) {
+
+    nf->addFile("Electron_Nov4ReReco_PU");
+    nf->addFile("Mu_Nov4ReReco_PU");
+
   } else if( dataset=="ZJets_alpgen_TuneZ2_Fall10" ) {
 
     nf->addFile( "Z0Jets_TuneZ2_7TeV-alpgen-tauola" );
@@ -156,6 +161,12 @@ int main( int argc, char* argv[] ) {
     nf->addFile( "Z5Jets_Pt100to300-alpgen_Spring10" );
     nf->addFile( "Z5Jets_Pt300to800-alpgen_Spring10" );
     nf->addFile( "Z5Jets_Pt800to1600-alpgen_Spring10" );
+
+  } else if( dataset=="VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" ) {
+
+    nf->addFile( "ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" );
+    nf->addFile( "WZtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" );
+    nf->addFile( "WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" );
 
   } else if( dataset=="all" ) {
 

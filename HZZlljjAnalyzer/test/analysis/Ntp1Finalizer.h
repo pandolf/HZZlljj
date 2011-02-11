@@ -26,8 +26,8 @@ class Ntp1Finalizer {
   Ntp1Finalizer( const std::string& analyzerType, const std::string& dataset, const std::string& flags="" );
   virtual ~Ntp1Finalizer();
 
-  void createOutputFile();
-  void addFile(const std::string& dataset);
+  void createOutputFile( const std::string& additionalFlags="" );
+  virtual void addFile(const std::string& dataset);
 
   std::vector<TH1F*> getResponseHistos(const std::string& name, unsigned binArraySize, Double_t* ptBins);
   void writeResponseHistos( TFile* file, std::vector<TH1F*> h1_response, std::string dirName );

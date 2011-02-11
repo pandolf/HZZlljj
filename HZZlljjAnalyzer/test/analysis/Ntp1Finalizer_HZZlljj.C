@@ -13,6 +13,8 @@
 #include "TFitParticleEtEtaPhi.h"
 #include "TKinFitter.h"
 
+#include "QGLikelihoodCalculator.h"
+
 
 #include "fitTools.h"
 
@@ -52,6 +54,8 @@ Double_t ErrEta(Float_t Et, Float_t Eta, int particleType);
 Double_t ErrPhi(Float_t Et, Float_t Eta, int particleType);
 
 int getNJets( int nPairs );
+
+std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string histoName, int nBins, float xMin, float xMax );
 
 
 // constructor:
@@ -103,19 +107,25 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_ptJet_all_presel->Sumw2();
   TH1D* h1_etaJet_all_presel = new TH1D("etaJet_all_presel", "", 25, -5., 5.);
   h1_etaJet_all_presel->Sumw2();
-  TH1D* h1_ptDJet_all_presel = new TH1D("ptDJet_all_presel", "", 50, 0., 1.);
-  h1_ptDJet_all_presel->Sumw2();
-  TH1D* h1_rmsCandJet_all_presel = new TH1D("rmsCandJet_all_presel", "", 50, 0., 0.07);
-  h1_rmsCandJet_all_presel->Sumw2();
-  TH1D* h1_nChargedJet_all_presel = new TH1D("nChargedJet_all_presel", "", 41, -0.5, 40.5);
-  h1_nChargedJet_all_presel->Sumw2();
-  TH1D* h1_nNeutralJet_all_presel = new TH1D("nNeutralJet_all_presel", "", 41, -0.5, 40.5);
-  h1_nNeutralJet_all_presel->Sumw2();
+
+  const int nPtBins = 20;
+  Double_t ptBins[nPtBins+1];
+  fitTools::getBins_int( nPtBins+1, ptBins, 15., 1000. );
+
+  std::vector<TH1D*> vh1_ptDJet_all_presel = getHistoVector(nPtBins, ptBins, "ptDJet_all_presel", 50, 0., 1.);
+  std::vector<TH1D*> vh1_rmsCandJet_all_presel = getHistoVector(nPtBins, ptBins, "rmsCandJet_all_presel", 50, 0., 0.07);
+  std::vector<TH1D*> vh1_nChargedJet_all_presel = getHistoVector(nPtBins, ptBins, "nChargedJet_all_presel", 41, -0.5, 40.5);
+  std::vector<TH1D*> vh1_nNeutralJet_all_presel = getHistoVector(nPtBins, ptBins, "nNeutralJet_all_presel", 41, -0.5, 40.5);
+
   TH1D* h1_nJets_presel = new TH1D("nJets_presel", "", 7, 1.5, 8.5);
   h1_nJets_presel->Sumw2();
   TH1D* h1_nPairs_presel = new TH1D("nPairs_presel", "", 21, 0.5, 21.5);
   h1_nPairs_presel->Sumw2();
 
+  TH1D* h1_ptLept1= new TH1D("ptLept1", "", 25, 20., 300.);
+  h1_ptLept1->Sumw2();
+  TH1D* h1_ptLept2= new TH1D("ptLept2", "", 25, 20., 150.);
+  h1_ptLept2->Sumw2();
   TH1D* h1_ptJet1 = new TH1D("ptJet1", "", 27, 30., 400.);
   h1_ptJet1->Sumw2();
   TH1D* h1_ptJet2 = new TH1D("ptJet2", "", 27, 30., 150.);
@@ -123,25 +133,6 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_ptJetBest1 = new TH1D("ptJetBest1", "", 27, 30., 400.);
   h1_ptJetBest1->Sumw2();
-  TH1D* h1_ptDJetBest1 = new TH1D("ptDJetBest1", "", 50, 0., 1.);
-  h1_ptDJetBest1->Sumw2();
-  TH1D* h1_rmsCandJetBest1 = new TH1D("rmsCandJetBest1", "", 50, 0., 0.07);
-  h1_rmsCandJetBest1->Sumw2();
-  TH1D* h1_nChargedJetBest1 = new TH1D("nChargedJetBest1", "", 41, -0.5, 40.5);
-  h1_nChargedJetBest1->Sumw2();
-  TH1D* h1_nNeutralJetBest1 = new TH1D("nNeutralJetBest1", "", 41, -0.5, 40.5);
-  h1_nNeutralJetBest1->Sumw2();
-
-  TH1D* h1_ptJetBest2 = new TH1D("ptJetBest2", "", 27, 30., 400.);
-  h1_ptJetBest2->Sumw2();
-  TH1D* h1_ptDJetBest2 = new TH1D("ptDJetBest2", "", 50, 0., 1.);
-  h1_ptDJetBest2->Sumw2();
-  TH1D* h1_rmsCandJetBest2 = new TH1D("rmsCandJetBest2", "", 50, 0., 0.07);
-  h1_rmsCandJetBest2->Sumw2();
-  TH1D* h1_nChargedJetBest2 = new TH1D("nChargedJetBest2", "", 41, -0.5, 40.5);
-  h1_nChargedJetBest2->Sumw2();
-  TH1D* h1_nNeutralJetBest2 = new TH1D("nNeutralJetBest2", "", 41, -0.5, 40.5);
-  h1_nNeutralJetBest2->Sumw2();
 
   TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 27, 30., 400.);
   h1_ptJetRecoil->Sumw2();
@@ -159,11 +150,11 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   float invMassMax = 120.;
   float invMassMin_ll = 60.;
 
-  TH1D* h1_mZjj_presel = new TH1D("mZjj_presel", "", 20, invMassMin, 400.);
-  h1_mZjj_presel->Sumw2();
+  TH1D* h1_mZjj_all_presel = new TH1D("mZjj_all_presel", "", 20, invMassMin, 400.);
+  h1_mZjj_all_presel->Sumw2();
 
-  TH1D* h1_deltaRjj_presel = new TH1D("deltaRjj_presel", "", 18, 0.5, 5.);
-  h1_deltaRjj_presel->Sumw2();
+  TH1D* h1_deltaRjj_all_presel = new TH1D("deltaRjj_all_presel", "", 18, 0.5, 5.);
+  h1_deltaRjj_all_presel->Sumw2();
   TH1D* h1_deltaRll_presel = new TH1D("deltaRll_presel", "", 20, 0., 5.);
   h1_deltaRll_presel->Sumw2();
 
@@ -190,39 +181,65 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_deltaR_part1 = new TH1D("deltaR_part1", "", 50, 0., 0.8);
   h1_deltaR_part1->Sumw2();
-  TH1D* h1_ptJet1_partMatched = new TH1D("ptJet1_partMatched", "", 30, ptJet1_thresh_, 400.);
-  h1_ptJet1_partMatched->Sumw2();
-  TH1D* h1_partFlavorJet1_partMatched = new TH1D("partFlavorJet1_partMatched", "", 30, -7.5, 22.5);
-  h1_partFlavorJet1_partMatched->Sumw2();
-  TH1D* h1_rmsCandJet1_partMatched = new TH1D("rmsCandJet1_partMatched", "", 50, 0., 0.07);
-  h1_rmsCandJet1_partMatched->Sumw2();
-  TH1D* h1_ptDJet1_partMatched = new TH1D("ptDJet1_partMatched", "", 50, 0., 1.);
-  h1_ptDJet1_partMatched->Sumw2();
-  TH1D* h1_nChargedJet1_partMatched = new TH1D("nChargedJet1_partMatched", "", 41, -0.5, 40.5);
-  h1_nChargedJet1_partMatched->Sumw2();
-  TH1D* h1_nNeutralJet1_partMatched = new TH1D("nNeutralJet1_partMatched", "", 41, -0.5, 40.5);
-  h1_nNeutralJet1_partMatched->Sumw2();
+  TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 30, -7.5, 22.5);
+  h1_partFlavorJet1->Sumw2();
+  std::vector<TH1D*> vh1_ptDJet1 = getHistoVector(nPtBins, ptBins, "ptDJet1", 50, 0., 1.);
+  std::vector<TH1D*> vh1_rmsCandJet1 = getHistoVector(nPtBins, ptBins, "rmsCandJet1", 50, 0., 0.1);
+  std::vector<TH1D*> vh1_nChargedJet1 = getHistoVector(nPtBins, ptBins, "nChargedJet1", 51, -0.5, 50.5);
+  std::vector<TH1D*> vh1_nNeutralJet1 = getHistoVector(nPtBins, ptBins, "nNeutralJet1", 51, -0.5, 50.5);
+  std::vector<TH1D*> vh1_QGLikelihoodJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet1", 50, 0., 1.);
+  std::vector<TH1D*> vh1_QGLikelihood_normsJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihood_normsJet1", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodJet1 = new TH1D("QGLikelihoodJet1", "", 50, 0., 1.);
+  h1_QGLikelihoodJet1->Sumw2();
+  TH1D* h1_QGLikelihood_normsJet1 = new TH1D("QGLikelihood_normsJet1", "", 50, 0., 1.);
+  h1_QGLikelihood_normsJet1->Sumw2();
+  TH1D* h1_QGLikelihoodJet1_eta2 = new TH1D("QGLikelihoodJet1_eta2", "", 50, 0., 1.);
+  h1_QGLikelihoodJet1_eta2->Sumw2();
+
 
   TH1D* h1_deltaR_part2 = new TH1D("deltaR_part2", "", 50, 0., 0.8);
   h1_deltaR_part2->Sumw2();
-  TH1D* h1_ptJet2_partMatched = new TH1D("ptJet2_partMatched", "", 30, ptJet2_thresh_, 200.);
-  h1_ptJet2_partMatched->Sumw2();
-  TH1D* h1_partFlavorJet2_partMatched = new TH1D("partFlavorJet2_partMatched", "", 30, -7.5, 22.5);
-  h1_partFlavorJet2_partMatched->Sumw2();
-  TH1D* h1_rmsCandJet2_partMatched = new TH1D("rmsCandJet2_partMatched", "", 50, 0., 0.07);
-  h1_rmsCandJet2_partMatched->Sumw2();
-  TH1D* h1_ptDJet2_partMatched = new TH1D("ptDJet2_partMatched", "", 50, 0., 1.);
-  h1_ptDJet2_partMatched->Sumw2();
-  TH1D* h1_nChargedJet2_partMatched = new TH1D("nChargedJet2_partMatched", "", 41, -0.5, 40.5);
-  h1_nChargedJet2_partMatched->Sumw2();
-  TH1D* h1_nNeutralJet2_partMatched = new TH1D("nNeutralJet2_partMatched", "", 41, -0.5, 40.5);
-  h1_nNeutralJet2_partMatched->Sumw2();
+  TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 30, -7.5, 22.5);
+  h1_partFlavorJet2->Sumw2();
+
+  std::vector<TH1D*> vh1_ptDJet2 = getHistoVector(nPtBins, ptBins, "ptDJet2", 50, 0., 1.);
+  std::vector<TH1D*> vh1_rmsCandJet2 = getHistoVector(nPtBins, ptBins, "rmsCandJet2", 50, 0., 0.1);
+  std::vector<TH1D*> vh1_nChargedJet2 = getHistoVector(nPtBins, ptBins, "nChargedJet2", 51, -0.5, 50.5);
+  std::vector<TH1D*> vh1_nNeutralJet2 = getHistoVector(nPtBins, ptBins, "nNeutralJet2", 51, -0.5, 50.5);
+  std::vector<TH1D*> vh1_QGLikelihoodJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet2", 50, 0., 1.);
+  std::vector<TH1D*> vh1_QGLikelihood_normsJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihood_normsJet2", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodJet2 = new TH1D("QGLikelihoodJet2", "", 40, 0., 1.);
+  h1_QGLikelihoodJet2->Sumw2();
+  TH1D* h1_QGLikelihood_normsJet2 = new TH1D("QGLikelihood_normsJet2", "", 40, 0., 1.);
+  h1_QGLikelihood_normsJet2->Sumw2();
+  TH1D* h1_QGLikelihoodJet2_eta2 = new TH1D("QGLikelihoodJet2_eta2", "", 40, 0., 1.);
+  h1_QGLikelihoodJet2_eta2->Sumw2();
+
+  TH1D* h1_QGLikelihoodSum = new TH1D("QGLikelihoodSum", "", 50, 0., 2.);
+  h1_QGLikelihoodSum->Sumw2();
 
   TH1D* h1_mZjj= new TH1D("mZjj", "", nBins_invMass, 70., 120.);
   h1_mZjj->Sumw2();
 
+  TH1D* h1_ptZll_presel = new TH1D("ptZll_presel", "", 40, 0., 160.);
+  h1_ptZll_presel->Sumw2();
+  TH1D* h1_ptZjj_all_presel = new TH1D("ptZjj_all_presel", "", 40, 0., 160.);
+  h1_ptZjj_all_presel->Sumw2();
+
+  TH1D* h1_ptZll = new TH1D("ptZll", "", 40, 0., 160.);
+  h1_ptZll->Sumw2();
+  TH1D* h1_ptZjj = new TH1D("ptZjj", "", 40, 0., 160.);
+  h1_ptZjj->Sumw2();
+
+  TH1D* h1_deltaRjj= new TH1D("deltaRjj", "", 36, 0.5, 5.);
+  h1_deltaRjj->Sumw2();
+
+  TH1D* h1_ZZInvMass_medMass= new TH1D("ZZInvMass_medMass", "", nBins_invMass, 150., 350.);
+  h1_ZZInvMass_medMass->Sumw2();
   TH1D* h1_ZZInvMass_hiMass= new TH1D("ZZInvMass_hiMass", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_QGlikeli = new TH1D("ZZInvMass_hiMass_QGlikeli", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_QGlikeli->Sumw2();
 
 
   TH1D* h1_ZZInvMass_MCassoc  = new TH1D("ZZInvMass_MCassoc", "", 100, 200., 600.);
@@ -258,14 +275,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_deltaPt_gamma = new TH1D("deltaPt_gamma", "", 100, -1., 1.);
   TH1D* h1_deltaPt_nh = new TH1D("deltaPt_nh", "", 100, -1., 1.);
 
-  Double_t ptBins[16];
-  fitTools::getBins_int( 16, ptBins, 20., 500.);
+//Double_t ptBins[16];
+//fitTools::getBins_int( 16, ptBins, 20., 500.);
 
-  TProfile* hp_ptJetGenMean = new TProfile("ptJetGenMean", "", 15, ptBins);
-  std::vector<TH1F*> h1_response_vs_pt = getResponseHistos("response", 16, ptBins);
-  std::vector<TH1F*> h1_response_vs_pt_Rch050 = getResponseHistos("response_Rch050", 16, ptBins);
-  std::vector<TH1F*> h1_response_vs_pt_Rch5070 = getResponseHistos("response_Rch5070", 16, ptBins);
-  std::vector<TH1F*> h1_response_vs_pt_Rch70100 = getResponseHistos("response_Rch70100", 16, ptBins);
+//TProfile* hp_ptJetGenMean = new TProfile("ptJetGenMean", "", 15, ptBins);
+//std::vector<TH1F*> h1_response_vs_pt = getResponseHistos("response", 16, ptBins);
+//std::vector<TH1F*> h1_response_vs_pt_Rch050 = getResponseHistos("response_Rch050", 16, ptBins);
+//std::vector<TH1F*> h1_response_vs_pt_Rch5070 = getResponseHistos("response_Rch5070", 16, ptBins);
+//std::vector<TH1F*> h1_response_vs_pt_Rch70100 = getResponseHistos("response_Rch70100", 16, ptBins);
 
 
 
@@ -487,6 +504,9 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   std::map< int, std::map<int, std::vector<int> > > run_lumi_ev_map;
 
 
+  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root", nPtBins);
+
+
 ofstream ofs("run_event.txt");
 
 
@@ -575,37 +595,24 @@ ofstream ofs("run_event.txt");
     TLorentzVector jetLead2;
     jetLead2.SetPtEtaPhiE( ptJetLead2, etaJetLead2, phiJetLead2, eJetLead2 );
 
-    TLorentzVector jetBest1;
-    jetBest1.SetPtEtaPhiE( ptJetBest1, etaJetBest1, phiJetBest1, eJetBest1 );
-    TLorentzVector jetBest2;
-    jetBest2.SetPtEtaPhiE( ptJetBest2, etaJetBest2, phiJetBest2, eJetBest2 );
+//  TLorentzVector jetBest1;
+//  jetBest1.SetPtEtaPhiE( ptJetBest1, etaJetBest1, phiJetBest1, eJetBest1 );
+//  TLorentzVector jetBest2;
+//  jetBest2.SetPtEtaPhiE( ptJetBest2, etaJetBest2, phiJetBest2, eJetBest2 );
 
     TLorentzVector jetRecoil;
     jetRecoil.SetPtEtaPhiE( ptJetRecoil, etaJetRecoil, phiJetRecoil, eJetRecoil );
 
-    h1_ptJetBest1->Fill(ptJetBest1, eventWeight);
-    if( ptJetBest1>100. && ptJetBest1<150. ) {
-    h1_rmsCandJetBest1->Fill(rmsCandJetBest1, eventWeight);
-    h1_ptDJetBest1->Fill(ptDJetBest1, eventWeight);
-    h1_nChargedJetBest1->Fill(nChargedJetBest1, eventWeight);
-    h1_nNeutralJetBest1->Fill(nNeutralJetBest1, eventWeight);
-    }
-
-    h1_ptJetBest2->Fill(ptJetBest2, eventWeight);
-    if( ptJetBest2>50. && ptJetBest2<80. ) {
-    h1_rmsCandJetBest2->Fill(rmsCandJetBest2, eventWeight);
-    h1_ptDJetBest2->Fill(ptDJetBest2, eventWeight);
-    h1_nChargedJetBest2->Fill(nChargedJetBest2, eventWeight);
-    h1_nNeutralJetBest2->Fill(nNeutralJetBest2, eventWeight);
-    }
+//  h1_ptJetBest1->Fill(ptJetBest1, eventWeight);
+//  h1_ptJetBest2->Fill(ptJetBest2, eventWeight);
 
     h1_ptJetRecoil->Fill(ptJetRecoil, eventWeight);
-    if( ptJetRecoil>0. ) {
-    h1_rmsCandJetRecoil->Fill(rmsCandJetRecoil, eventWeight);
-    h1_ptDJetRecoil->Fill(ptDJetRecoil, eventWeight);
-    h1_nChargedJetRecoil->Fill(nChargedJetRecoil, eventWeight);
-    h1_nNeutralJetRecoil->Fill(nNeutralJetRecoil, eventWeight);
-    }
+//  if( ptJetRecoil>0. ) {
+//  h1_rmsCandJetRecoil->Fill(rmsCandJetRecoil, eventWeight);
+//  h1_ptDJetRecoil->Fill(ptDJetRecoil, eventWeight);
+//  h1_nChargedJetRecoil->Fill(nChargedJetRecoil, eventWeight);
+//  h1_nNeutralJetRecoil->Fill(nNeutralJetRecoil, eventWeight);
+//  }
 
 
 
@@ -618,6 +625,7 @@ ofstream ofs("run_event.txt");
         h1_mZmumu_presel->Fill( diLepton.M(), eventWeight );
       else
         h1_mZee_presel->Fill( diLepton.M(), eventWeight );
+      h1_ptZll_presel->Fill( diLepton.Pt(), eventWeight );
 
       h1_deltaRll_presel->Fill(lept1.DeltaR(lept2), eventWeight );
 
@@ -640,6 +648,7 @@ ofstream ofs("run_event.txt");
         h1_mZee_presel_0jets->Fill( diLepton.M(), eventWeight );
 
     }
+
 
 
     float cached_jetpt = 0.;
@@ -667,18 +676,32 @@ ofstream ofs("run_event.txt");
         jetPairs_selected.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
 
-      h1_mZjj_presel->Fill( diJet.M(), eventWeight );
-      h1_deltaRjj_presel->Fill(jet1.DeltaR(jet2), eventWeight );
+      h1_mZjj_all_presel->Fill( diJet.M(), eventWeight );
+      h1_ptZjj_all_presel->Fill( diJet.Pt(), eventWeight );
+      h1_deltaRjj_all_presel->Fill(jet1.DeltaR(jet2), eventWeight );
 
       if( jet1.Pt()!=cached_jetpt ) {
         h1_ptJet_all_presel->Fill( jet1.Pt(), eventWeight );
         h1_etaJet_all_presel->Fill( jet1.Eta(), eventWeight );
-        if( jet1.Pt()>100. && jet1.Pt()<150. ) {
-        h1_rmsCandJet_all_presel->Fill( rmsCandJet1[iJetPair], eventWeight );
-        h1_ptDJet_all_presel->Fill( ptDJet1[iJetPair], eventWeight );
-        h1_nChargedJet_all_presel->Fill( nChargedJet1[iJetPair], eventWeight );
-        h1_nNeutralJet_all_presel->Fill( nNeutralJet1[iJetPair], eventWeight );
+
+        int jetPtBin = -1;
+        for( unsigned iPtBin=0; iPtBin<nPtBins-1; ++iPtBin ) {
+          if( jet1.Pt()>ptBins[iPtBin] && jet1.Pt()<ptBins[iPtBin+1] ) {
+            jetPtBin=iPtBin;
+            break;
+          }
+          if( iPtBin==nPtBins-2 ) jetPtBin=iPtBin; //jets with pt higher that max pt are put in last bin
+        } 
+        if( jetPtBin<0 ) {
+          std::cout << "there must be an error this is not possible." << std::endl;
+          exit(9187);
         }
+
+        vh1_rmsCandJet_all_presel[jetPtBin]->Fill( rmsCandJet1[iJetPair], eventWeight );
+        vh1_ptDJet_all_presel[jetPtBin]->Fill( ptDJet1[iJetPair], eventWeight );
+        vh1_nChargedJet_all_presel[jetPtBin]->Fill( nChargedJet1[iJetPair], eventWeight );
+        vh1_nNeutralJet_all_presel[jetPtBin]->Fill( nNeutralJet1[iJetPair], eventWeight );
+        
         cached_jetpt = jet1.Pt();
       }
 
@@ -726,9 +749,19 @@ ofstream ofs("run_event.txt");
           h1_ptJet1->Fill( jet2.Pt(), eventWeight );
           h1_ptJet2->Fill( jet1.Pt(), eventWeight );
         }
+        h1_ptLept1->Fill( lept1.Pt(), eventWeight );
+        h1_ptLept2->Fill( lept2.Pt(), eventWeight );
+        h1_deltaRjj->Fill( jet1.DeltaR(jet2), eventWeight);
+        h1_ptZll->Fill( diLepton.Pt(), eventWeight);
+        h1_ptZjj->Fill( bestZDiJet.Pt(), eventWeight);
+        if( leptType==0 )
+          h1_mZmumu->Fill( diLepton.M(), eventWeight );
+        else
+          h1_mZee->Fill( diLepton.M(), eventWeight );
         h1_mZll->Fill( diLepton.M(), eventWeight);
         h1_mZjj->Fill( bestZDiJet.M(), eventWeight);
         h1_ZZInvMass_hiMass->Fill(ZZ.M(), eventWeight);
+        h1_ZZInvMass_medMass->Fill(ZZ.M(), eventWeight);
 
         //match to partons:
         int partFlavor1=0;
@@ -743,14 +776,49 @@ ofstream ofs("run_event.txt");
           }
         }
         h1_deltaR_part1->Fill(deltaRmin1, eventWeight);
-        if( deltaRmin1<0.5 ) {
-          h1_ptJet1_partMatched->Fill( jet1.Pt(), eventWeight );
-          h1_partFlavorJet1_partMatched->Fill( partFlavor1, eventWeight );
-          h1_rmsCandJet1_partMatched->Fill( jet1.rmsCand, eventWeight );
-          h1_ptDJet1_partMatched->Fill( jet1.ptD, eventWeight );
-          h1_nChargedJet1_partMatched->Fill( jet1.nCharged, eventWeight );
-          h1_nNeutralJet1_partMatched->Fill( jet1.nNeutral, eventWeight );
+       
+        h1_ptJet1->Fill( jet1.Pt(), eventWeight );
+        h1_partFlavorJet1->Fill( partFlavor1, eventWeight );
+
+
+        int jet1PtBin=-1;
+        if( jet1.Pt() > ptBins[nPtBins] ) {
+          jet1PtBin = nPtBins-1;
+        } else {
+          for( unsigned int iBin=0; iBin<nPtBins; ++iBin ) {
+            if( jet1.Pt()>ptBins[iBin] && jet1.Pt()<ptBins[iBin+1] ) {
+              jet1PtBin = iBin;
+              break;
+            }
+          }
         }
+
+
+      //int jet1PtBin = -1;
+      //for( unsigned iPtBin=0; iPtBin<nPtBins-1; ++iPtBin ) {
+      //  if( jet1.Pt()>ptBins[iPtBin] && jet1.Pt()<ptBins[iPtBin+1] ) {
+      //    jet1PtBin=iPtBin;
+      //    break;
+      //  }
+      //  if( iPtBin==nPtBins-2 ) jet1PtBin=iPtBin; //jets with pt higher that max pt are put in last bin
+      //} 
+      //if( jet1PtBin<0 ) {
+      //  std::cout << "there must be an error this is not possible." << std::endl;
+      //  exit(9187);
+      //}
+
+        vh1_rmsCandJet1[jet1PtBin]->Fill( jet1.rmsCand, eventWeight );
+        vh1_ptDJet1[jet1PtBin]->Fill( jet1.ptD, eventWeight );
+        vh1_nChargedJet1[jet1PtBin]->Fill( jet1.nCharged, eventWeight );
+        vh1_nNeutralJet1[jet1PtBin]->Fill( jet1.nNeutral, eventWeight );
+        float QGLikelihoodJet1 = qglikeli->computeQGLikelihood( jet2.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, jet1.rmsCand );
+        float QGLikelihood_normsJet1 = qglikeli->computeQGLikelihood( jet2.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
+        vh1_QGLikelihoodJet1[jet1PtBin]->Fill( QGLikelihoodJet1, eventWeight );
+        h1_QGLikelihoodJet1->Fill( QGLikelihoodJet1, eventWeight );
+        vh1_QGLikelihood_normsJet1[jet1PtBin]->Fill( QGLikelihood_normsJet1, eventWeight );
+        h1_QGLikelihood_normsJet1->Fill( QGLikelihood_normsJet1, eventWeight );
+        if( fabs(jet1.Eta())<2. ) h1_QGLikelihoodJet1_eta2->Fill(QGLikelihoodJet1, eventWeight);
+        
       
         float deltaRmin2=999.;
         int partFlavor2=0;
@@ -764,14 +832,52 @@ ofstream ofs("run_event.txt");
           }
         }
         h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
-        if( deltaRmin2<0.5 ) {
-          h1_ptJet2_partMatched->Fill( jet2.Pt(), eventWeight );
-          h1_partFlavorJet2_partMatched->Fill( partFlavor2, eventWeight );
-          h1_rmsCandJet2_partMatched->Fill( jet2.rmsCand, eventWeight );
-          h1_ptDJet2_partMatched->Fill( jet2.ptD, eventWeight );
-          h1_nChargedJet2_partMatched->Fill( jet2.nCharged, eventWeight );
-          h1_nNeutralJet2_partMatched->Fill( jet2.nNeutral, eventWeight );
+        
+        h1_ptJet2->Fill( jet2.Pt(), eventWeight );
+        h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
+
+
+        int jet2PtBin=-1;
+        if( jet2.Pt() > ptBins[nPtBins] ) {
+          jet2PtBin = nPtBins-1;
+        } else {
+          for( unsigned int iBin=0; iBin<nPtBins; ++iBin ) {
+            if( jet2.Pt()>ptBins[iBin] && jet2.Pt()<ptBins[iBin+1] ) {
+              jet2PtBin = iBin;
+              break;
+            }
+          }
         }
+
+//      int jet2PtBin = -1;
+//      for( unsigned iPtBin=0; iPtBin<nPtBins-1; ++iPtBin ) {
+//        if( jet2.Pt()>ptBins[iPtBin] && jet2.Pt()<ptBins[iPtBin+1] ) {
+//          jet2PtBin=iPtBin;
+//          break;
+//        }
+//        if( iPtBin==nPtBins-2 ) jet2PtBin=iPtBin; //jets with pt higher that max pt are put in last bin
+//      } 
+//      if( jet2PtBin<0 ) {
+//        std::cout << "there must be an error this is not possible." << std::endl;
+//        exit(9187);
+//      }
+
+        vh1_rmsCandJet2[jet2PtBin]->Fill( jet2.rmsCand, eventWeight );
+        vh1_ptDJet2[jet2PtBin]->Fill( jet2.ptD, eventWeight );
+        vh1_nChargedJet2[jet2PtBin]->Fill( jet2.nCharged, eventWeight );
+        vh1_nNeutralJet2[jet2PtBin]->Fill( jet2.nNeutral, eventWeight );
+        float QGLikelihoodJet2 = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, jet2.rmsCand );
+        float QGLikelihood_normsJet2 = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
+        vh1_QGLikelihoodJet2[jet2PtBin]->Fill( QGLikelihoodJet2, eventWeight );
+        h1_QGLikelihoodJet2->Fill( QGLikelihoodJet2, eventWeight );
+        vh1_QGLikelihood_normsJet2[jet2PtBin]->Fill( QGLikelihood_normsJet2, eventWeight );
+        h1_QGLikelihood_normsJet2->Fill( QGLikelihood_normsJet2, eventWeight );
+        if( fabs(jet2.Eta())<2. ) h1_QGLikelihoodJet2_eta2->Fill(QGLikelihoodJet2, eventWeight);
+
+        h1_QGLikelihoodSum->Fill( QGLikelihoodJet1+QGLikelihoodJet2, eventWeight );
+        
+        if( QGLikelihoodJet1<0.9 && QGLikelihoodJet2<0.9 )
+          h1_ZZInvMass_hiMass_QGlikeli->Fill(ZZ.M(), eventWeight);
 
       } //if passes selection
 
@@ -1096,24 +1202,20 @@ ofstream ofs("run_event.txt");
 
   h1_ptJet_all_presel->Write();
   h1_etaJet_all_presel->Write();
-  h1_rmsCandJet_all_presel->Write();
-  h1_ptDJet_all_presel->Write();
-  h1_nChargedJet_all_presel->Write();
-  h1_nNeutralJet_all_presel->Write();
   h1_nJets_presel->Write();
   h1_nPairs_presel->Write();
 
-  h1_ptJetBest1->Write();
-  h1_ptDJetBest1->Write();
-  h1_rmsCandJetBest1->Write();
-  h1_nChargedJetBest1->Write();
-  h1_nNeutralJetBest1->Write();
+//h1_ptJetBest1->Write();
+//h1_ptDJetBest1->Write();
+//h1_rmsCandJetBest1->Write();
+//h1_nChargedJetBest1->Write();
+//h1_nNeutralJetBest1->Write();
 
-  h1_ptJetBest2->Write();
-  h1_ptDJetBest2->Write();
-  h1_rmsCandJetBest2->Write();
-  h1_nChargedJetBest2->Write();
-  h1_nNeutralJetBest2->Write();
+//h1_ptJetBest2->Write();
+//h1_ptDJetBest2->Write();
+//h1_rmsCandJetBest2->Write();
+//h1_nChargedJetBest2->Write();
+//h1_nNeutralJetBest2->Write();
 
   h1_ptJetRecoil->Write();
   h1_ptDJetRecoil->Write();
@@ -1122,11 +1224,13 @@ ofstream ofs("run_event.txt");
   h1_nNeutralJetRecoil->Write();
 
   h1_deltaRll_presel->Write();
-  h1_deltaRjj_presel->Write();
+  h1_deltaRjj_all_presel->Write();
+
+  h1_ptLept1->Write();
+  h1_ptLept2->Write();
 
   h1_ptLept1_presel->Write();
   h1_ptLept2_presel->Write();
-
   h1_etaLept1_presel->Write();
   h1_etaLept2_presel->Write();
 
@@ -1140,25 +1244,27 @@ ofstream ofs("run_event.txt");
   h1_mZee_presel_0jets->Write();
 
   h1_mZjj->Write();
-  h1_mZjj_presel->Write();
+  h1_mZjj_all_presel->Write();
 
+  h1_ptZll_presel->Write();
+  h1_ptZjj_all_presel->Write();
+
+  h1_deltaRjj->Write();
+
+  h1_ptZjj->Write();
+  h1_ptZll->Write();
+
+  h1_ZZInvMass_medMass->Write();
   h1_ZZInvMass_hiMass->Write();
+  h1_ZZInvMass_hiMass_QGlikeli->Write();
 
   h1_deltaR_part1->Write();
-  h1_ptJet1_partMatched->Write();
-  h1_partFlavorJet1_partMatched->Write();
-  h1_rmsCandJet1_partMatched->Write();
-  h1_ptDJet1_partMatched->Write();
-  h1_nChargedJet1_partMatched->Write();
-  h1_nNeutralJet1_partMatched->Write();
+  h1_ptJet1->Write();
+  h1_partFlavorJet1->Write();
 
   h1_deltaR_part2->Write();
-  h1_ptJet2_partMatched->Write();
-  h1_partFlavorJet2_partMatched->Write();
-  h1_rmsCandJet2_partMatched->Write();
-  h1_ptDJet2_partMatched->Write();
-  h1_nChargedJet2_partMatched->Write();
-  h1_nNeutralJet2_partMatched->Write();
+  h1_ptJet2->Write();
+  h1_partFlavorJet2->Write();
 
 
   h1_ZZInvMass_MCassoc->Write();
@@ -1182,6 +1288,37 @@ ofstream ofs("run_event.txt");
   h1_deltaPt_ch->Write();
   h1_deltaPt_gamma->Write();
   h1_deltaPt_nh->Write();
+
+  h1_QGLikelihoodJet1->Write();
+  h1_QGLikelihoodJet2->Write();
+  h1_QGLikelihood_normsJet1->Write();
+  h1_QGLikelihood_normsJet2->Write();
+  h1_QGLikelihoodSum->Write();
+
+
+  for( unsigned iPtBin=0; iPtBin<nPtBins; ++iPtBin ) {
+
+    vh1_rmsCandJet_all_presel[iPtBin]->Write();
+    vh1_ptDJet_all_presel[iPtBin]->Write();
+    vh1_nChargedJet_all_presel[iPtBin]->Write();
+    vh1_nNeutralJet_all_presel[iPtBin]->Write();
+
+    vh1_rmsCandJet1[iPtBin]->Write();
+    vh1_ptDJet1[iPtBin]->Write();
+    vh1_nChargedJet1[iPtBin]->Write();
+    vh1_nNeutralJet1[iPtBin]->Write();
+    vh1_QGLikelihoodJet1[iPtBin]->Write();
+    vh1_QGLikelihood_normsJet1[iPtBin]->Write();
+
+    vh1_rmsCandJet2[iPtBin]->Write();
+    vh1_ptDJet2[iPtBin]->Write();
+    vh1_nChargedJet2[iPtBin]->Write();
+    vh1_nNeutralJet2[iPtBin]->Write();
+    vh1_QGLikelihoodJet2[iPtBin]->Write();
+    vh1_QGLikelihood_normsJet2[iPtBin]->Write();
+
+  }
+
 
   outFile_->Close();
 
@@ -1543,5 +1680,29 @@ int getNJets( int nPairs ) {
   }
 
   return i;
+
+}
+
+
+std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string histoName, int nBins, float xMin, float xMax ) {
+
+  std::vector<TH1D*> returnVector;
+
+  for( unsigned iPtBin=0; iPtBin<nPtBins; ++iPtBin ) {
+
+    Double_t ptMin = ptBins[iPtBin];
+    Double_t ptMax = ptBins[iPtBin+1];
+
+    char histoName_thisBin[200];
+    sprintf( histoName_thisBin, "%s_pt_%.0lf_%.0lf", histoName.c_str(), ptMin, ptMax);
+
+    TH1D* newHisto = new TH1D(histoName_thisBin, "", nBins, xMin, xMax);
+    newHisto->Sumw2();
+
+    returnVector.push_back(newHisto);
+
+  } //for pt bins
+
+  return returnVector;
 
 }

@@ -32,7 +32,7 @@ Ntp1Finalizer::~Ntp1Finalizer() {
 
 
 
-void Ntp1Finalizer::createOutputFile() {
+void Ntp1Finalizer::createOutputFile( const std::string& additionalFlags) {
 
    std::string outfileName;
 
@@ -45,6 +45,8 @@ void Ntp1Finalizer::createOutputFile() {
 
    if( flags_!="" )
      outfileName = outfileName + "_" + flags_;
+   if( additionalFlags!="" )
+     outfileName = outfileName + "_" + additionalFlags;
 
    outfileName = outfileName + ".root";
 

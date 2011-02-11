@@ -34,8 +34,8 @@ int main( int argc, char* argv[] ) {
     nf->addFile("PhotonJet_Summer1036X_Pt170to300_pfakt5");
     nf->addFile("PhotonJet_Summer1036X_Pt300to500_pfakt5");
     nf->addFile("PhotonJet_Summer1036X_Pt500toInf_pfakt5");
-  } else if( dataset=="ZJets_alpgen_TuneZ2" ) {
-    nf->addFile( "Z0Jets_TuneZ2_7TeV-alpgen-tauola" );
+  } else if( dataset=="ZJets_alpgen_TuneZ2_Fall10" ) {
+    //nf->addFile( "Z0Jets_TuneZ2_7TeV-alpgen-tauola" );
     nf->addFile( "Z1Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" );
     nf->addFile( "Z1Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" );
     nf->addFile( "Z1Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" );
@@ -84,6 +84,9 @@ int main( int argc, char* argv[] ) {
   } else if( dataset=="EleMu_38x_35pb" ) {
     nf->addFile( "Electron_38x_35pb" );
     nf->addFile( "Muon_38x_35pb_OLD" );
+  } else if( dataset=="QCD_TuneZ2_pythia6" ) {
+    nf->addFile( "QCD_Pt_120to170_TuneZ2_7TeV_pythia6" );
+    nf->addFile( "QCD_Pt_170to300_TuneZ2_7TeV_pythia6" );
   } else {
     nf->addFile( dataset );
   }
