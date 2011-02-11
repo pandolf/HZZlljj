@@ -19,6 +19,24 @@
 #include "fitTools.h"
 
 
+class AnalysisLepton : public TLorentzVector {
+
+ public:
+
+  AnalysisLepton( float x=0., float y=0., float z=0., float t=0.) : TLorentzVector( x, y, z, t ) {
+    charge=0;
+  }
+
+  AnalysisLepton( const TLorentzVector &v) : TLorentzVector( v ) {
+    charge=0;
+  }
+
+  int charge;
+
+};
+
+
+
 class AnalysisJet : public TLorentzVector {
 
  public:
@@ -43,6 +61,22 @@ class AnalysisJet : public TLorentzVector {
   int nNeutral;
 
 };
+
+
+
+struct HelicityAngles {
+
+  float cosTheta1;
+  float cosTheta2;
+  float cosThetaStar;
+  float phi;
+  float phi1;
+
+};
+
+
+HelicityAngles computeHelicityAngles(AnalysisLepton lept1, AnalysisLepton lept2, TLorentzVector jet1, TLorentzVector jet2 );
+
 
 
 void print(TKinFitter *fitter);
@@ -321,6 +355,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("etaLept1", &etaLept1);
   Float_t phiLept1;
   tree_->SetBranchAddress("phiLept1", &phiLept1);
+  Int_t chargeLept1;
+  tree_->SetBranchAddress("chargeLept1", &chargeLept1);
 
   Float_t eLept2;
   tree_->SetBranchAddress("eLept2", &eLept2);
@@ -330,6 +366,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("etaLept2", &etaLept2);
   Float_t phiLept2;
   tree_->SetBranchAddress("phiLept2", &phiLept2);
+  Int_t chargeLept2;
+  tree_->SetBranchAddress("chargeLept2", &chargeLept2);
 
   Float_t eJetLead;
   tree_->SetBranchAddress("eJetLead", &eJetLead);
@@ -588,9 +626,11 @@ ofstream ofs("run_event.txt");
 
 
 
-    TLorentzVector lept1, lept2;
+    AnalysisLepton lept1, lept2;
     lept1.SetPtEtaPhiE( ptLept1, etaLept1, phiLept1, eLept1 );
     lept2.SetPtEtaPhiE( ptLept2, etaLept2, phiLept2, eLept2 );
+    lept1.charge = chargeLept1;
+    lept2.charge = chargeLept2;
 
     TLorentzVector diLepton = lept1+lept2;
 
@@ -739,6 +779,8 @@ ofstream ofs("run_event.txt");
 
       TLorentzVector bestZDiJet = jet1 + jet2;
   
+      //get helicity angles with o-o-t-b jets:
+      HelicityAngles hangles = computeHelicityAngles(lept1, lept2, jet1, jet2);
 
 
       // ------------------------
@@ -791,6 +833,7 @@ ofstream ofs("run_event.txt");
 
       h2_mZjj_vs_mZZ->Fill( ZZ.M(), bestZDiJet.M() );
       h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit_jets.M(), bestZDiJet.M() );
+
 
 
     //// match to parton:
@@ -1658,5 +1701,112 @@ std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string his
   } //for pt bins
 
   return returnVector;
+
+}
+
+
+
+HelicityAngles computeHelicityAngles(AnalysisLepton lept1, AnalysisLepton lept2, TLorentzVector jet1, TLorentzVector jet2 ) {
+
+  HelicityAngles returnAngles;
+
+  TLorentzVector Zll = lept1 + lept2;
+  TLorentzVector Zjj = jet1 + jet2;
+
+  TLorentzVector Higgs = Zjj + Zll;
+
+  TLorentzVector Zll_Hstar(Zll);
+  Zll_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector Zjj_Hstar(Zjj);
+  Zjj_Hstar.Boost(-Higgs.BoostVector());
+
+  
+  // now want lept1 to be the negative-signed lepton:
+  if( lept1.charge>0 ) { //swap them
+    AnalysisLepton lept1_tmp(lept1);
+    AnalysisLepton lept2_tmp(lept2);
+    lept1 = lept2_tmp;
+    lept2 = lept1_tmp;
+  }
+
+
+  // no charge for jets (well, not really)
+  // so choose jet with positive scalar product with Zjj 
+  // in its restframe
+  TLorentzVector jet1_Zstar(jet1);
+  jet1_Zstar.Boost(-Zjj.BoostVector());
+  TLorentzVector jet2_Zstar(jet2);
+  jet2_Zstar.Boost(-Zjj.BoostVector());
+
+  if( jet1_Zstar.Phi()<0. ) { //swap them
+    TLorentzVector jet1_tmp(jet1);
+    TLorentzVector jet2_tmp(jet2);
+    jet1 = jet2_tmp;
+    jet2 = jet1_tmp;
+  }
+
+
+  // now define Z1 and Z2 (and their daughters):
+
+  // Z1 is the Z candidate which has its momentum in the Higgs restframe
+  // pointing in the Higgs boost direction (positive scalar product)
+  TLorentzVector Z1, Z2;
+  TLorentzVector daughterZ1_1, daughterZ1_2, daughterZ2_1, daughterZ2_2;
+  if( Zll_Hstar.Phi()>0. ) {
+    Z1 = Zll;
+    Z2 = Zjj;
+    daughterZ1_1 = lept1;
+    daughterZ1_2 = lept2;
+    daughterZ2_1 = jet1;
+    daughterZ2_2 = jet2;
+  } else {
+    Z1 = Zjj;
+    Z2 = Zll;
+    daughterZ1_1 = jet1;
+    daughterZ1_2 = jet2;
+    daughterZ2_1 = lept1;
+    daughterZ2_2 = lept2;
+  }
+
+  // boost the daughters in their Z rest frame (only first daughter needed):
+  TLorentzVector daughterZ1_1_Zstar(daughterZ1_1);
+  daughterZ1_1_Zstar.Boost(-Z1.BoostVector());
+  TLorentzVector daughterZ2_1_Zstar(daughterZ2_1);
+  daughterZ2_1_Zstar.Boost(-Z2.BoostVector());
+
+  returnAngles.cosTheta1 = daughterZ1_1_Zstar.CosTheta();
+  returnAngles.cosTheta2 = daughterZ2_1_Zstar.CosTheta();
+
+
+  // boost them all into the Higgs restframe:
+  TLorentzVector Z1_Hstar(Z1);
+  Z1_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector Z2_Hstar(Z2);
+  Z2_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector daughterZ1_1_Hstar(daughterZ1_1);
+  daughterZ1_1_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector daughterZ1_2_Hstar(daughterZ1_2);
+  daughterZ1_2_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector daughterZ2_1_Hstar(daughterZ2_1);
+  daughterZ2_1_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector daughterZ2_2_Hstar(daughterZ2_2);
+  daughterZ2_2_Hstar.Boost(-Higgs.BoostVector());
+
+  returnAngles.cosThetaStar = Z1_Hstar.CosTheta();
+
+  // now compute angle between two decay planes in Higgs CoM
+  // (angle between planes is angle between normal vectors to planes)
+  TVector3 normPlane1 = (daughterZ1_1_Hstar.Vect()).Cross(daughterZ1_2_Hstar.Vect());
+  TVector3 normPlane2 = (daughterZ2_1_Hstar.Vect()).Cross(daughterZ2_2_Hstar.Vect());
+  returnAngles.phi = normPlane1.DeltaPhi(normPlane2);
+
+
+  // and finally compute angle between plane1 and the plane defined by Z1 and the z-axis:
+  TVector3 zAxis(0., 0., 1.);
+  TVector3 normPlane1z = (Z1_Hstar.Vect()).Cross(zAxis);
+  returnAngles.phi1 = normPlane1.DeltaPhi(normPlane1z);
+
+
+  return returnAngles;
 
 }
