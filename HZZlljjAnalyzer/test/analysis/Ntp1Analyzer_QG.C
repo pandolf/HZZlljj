@@ -7,6 +7,7 @@
 #include "TLorentzVector.h"
 #include "TRegexp.h"
 
+#include "fitTools.h"
 
 
 double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
@@ -32,11 +33,11 @@ class AnalysisJet : public TLorentzVector {
 
 
 
-Ntp1Analyzer_QG::Ntp1Analyzer_QG( const std::string& dataset, bool requireLeptons, const std::string& flags, TTree* tree ) :
+Ntp1Analyzer_QG::Ntp1Analyzer_QG( const std::string& dataset, const std::string& flags, TTree* tree ) :
      Ntp1Analyzer( "QG", dataset, flags, tree ) {
 
 
-  requireLeptons_ = requireLeptons;
+  //nothing to do here
 
 
 } //constructor
@@ -367,8 +368,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      } //for electrons
 
 
-     if( requireLeptons_ )
-       if( electrons.size() < 2 && muons.size() < 2 ) continue;
+     if( electrons.size() < 2 && muons.size() < 2 ) continue;
 
 
      std::vector< TLorentzVector > leptons;
@@ -411,21 +411,20 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      } else {
 
-     //std::cout << "There must be an error this is not possible." << std::endl;
-     //exit(9101);
+       std::cout << "There must be an error this is not possible." << std::endl;
+       exit(9101);
 
      }
 
+     eLept1_ = leptons[0].Energy();
+     ptLept1_ = leptons[0].Pt();
+     etaLept1_ = leptons[0].Eta();
+     phiLept1_ = leptons[0].Phi();
      
-     eLept1_ = (leptons.size()>0) ? leptons[0].Energy() : 0.;
-     ptLept1_ = (leptons.size()>0) ? leptons[0].Pt() : 0.;
-     etaLept1_ = (leptons.size()>0) ? leptons[0].Eta() : 0.;
-     phiLept1_ = (leptons.size()>0) ? leptons[0].Phi() : 0.;
-     
-     eLept2_ = (leptons.size()>1) ? leptons[1].Energy() : 0.;
-     ptLept2_ = (leptons.size()>1) ? leptons[1].Pt() : 0.;
-     etaLept2_ = (leptons.size()>1) ? leptons[1].Eta() : 0.;
-     phiLept2_ = (leptons.size()>1) ? leptons[1].Phi() : 0.;
+     eLept2_ = leptons[1].Energy();
+     ptLept2_ = leptons[1].Pt();
+     etaLept2_ = leptons[1].Eta();
+     phiLept2_ = leptons[1].Phi();
 
 
      // --------------------
@@ -480,10 +479,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( leadJets.size()>=3 && thisJet.Pt()<jetPt_thresh ) break;
 
        // far away from leptons:
-       if( leptons.size()>0 )
-         if( thisJet.DeltaR( leptons[0] ) <= 0.5 ) continue;
-       if( leptons.size()>1 )
-         if( thisJet.DeltaR( leptons[1] ) <= 0.5 ) continue;
+       if( thisJet.DeltaR( leptons[0] ) <= 0.5 ) continue;
+       if( thisJet.DeltaR( leptons[1] ) <= 0.5 ) continue;
 
        thisJet.nCharged = chargedHadronMultiplicityAK5PFJet[iJet] +
                           electronMultiplicityAK5PFJet[iJet] + 
