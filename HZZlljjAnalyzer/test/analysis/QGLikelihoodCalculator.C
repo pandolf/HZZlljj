@@ -16,15 +16,7 @@ QGLikelihoodCalculator::QGLikelihoodCalculator( const std::string& fileName, int
 
   histoFile_ = TFile::Open(fileName.c_str());
 
-  if( nPtBins==0 ) {
-
-    nPtBins_ = 20;
-
-  } else {
-
-    nPtBins_ = nPtBins;
-
-  }
+  nPtBins_ = nPtBins;
 
 }
 

@@ -18,7 +18,7 @@ class QGLikelihoodCalculator {
 
  public:
 
-  QGLikelihoodCalculator( const std::string& fileName, int nPtBins=0 );
+  QGLikelihoodCalculator( const std::string& fileName="QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root", int nPtBins=20 );
   virtual ~QGLikelihoodCalculator() {};
 
   float computeQGLikelihood( float pt, int nCharged, int nNeutral, float ptD, float rmsCand );
