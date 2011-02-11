@@ -739,6 +739,7 @@ ofstream ofs("run_event.txt");
       TLorentzVector ZZ = diLepton + bestZDiJet; 
   
 
+
       if( lept1.Pt() > ptLept1_thresh_ && lept2.Pt() > ptLept2_thresh_ && fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_
        && diLepton.M() > mZll_threshLo_ && diLepton.M() < mZll_threshHi_ && lept1.DeltaR(lept2) < deltaRll_thresh_ && diLepton.Pt() > ptZll_thresh_ ) {
 
@@ -811,8 +812,8 @@ ofstream ofs("run_event.txt");
         vh1_ptDJet1[jet1PtBin]->Fill( jet1.ptD, eventWeight );
         vh1_nChargedJet1[jet1PtBin]->Fill( jet1.nCharged, eventWeight );
         vh1_nNeutralJet1[jet1PtBin]->Fill( jet1.nNeutral, eventWeight );
-        float QGLikelihoodJet1 = qglikeli->computeQGLikelihood( jet2.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, jet1.rmsCand );
-        float QGLikelihood_normsJet1 = qglikeli->computeQGLikelihood( jet2.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
+        float QGLikelihoodJet1 = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, jet1.rmsCand );
+        float QGLikelihood_normsJet1 = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
         vh1_QGLikelihoodJet1[jet1PtBin]->Fill( QGLikelihoodJet1, eventWeight );
         h1_QGLikelihoodJet1->Fill( QGLikelihoodJet1, eventWeight );
         vh1_QGLikelihood_normsJet1[jet1PtBin]->Fill( QGLikelihood_normsJet1, eventWeight );
