@@ -13,27 +13,9 @@
 #include "TFitParticleEtEtaPhi.h"
 #include "TKinFitter.h"
 
-#include "QGLikelihoodCalculator.h"
-
-
-#include "fitTools.h"
-
-
-class AnalysisLepton : public TLorentzVector {
-
- public:
-
-  AnalysisLepton( float x=0., float y=0., float z=0., float t=0.) : TLorentzVector( x, y, z, t ) {
-    charge=0;
-  }
-
-  AnalysisLepton( const TLorentzVector &v) : TLorentzVector( v ) {
-    charge=0;
-  }
-
-  int charge;
-
-};
+#include "QGLikelihood/QGLikelihoodCalculator.h"
+#include "CommonTools/fitTools.h"
+#include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
 
 
 
@@ -75,7 +57,7 @@ struct HelicityAngles {
 };
 
 
-HelicityAngles computeHelicityAngles(AnalysisLepton lept1, AnalysisLepton lept2, TLorentzVector jet1, TLorentzVector jet2 );
+HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
 
 
 
@@ -267,6 +249,37 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_deltaRjj= new TH1D("deltaRjj", "", 36, 0.5, 5.);
   h1_deltaRjj->Sumw2();
+
+
+  TH1D* h1_cosThetaStar = new TH1D("cosThetaStar", "", 45, -1.001, 1.001);
+  h1_cosThetaStar->Sumw2();
+  TH1D* h1_cosTheta1 = new TH1D("cosTheta1", "", 45, -1.001, 1.001);
+  h1_cosTheta1->Sumw2();
+  TH1D* h1_cosTheta2 = new TH1D("cosTheta2", "", 45, -1.001, 1.001);
+  h1_cosTheta2->Sumw2();
+  TH1D* h1_phi = new TH1D("phi", "", 45, -3.1416, 3.1416);
+  h1_phi->Sumw2();
+  TH1D* h1_phi1 = new TH1D("phi1", "", 45, -3.1416, 3.1416);
+  h1_phi1->Sumw2();
+
+  TH1D* h1_cosThetaStar_kinfit = new TH1D("cosThetaStar_kinfit", "", 45, -1.0001, 1.001);
+  h1_cosThetaStar_kinfit->Sumw2();
+  TH1D* h1_cosTheta1_kinfit = new TH1D("cosTheta1_kinfit", "", 45, -1.001, 1.001);
+  h1_cosTheta1_kinfit->Sumw2();
+  TH1D* h1_cosTheta2_kinfit = new TH1D("cosTheta2_kinfit", "", 45, -1.001, 1.001);
+  h1_cosTheta2_kinfit->Sumw2();
+  TH1D* h1_phi_kinfit = new TH1D("phi_kinfit", "", 45, -3.1416, 3.1416);
+  h1_phi_kinfit->Sumw2();
+  TH1D* h1_phi1_kinfit = new TH1D("phi1_kinfit", "", 45, -3.1416, 3.1416);
+  h1_phi1_kinfit->Sumw2();
+
+  TH1D* h1_helicityLD = new TH1D("helicityLD", "", 50, 0., 1.);
+  h1_helicityLD->Sumw2();
+  TH1D* h1_helicityLD_kinfit = new TH1D("helicityLD_kinfit", "", 50, 0., 1.);
+  h1_helicityLD_kinfit->Sumw2();
+
+  TH1D* h1_deltaRZZ= new TH1D("deltaRZZ", "", 50, 0., 6.);
+  h1_deltaRZZ->Sumw2();
 
   TH1D* h1_ZZInvMass_medMass= new TH1D("ZZInvMass_medMass", "", nBins_invMass, 150., 350.);
   h1_ZZInvMass_medMass->Sumw2();
@@ -626,11 +639,9 @@ ofstream ofs("run_event.txt");
 
 
 
-    AnalysisLepton lept1, lept2;
+    TLorentzVector lept1, lept2;
     lept1.SetPtEtaPhiE( ptLept1, etaLept1, phiLept1, eLept1 );
     lept2.SetPtEtaPhiE( ptLept2, etaLept2, phiLept2, eLept2 );
-    lept1.charge = chargeLept1;
-    lept2.charge = chargeLept2;
 
     TLorentzVector diLepton = lept1+lept2;
 
@@ -779,8 +790,6 @@ ofstream ofs("run_event.txt");
 
       TLorentzVector bestZDiJet = jet1 + jet2;
   
-      //get helicity angles with o-o-t-b jets:
-      HelicityAngles hangles = computeHelicityAngles(lept1, lept2, jet1, jet2);
 
 
       // ------------------------
@@ -1039,8 +1048,94 @@ ofstream ofs("run_event.txt");
       if( lept1.Pt() > ptLept1_thresh_ && lept2.Pt() > ptLept2_thresh_ && fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_
        && diLepton.M() > mZll_threshLo_ && diLepton.M() < mZll_threshHi_ && lept1.DeltaR(lept2) < deltaRll_thresh_ && diLepton.Pt() > ptZll_thresh_ ) {
 
+        // event has passed kinematic selection
 
-        // event has passed kinematic selection: fill histograms:
+        //get helicity angles:
+        HelicityAngles hangles;
+        if( chargeLept1<0 ) hangles = computeHelicityAngles(lept1, lept2, jet1, jet2);
+        else                hangles = computeHelicityAngles(lept2, lept1, jet1, jet2);
+
+        HelicityAngles hangles_kinfit;
+        if( chargeLept1<0 ) hangles_kinfit = computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
+        else                hangles_kinfit = computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
+
+      std::vector<double> ldvars;
+      //variables in the order : costhetazll,costhetazjj,helphi,costhetastar ,helphizll ; only the first two can be swapped
+      ldvars.push_back(hangles.cosTheta1);
+      ldvars.push_back(hangles.cosTheta2);
+      ldvars.push_back(hangles.phi);
+      ldvars.push_back(hangles.cosThetaStar);
+      ldvars.push_back(hangles.phi1);
+      ldvars.push_back(ZZ.M());
+
+      HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
+
+      LD->setMeasurables(ldvars);
+      double sProb=LD->getSignalProbability();
+      double bProb=LD->getBkgdProbability();
+      double myld=sProb/(sProb+bProb);
+      h1_helicityLD->Fill(myld, eventWeight);
+
+      std::vector<double> ldvars_kinfit;
+      //variables in the order : costhetazll,costhetazjj,helphi,costhetastar ,helphizll ; only the first two can be swapped
+      ldvars_kinfit.push_back(hangles_kinfit.cosTheta1);
+      ldvars_kinfit.push_back(hangles_kinfit.cosTheta2);
+      ldvars_kinfit.push_back(hangles_kinfit.phi);
+      ldvars_kinfit.push_back(hangles_kinfit.cosThetaStar);
+      ldvars_kinfit.push_back(hangles_kinfit.phi1);
+      ldvars_kinfit.push_back(ZZ_kinfit_jets.M());
+
+      LD->setMeasurables(ldvars_kinfit);
+      double sProb_kinfit=LD->getSignalProbability();
+      double bProb_kinfit=LD->getBkgdProbability();
+      double myld_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
+      h1_helicityLD_kinfit->Fill(myld_kinfit, eventWeight);
+
+/*
+std::cout << std::endl;
+std::cout << std::endl << "---------------------" << std::endl;
+std::cout << "run: " << run << std::endl;
+std::cout << "event: " << event << std::endl;
+if( leptType==0 ) std::cout << "Leptons are MUONS." << std::endl;
+else std::cout << "Leptons are ELECTRONS." << std::endl << std::endl;
+std::cout << "++ lept 1: " << std::endl;
+std::cout << "pt: " << lept1.Pt() << std::endl;
+std::cout << "eta: " << lept1.Eta() << std::endl;
+std::cout << "phi: " << lept1.Phi() << std::endl;
+std::cout << "e: " << lept1.Energy() << std::endl;
+std::cout << "charge: " << chargeLept1 << std::endl;
+
+std::cout << std::endl;
+std::cout << "++ lept 2: " << std::endl;
+std::cout << "pt: " << lept2.Pt() << std::endl;
+std::cout << "eta: " << lept2.Eta() << std::endl;
+std::cout << "phi: " << lept2.Phi() << std::endl;
+std::cout << "e: " << lept2.Energy() << std::endl;
+std::cout << "charge: " << chargeLept2 << std::endl;
+
+std::cout << std::endl;
+std::cout << "++ jet 1: " << std::endl;
+std::cout << "pt: " << jet1.Pt() << std::endl;
+std::cout << "eta: " << jet1.Eta() << std::endl;
+std::cout << "phi: " << jet1.Phi() << std::endl;
+std::cout << "e: " << jet1.Energy() << std::endl;
+
+std::cout << std::endl;
+std::cout << "++ jet 2: " << std::endl;
+std::cout << "pt: " << jet2.Pt() << std::endl;
+std::cout << "eta: " << jet2.Eta() << std::endl;
+std::cout << "phi: " << jet2.Phi() << std::endl;
+std::cout << "e: " << jet2.Energy() << std::endl;
+
+std::cout << std::endl;
+std::cout << "cosTheta*: " << hangles.cosThetaStar << std::endl;
+std::cout << "cosTheta1: " << hangles.cosTheta1 << std::endl;
+std::cout << "cosTheta2: " << hangles.cosTheta2 << std::endl;
+std::cout << "phi: " << hangles.phi << std::endl;
+std::cout << "phi1: " << hangles.phi1 << std::endl;
+*/
+
+        // fill histograms:
 
         if( jet1.Pt()>jet2.Pt() ) {
           h1_ptJet1->Fill( jet1.Pt(), eventWeight );
@@ -1064,6 +1159,20 @@ ofstream ofs("run_event.txt");
         h1_ZZInvMass_medMass->Fill(ZZ.M(), eventWeight);
         h1_ZZInvMass_kinfit_hiMass->Fill(ZZ_kinfit_jets.M(), eventWeight);
         h1_ZZInvMass_kinfit_medMass->Fill(ZZ_kinfit_jets.M(), eventWeight);
+
+        h1_deltaRZZ->Fill(bestZDiJet.DeltaR(diLepton), eventWeight);
+
+        h1_cosThetaStar->Fill(hangles.cosThetaStar, eventWeight);
+        h1_cosTheta1->Fill(hangles.cosTheta1, eventWeight);
+        h1_cosTheta2->Fill(hangles.cosTheta2, eventWeight);
+        h1_phi->Fill(hangles.phi, eventWeight);
+        h1_phi1->Fill(hangles.phi1, eventWeight);
+
+        h1_cosThetaStar_kinfit->Fill(hangles_kinfit.cosThetaStar, eventWeight);
+        h1_cosTheta1_kinfit->Fill(hangles_kinfit.cosTheta1, eventWeight);
+        h1_cosTheta2_kinfit->Fill(hangles_kinfit.cosTheta2, eventWeight);
+        h1_phi_kinfit->Fill(hangles_kinfit.phi, eventWeight);
+        h1_phi1_kinfit->Fill(hangles_kinfit.phi1, eventWeight);
 
 
         //
@@ -1249,6 +1358,21 @@ ofstream ofs("run_event.txt");
   h1_ptZjj->Write();
   h1_ptZll->Write();
 
+  h1_cosThetaStar->Write();
+  h1_cosTheta1->Write();
+  h1_cosTheta2->Write();
+  h1_phi->Write();
+  h1_phi1->Write();
+
+  h1_cosThetaStar_kinfit->Write();
+  h1_cosTheta1_kinfit->Write();
+  h1_cosTheta2_kinfit->Write();
+  h1_phi_kinfit->Write();
+  h1_phi1_kinfit->Write();
+  
+  h1_helicityLD->Write();
+  h1_helicityLD_kinfit->Write();
+
   h1_ZZInvMass_medMass->Write();
   h1_ZZInvMass_hiMass->Write();
   h1_ZZInvMass_kinfit_medMass->Write();
@@ -1263,6 +1387,7 @@ ofstream ofs("run_event.txt");
   h1_ptJet2->Write();
   h1_partFlavorJet2->Write();
 
+  h1_deltaRZZ->Write();
 
   h1_ZZInvMass_MCassoc->Write();
   h1_ZZInvMass_MCassoc_ZjjMassConstr->Write();
@@ -1292,6 +1417,8 @@ ofstream ofs("run_event.txt");
   h1_QGLikelihood_normsJet2->Write();
   h1_QGLikelihoodProd->Write();
 
+  outFile_->mkdir("QGbins");
+  outFile_->cd("QGbins");
 
   for( unsigned iPtBin=0; iPtBin<nPtBins; ++iPtBin ) {
 
@@ -1706,11 +1833,11 @@ std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string his
 
 
 
-HelicityAngles computeHelicityAngles(AnalysisLepton lept1, AnalysisLepton lept2, TLorentzVector jet1, TLorentzVector jet2 ) {
+HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 ) {
 
   HelicityAngles returnAngles;
 
-  TLorentzVector Zll = lept1 + lept2;
+  TLorentzVector Zll = leptPlus + leptMinus;
   TLorentzVector Zjj = jet1 + jet2;
 
   TLorentzVector Higgs = Zjj + Zll;
@@ -1721,14 +1848,6 @@ HelicityAngles computeHelicityAngles(AnalysisLepton lept1, AnalysisLepton lept2,
   Zjj_Hstar.Boost(-Higgs.BoostVector());
 
   
-  // now want lept1 to be the negative-signed lepton:
-  if( lept1.charge>0 ) { //swap them
-    AnalysisLepton lept1_tmp(lept1);
-    AnalysisLepton lept2_tmp(lept2);
-    lept1 = lept2_tmp;
-    lept2 = lept1_tmp;
-  }
-
 
   // no charge for jets (well, not really)
   // so choose jet with positive scalar product with Zjj 
@@ -1755,8 +1874,8 @@ HelicityAngles computeHelicityAngles(AnalysisLepton lept1, AnalysisLepton lept2,
   if( Zll_Hstar.Phi()>0. ) {
     Z1 = Zll;
     Z2 = Zjj;
-    daughterZ1_1 = lept1;
-    daughterZ1_2 = lept2;
+    daughterZ1_1 = leptMinus;
+    daughterZ1_2 = leptPlus;
     daughterZ2_1 = jet1;
     daughterZ2_2 = jet2;
   } else {
@@ -1764,8 +1883,8 @@ HelicityAngles computeHelicityAngles(AnalysisLepton lept1, AnalysisLepton lept2,
     Z2 = Zll;
     daughterZ1_1 = jet1;
     daughterZ1_2 = jet2;
-    daughterZ2_1 = lept1;
-    daughterZ2_2 = lept2;
+    daughterZ2_1 = leptMinus;
+    daughterZ2_2 = leptPlus;
   }
 
   // boost the daughters in their Z rest frame (only first daughter needed):
