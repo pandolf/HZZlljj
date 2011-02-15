@@ -7,7 +7,7 @@ import time
 ### usage  cmst3_submit_manyfilesperjob.py dataset njobs applicationName queue 
 #######################################
 if (len(sys.argv) != 3) and (len(sys.argv) != 4) and (len(sys.argv) != 5):
-    print "usage sendOnBatch.py dataset njobs analyzerType=\"HZZlljj\" flags=\"\""
+    print "usage sendOnBatch.py dataset filesPerJob analyzerType=\"HZZlljj\" flags=\"\""
     sys.exit(1)
 dataset = sys.argv[1]
 inputlist = "files_"+dataset+".txt"
@@ -61,29 +61,22 @@ if diskoutputdir != "none":
 #######################################
 pwd = os.environ['PWD']
 #######################################
-numfiles = reduce(lambda x,y: x+1, file(inputlist).xreadlines(), 0)
-filesperjob = numfiles/ijobmax
-extrafiles  = numfiles%ijobmax
-input = open(inputlist)
-######################################
+inputListfile=open(inputlist)
+inputfiles = inputListfile.readlines()
+ijob=0
 
-for ijob in range(ijobmax):
-    # prepare the list file
+#copy the configuration in the actual run directory
+#os.system("cp -r config "+dataset_name)
+
+while (len(inputfiles) > 0):
     inputfilename = pwd+"/"+dir+"/input/input_"+str(ijob)+".list"
     inputfile = open(inputfilename,'w')
-    # if it is a normal job get filesperjob lines
-    if ijob != (ijobmax-1):
-        for line in range(filesperjob):
-            ntpfile = input.readline() 
+    for line in range(min(ijobmax,len(inputfiles))):
+        ntpfile = inputfiles.pop()
+        if ntpfile != '':
             inputfile.write(ntpfile)
-            continue
-    else:
-        # if it is the last job get ALL remaining lines
-        ntpfile = input.readline()
-        while ntpfile != '':
-            inputfile.write(ntpfile)
-            ntpfile = input.readline()
-            continue
+
+
     inputfile.close()
 
     # prepare the script to run
@@ -92,16 +85,19 @@ for ijob in range(ijobmax):
     outputfile.write('#!/bin/bash\n')
     outputfile.write('export STAGE_HOST=castorcms\n')
     outputfile.write('export STAGE_SVCCLASS=cmst3\n')
+    #outputfile.write('export ROOTSYS=/afs/cern.ch/sw/lcg/app/releases/ROOT/5.26.00/x86_64-slc5-gcc34-opt/root\n')
+    #outputfile.write('export LD_LIBRARY_PATH=$ROOTSYS/lib\n')
     #    outputfile.write('cd '+pwd)
     #outputfile.write('cp '+pwd+'/Cert_132440-140399_7TeV_StreamExpress_Collisions10_CMSSWConfig.txt $WORKDIR\n')
     #outputfile.write('cp '+pwd+'/lumi_by_LS_132440_140401.csv $WORKDIR\n')
+    #outputfile.write('cp -r  /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_3_8_7/src/HZZlljj/HZZlljjAnalyzer/test/analysis/Bins $WORKDIR\n')
     outputfile.write('cd $WORKDIR\n')
     #outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" _"+str(ijob)+"\n")
     outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" "+str(ijob)+"\n")
-    outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm21:'+diskoutputmain+'/{}\n') 
+    outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm23:'+diskoutputmain+'/{}\n') 
     outputfile.close
     os.system("echo bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
     os.system("bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname+" -copyInput="+dataset+"_"+str(ijob))
     ijob = ijob+1
-    time.sleep(4.)
+    time.sleep(2.)
     continue

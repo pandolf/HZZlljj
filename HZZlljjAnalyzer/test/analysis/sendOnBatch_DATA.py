@@ -29,7 +29,8 @@ flags = ""
 if len(sys.argv) == 6:
     flags = sys.argv[5]
 application = "do2ndLevel_"+analyzerType
-application = application + "_DATA"
+if analyzerType =="HZZlljj":
+  application = application + "_DATA"
 # to write on the cmst3 cluster disks
 ################################################
 #castordir = "/castor/cern.ch/user/m/mpierini/CMST3/Vecbos/output/"
@@ -97,5 +98,5 @@ while (len(inputfiles) > 0):
     os.system("echo bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
     os.system("bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname+" -copyInput="+dataset+"_"+str(ijob))
     ijob = ijob+1
-    time.sleep(4.)
+    time.sleep(2.)
     continue
