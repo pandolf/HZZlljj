@@ -6,8 +6,12 @@
 #include "TRandom3.h"
 #include "TLorentzVector.h"
 #include "TRegexp.h"
+#include "TMVA/Reader.h"
+#include "QGLikelihoodCalculator.h"
 
-#include "fitTools.h"
+
+
+//#include "fitTools.h"
 
 
 double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
@@ -20,27 +24,57 @@ class AnalysisJet : public TLorentzVector {
   AnalysisJet( float x=0., float y=0., float z=0., float t=0.) : TLorentzVector( x, y, z, t ) {
     eChargedHadrons=0.;
     ePhotons=0.;
+    eNeutralEm=0.;
     eNeutralHadrons=0.;
     eElectrons=0.;
+    nChargedHadrons=0;
+    nPhotons=0;
+    nNeutralHadrons=0;
   }
 
   float eChargedHadrons;
   float ePhotons;
+  float eNeutralEm;
   float eNeutralHadrons;
 //float eMuons;
   float eElectrons;
 //float eHFHadrons;
 //float eHFEM;
 
-//int nChargedHadrons;
-//int nPhotons;
-//int nNeutralHadrons;
+  int nChargedHadrons;
+  int nPhotons;
+  int nNeutralHadrons;
 //int nMuons;
 //int nElectrons;
 //int nHFHadrons;
 //int nHFEM;
 
+  float ptD;
+  float rmsCand;
+  int nCharged;
+  int nNeutral;
+  float QGlikelihood;
+
 };
+
+
+
+class AnalysisLepton : public TLorentzVector {
+
+ public:
+
+  AnalysisLepton( float x=0., float y=0., float z=0., float t=0.) : TLorentzVector( x, y, z, t ) {
+    charge=0;
+  }
+
+  AnalysisLepton( const TLorentzVector &v) : TLorentzVector( v ) {
+    charge=0;
+  }
+
+  int charge;
+
+};
+
 
 
 
@@ -95,6 +129,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("ptLept1",  &ptLept1_,  "ptLept1_/F");
   reducedTree_->Branch("etaLept1",  &etaLept1_,  "etaLept1_/F");
   reducedTree_->Branch("phiLept1",  &phiLept1_,  "phiLept1_/F");
+  reducedTree_->Branch("chargeLept1",  &chargeLept1_,  "chargeLept1_/I");
 
   reducedTree_->Branch("eLept1Gen",  &eLept1Gen_,  "eLept1Gen_/F");
   reducedTree_->Branch("ptLept1Gen",  &ptLept1Gen_,  "ptLept1Gen_/F");
@@ -105,6 +140,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("ptLept2",  &ptLept2_,  "ptLept2_/F");
   reducedTree_->Branch("etaLept2",  &etaLept2_,  "etaLept2_/F");
   reducedTree_->Branch("phiLept2",  &phiLept2_,  "phiLept2_/F");
+  reducedTree_->Branch("chargeLept2",  &chargeLept2_,  "chargeLept2_/I");
 
   reducedTree_->Branch("eLept2Gen",  &eLept2Gen_,  "eLept2Gen_/F");
   reducedTree_->Branch("ptLept2Gen",  &ptLept2Gen_,  "ptLept2Gen_/F");
@@ -126,10 +162,32 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("etaJetLead3", &etaJetLead3_, "etaJetLead3_/F");
   reducedTree_->Branch("phiJetLead3", &phiJetLead3_, "phiJetLead3_/F");
 
+  reducedTree_->Branch("eJetBest1",  &eJetBest1_,  "eJetBest1_/F");
+  reducedTree_->Branch( "ptJetBest1",  &ptJetBest1_,  "ptJetBest1_/F");
+  reducedTree_->Branch("etaJetBest1", &etaJetBest1_, "etaJetBest1_/F");
+  reducedTree_->Branch("phiJetBest1", &phiJetBest1_, "phiJetBest1_/F");
+  reducedTree_->Branch("rmsCandJetBest1", &rmsCandJetBest1_, "rmsCandJetBest1_/F");
+  reducedTree_->Branch("ptDJetBest1", &ptDJetBest1_, "ptDJetBest1_/F");
+  reducedTree_->Branch("nChargedJetBest1", &nChargedJetBest1_, "nChargedJetBest1_/I");
+  reducedTree_->Branch("nNeutralJetBest1", &nNeutralJetBest1_, "nNeutralJetBest1_/I");
+
+  reducedTree_->Branch("eJetBest2",  &eJetBest2_,  "eJetBest2_/F");
+  reducedTree_->Branch( "ptJetBest2",  &ptJetBest2_,  "ptJetBest2_/F");
+  reducedTree_->Branch("etaJetBest2", &etaJetBest2_, "etaJetBest2_/F");
+  reducedTree_->Branch("phiJetBest2", &phiJetBest2_, "phiJetBest2_/F");
+  reducedTree_->Branch("rmsCandJetBest2", &rmsCandJetBest2_, "rmsCandJetBest2_/F");
+  reducedTree_->Branch("ptDJetBest2", &ptDJetBest2_, "ptDJetBest2_/F");
+  reducedTree_->Branch("nChargedJetBest2", &nChargedJetBest2_, "nChargedJetBest2_/I");
+  reducedTree_->Branch("nNeutralJetBest2", &nNeutralJetBest2_, "nNeutralJetBest2_/I");
+
   reducedTree_->Branch("eJetRecoil",  &eJetRecoil_,  "eJetRecoil_/F");
   reducedTree_->Branch( "ptJetRecoil",  &ptJetRecoil_,  "ptJetRecoil_/F");
   reducedTree_->Branch("etaJetRecoil", &etaJetRecoil_, "etaJetRecoil_/F");
   reducedTree_->Branch("phiJetRecoil", &phiJetRecoil_, "phiJetRecoil_/F");
+  reducedTree_->Branch("rmsCandJetRecoil", &rmsCandJetRecoil_, "rmsCandJetRecoil_/F");
+  reducedTree_->Branch("ptDJetRecoil", &ptDJetRecoil_, "ptDJetRecoil_/F");
+  reducedTree_->Branch("nChargedJetRecoil", &nChargedJetRecoil_, "nChargedJetRecoil_/I");
+  reducedTree_->Branch("nNeutralJetRecoil", &nNeutralJetRecoil_, "nNeutralJetRecoil_/I");
 
   reducedTree_->Branch("nPairs", &nPairs_, "nPairs_/I");
 
@@ -139,21 +197,28 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("etaJet1", etaJet1_, "etaJet1_[nPairs_]/F");
   reducedTree_->Branch("phiJet1", phiJet1_, "phiJet1_[nPairs_]/F");
 
-  reducedTree_->Branch("eChargedHadronsJet1", eChargedHadronsJet1_, "eChargedHadronsJet1_/F");
-  reducedTree_->Branch("ePhotonsJet1", &ePhotonsJet1_, "ePhotonsJet1_/F");
-  reducedTree_->Branch("eNeutralHadronsJet1", &eNeutralHadronsJet1_, "eNeutralHadronsJet1_/F");
-  reducedTree_->Branch("eMuonsJet1", &eMuonsJet1_, "eMuonsJet1_/F");
-  reducedTree_->Branch("eElectronsJet1", &eElectronsJet1_, "eElectronsJet1_/F");
-  reducedTree_->Branch("eHFHadronsJet1", &eHFHadronsJet1_, "eHFHadronsJet1_/F");
-  reducedTree_->Branch("eHFEMJet1", &eHFEMJet1_, "eHFEMJet1_/F");
+  reducedTree_->Branch("ptDJet1", ptDJet1_, "ptDJet1_[nPairs_]/F");
+  reducedTree_->Branch("rmsCandJet1", rmsCandJet1_, "rmsCandJet1_[nPairs_]/F");
+  reducedTree_->Branch("nChargedJet1", nChargedJet1_, "nChargedJet1_[nPairs_]/F");
+  reducedTree_->Branch("nNeutralJet1", nNeutralJet1_, "nNeutralJet1_[nPairs_]/F");
+  reducedTree_->Branch("QGlikelihoodJet1", QGlikelihoodJet1_, "QGlikelihoodJet1_[nPairs_]/F");
 
-  reducedTree_->Branch("nChargedHadronsJet1", &nChargedHadronsJet1_, "nChargedHadronsJet1_/I");
-  reducedTree_->Branch("nPhotonsJet1", &nPhotonsJet1_, "nPhotonsJet1_/I");
-  reducedTree_->Branch("nNeutralHadronsJet1", &nNeutralHadronsJet1_, "nNeutralHadronsJet1_/I");
-  reducedTree_->Branch("nMuonsJet1", &nMuonsJet1_, "nMuonsJet1_/I");
-  reducedTree_->Branch("nElectronsJet1", &nElectronsJet1_, "nElectronsJet1_/I");
-  reducedTree_->Branch("nHFHadronsJet1", &nHFHadronsJet1_, "nHFHadronsJet1_/I");
-  reducedTree_->Branch("nHFEMJet1", &nHFEMJet1_, "nHFEMJet1_/I");
+  reducedTree_->Branch("eChargedHadronsJet1", eChargedHadronsJet1_, "eChargedHadronsJet1_[nPairs_]/F");
+  reducedTree_->Branch("ePhotonsJet1", ePhotonsJet1_, "ePhotonsJet1_[nPairs_]/F");
+  reducedTree_->Branch("eNeutralEmJet1", eNeutralEmJet1_, "eNeutralEmJet1_[nPairs_]/F");
+  reducedTree_->Branch("eNeutralHadronsJet1", eNeutralHadronsJet1_, "eNeutralHadronsJet1_[nPairs_]/F");
+  reducedTree_->Branch("eMuonsJet1", eMuonsJet1_, "eMuonsJet1_[nPairs_]/F");
+  reducedTree_->Branch("eElectronsJet1", eElectronsJet1_, "eElectronsJet1_[nPairs_]/F");
+  reducedTree_->Branch("eHFHadronsJet1", eHFHadronsJet1_, "eHFHadronsJet1_[nPairs_]/F");
+  reducedTree_->Branch("eHFEMJet1", eHFEMJet1_, "eHFEMJet1_[nPairs_]/F");
+
+  reducedTree_->Branch("nChargedHadronsJet1", nChargedHadronsJet1_, "nChargedHadronsJet1_[nPairs_]/I");
+  reducedTree_->Branch("nPhotonsJet1", nPhotonsJet1_, "nPhotonsJet1_[nPairs_]/I");
+  reducedTree_->Branch("nNeutralHadronsJet1", nNeutralHadronsJet1_, "nNeutralHadronsJet1_[nPairs_]/I");
+  reducedTree_->Branch("nMuonsJet1", nMuonsJet1_, "nMuonsJet1_[nPairs_]/I");
+  reducedTree_->Branch("nElectronsJet1", nElectronsJet1_, "nElectronsJet1_[nPairs_]/I");
+  reducedTree_->Branch("nHFHadronsJet1", nHFHadronsJet1_, "nHFHadronsJet1_[nPairs_]/I");
+  reducedTree_->Branch("nHFEMJet1", nHFEMJet1_, "nHFEMJet1_[nPairs_]/I");
 
   reducedTree_->Branch("nPFCand1",  &nPFCand1_,  "nPFCand1_/I");
   reducedTree_->Branch("ePFCand1",  &ePFCand1_,  "ePFCand1_[nPFCand1_]/F");
@@ -162,38 +227,34 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("phiPFCand1",  &phiPFCand1_,  "phiPFCand1_[nPFCand1_]/F");
   reducedTree_->Branch("particleTypePFCand1",  &particleTypePFCand1_,  "particleTypePFCand1_[nPFCand1_]/I");
 
-//reducedTree_->Branch(   "eJetGen1",    &eJetGen1_,    "eJetGen1_/F");
-//reducedTree_->Branch(  "ptJetGen1",   &ptJetGen1_,   "ptJetGen1_/F");
-//reducedTree_->Branch( "etaJetGen1",  &etaJetGen1_,  "etaJetGen1_/F");
-//reducedTree_->Branch( "phiJetGen1",  &phiJetGen1_,  "phiJetGen1_/F");
-//reducedTree_->Branch("partIdJetGen1", &partIdJetGen1_, "partIdJetGen1_/I");
-
-//reducedTree_->Branch(   "ePart1",    &ePart1_,    "ePart1_/F");
-//reducedTree_->Branch(  "ptPart1",   &ptPart1_,   "ptPart1_/F");
-//reducedTree_->Branch( "etaPart1",  &etaPart1_,  "etaPart1_/F");
-//reducedTree_->Branch( "phiPart1",  &phiPart1_,  "phiPart1_/F");
-
   reducedTree_->Branch("iJet2",  iJet2_,  "iJet2_[nPairs_]/I");
   reducedTree_->Branch("eJet2",  eJet2_,  "eJet2_[nPairs_]/F");
   reducedTree_->Branch( "ptJet2",  ptJet2_,  "ptJet2_[nPairs_]/F");
   reducedTree_->Branch("etaJet2", etaJet2_, "etaJet2_[nPairs_]/F");
   reducedTree_->Branch("phiJet2", phiJet2_, "phiJet2_[nPairs_]/F");
 
-  reducedTree_->Branch("eChargedHadronsJet2", &eChargedHadronsJet2_, "eChargedHadronsJet2_/F");
-  reducedTree_->Branch("ePhotonsJet2", &ePhotonsJet2_, "ePhotonsJet2_/F");
-  reducedTree_->Branch("eNeutralHadronsJet2", &eNeutralHadronsJet2_, "eNeutralHadronsJet2_/F");
-  reducedTree_->Branch("eMuonsJet2", &eMuonsJet2_, "eMuonsJet2_/F");
-  reducedTree_->Branch("eElectronsJet2", &eElectronsJet2_, "eElectronsJet2_/F");
-  reducedTree_->Branch("eHFHadronsJet2", &eHFHadronsJet2_, "eHFHadronsJet2_/F");
-  reducedTree_->Branch("eHFEMJet2", &eHFEMJet2_, "eHFEMJet2_/F");
+  reducedTree_->Branch("ptDJet2", ptDJet2_, "ptDJet2_[nPairs_]/F");
+  reducedTree_->Branch("rmsCandJet2", rmsCandJet2_, "rmsCandJet2_[nPairs_]/F");
+  reducedTree_->Branch("nChargedJet2", nChargedJet2_, "nChargedJet2_[nPairs_]/F");
+  reducedTree_->Branch("nNeutralJet2", nNeutralJet2_, "nNeutralJet2_[nPairs_]/F");
+  reducedTree_->Branch("QGlikelihoodJet2", QGlikelihoodJet2_, "QGlikelihoodJet2_[nPairs_]/F");
 
-  reducedTree_->Branch("nChargedHadronsJet2", &nChargedHadronsJet2_, "nChargedHadronsJet2_/I");
-  reducedTree_->Branch("nPhotonsJet2", &nPhotonsJet2_, "nPhotonsJet2_/I");
-  reducedTree_->Branch("nNeutralHadronsJet2", &nNeutralHadronsJet2_, "nNeutralHadronsJet2_/I");
-  reducedTree_->Branch("nMuonsJet2", &nMuonsJet2_, "nMuonsJet2_/I");
-  reducedTree_->Branch("nElectronsJet2", &nElectronsJet2_, "nElectronsJet2_/I");
-  reducedTree_->Branch("nHFHadronsJet2", &nHFHadronsJet2_, "nHFHadronsJet2_/I");
-  reducedTree_->Branch("nHFEMJet2", &nHFEMJet2_, "nHFEMJet2_/I");
+  reducedTree_->Branch("eChargedHadronsJet2", eChargedHadronsJet2_, "eChargedHadronsJet2_[nPairs_]/F");
+  reducedTree_->Branch("ePhotonsJet2", ePhotonsJet2_, "ePhotonsJet2_[nPairs_]/F");
+  reducedTree_->Branch("eNeutralEmJet2", eNeutralEmJet2_, "eNeutralEmJet2_[nPairs_]/F");
+  reducedTree_->Branch("eNeutralHadronsJet2", eNeutralHadronsJet2_, "eNeutralHadronsJet2_[nPairs_]/F");
+  reducedTree_->Branch("eMuonsJet2", eMuonsJet2_, "eMuonsJet2_[nPairs_]/F");
+  reducedTree_->Branch("eElectronsJet2", eElectronsJet2_, "eElectronsJet2_[nPairs_]/F");
+  reducedTree_->Branch("eHFHadronsJet2", eHFHadronsJet2_, "eHFHadronsJet2_[nPairs_]/F");
+  reducedTree_->Branch("eHFEMJet2", eHFEMJet2_, "eHFEMJet2_[nPairs_]/F");
+
+  reducedTree_->Branch("nChargedHadronsJet2", nChargedHadronsJet2_, "nChargedHadronsJet2_[nPairs_]/I");
+  reducedTree_->Branch("nPhotonsJet2", nPhotonsJet2_, "nPhotonsJet2_[nPairs_]/I");
+  reducedTree_->Branch("nNeutralHadronsJet2", nNeutralHadronsJet2_, "nNeutralHadronsJet2_[nPairs_]/I");
+  reducedTree_->Branch("nMuonsJet2", nMuonsJet2_, "nMuonsJet2_[nPairs_]/I");
+  reducedTree_->Branch("nElectronsJet2", nElectronsJet2_, "nElectronsJet2_[nPairs_]/I");
+  reducedTree_->Branch("nHFHadronsJet2", nHFHadronsJet2_, "nHFHadronsJet2_[nPairs_]/I");
+  reducedTree_->Branch("nHFEMJet2", nHFEMJet2_, "nHFEMJet2_[nPairs_]/I");
 
   reducedTree_->Branch("nPFCand2",  &nPFCand2_,  "nPFCand2_/I");
   reducedTree_->Branch("ePFCand2",  &ePFCand2_,  "ePFCand2_[nPFCand2_]/F");
@@ -201,17 +262,6 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("etaPFCand2",  &etaPFCand2_,  "etaPFCand2_[nPFCand2_]/F");
   reducedTree_->Branch("phiPFCand2",  &phiPFCand2_,  "phiPFCand2_[nPFCand2_]/F");
   reducedTree_->Branch("particleTypePFCand2",  &particleTypePFCand2_,  "particleTypePFCand2_[nPFCand2_]/I");
-
-//reducedTree_->Branch(   "eJetGen2",    &eJetGen2_,    "eJetGen2_/F");
-//reducedTree_->Branch(  "ptJetGen2",   &ptJetGen2_,   "ptJetGen2_/F");
-//reducedTree_->Branch( "etaJetGen2",  &etaJetGen2_,  "etaJetGen2_/F");
-//reducedTree_->Branch( "phiJetGen2",  &phiJetGen2_,  "phiJetGen2_/F");
-//reducedTree_->Branch("partIdJetGen2", &partIdJetGen2_, "partIdJetGen2_/I");
-
-//reducedTree_->Branch(   "ePart2",    &ePart2_,    "ePart2_/F");
-//reducedTree_->Branch(  "ptPart2",   &ptPart2_,   "ptPart2_/F");
-//reducedTree_->Branch( "etaPart2",  &etaPart2_,  "etaPart2_/F");
-//reducedTree_->Branch( "phiPart2",  &phiPart2_,  "phiPart2_/F");
 
   reducedTree_->Branch("nPart", &nPart_, "nPart_/I");
   reducedTree_->Branch("ePart",  ePart_,  "ePart_[nPart_]/F");
@@ -238,6 +288,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   h1_deltaRmatching_genjet_parton = new TH1F("deltaRmatching_genjet_parton", "", 100, 0., 0.6);
   h1_deltaRmatching_jet_genjet = new TH1F("deltaRmatching_jet_genjet", "", 100, 0., 0.6);
   h1_deltaRmatching_jet_leptonParton = new TH1F("deltaRmatching_leptonParton", "", 100, 0., 4.);
+  h1_nJets30 = new TH1F("nJets30", "", 31, -0.5, 30.5);
 //h1_indexMatchedJet = new TH1F("indexMatchedJet", "", 6, -0.5, 5.5);
 //h1_indexMatched05Jet = new TH1F("indexMatched05Jet", "", 6, -0.5, 5.5);
 //h1_nMatched_per_event = new TH1F("nMatched_per_event", "", 6, -0.5, 5.5);
@@ -264,6 +315,7 @@ Ntp1Analyzer_HZZlljj::~Ntp1Analyzer_HZZlljj() {
   h1_deltaRmatching_genjet_parton->Write();
   h1_deltaRmatching_jet_genjet->Write();
   h1_deltaRmatching_jet_leptonParton->Write();
+  h1_nJets30->Write();
 //h1_indexMatchedJet->Write();
 //h1_indexMatched05Jet->Write();
 //h1_nMatched_per_event->Write();
@@ -478,12 +530,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // MUONS
      // ------------------
 
-     std::vector<TLorentzVector> muons;
+     std::vector<AnalysisLepton> muons;
      int chargeFirstMuon;
 
      for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
 
-       TLorentzVector thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
+       AnalysisLepton thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
+       thisMuon.charge = chargeMuon[iMuon];
 
        // --------------
        // kinematics:
@@ -554,13 +607,15 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // ELECTRONS
      // ------------------
 
-     std::vector<TLorentzVector> electrons;
+     std::vector<AnalysisLepton> electrons;
      int chargeFirstEle = 0;
      bool firstPassedVBTF80 = false;
 
      for( unsigned int iEle=0; (iEle<nEle) && (electrons.size()<2); ++iEle ) {
 
-       TLorentzVector thisEle( pxEle[iEle], pyEle[iEle], pzEle[iEle], energyEle[iEle] );
+       AnalysisLepton thisEle( pxEle[iEle], pyEle[iEle], pzEle[iEle], energyEle[iEle] );
+       thisEle.charge = chargeEle[iEle];
+
 
        // --------------
        // kinematics:
@@ -569,6 +624,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( (fabs(thisEle.Eta()) > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) continue;
 
 
+       // ELE ID vars:
        Float_t dr03TkSumPt_thresh95;
        Float_t dr03EcalRecHitSumEt_thresh95;
        Float_t dr03HcalTowerSumEt_thresh95;
@@ -586,6 +642,16 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        Float_t deltaPhiAtVtx_thresh80;
        Float_t deltaEtaAtVtx_thresh80;
        Float_t hOverE_thresh80;
+
+       // CONVERSION REJECTION VARS:
+       Int_t nMissingHits_thresh95 = 1;
+       Float_t deltaCotTheta_thresh95 = 99999.;
+       Float_t dist_thresh95 = 99999.;
+
+       Int_t nMissingHits_thresh80 = 0;
+       Float_t deltaCotTheta_thresh80 = 0.02;
+       Float_t dist_thresh80 = 0.02;
+
 
        if( fabs(thisEle.Eta())<1.4442 ) {
          dr03TkSumPt_thresh95 = 0.15;
@@ -607,6 +673,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          deltaPhiAtVtx_thresh80 = 0.06;
          deltaEtaAtVtx_thresh80 = 0.004;
          hOverE_thresh80 = 0.04;
+
        } else {
          dr03TkSumPt_thresh95 = 0.08;
          dr03EcalRecHitSumEt_thresh95 = 0.06;
@@ -660,16 +727,25 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
                            (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh80) &&
                            (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh80) &&
                            (hOverEEle[iEle] < hOverE_thresh80);
+       
+       // ---------------------
+       // conversion rejection:
+       // ---------------------
+       int nMissingHits = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
+       bool convRej_VBTF95 = (nMissingHits<=nMissingHits_thresh95) && !(fabs(convDistEle[iEle])<dist_thresh95 && fabs(convDcotEle[iEle])<deltaCotTheta_thresh95);
+       bool convRej_VBTF80 = (nMissingHits<=nMissingHits_thresh80) && !(fabs(convDistEle[iEle])<dist_thresh80 && fabs(convDcotEle[iEle])<deltaCotTheta_thresh80);
 
-       bool passed_VBTF95 = (iso_VBTF95 && eleID_VBTF95);
-       bool passed_VBTF80 = (iso_VBTF80 && eleID_VBTF80);
+
+
+       bool passed_VBTF95 = (iso_VBTF95 && eleID_VBTF95 && convRej_VBTF95);
+       bool passed_VBTF80 = (iso_VBTF80 && eleID_VBTF80 && convRej_VBTF80);
 
 
        if( !passed_VBTF95 ) continue;
 
        // check that not matched to muon (clean electrons faked by muon MIP):
        bool matchedtomuon=false;
-       for( std::vector<TLorentzVector>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu )
+       for( std::vector<AnalysisLepton>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu )
          if( iMu->DeltaR(thisEle)<0.1 ) matchedtomuon=true;
 
        if( matchedtomuon ) continue;
@@ -704,7 +780,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 //   if( electrons.size() < 2 && muons.size() < 2 ) continue;
 
 
-     std::vector< TLorentzVector > leptons;
+     std::vector< AnalysisLepton > leptons;
 
      if( electrons.size() == 2 && muons.size() == 2 ) { //veto H->ZZ->4l
 
@@ -753,11 +829,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      ptLept1_ = leptons[0].Pt();
      etaLept1_ = leptons[0].Eta();
      phiLept1_ = leptons[0].Phi();
+     chargeLept1_ = leptons[0].charge;
      
      eLept2_ = leptons[1].Energy();
      ptLept2_ = leptons[1].Pt();
      etaLept2_ = leptons[1].Eta();
      phiLept2_ = leptons[1].Phi();
+     chargeLept2_ = leptons[1].charge;
 
 
      // --------------------
@@ -817,10 +895,30 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // first save leading jets in event:
      std::vector<AnalysisJet> leadJets;
      std::vector<int> leadJetsIndex; //index in the event collection (needed afterwards for PFCandidates)
+     int nJets30=0;
 
+     //QGLikelihoodCalculator qglc;
      for( unsigned int iJet=0; iJet<nAK5PFJet; ++iJet ) {
 
        AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
+
+       thisJet.eChargedHadrons = chargedHadronEnergyAK5PFJet[iJet];
+       thisJet.ePhotons        = photonEnergyAK5PFJet[iJet];
+       thisJet.eNeutralEm      = neutralEmEnergyAK5PFJet[iJet];
+       thisJet.eNeutralHadrons = neutralHadronEnergyAK5PFJet[iJet];
+
+       thisJet.nChargedHadrons = chargedHadronMultiplicityAK5PFJet[iJet];
+       thisJet.nPhotons        = photonMultiplicityAK5PFJet[iJet];
+       thisJet.nNeutralHadrons = neutralHadronMultiplicityAK5PFJet[iJet];
+
+       thisJet.nCharged = chargedHadronMultiplicityAK5PFJet[iJet]+electronMultiplicityAK5PFJet[iJet]+muonMultiplicityAK5PFJet[iJet];
+       thisJet.nNeutral = neutralHadronMultiplicityAK5PFJet[iJet]+photonMultiplicityAK5PFJet[iJet];
+       thisJet.rmsCand =  rmsCandAK5PFJet[iJet];
+       thisJet.ptD =  ptDAK5PFJet[iJet];
+
+       //thisJet.QGlikelihood = qglc.ComputeLikelihood( thisJet.Pt(), thisJet.nCharged, thisJet.nNeutral, thisJet.ptD, thisJet.rmsCand );
+
+       if( thisJet.Pt()>jetPt_thresh ) nJets30++;
 
        // save at least 3 lead jets (if event has them) and all jets with pt>thresh:
        if( leadJets.size()>=3 && thisJet.Pt()<jetPt_thresh ) break;
@@ -836,6 +934,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      }
 
+
+     h1_nJets30->Fill(nJets30);
     // if( leadJets.size()<2 ) continue;
     // if( leadJets[1].Pt()<jetPt_thresh ) continue; //at least 2 jets over thresh
 
@@ -886,12 +986,36 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            etaJet1_[nPairs_] = leadJets[iJet].Eta();
            phiJet1_[nPairs_] = leadJets[iJet].Phi();
            eChargedHadronsJet1_[nPairs_] = leadJets[iJet].eChargedHadrons;
+           ePhotonsJet1_[nPairs_]        = leadJets[iJet].ePhotons;
+           eNeutralEmJet1_[nPairs_]      = leadJets[iJet].eNeutralEm;
+           eNeutralHadronsJet1_[nPairs_] = leadJets[iJet].eNeutralHadrons;
+           nChargedHadronsJet1_[nPairs_] = leadJets[iJet].nChargedHadrons;
+           nPhotonsJet1_[nPairs_]        = leadJets[iJet].nPhotons;
+           nNeutralHadronsJet1_[nPairs_] = leadJets[iJet].nNeutralHadrons;
+
+           ptDJet1_[nPairs_] = leadJets[iJet].ptD;
+           rmsCandJet1_[nPairs_] = leadJets[iJet].rmsCand;
+           nChargedJet1_[nPairs_] = leadJets[iJet].nCharged;
+           nNeutralJet1_[nPairs_] = leadJets[iJet].nNeutral;
+           QGlikelihoodJet1_[nPairs_] = leadJets[iJet].QGlikelihood;
             
            eJet2_[nPairs_] = leadJets[jJet].Energy();
            ptJet2_[nPairs_] = leadJets[jJet].Pt();
            etaJet2_[nPairs_] = leadJets[jJet].Eta();
            phiJet2_[nPairs_] = leadJets[jJet].Phi();
            eChargedHadronsJet2_[nPairs_] = leadJets[jJet].eChargedHadrons;
+           ePhotonsJet2_[nPairs_]        = leadJets[jJet].ePhotons;
+           eNeutralEmJet2_[nPairs_]      = leadJets[jJet].eNeutralEm;
+           eNeutralHadronsJet2_[nPairs_] = leadJets[jJet].eNeutralHadrons;
+           nChargedHadronsJet2_[nPairs_] = leadJets[jJet].nChargedHadrons;
+           nPhotonsJet2_[nPairs_]        = leadJets[jJet].nPhotons;
+           nNeutralHadronsJet2_[nPairs_] = leadJets[jJet].nNeutralHadrons;
+
+           ptDJet2_[nPairs_] = leadJets[jJet].ptD;
+           rmsCandJet2_[nPairs_] = leadJets[jJet].rmsCand;
+           nChargedJet2_[nPairs_] = leadJets[jJet].nCharged;
+           nNeutralJet2_[nPairs_] = leadJets[jJet].nNeutral;
+           QGlikelihoodJet2_[nPairs_] = leadJets[jJet].QGlikelihood;
 
            nPairs_++;
           
@@ -918,7 +1042,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      
      // look for hardest jet in event which is not already picked as best-Z pair (but no pt cut):
-     TLorentzVector recoilJet(0., 0., 0., 0.);
+     AnalysisJet recoilJet(0., 0., 0., 0.);
      for( unsigned int iJet=0; iJet<leadJets.size() && recoilJet.Energy()==0.; ++iJet ) {
 
        if( iJet==best_i || iJet==best_j ) {
@@ -935,10 +1059,32 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
          
 
+     eJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].Energy() : 0.;
+     ptJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].Pt() : 0.;
+     etaJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].Eta() : 20.;
+     phiJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].Phi() : 0.;
+     rmsCandJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].rmsCand : 0.;
+     ptDJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].ptD : 0.;
+     nChargedJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].nCharged : 0;
+     nNeutralJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].nNeutral : 0;
+
+     eJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].Energy() : 0.;
+     ptJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].Pt() : 0.;
+     etaJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].Eta() : 20.;
+     phiJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].Phi() : 0.;
+     rmsCandJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].rmsCand : 0.;
+     ptDJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].ptD : 0.;
+     nChargedJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].nCharged : 0;
+     nNeutralJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].nNeutral : 0;
+
      eJetRecoil_ = (recoilJet.Energy()==0.) ? 0. : recoilJet.Energy();
      ptJetRecoil_ = (recoilJet.Energy()==0.) ? 0. : recoilJet.Pt();
      etaJetRecoil_ = (recoilJet.Energy()==0.) ? 20. : recoilJet.Eta();
      phiJetRecoil_ = (recoilJet.Energy()==0.) ? 0. : recoilJet.Phi();
+     rmsCandJetRecoil_ = ( recoilJet.Energy()==0. ) ? recoilJet.rmsCand : 0.;
+     ptDJetRecoil_ = ( recoilJet.Energy()==0. ) ? recoilJet.ptD : 0.;
+     nChargedJetRecoil_ = ( recoilJet.Energy()==0. ) ? recoilJet.nCharged : 0;
+     nNeutralJetRecoil_ = ( recoilJet.Energy()==0. ) ? recoilJet.nNeutral : 0;
    //eChargedHadronsJetRecoil_ = recoilJet.eChargedHadrons;
    //eNeutralHadronsJetRecoil_ = recoilJet.eNeutralHadrons;
    //ePhotonsJetRecoil_ = recoilJet.ePhotons;
@@ -1074,3 +1220,47 @@ double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, flo
   return ( - (eleVx-PVx)*elePy + (eleVy-PVy)*elePx ) / elePt;
 }
 
+
+
+/*
+Double_t Ntp1Analyzer_HZZlljj::computeQGLikelihood(const Double_t jtpt, Int_t ncharged, Int_t nneutral, Double_t PtD, Double_t r) {
+
+//std::vector<variable*> vars;
+//  std::vector<variable*> spects;
+  TMVA::Reader *reader=new TMVA::Reader("Reader");
+    Double_t result;
+//AddVariables(vars);
+//  AddSpectators(spects);
+//  AddVariableAndSpectators(reader,vars,spects);
+  
+std::cout << "jtpt: " << jtpt << std::endl;
+  if(15.<jtpt&&jtpt<30.)reader->BookMVA("PDEFoam","Bins/15-30/weights/TMVA Analysis_PDEFoam.weights.xml"); else
+  if(30.<jtpt&&jtpt<50.)reader->BookMVA("PDEFoam","Bins/30-50/weights/TMVA Analysis_PDEFoam.weights.xml"); else
+  if(50.<jtpt&&jtpt<80.)reader->BookMVA("PDEFoam","Bins/50-80/weights/TMVA Analysis_PDEFoam.weights.xml"); else
+  if(80.<jtpt&&jtpt<120.){
+    std::cout << "in here" << std::endl;
+    reader->BookMVA("PDEFoam","Bins/80-120/weights/TMVA Analysis_PDEFoam.weights.xml"); 
+    std::cout << "done" << std::endl;
+    } else
+  if(120.<jtpt&&jtpt<170.)reader->BookMVA("PDEFoam","Bins/120-170/weights/TMVA Analysis_PDEFoam.weights.xml"); else
+  if(170.<jtpt&&jtpt<300.)reader->BookMVA("PDEFoam","Bins/170-300/weights/TMVA Analysis_PDEFoam.weights.xml"); else
+  if(300.<jtpt&&jtpt<470.)reader->BookMVA("PDEFoam","Bins/300-470/weights/TMVA Analysis_PDEFoam.weights.xml"); else
+  if(470.<jtpt&&jtpt<600.)reader->BookMVA("PDEFoam","Bins/470-6000/weights/TMVA Analysis_PDEFoam.weights.xml");else
+  return -1.0; //dentro l'else
+  
+//std::vector<variable*>::iterator it;
+//  for(it=vars.begin();it!=vars.end();it++)
+//          {
+//          if((*it)->name=="ncharged") (*it)->SetVar(&ncharged); else
+//          if((*it)->name=="nneutral") (*it)->SetVar(&nneutral); else
+//          if((*it)->name=="PtD") (*it)->SetVar(&PtD);else
+//          if((*it)->name== "r") (*it)->SetVar(&r);else
+//          {return -2.0;}
+//          
+//          }
+std::cout << "jaja" << std::endl;
+  result=reader->EvaluateMVA("PDEFoam");
+  return result;
+  
+}
+*/
