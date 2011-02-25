@@ -128,8 +128,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   Double_t ptBins[nPtBins+1];
   fitTools::getBins_int( nPtBins+1, ptBins, 15., 1000. );
 
-  std::vector<TH1D*> vh1_ptDJet_all_presel = getHistoVector(nPtBins, ptBins, "ptDJet_all_presel", 50, 0., 1.);
-  std::vector<TH1D*> vh1_rmsCandJet_all_presel = getHistoVector(nPtBins, ptBins, "rmsCandJet_all_presel", 50, 0., 0.07);
+  std::vector<TH1D*> vh1_ptDJet_all_presel = getHistoVector(nPtBins, ptBins, "ptDJet_all_presel", 60, 0., 1.);
+  std::vector<TH1D*> vh1_rmsCandJet_all_presel = getHistoVector(nPtBins, ptBins, "rmsCandJet_all_presel", 60, 0., 0.07);
   std::vector<TH1D*> vh1_nChargedJet_all_presel = getHistoVector(nPtBins, ptBins, "nChargedJet_all_presel", 41, -0.5, 40.5);
   std::vector<TH1D*> vh1_nNeutralJet_all_presel = getHistoVector(nPtBins, ptBins, "nNeutralJet_all_presel", 41, -0.5, 40.5);
 
@@ -152,16 +152,16 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 27, 30., 400.);
   h1_ptJetRecoil->Sumw2();
-  TH1D* h1_ptDJetRecoil = new TH1D("ptDJetRecoil", "", 50, 0., 1.);
+  TH1D* h1_ptDJetRecoil = new TH1D("ptDJetRecoil", "", 60, 0., 1.);
   h1_ptDJetRecoil->Sumw2();
-  TH1D* h1_rmsCandJetRecoil = new TH1D("rmsCandJetRecoil", "", 50, 0., 0.07);
+  TH1D* h1_rmsCandJetRecoil = new TH1D("rmsCandJetRecoil", "", 60, 0., 0.07);
   h1_rmsCandJetRecoil->Sumw2();
   TH1D* h1_nChargedJetRecoil = new TH1D("nChargedJetRecoil", "", 41, -0.5, 40.5);
   h1_nChargedJetRecoil->Sumw2();
   TH1D* h1_nNeutralJetRecoil = new TH1D("nNeutralJetRecoil", "", 41, -0.5, 40.5);
   h1_nNeutralJetRecoil->Sumw2();
 
-  int nBins_invMass = 40;
+  int nBins_invMass = 80;
   float invMassMin = 30.;
   float invMassMax = 120.;
   float invMassMin_ll = 60.;
@@ -199,54 +199,63 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_deltaR_part1->Sumw2();
   TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 30, -7.5, 22.5);
   h1_partFlavorJet1->Sumw2();
-  std::vector<TH1D*> vh1_ptDJet1 = getHistoVector(nPtBins, ptBins, "ptDJet1", 50, 0., 1.);
-  std::vector<TH1D*> vh1_rmsCandJet1 = getHistoVector(nPtBins, ptBins, "rmsCandJet1", 50, 0., 0.1);
+  std::vector<TH1D*> vh1_ptDJet1 = getHistoVector(nPtBins, ptBins, "ptDJet1", 60, 0., 1.);
+  std::vector<TH1D*> vh1_rmsCandJet1 = getHistoVector(nPtBins, ptBins, "rmsCandJet1", 60, 0., 0.1);
   std::vector<TH1D*> vh1_nChargedJet1 = getHistoVector(nPtBins, ptBins, "nChargedJet1", 51, -0.5, 50.5);
   std::vector<TH1D*> vh1_nNeutralJet1 = getHistoVector(nPtBins, ptBins, "nNeutralJet1", 51, -0.5, 50.5);
-  std::vector<TH1D*> vh1_QGLikelihoodJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet1", 50, 0., 1.);
-  std::vector<TH1D*> vh1_QGLikelihood_normsJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihood_normsJet1", 50, 0., 1.);
-  TH1D* h1_QGLikelihoodJet1 = new TH1D("QGLikelihoodJet1", "", 50, 0., 1.);
+  std::vector<TH1D*> vh1_QGLikelihoodJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet1", 60, 0., 1.);
+  std::vector<TH1D*> vh1_QGLikelihood_normsJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihood_normsJet1", 60, 0., 1.);
+  TH1D* h1_QGLikelihoodJet1 = new TH1D("QGLikelihoodJet1", "", 60, 0., 1.);
   h1_QGLikelihoodJet1->Sumw2();
-  TH1D* h1_QGLikelihood_normsJet1 = new TH1D("QGLikelihood_normsJet1", "", 50, 0., 1.);
+  TH1D* h1_QGLikelihood_normsJet1 = new TH1D("QGLikelihood_normsJet1", "", 60, 0., 1.);
   h1_QGLikelihood_normsJet1->Sumw2();
-  TH1D* h1_QGLikelihoodJet1_eta2 = new TH1D("QGLikelihoodJet1_eta2", "", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodJet1_eta2 = new TH1D("QGLikelihoodJet1_eta2", "", 60, 0., 1.);
   h1_QGLikelihoodJet1_eta2->Sumw2();
 
 
-  TH1D* h1_deltaR_part2 = new TH1D("deltaR_part2", "", 50, 0., 0.8);
+  TH1D* h1_deltaR_part2 = new TH1D("deltaR_part2", "", 60, 0., 0.8);
   h1_deltaR_part2->Sumw2();
   TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 30, -7.5, 22.5);
   h1_partFlavorJet2->Sumw2();
 
-  std::vector<TH1D*> vh1_ptDJet2 = getHistoVector(nPtBins, ptBins, "ptDJet2", 50, 0., 1.);
-  std::vector<TH1D*> vh1_rmsCandJet2 = getHistoVector(nPtBins, ptBins, "rmsCandJet2", 50, 0., 0.1);
+  std::vector<TH1D*> vh1_ptDJet2 = getHistoVector(nPtBins, ptBins, "ptDJet2", 60, 0., 1.);
+  std::vector<TH1D*> vh1_rmsCandJet2 = getHistoVector(nPtBins, ptBins, "rmsCandJet2", 60, 0., 0.1);
   std::vector<TH1D*> vh1_nChargedJet2 = getHistoVector(nPtBins, ptBins, "nChargedJet2", 51, -0.5, 50.5);
   std::vector<TH1D*> vh1_nNeutralJet2 = getHistoVector(nPtBins, ptBins, "nNeutralJet2", 51, -0.5, 50.5);
-  std::vector<TH1D*> vh1_QGLikelihoodJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet2", 50, 0., 1.);
-  std::vector<TH1D*> vh1_QGLikelihood_normsJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihood_normsJet2", 50, 0., 1.);
-  TH1D* h1_QGLikelihoodJet2 = new TH1D("QGLikelihoodJet2", "", 40, 0., 1.);
+  std::vector<TH1D*> vh1_QGLikelihoodJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet2", 60, 0., 1.);
+  std::vector<TH1D*> vh1_QGLikelihood_normsJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihood_normsJet2", 60, 0., 1.);
+  TH1D* h1_QGLikelihoodJet2 = new TH1D("QGLikelihoodJet2", "", 60, 0., 1.);
   h1_QGLikelihoodJet2->Sumw2();
-  TH1D* h1_QGLikelihood_normsJet2 = new TH1D("QGLikelihood_normsJet2", "", 40, 0., 1.);
+  TH1D* h1_QGLikelihood_normsJet2 = new TH1D("QGLikelihood_normsJet2", "", 60, 0., 1.);
   h1_QGLikelihood_normsJet2->Sumw2();
-  TH1D* h1_QGLikelihoodJet2_eta2 = new TH1D("QGLikelihoodJet2_eta2", "", 40, 0., 1.);
+  TH1D* h1_QGLikelihoodJet2_eta2 = new TH1D("QGLikelihoodJet2_eta2", "", 60, 0., 1.);
   h1_QGLikelihoodJet2_eta2->Sumw2();
 
-  TH1D* h1_QGLikelihoodProd = new TH1D("QGLikelihoodProd", "", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodProd = new TH1D("QGLikelihoodProd", "", 60, 0., 1.);
   h1_QGLikelihoodProd->Sumw2();
-  TH1D* h1_QGLikelihoodProd_norms = new TH1D("QGLikelihoodProd_norms", "", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodProd_norms = new TH1D("QGLikelihoodProd_norms", "", 60, 0., 1.);
   h1_QGLikelihoodProd_norms->Sumw2();
-  TH1D* h1_QGLikelihoodRevProd = new TH1D("QGLikelihoodRevProd", "", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodRevProd = new TH1D("QGLikelihoodRevProd", "", 60, 0., 1.);
   h1_QGLikelihoodRevProd->Sumw2();
-  TH1D* h1_QGLikelihoodRevProd_norms = new TH1D("QGLikelihoodRevProd_norms", "", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodRevProd_norms = new TH1D("QGLikelihoodRevProd_norms", "", 60, 0., 1.);
   h1_QGLikelihoodRevProd_norms->Sumw2();
 
-  TH1D* h1_QGLikelihoodProd_MW = new TH1D("QGLikelihoodProd_MW", "", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodProd_MW300 = new TH1D("QGLikelihoodProd_MW300", "", 60, 0., 1.);
+  h1_QGLikelihoodProd_MW300->Sumw2();
+  TH1D* h1_QGLikelihoodProd_norms_MW300 = new TH1D("QGLikelihoodProd_norms_MW300", "", 60, 0., 1.);
+  h1_QGLikelihoodProd_norms_MW300->Sumw2();
+  TH1D* h1_QGLikelihoodRevProd_MW300 = new TH1D("QGLikelihoodRevProd_MW300", "", 60, 0., 1.);
+  h1_QGLikelihoodRevProd_MW300->Sumw2();
+  TH1D* h1_QGLikelihoodRevProd_norms_MW300 = new TH1D("QGLikelihoodRevProd_norms_MW300", "", 60, 0., 1.);
+  h1_QGLikelihoodRevProd_norms_MW300->Sumw2();
+
+  TH1D* h1_QGLikelihoodProd_MW = new TH1D("QGLikelihoodProd_MW", "", 60, 0., 1.);
   h1_QGLikelihoodProd_MW->Sumw2();
-  TH1D* h1_QGLikelihoodProd_norms_MW = new TH1D("QGLikelihoodProd_norms_MW", "", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodProd_norms_MW = new TH1D("QGLikelihoodProd_norms_MW", "", 60, 0., 1.);
   h1_QGLikelihoodProd_norms_MW->Sumw2();
-  TH1D* h1_QGLikelihoodRevProd_MW = new TH1D("QGLikelihoodRevProd_MW", "", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodRevProd_MW = new TH1D("QGLikelihoodRevProd_MW", "", 60, 0., 1.);
   h1_QGLikelihoodRevProd_MW->Sumw2();
-  TH1D* h1_QGLikelihoodRevProd_norms_MW = new TH1D("QGLikelihoodRevProd_norms_MW", "", 50, 0., 1.);
+  TH1D* h1_QGLikelihoodRevProd_norms_MW = new TH1D("QGLikelihoodRevProd_norms_MW", "", 60, 0., 1.);
   h1_QGLikelihoodRevProd_norms_MW->Sumw2();
 
   TH1D* h1_mZjj= new TH1D("mZjj", "", nBins_invMass, 70., 120.);
@@ -270,7 +279,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_cosThetaStar->Sumw2();
   TH1D* h1_cosTheta1 = new TH1D("cosTheta1", "", 45, -1.001, 1.001);
   h1_cosTheta1->Sumw2();
-  TH1D* h1_cosTheta2 = new TH1D("cosTheta2", "", 45, -1.001, 1.001);
+  TH1D* h1_cosTheta2 = new TH1D("cosTheta2", "", 45, 0., 1.001);
   h1_cosTheta2->Sumw2();
   TH1D* h1_phi = new TH1D("phi", "", 45, -3.1416, 3.1416);
   h1_phi->Sumw2();
@@ -281,37 +290,51 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_cosThetaStar_kinfit->Sumw2();
   TH1D* h1_cosTheta1_kinfit = new TH1D("cosTheta1_kinfit", "", 45, -1.001, 1.001);
   h1_cosTheta1_kinfit->Sumw2();
-  TH1D* h1_cosTheta2_kinfit = new TH1D("cosTheta2_kinfit", "", 45, -1.001, 1.001);
+  TH1D* h1_cosTheta2_kinfit = new TH1D("cosTheta2_kinfit", "", 45, 0., 1.001);
   h1_cosTheta2_kinfit->Sumw2();
   TH1D* h1_phi_kinfit = new TH1D("phi_kinfit", "", 45, -3.1416, 3.1416);
   h1_phi_kinfit->Sumw2();
   TH1D* h1_phi1_kinfit = new TH1D("phi1_kinfit", "", 45, -3.1416, 3.1416);
   h1_phi1_kinfit->Sumw2();
 
-  TH1D* h1_helicityLD = new TH1D("helicityLD", "", 50, 0., 1.);
+  TH1D* h1_helicityLD = new TH1D("helicityLD", "", 60, 0., 1.);
   h1_helicityLD->Sumw2();
-  TH1D* h1_helicityLD_kinfit = new TH1D("helicityLD_kinfit", "", 50, 0., 1.);
+  TH1D* h1_helicityLD_kinfit = new TH1D("helicityLD_kinfit", "", 60, 0., 1.);
   h1_helicityLD_kinfit->Sumw2();
 
-  TH1D* h1_deltaRZZ= new TH1D("deltaRZZ", "", 50, 0., 6.);
+  TH1D* h1_deltaRZZ= new TH1D("deltaRZZ", "", 60, 0., 6.);
   h1_deltaRZZ->Sumw2();
 
-  TH1D* h1_ZZInvMass_medMass= new TH1D("ZZInvMass_medMass", "", nBins_invMass, 150., 350.);
-  h1_ZZInvMass_medMass->Sumw2();
   TH1D* h1_ZZInvMass_hiMass= new TH1D("ZZInvMass_hiMass", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass->Sumw2();
-  TH1D* h1_ZZInvMass_kinfit_medMass= new TH1D("ZZInvMass_kinfit_medMass", "", nBins_invMass, 150., 350.);
-  h1_ZZInvMass_kinfit_medMass->Sumw2();
   TH1D* h1_ZZInvMass_kinfit_hiMass= new TH1D("ZZInvMass_kinfit_hiMass", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_kinfit_hiMass->Sumw2();
+  TH1D* h1_ZZInvMass_ZjjMassConstr_hiMass  = new TH1D("ZZInvMass_ZjjMassConstr_hiMass", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_ZjjMassConstr_hiMass->Sumw2();
+  TH1D* h1_ZZInvMass_300Mass= new TH1D("ZZInvMass_300Mass", "", nBins_invMass, 250., 500.);
+  h1_ZZInvMass_300Mass->Sumw2();
+  TH1D* h1_ZZInvMass_ZjjMassConstr_300Mass  = new TH1D("ZZInvMass_ZjjMassConstr_300Mass", "", nBins_invMass, 250., 500.);
+  h1_ZZInvMass_ZjjMassConstr_300Mass->Sumw2();
+  TH1D* h1_ZZInvMass_kinfit_300Mass= new TH1D("ZZInvMass_kinfit_300Mass", "", nBins_invMass, 250., 500.);
+  h1_ZZInvMass_kinfit_300Mass->Sumw2();
+  TH1D* h1_ZZInvMass_medMass= new TH1D("ZZInvMass_medMass", "", nBins_invMass, 150., 350.);
+  h1_ZZInvMass_medMass->Sumw2();
+  TH1D* h1_ZZInvMass_ZjjMassConstr_medMass  = new TH1D("ZZInvMass_ZjjMassConstr_medMass", "", nBins_invMass, 150., 350.);
+  h1_ZZInvMass_ZjjMassConstr_medMass->Sumw2();
+  TH1D* h1_ZZInvMass_kinfit_medMass= new TH1D("ZZInvMass_kinfit_medMass", "", nBins_invMass, 150., 350.);
+  h1_ZZInvMass_kinfit_medMass->Sumw2();
   TH1D* h1_ZZInvMass_hiMass_QGlikeli = new TH1D("ZZInvMass_hiMass_QGlikeli", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_QGlikeli->Sumw2();
   TH1D* h1_ZZInvMass_hiMass_QGlikeli_norms = new TH1D("ZZInvMass_hiMass_QGlikeli_norms", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_QGlikeli_norms->Sumw2();
   TH1D* h1_ZZInvMass_hiMass_QGlikeliProd = new TH1D("ZZInvMass_hiMass_QGlikeliProd", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_QGlikeliProd->Sumw2();
+  TH1D* h1_ZZInvMass_kinfit_hiMass_QGlikeliProd = new TH1D("ZZInvMass_kinfit_hiMass_QGlikeliProd", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_kinfit_hiMass_QGlikeliProd->Sumw2();
   TH1D* h1_ZZInvMass_hiMass_QGlikeliRevProd = new TH1D("ZZInvMass_hiMass_QGlikeliRevProd", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_QGlikeliRevProd->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_QGlikeliRevProd_norms = new TH1D("ZZInvMass_hiMass_QGlikeliRevProd_norms", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_QGlikeliRevProd_norms->Sumw2();
 
 
   TH1D* h1_ZZInvMass_MCassoc  = new TH1D("ZZInvMass_MCassoc", "", 100, 200., 600.);
@@ -1068,15 +1091,23 @@ ofstream ofs("run_event.txt");
 
 
 
+/*
+lept1.SetPtEtaPhiE(21.71, 1.16, -0.79, 37.96);
+lept2.SetPtEtaPhiE(154.6, 1.86, 0.73, 509.0);
+jet1.SetPtEtaPhiE(40.5, 2.17, -2.2, 180.4);
+jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
+*/
 
-        //get helicity angles:
-        HelicityAngles hangles;
-        if( chargeLept1<0 ) hangles = computeHelicityAngles(lept1, lept2, jet1, jet2);
-        else                hangles = computeHelicityAngles(lept2, lept1, jet1, jet2);
 
-        HelicityAngles hangles_kinfit;
-        if( chargeLept1<0 ) hangles_kinfit = computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
-        else                hangles_kinfit = computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
+      //get helicity angles:
+
+      HelicityAngles hangles;
+      if( chargeLept1<0 ) hangles = computeHelicityAngles(lept1, lept2, jet1, jet2);
+      else                hangles = computeHelicityAngles(lept2, lept1, jet1, jet2);
+
+      HelicityAngles hangles_kinfit;
+      if( chargeLept1<0 ) hangles_kinfit = computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
+      else                hangles_kinfit = computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
 
       std::vector<double> ldvars;
       //variables in the order : costhetazll,costhetazjj,helphi,costhetastar ,helphizll ; only the first two can be swapped
@@ -1109,6 +1140,7 @@ ofstream ofs("run_event.txt");
       double bProb_kinfit=LD->getBkgdProbability();
       double myld_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
       h1_helicityLD_kinfit->Fill(myld_kinfit, eventWeight);
+
 
 
 /*
@@ -1153,7 +1185,10 @@ std::cout << "cosTheta1: " << hangles.cosTheta1 << std::endl;
 std::cout << "cosTheta2: " << hangles.cosTheta2 << std::endl;
 std::cout << "phi: " << hangles.phi << std::endl;
 std::cout << "phi1: " << hangles.phi1 << std::endl;
+exit(1);
 */
+
+
 
         // fill histograms:
 
@@ -1177,8 +1212,13 @@ std::cout << "phi1: " << hangles.phi1 << std::endl;
         h1_mZjj->Fill( bestZDiJet.M(), eventWeight);
         h1_ZZInvMass_hiMass->Fill(ZZ.M(), eventWeight);
         h1_ZZInvMass_medMass->Fill(ZZ.M(), eventWeight);
+        h1_ZZInvMass_300Mass->Fill(ZZ.M(), eventWeight);
+        h1_ZZInvMass_ZjjMassConstr_hiMass->Fill(ZZ_constr.M(), eventWeight);
+        h1_ZZInvMass_ZjjMassConstr_medMass->Fill(ZZ_constr.M(), eventWeight);
+        h1_ZZInvMass_ZjjMassConstr_300Mass->Fill(ZZ_constr.M(), eventWeight);
         h1_ZZInvMass_kinfit_hiMass->Fill(ZZ_kinfit_jets.M(), eventWeight);
         h1_ZZInvMass_kinfit_medMass->Fill(ZZ_kinfit_jets.M(), eventWeight);
+        h1_ZZInvMass_kinfit_300Mass->Fill(ZZ_kinfit_jets.M(), eventWeight);
         h2_mZjj_vs_mZZ->Fill( ZZ.M(), bestZDiJet.M() );
         h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit_jets.M(), bestZDiJet.M() );
 
@@ -1230,8 +1270,11 @@ std::cout << "phi1: " << hangles.phi1 << std::endl;
         vh1_ptDJet1[jet1PtBin]->Fill( jet1.ptD, eventWeight );
         vh1_nChargedJet1[jet1PtBin]->Fill( jet1.nCharged, eventWeight );
         vh1_nNeutralJet1[jet1PtBin]->Fill( jet1.nNeutral, eventWeight );
+      //float QGLikelihoodJet1 = 1.-qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, jet1.rmsCand );
+      //float QGLikelihood_normsJet1 = 1.-qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
         float QGLikelihoodJet1 = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, jet1.rmsCand );
         float QGLikelihood_normsJet1 = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
+
         vh1_QGLikelihoodJet1[jet1PtBin]->Fill( QGLikelihoodJet1, eventWeight );
         h1_QGLikelihoodJet1->Fill( QGLikelihoodJet1, eventWeight );
         vh1_QGLikelihood_normsJet1[jet1PtBin]->Fill( QGLikelihood_normsJet1, eventWeight );
@@ -1242,8 +1285,11 @@ std::cout << "phi1: " << hangles.phi1 << std::endl;
         vh1_ptDJet2[jet2PtBin]->Fill( jet2.ptD, eventWeight );
         vh1_nChargedJet2[jet2PtBin]->Fill( jet2.nCharged, eventWeight );
         vh1_nNeutralJet2[jet2PtBin]->Fill( jet2.nNeutral, eventWeight );
+      //float QGLikelihoodJet2 = 1.-qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, jet2.rmsCand );
+      //float QGLikelihood_normsJet2 = 1.-qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
         float QGLikelihoodJet2 = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, jet2.rmsCand );
         float QGLikelihood_normsJet2 = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
+
         vh1_QGLikelihoodJet2[jet2PtBin]->Fill( QGLikelihoodJet2, eventWeight );
         h1_QGLikelihoodJet2->Fill( QGLikelihoodJet2, eventWeight );
         vh1_QGLikelihood_normsJet2[jet2PtBin]->Fill( QGLikelihood_normsJet2, eventWeight );
@@ -1261,17 +1307,39 @@ std::cout << "phi1: " << hangles.phi1 << std::endl;
         h1_QGLikelihoodRevProd->Fill( QGLikelihoodRevProd, eventWeight );
         h1_QGLikelihoodRevProd_norms->Fill( QGLikelihoodRevProd_norms, eventWeight );
         
-        if( QGLikelihoodJet1<0.9 && QGLikelihoodJet2<0.9 )
+        if( QGLikelihoodJet1>0.1 && QGLikelihoodJet2>0.1 )
           h1_ZZInvMass_hiMass_QGlikeli->Fill(ZZ_kinfit_jets.M(), eventWeight);
 
-        if( QGLikelihood_normsJet1<0.8 && QGLikelihood_normsJet2<0.8 )
+        if( QGLikelihood_normsJet1>0.15 && QGLikelihood_normsJet2>0.2 )
           h1_ZZInvMass_hiMass_QGlikeli_norms->Fill(ZZ_kinfit_jets.M(), eventWeight);
 
-        if( QGLikelihoodProd_norms<0.2 )
-          h1_ZZInvMass_hiMass_QGlikeliProd->Fill(ZZ_kinfit_jets.M(), eventWeight);
+        if( QGLikelihoodProd_norms>0.11 ) {
+          h1_ZZInvMass_hiMass_QGlikeliProd->Fill(ZZ.M(), eventWeight);
+          h1_ZZInvMass_kinfit_hiMass_QGlikeliProd->Fill(ZZ_kinfit_jets.M(), eventWeight);
+        }
 
-        if( QGLikelihoodRevProd_norms>0.15 )
+        if( QGLikelihoodRevProd<0.06 )
           h1_ZZInvMass_hiMass_QGlikeliRevProd->Fill(ZZ_kinfit_jets.M(), eventWeight);
+
+        if( QGLikelihoodRevProd_norms<0.2 )
+          h1_ZZInvMass_hiMass_QGlikeliRevProd_norms->Fill(ZZ_kinfit_jets.M(), eventWeight);
+
+      //if( QGLikelihoodProd_norms<0.2 )
+      //  h1_ZZInvMass_hiMass_QGlikeliProd->Fill(ZZ_kinfit_jets.M(), eventWeight);
+
+      //if( QGLikelihoodRevProd>0.06 )
+      //  h1_ZZInvMass_hiMass_QGlikeliRevProd->Fill(ZZ_kinfit_jets.M(), eventWeight);
+
+      //if( QGLikelihoodRevProd_norms>0.11 )
+      //  h1_ZZInvMass_hiMass_QGlikeliRevProd_norms->Fill(ZZ_kinfit_jets.M(), eventWeight);
+
+        if( ZZ_kinfit_jets.M()>270. && ZZ_kinfit_jets.M()<330. ) {
+          h1_QGLikelihoodProd_MW300->Fill( QGLikelihoodProd, eventWeight );
+          h1_QGLikelihoodProd_norms_MW300->Fill( QGLikelihoodProd_norms, eventWeight );
+          
+          h1_QGLikelihoodRevProd_MW300->Fill( QGLikelihoodRevProd, eventWeight );
+          h1_QGLikelihoodRevProd_norms_MW300->Fill( QGLikelihoodRevProd_norms, eventWeight );
+        } 
 
         if( ZZ_kinfit_jets.M()>360. && ZZ_kinfit_jets.M()<440. ) {
           h1_QGLikelihoodProd_MW->Fill( QGLikelihoodProd, eventWeight );
@@ -1422,14 +1490,21 @@ std::cout << "phi1: " << hangles.phi1 << std::endl;
   h1_helicityLD->Write();
   h1_helicityLD_kinfit->Write();
 
+  h1_ZZInvMass_300Mass->Write();
   h1_ZZInvMass_medMass->Write();
   h1_ZZInvMass_hiMass->Write();
+  h1_ZZInvMass_ZjjMassConstr_300Mass->Write();
+  h1_ZZInvMass_ZjjMassConstr_medMass->Write();
+  h1_ZZInvMass_ZjjMassConstr_hiMass->Write();
+  h1_ZZInvMass_kinfit_300Mass->Write();
   h1_ZZInvMass_kinfit_medMass->Write();
   h1_ZZInvMass_kinfit_hiMass->Write();
   h1_ZZInvMass_hiMass_QGlikeli->Write();
   h1_ZZInvMass_hiMass_QGlikeli_norms->Write();
   h1_ZZInvMass_hiMass_QGlikeliProd->Write();
+  h1_ZZInvMass_kinfit_hiMass_QGlikeliProd->Write();
   h1_ZZInvMass_hiMass_QGlikeliRevProd->Write();
+  h1_ZZInvMass_hiMass_QGlikeliRevProd_norms->Write();
 
   h1_deltaR_part1->Write();
   h1_ptJet1->Write();
@@ -1471,6 +1546,12 @@ std::cout << "phi1: " << hangles.phi1 << std::endl;
   h1_QGLikelihoodProd_norms->Write();
   h1_QGLikelihoodRevProd->Write();
   h1_QGLikelihoodRevProd_norms->Write();
+
+  h1_QGLikelihoodProd_MW300->Write();
+  h1_QGLikelihoodProd_norms_MW300->Write();
+  h1_QGLikelihoodRevProd_MW300->Write();
+  h1_QGLikelihoodRevProd_norms_MW300->Write();
+
   h1_QGLikelihoodProd_MW->Write();
   h1_QGLikelihoodProd_norms_MW->Write();
   h1_QGLikelihoodRevProd_MW->Write();
@@ -1513,7 +1594,45 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
 
   selectionType_ = selectionType;
 
-  if( selectionType_=="loose" ) {
+  if( selectionType_=="presel" ) {
+
+    ptLept1_thresh_ = 10.;
+    ptLept2_thresh_ = 10.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 70.;
+    mZjj_threshHi_ = 110.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+
+  } else if( selectionType_=="lenzi" ) {
+
+    ptLept1_thresh_ = 10.;
+    ptLept2_thresh_ = 10.;
+    etaLept1_thresh_ = 2.1;
+    etaLept2_thresh_ = 2.1;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 60.;
+    mZll_threshHi_ = 120.;
+    mZjj_threshLo_ = 70.;
+    mZjj_threshHi_ = 110.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+
+  } else if( selectionType_=="loose" ) {
 
     ptLept1_thresh_ = 10.;
     ptLept2_thresh_ = 10.;
@@ -1548,6 +1667,25 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZjj_threshHi_ = 105.;
     deltaRll_thresh_ = 999.;
     deltaRjj_thresh_ = 1.5;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+
+  } else if( selectionType=="loMass" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 55.;
+    ptJet2_thresh_ = 35.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 40.;
+    mZll_threshHi_ = 80.;
+    mZjj_threshLo_ = 81.;
+    mZjj_threshHi_ = 101.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
     ptZll_thresh_ = 0.;
     ptZjj_thresh_ = 0.;
 
@@ -1901,22 +2039,17 @@ HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector le
 
   TLorentzVector Higgs = Zjj + Zll;
 
-  TLorentzVector Zll_Hstar(Zll);
-  Zll_Hstar.Boost(-Higgs.BoostVector());
-  TLorentzVector Zjj_Hstar(Zjj);
-  Zjj_Hstar.Boost(-Higgs.BoostVector());
-
   
+  // define lept1 as negatively charged lepton:
+  TLorentzVector lept1 = leptMinus;
+  TLorentzVector lept2 = leptPlus;
 
   // no charge for jets (well, not really)
   // so choose jet with positive scalar product with Zjj 
-  // in its restframe
-  TLorentzVector jet1_Zstar(jet1);
-  jet1_Zstar.Boost(-Zjj.BoostVector());
-  TLorentzVector jet2_Zstar(jet2);
-  jet2_Zstar.Boost(-Zjj.BoostVector());
-
-  if( jet1_Zstar.Phi()<0. ) { //swap them
+  // in its restframe:
+  TLorentzVector jet1_Zjjstar_tmp(jet1);
+  jet1_Zjjstar_tmp.Boost(-Zjj.BoostVector());
+  if( jet1_Zjjstar_tmp.Phi()<0. ) { //swap them
     TLorentzVector jet1_tmp(jet1);
     TLorentzVector jet2_tmp(jet2);
     jet1 = jet2_tmp;
@@ -1924,65 +2057,113 @@ HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector le
   }
 
 
-  // now define Z1 and Z2 (and their daughters):
+  //     BOOSTS:
 
-  // Z1 is the Z candidate which has its momentum in the Higgs restframe
-  // pointing in the Higgs boost direction (positive scalar product)
-  TLorentzVector Z1, Z2;
-  TLorentzVector daughterZ1_1, daughterZ1_2, daughterZ2_1, daughterZ2_2;
+  // boosts in Higgs CoM frame:
+  TLorentzVector lept1_Hstar(lept1);
+  lept1_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector lept2_Hstar(lept2);
+  lept2_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector jet1_Hstar(jet1);
+  jet1_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector jet2_Hstar(jet2);
+  jet2_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector Zll_Hstar(Zll);
+  Zll_Hstar.Boost(-Higgs.BoostVector());
+  TLorentzVector Zjj_Hstar(Zjj);
+  Zjj_Hstar.Boost(-Higgs.BoostVector());
+
+  // boosts in Zll CoM frame:
+  TLorentzVector lept1_Zllstar(lept1);
+  lept1_Zllstar.Boost(-Zll.BoostVector());
+  TLorentzVector H_Zllstar(Higgs);
+  H_Zllstar.Boost(-Zll.BoostVector());
+
+  // boosts in Zjj CoM frame:
+  TLorentzVector jet1_Zjjstar(jet1);
+  jet1_Zjjstar.Boost(-Zjj.BoostVector());
+  TLorentzVector H_Zjjstar(Higgs);
+  H_Zjjstar.Boost(-Zjj.BoostVector());
+
+
+  returnAngles.cosThetaStar = Zll_Hstar.CosTheta();
+
+//// now compute angle between two decay planes in Higgs CoM
+//// (angle between planes is angle between normal vectors to planes)
+//TVector3 normPlane1 = (lept1_Hstar.Vect()).Cross(lept2_Hstar.Vect());
+//TVector3 normPlane2 = (jet1_Hstar.Vect()).Cross(jet2_Hstar.Vect());
+//returnAngles.phi = normPlane1.Angle(normPlane2);
+
+
+//// and finally compute angle between plane1 and the plane defined by Z1 and the z-axis:
+//TVector3 zAxis(0., 0., 1.);
+//TVector3 normPlane1z = (Zll_Hstar.Vect()).Cross(zAxis);
+//returnAngles.phi1 = normPlane1.Angle(normPlane1z);
+
+  TVector3 v_pbeamLAB( 0.0, 0.0, 1.0 );
+
+  //cross prod beam x Zll
+  TVector3 v_1 = (v_pbeamLAB.Cross(  (Zll_Hstar.Vect()).Unit()) ).Unit();//versor normal to z-z' plane
+
+
+  //v_2 = cross prod l1 x l2 = versor normal to Zll decay plane
+  // careful to the order: L1, the z-axis and Z->ll make a right-handed (non-orthogonal) frame (xyz); at the end we want the angle btw x and y
+  TVector3 v_2((Zll_Hstar.Vect().Cross(lept1_Hstar.Vect().Unit())).Unit());
+
+
+  //v_3 = similar to v_2, BUT
+  //now, if we want a right-handed set of Unit-vectors, keeping the same direction of the z-axis
+  //we must swap the direction of one of the other two vectors of the Z bosons. 
+  //Keeping the same direction of the z-axis
+  //means measuring phiZll and phiZjj w.r.t. to the same v_1 vector (i.e. w.r.t. the same z'-Zll plane)
+  TVector3 v_3(((-1.0*Zjj_Hstar.Vect()).Cross(jet1_Hstar.Vect().Unit())).Unit()) ;
+
+  //in other terms: we can define v_3 as above and then do the crss prod with v_1
+  //or define v_3 in a way consistent with v_2 and then do the cross product with a newly defined
+  //Unit vector v_4 =  (v_pbeamLAB.Cross(  (ZjjboostedX->momentum()).Unit()) ).Unit();//versor normal to z-Zjj plane
+ 
+  float phi1;
   if( Zll_Hstar.Phi()>0. ) {
-    Z1 = Zll;
-    Z2 = Zjj;
-    daughterZ1_1 = leptMinus;
-    daughterZ1_2 = leptPlus;
-    daughterZ2_1 = jet1;
-    daughterZ2_2 = jet2;
+    phi1 = fabs( acos(v_1.Dot(v_2)) );
+    if(v_pbeamLAB.Dot(v_2)>0.0)phi1=-1.0*phi1;
+    else phi1=+1.0*phi1;
   } else {
-    Z1 = Zjj;
-    Z2 = Zll;
-    daughterZ1_1 = jet1;
-    daughterZ1_2 = jet2;
-    daughterZ2_1 = leptMinus;
-    daughterZ2_2 = leptPlus;
+    phi1 = fabs( acos(v_1.Dot(v_3)) );
+    if(v_pbeamLAB.Dot(v_3)>0.0)phi1=+1.0*phi1; 
+    else phi1=-1.0*phi1;
   }
 
-  // boost the daughters in their Z rest frame (only first daughter needed):
-  TLorentzVector daughterZ1_1_Zstar(daughterZ1_1);
-  daughterZ1_1_Zstar.Boost(-Z1.BoostVector());
-  TLorentzVector daughterZ2_1_Zstar(daughterZ2_1);
-  daughterZ2_1_Zstar.Boost(-Z2.BoostVector());
+////phi1 and phi2
+//float phi1 = fabs( acos(v_1.Dot(v_2)) );//two-fold ambiguity when doing the acos
+//float helphiZjj=fabs( acos(v_1.Dot(v_3)) );//two-fold ambiguity when doing the acos
+////phi
+  float phi = fabs( acos(v_2.Dot(v_3)) );//two-fold ambiguity when doing the acos + pi ambiguity from sign of v_3 
 
-  returnAngles.cosTheta1 = daughterZ1_1_Zstar.CosTheta();
-  returnAngles.cosTheta2 = daughterZ2_1_Zstar.CosTheta();
+////resolve sign ambiguities: clockwise rotation around ZllboostedX flight direction
+//if(v_pbeamLAB.Dot(v_2)>0.0)phi1=-1.0*phi1;
+//else phi1=+1.0*phi1;
 
+//if(v_pbeamLAB.Dot(v_3)>0.0)helphiZjj=+1.0*helphiZjj; 
+//else helphiZjj=-1.0*helphiZjj;
 
-  // boost them all into the Higgs restframe:
-  TLorentzVector Z1_Hstar(Z1);
-  Z1_Hstar.Boost(-Higgs.BoostVector());
-  TLorentzVector Z2_Hstar(Z2);
-  Z2_Hstar.Boost(-Higgs.BoostVector());
-  TLorentzVector daughterZ1_1_Hstar(daughterZ1_1);
-  daughterZ1_1_Hstar.Boost(-Higgs.BoostVector());
-  TLorentzVector daughterZ1_2_Hstar(daughterZ1_2);
-  daughterZ1_2_Hstar.Boost(-Higgs.BoostVector());
-  TLorentzVector daughterZ2_1_Hstar(daughterZ2_1);
-  daughterZ2_1_Hstar.Boost(-Higgs.BoostVector());
-  TLorentzVector daughterZ2_2_Hstar(daughterZ2_2);
-  daughterZ2_2_Hstar.Boost(-Higgs.BoostVector());
+  if(lept1_Hstar.Vect().Dot(v_3)>0.0)phi= +1.0 * phi;
+  else phi= -1.0 * phi;
 
-  returnAngles.cosThetaStar = Z1_Hstar.CosTheta();
+  returnAngles.phi1 = phi1;
+  returnAngles.phi = phi;
 
-  // now compute angle between two decay planes in Higgs CoM
-  // (angle between planes is angle between normal vectors to planes)
-  TVector3 normPlane1 = (daughterZ1_1_Hstar.Vect()).Cross(daughterZ1_2_Hstar.Vect());
-  TVector3 normPlane2 = (daughterZ2_1_Hstar.Vect()).Cross(daughterZ2_2_Hstar.Vect());
-  returnAngles.phi = normPlane1.DeltaPhi(normPlane2);
+//std::cout << "helphiZjj: " << helphiZjj << std::endl;
+
+  returnAngles.cosTheta1 =  (-1.0*(lept1_Zllstar.X()* H_Zllstar.X()+
+                                   lept1_Zllstar.Y()* H_Zllstar.Y()+
+                                   lept1_Zllstar.Z()* H_Zllstar.Z())/
+                                  (lept1_Zllstar.Vect().Mag()* H_Zllstar.Vect().Mag())  );
 
 
-  // and finally compute angle between plane1 and the plane defined by Z1 and the z-axis:
-  TVector3 zAxis(0., 0., 1.);
-  TVector3 normPlane1z = (Z1_Hstar.Vect()).Cross(zAxis);
-  returnAngles.phi1 = normPlane1.DeltaPhi(normPlane1z);
+  returnAngles.cosTheta2 =  fabs( (jet1_Zjjstar.X()* H_Zjjstar.X()+
+                                   jet1_Zjjstar.Y()* H_Zjjstar.Y()+
+                                   jet1_Zjjstar.Z()* H_Zjjstar.Z())/
+                                  (jet1_Zjjstar.Vect().Mag()* H_Zjjstar.Vect().Mag())  );
 
 
   return returnAngles;
