@@ -36,7 +36,7 @@ class AnalysisJet : public TLorentzVector {
   float ePhotons;
   float eNeutralEm;
   float eNeutralHadrons;
-//float eMuons;
+  float eMuons;
   float eElectrons;
 //float eHFHadrons;
 //float eHFEM;
@@ -44,8 +44,8 @@ class AnalysisJet : public TLorentzVector {
   int nChargedHadrons;
   int nPhotons;
   int nNeutralHadrons;
-//int nMuons;
-//int nElectrons;
+  int nMuons;
+  int nElectrons;
 //int nHFHadrons;
 //int nHFEM;
 
@@ -595,7 +595,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          chargeFirstMuon = chargeMuon[iMuon];
        } else {
          if( chargeMuon[iMuon]==chargeFirstMuon ) continue;
-         if( fabs(muons[0].Eta())>2.1 && fabs(thisMuon.Eta())>2.1 ) continue;
+         //if( fabs(muons[0].Eta())>2.1 && fabs(thisMuon.Eta())>2.1 ) continue;
          muons.push_back(thisMuon);
        }
 
@@ -906,10 +906,14 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisJet.ePhotons        = photonEnergyAK5PFJet[iJet];
        thisJet.eNeutralEm      = neutralEmEnergyAK5PFJet[iJet];
        thisJet.eNeutralHadrons = neutralHadronEnergyAK5PFJet[iJet];
+       thisJet.eElectrons      = electronEnergyAK5PFJet[iJet];
+       thisJet.eMuons          = muonEnergyAK5PFJet[iJet];
 
        thisJet.nChargedHadrons = chargedHadronMultiplicityAK5PFJet[iJet];
        thisJet.nPhotons        = photonMultiplicityAK5PFJet[iJet];
        thisJet.nNeutralHadrons = neutralHadronMultiplicityAK5PFJet[iJet];
+       thisJet.nElectrons      = electronMultiplicityAK5PFJet[iJet];
+       thisJet.nMuons          = muonMultiplicityAK5PFJet[iJet];
 
        thisJet.nCharged = chargedHadronMultiplicityAK5PFJet[iJet]+electronMultiplicityAK5PFJet[iJet]+muonMultiplicityAK5PFJet[iJet];
        thisJet.nNeutral = neutralHadronMultiplicityAK5PFJet[iJet]+photonMultiplicityAK5PFJet[iJet];
@@ -927,7 +931,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( thisJet.DeltaR( leptons[0] ) <= 0.5 ) continue;
        if( thisJet.DeltaR( leptons[1] ) <= 0.5 ) continue;
 
-       thisJet.eChargedHadrons = chargedHadronEnergyAK5PFJet[iJet];
+       // jet ID:
+       int multiplicity = thisJet.nCharged +  thisJet.nNeutral + HFEMMultiplicityAK5PFJet[iJet] + HFHadronMultiplicityAK5PFJet[iJet];
+       if( multiplicity < 2 ) continue;
+       if( fabs(thisJet.Eta())<2.4 && (thisJet.eChargedHadrons == 0. || thisJet.nChargedHadrons == 0) ) continue;
+       if( thisJet.eNeutralHadrons >= 0.99 ) continue;
+       if( thisJet.ePhotons >= 0.99 ) continue;
+                          
 
        leadJets.push_back(thisJet);
        leadJetsIndex.push_back(iJet);
@@ -989,9 +999,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            ePhotonsJet1_[nPairs_]        = leadJets[iJet].ePhotons;
            eNeutralEmJet1_[nPairs_]      = leadJets[iJet].eNeutralEm;
            eNeutralHadronsJet1_[nPairs_] = leadJets[iJet].eNeutralHadrons;
+           eElectronsJet1_[nPairs_]      = leadJets[iJet].eElectrons;
+           eMuonsJet1_[nPairs_]          = leadJets[iJet].eMuons;
            nChargedHadronsJet1_[nPairs_] = leadJets[iJet].nChargedHadrons;
            nPhotonsJet1_[nPairs_]        = leadJets[iJet].nPhotons;
            nNeutralHadronsJet1_[nPairs_] = leadJets[iJet].nNeutralHadrons;
+           nElectronsJet1_[nPairs_]      = leadJets[iJet].nElectrons;
+           nMuonsJet1_[nPairs_]          = leadJets[iJet].nMuons;
 
            ptDJet1_[nPairs_] = leadJets[iJet].ptD;
            rmsCandJet1_[nPairs_] = leadJets[iJet].rmsCand;
@@ -1007,9 +1021,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            ePhotonsJet2_[nPairs_]        = leadJets[jJet].ePhotons;
            eNeutralEmJet2_[nPairs_]      = leadJets[jJet].eNeutralEm;
            eNeutralHadronsJet2_[nPairs_] = leadJets[jJet].eNeutralHadrons;
+           eElectronsJet2_[nPairs_]      = leadJets[jJet].eElectrons;
+           eMuonsJet2_[nPairs_]          = leadJets[jJet].eMuons;
            nChargedHadronsJet2_[nPairs_] = leadJets[jJet].nChargedHadrons;
            nPhotonsJet2_[nPairs_]        = leadJets[jJet].nPhotons;
            nNeutralHadronsJet2_[nPairs_] = leadJets[jJet].nNeutralHadrons;
+           nElectronsJet2_[nPairs_]      = leadJets[jJet].nElectrons;
+           nMuonsJet2_[nPairs_]          = leadJets[jJet].nMuons;
 
            ptDJet2_[nPairs_] = leadJets[jJet].ptD;
            rmsCandJet2_[nPairs_] = leadJets[jJet].rmsCand;
@@ -1175,7 +1193,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // store event partons in tree:
        for( unsigned iMc=0; iMc<nMc; ++iMc ) {
 
-         if( statusMc[iMc]==3 && (fabs(idMc[iMc])<=6 || idMc[iMc]==21) ) {
+         //if( statusMc[iMc]==3 && (fabs(idMc[iMc])<=6 || idMc[iMc]==21) ) {
+         if( statusMc[iMc]==3 && pMc[iMc]*sin(thetaMc[iMc])>0.1 ) {
 
            TLorentzVector* thisParticle = new TLorentzVector();
            thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
