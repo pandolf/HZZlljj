@@ -42,6 +42,9 @@ class AnalysisJet : public TLorentzVector {
   int nCharged;
   int nNeutral;
 
+  float muonEnergyFraction;
+  float electronEnergyFraction;
+
 };
 
 
@@ -146,6 +149,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_ptJet1->Sumw2();
   TH1D* h1_ptJet2 = new TH1D("ptJet2", "", 27, 30., 150.);
   h1_ptJet2->Sumw2();
+  TH1D* h1_eElectronsJet1 = new TH1D("eElectronsJet1", "", 60, 0., 1.0001);
+  h1_eElectronsJet1->Sumw2();
+  TH1D* h1_eElectronsJet2 = new TH1D("eElectronsJet2", "", 60, 0., 1.0001);
+  h1_eElectronsJet2->Sumw2();
+  TH1D* h1_eMuonsJet1 = new TH1D("eMuonsJet1", "", 60, 0., 1.0001);
+  h1_eMuonsJet1->Sumw2();
+  TH1D* h1_eMuonsJet2 = new TH1D("eMuonsJet2", "", 60, 0., 1.0001);
+  h1_eMuonsJet2->Sumw2();
 
   TH1D* h1_ptJetBest1 = new TH1D("ptJetBest1", "", 27, 30., 400.);
   h1_ptJetBest1->Sumw2();
@@ -197,7 +208,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_deltaR_part1 = new TH1D("deltaR_part1", "", 50, 0., 0.8);
   h1_deltaR_part1->Sumw2();
-  TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 30, -7.5, 22.5);
+  //TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 30, -7.5, 22.5);
+  TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 38, -15.5, 22.5);
   h1_partFlavorJet1->Sumw2();
   std::vector<TH1D*> vh1_ptDJet1 = getHistoVector(nPtBins, ptBins, "ptDJet1", 60, 0., 1.);
   std::vector<TH1D*> vh1_rmsCandJet1 = getHistoVector(nPtBins, ptBins, "rmsCandJet1", 60, 0., 0.1);
@@ -215,7 +227,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_deltaR_part2 = new TH1D("deltaR_part2", "", 60, 0., 0.8);
   h1_deltaR_part2->Sumw2();
-  TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 30, -7.5, 22.5);
+  //TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 30, -7.5, 22.5);
+  TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 38, -15.5, 22.5);
   h1_partFlavorJet2->Sumw2();
 
   std::vector<TH1D*> vh1_ptDJet2 = getHistoVector(nPtBins, ptBins, "ptDJet2", 60, 0., 1.);
@@ -299,6 +312,16 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_helicityLD = new TH1D("helicityLD", "", 60, 0., 1.);
   h1_helicityLD->Sumw2();
+  TH1D* h1_helicityLD_MW200 = new TH1D("helicityLD_MW200", "", 100, 0., 1.);
+  h1_helicityLD_MW200->Sumw2();
+  TH1D* h1_helicityLD_MW250 = new TH1D("helicityLD_MW250", "", 100, 0., 1.);
+  h1_helicityLD_MW250->Sumw2();
+  TH1D* h1_helicityLD_MW300 = new TH1D("helicityLD_MW300", "", 100, 0., 1.);
+  h1_helicityLD_MW300->Sumw2();
+  TH1D* h1_helicityLD_MW400 = new TH1D("helicityLD_MW400", "", 100, 0., 1.);
+  h1_helicityLD_MW400->Sumw2();
+  TH1D* h1_helicityLD_MW500 = new TH1D("helicityLD_MW500", "", 100, 0., 1.);
+  h1_helicityLD_MW500->Sumw2();
   TH1D* h1_helicityLD_kinfit = new TH1D("helicityLD_kinfit", "", 60, 0., 1.);
   h1_helicityLD_kinfit->Sumw2();
 
@@ -335,6 +358,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_ZZInvMass_hiMass_QGlikeliRevProd->Sumw2();
   TH1D* h1_ZZInvMass_hiMass_QGlikeliRevProd_norms = new TH1D("ZZInvMass_hiMass_QGlikeliRevProd_norms", "", nBins_invMass, 200., 600.);
   h1_ZZInvMass_hiMass_QGlikeliRevProd_norms->Sumw2();
+  TH1D* h1_ZZInvMass_hiMass_helicityLD = new TH1D("ZZInvMass_hiMass_helicityLD", "", nBins_invMass, 200., 600.);
+  h1_ZZInvMass_hiMass_helicityLD->Sumw2();
 
 
   TH1D* h1_ZZInvMass_MCassoc  = new TH1D("ZZInvMass_MCassoc", "", 100, 200., 600.);
@@ -528,6 +553,10 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("nChargedJet1", nChargedJet1);
   Int_t nNeutralJet1[50];
   tree_->SetBranchAddress("nNeutralJet1", nNeutralJet1);
+  Float_t eMuonsJet1[50];
+  tree_->SetBranchAddress("eMuonsJet1", eMuonsJet1);
+  Float_t eElectronsJet1[50];
+  tree_->SetBranchAddress("eElectronsJet1", eElectronsJet1);
 
   Int_t nPFCand1;
   tree_->SetBranchAddress("nPFCand1", &nPFCand1);
@@ -562,6 +591,10 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("nChargedJet2", nChargedJet2);
   Int_t nNeutralJet2[50];
   tree_->SetBranchAddress("nNeutralJet2", nNeutralJet2);
+  Float_t eMuonsJet2[50];
+  tree_->SetBranchAddress("eMuonsJet2", eMuonsJet2);
+  Float_t eElectronsJet2[50];
+  tree_->SetBranchAddress("eElectronsJet2", eElectronsJet2);
 
   Int_t nPFCand2;
   tree_->SetBranchAddress("nPFCand2", &nPFCand2);
@@ -597,6 +630,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   float nEvents_pre_leptPt_leptMass_jetPt_jetMass=0.;
   float nEvents_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj=0.;
 
+  float nEvents_tautau=0.;
+  float nEvents_tautau_MW=0.;
 
 
   int nEntries = tree_->GetEntries();
@@ -762,16 +797,25 @@ ofstream ofs("run_event.txt");
       jet1.ptD = ptDJet1[iJetPair];
       jet1.nCharged = nChargedJet1[iJetPair];
       jet1.nNeutral = nNeutralJet1[iJetPair];
+      jet1.muonEnergyFraction = eMuonsJet1[iJetPair]/jet1.Energy();
+      jet1.electronEnergyFraction = eElectronsJet1[iJetPair]/jet1.Energy();
 
       jet2.rmsCand = rmsCandJet2[iJetPair];
       jet2.ptD = ptDJet2[iJetPair];
       jet2.nCharged = nChargedJet2[iJetPair];
       jet2.nNeutral = nNeutralJet2[iJetPair];
+      jet2.muonEnergyFraction = eMuonsJet2[iJetPair]/jet2.Energy();
+      jet2.electronEnergyFraction = eElectronsJet2[iJetPair]/jet2.Energy();
 
       TLorentzVector diJet = jet1 + jet2;
 
+    //if( jet1.Pt()>ptJet1_thresh_ && jet2.Pt()>ptJet2_thresh_ && fabs(jet1.Eta())<etaJet1_thresh_ && fabs(jet2.Eta())<etaJet1_thresh_ 
+    // && jet1.DeltaR(jet2) < deltaRjj_thresh_ && diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ && diJet.Pt() > ptZjj_thresh_ )
+    //  jetPairs_selected.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
+
       if( jet1.Pt()>ptJet1_thresh_ && jet2.Pt()>ptJet2_thresh_ && fabs(jet1.Eta())<etaJet1_thresh_ && fabs(jet2.Eta())<etaJet1_thresh_ 
-       && jet1.DeltaR(jet2) < deltaRjj_thresh_ && diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ && diJet.Pt() > ptZjj_thresh_ )
+       && jet1.DeltaR(jet2) < deltaRjj_thresh_ && diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ && diJet.Pt() > ptZjj_thresh_ 
+       && jet1.electronEnergyFraction < 0.5 && jet1.muonEnergyFraction < 0.4 && jet2.electronEnergyFraction < 0.5 && jet2.muonEnergyFraction < 0.4 )
         jetPairs_selected.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
 
@@ -1123,8 +1167,18 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
       LD->setMeasurables(ldvars);
       double sProb=LD->getSignalProbability();
       double bProb=LD->getBkgdProbability();
-      double myld=sProb/(sProb+bProb);
-      h1_helicityLD->Fill(myld, eventWeight);
+      double helicityLD=sProb/(sProb+bProb);
+      h1_helicityLD->Fill(helicityLD, eventWeight);
+      if( ZZ.M()>185. && ZZ.M()<215. )
+        h1_helicityLD_MW200->Fill(helicityLD, eventWeight);
+      if( ZZ.M()>235. && ZZ.M()<265. )
+        h1_helicityLD_MW250->Fill(helicityLD, eventWeight);
+      if( ZZ.M()>280. && ZZ.M()<320. )
+        h1_helicityLD_MW300->Fill(helicityLD, eventWeight);
+      if( ZZ.M()>370. && ZZ.M()<430. )
+        h1_helicityLD_MW400->Fill(helicityLD, eventWeight);
+      if( ZZ.M()>450. && ZZ.M()<550. )
+        h1_helicityLD_MW500->Fill(helicityLD, eventWeight);
 
       std::vector<double> ldvars_kinfit;
       //variables in the order : costhetazll,costhetazjj,helphi,costhetastar ,helphizll ; only the first two can be swapped
@@ -1138,8 +1192,8 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
       LD->setMeasurables(ldvars_kinfit);
       double sProb_kinfit=LD->getSignalProbability();
       double bProb_kinfit=LD->getBkgdProbability();
-      double myld_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
-      h1_helicityLD_kinfit->Fill(myld_kinfit, eventWeight);
+      double helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
+      h1_helicityLD_kinfit->Fill(helicityLD_kinfit, eventWeight);
 
 
 
@@ -1199,6 +1253,11 @@ exit(1);
           h1_ptJet1->Fill( jet2.Pt(), eventWeight );
           h1_ptJet2->Fill( jet1.Pt(), eventWeight );
         }
+        h1_eMuonsJet1->Fill( jet1.muonEnergyFraction, eventWeight );
+        h1_eMuonsJet2->Fill( jet2.muonEnergyFraction, eventWeight );
+        h1_eElectronsJet1->Fill( jet1.electronEnergyFraction, eventWeight );
+        h1_eElectronsJet2->Fill( jet2.electronEnergyFraction, eventWeight );
+
         h1_ptLept1->Fill( lept1.Pt(), eventWeight );
         h1_ptLept2->Fill( lept2.Pt(), eventWeight );
         h1_deltaRjj->Fill( jet1.DeltaR(jet2), eventWeight);
@@ -1349,6 +1408,8 @@ exit(1);
           h1_QGLikelihoodRevProd_norms_MW->Fill( QGLikelihoodRevProd_norms, eventWeight );
         } 
 
+        if( helicityLD > 0.765 )
+          h1_ZZInvMass_hiMass_helicityLD->Fill(ZZ.M(), eventWeight);
 
         //match to partons:
         int partFlavor1=0;
@@ -1379,6 +1440,11 @@ exit(1);
         h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
         h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
 
+if( abs(partFlavor1)==15 && abs(partFlavor2)==15 ) {
+  nEvents_tautau += 1;
+if( ZZ.M()>350. && ZZ.M()<450. ) {
+  nEvents_tautau_MW += 1;
+}}
 
       } //if passes selection
 
@@ -1415,6 +1481,8 @@ exit(1);
 //    << nEvents500_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj*1000. << "\t"
 //    << std::endl;
 
+std::cout << "nEvents_tautau: " << nEvents_tautau << std::endl;
+std::cout << "nEvents_tautau_MW: " << nEvents_tautau_MW << std::endl;
 
   outFile_->cd();
 
@@ -1488,6 +1556,11 @@ exit(1);
   h1_phi1_kinfit->Write();
   
   h1_helicityLD->Write();
+  h1_helicityLD_MW200->Write();
+  h1_helicityLD_MW250->Write();
+  h1_helicityLD_MW300->Write();
+  h1_helicityLD_MW400->Write();
+  h1_helicityLD_MW500->Write();
   h1_helicityLD_kinfit->Write();
 
   h1_ZZInvMass_300Mass->Write();
@@ -1505,13 +1578,18 @@ exit(1);
   h1_ZZInvMass_kinfit_hiMass_QGlikeliProd->Write();
   h1_ZZInvMass_hiMass_QGlikeliRevProd->Write();
   h1_ZZInvMass_hiMass_QGlikeliRevProd_norms->Write();
+  h1_ZZInvMass_hiMass_helicityLD->Write();
 
   h1_deltaR_part1->Write();
   h1_ptJet1->Write();
+  h1_eElectronsJet1->Write();
+  h1_eMuonsJet1->Write();
   h1_partFlavorJet1->Write();
 
   h1_deltaR_part2->Write();
   h1_ptJet2->Write();
+  h1_eElectronsJet2->Write();
+  h1_eMuonsJet2->Write();
   h1_partFlavorJet2->Write();
 
   h1_deltaRZZ->Write();
@@ -2088,17 +2166,6 @@ HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector le
 
   returnAngles.cosThetaStar = Zll_Hstar.CosTheta();
 
-//// now compute angle between two decay planes in Higgs CoM
-//// (angle between planes is angle between normal vectors to planes)
-//TVector3 normPlane1 = (lept1_Hstar.Vect()).Cross(lept2_Hstar.Vect());
-//TVector3 normPlane2 = (jet1_Hstar.Vect()).Cross(jet2_Hstar.Vect());
-//returnAngles.phi = normPlane1.Angle(normPlane2);
-
-
-//// and finally compute angle between plane1 and the plane defined by Z1 and the z-axis:
-//TVector3 zAxis(0., 0., 1.);
-//TVector3 normPlane1z = (Zll_Hstar.Vect()).Cross(zAxis);
-//returnAngles.phi1 = normPlane1.Angle(normPlane1z);
 
   TVector3 v_pbeamLAB( 0.0, 0.0, 1.0 );
 
@@ -2122,37 +2189,28 @@ HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector le
   //or define v_3 in a way consistent with v_2 and then do the cross product with a newly defined
   //Unit vector v_4 =  (v_pbeamLAB.Cross(  (ZjjboostedX->momentum()).Unit()) ).Unit();//versor normal to z-Zjj plane
  
-  float phi1;
-  if( Zll_Hstar.Phi()>0. ) {
-    phi1 = fabs( acos(v_1.Dot(v_2)) );
-    if(v_pbeamLAB.Dot(v_2)>0.0)phi1=-1.0*phi1;
-    else phi1=+1.0*phi1;
-  } else {
-    phi1 = fabs( acos(v_1.Dot(v_3)) );
-    if(v_pbeamLAB.Dot(v_3)>0.0)phi1=+1.0*phi1; 
-    else phi1=-1.0*phi1;
-  }
+  // helphiZll:
+  float phiZll = fabs( acos(v_1.Dot(v_2)) );
+  if(v_pbeamLAB.Dot(v_2)>0.0)phiZll=-1.0*phiZll;
+  else phiZll=+1.0*phiZll;
 
-////phi1 and phi2
-//float phi1 = fabs( acos(v_1.Dot(v_2)) );//two-fold ambiguity when doing the acos
-//float helphiZjj=fabs( acos(v_1.Dot(v_3)) );//two-fold ambiguity when doing the acos
-////phi
+  // helphiZjj:
+  float phiZjj = fabs( acos(v_1.Dot(v_3)) );
+  if(v_pbeamLAB.Dot(v_3)>0.0)phiZjj=+1.0*phiZjj; 
+  else phiZjj=-1.0*phiZjj;
+
+
+  float phi1 = phiZll;
+
+
+  //phi
   float phi = fabs( acos(v_2.Dot(v_3)) );//two-fold ambiguity when doing the acos + pi ambiguity from sign of v_3 
-
-////resolve sign ambiguities: clockwise rotation around ZllboostedX flight direction
-//if(v_pbeamLAB.Dot(v_2)>0.0)phi1=-1.0*phi1;
-//else phi1=+1.0*phi1;
-
-//if(v_pbeamLAB.Dot(v_3)>0.0)helphiZjj=+1.0*helphiZjj; 
-//else helphiZjj=-1.0*helphiZjj;
-
   if(lept1_Hstar.Vect().Dot(v_3)>0.0)phi= +1.0 * phi;
   else phi= -1.0 * phi;
 
   returnAngles.phi1 = phi1;
   returnAngles.phi = phi;
 
-//std::cout << "helphiZjj: " << helphiZjj << std::endl;
 
   returnAngles.cosTheta1 =  (-1.0*(lept1_Zllstar.X()* H_Zllstar.X()+
                                    lept1_Zllstar.Y()* H_Zllstar.Y()+
