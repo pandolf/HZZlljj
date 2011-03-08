@@ -935,9 +935,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        int multiplicity = thisJet.nCharged +  thisJet.nNeutral + HFEMMultiplicityAK5PFJet[iJet] + HFHadronMultiplicityAK5PFJet[iJet];
        if( multiplicity < 2 ) continue;
        if( fabs(thisJet.Eta())<2.4 && (thisJet.eChargedHadrons == 0. || thisJet.nChargedHadrons == 0) ) continue;
-       if( thisJet.eNeutralHadrons >= 0.99 ) continue;
-       if( thisJet.ePhotons >= 0.99 ) continue;
-                          
+       if( thisJet.eNeutralHadrons >= 0.99*thisJet.Energy() ) continue;
+       if( thisJet.ePhotons >= 0.99*thisJet.Energy() ) continue;
 
        leadJets.push_back(thisJet);
        leadJetsIndex.push_back(iJet);
