@@ -1805,6 +1805,26 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZll_thresh_ = 95.;
     ptZjj_thresh_ = 0.;
 
+  } else if( selectionType=="newopt400" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 125.;
+    ptJet2_thresh_ = 50.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 81.;
+    mZll_threshHi_ = 101.;
+    mZjj_threshLo_ = 81.;
+    mZjj_threshHi_ = 101.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 1.1;
+    ptZll_thresh_ = 125.;
+    ptZjj_thresh_ = 0.;
+    //QGLikelihoodProd_thresh_ = 0.02;
+
   } else if( selectionType=="opt500" ) {
 
     ptLept1_thresh_ = 40.;
