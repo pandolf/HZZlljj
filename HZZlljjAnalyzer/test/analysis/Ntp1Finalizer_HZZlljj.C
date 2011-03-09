@@ -49,18 +49,9 @@ class AnalysisJet : public TLorentzVector {
 
 
 
-struct HelicityAngles {
-
-  float cosTheta1;
-  float cosTheta2;
-  float cosThetaStar;
-  float phi;
-  float phi1;
-
-};
 
 
-HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
+HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
 
 
 
@@ -630,8 +621,6 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   float nEvents_pre_leptPt_leptMass_jetPt_jetMass=0.;
   float nEvents_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj=0.;
 
-  float nEvents_tautau=0.;
-  float nEvents_tautau_MW=0.;
 
 
   int nEntries = tree_->GetEntries();
@@ -1145,26 +1134,19 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
 
       //get helicity angles:
 
-      HelicityAngles hangles;
+      HelicityLikelihoodDiscriminant::HelicityAngles hangles;
       if( chargeLept1<0 ) hangles = computeHelicityAngles(lept1, lept2, jet1, jet2);
       else                hangles = computeHelicityAngles(lept2, lept1, jet1, jet2);
 
-      HelicityAngles hangles_kinfit;
+      HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinfit;
       if( chargeLept1<0 ) hangles_kinfit = computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
       else                hangles_kinfit = computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
 
-      std::vector<double> ldvars;
-      //variables in the order : costhetazll,costhetazjj,helphi,costhetastar ,helphizll ; only the first two can be swapped
-      ldvars.push_back(hangles.cosTheta1);
-      ldvars.push_back(hangles.cosTheta2);
-      ldvars.push_back(hangles.phi);
-      ldvars.push_back(hangles.cosThetaStar);
-      ldvars.push_back(hangles.phi1);
-      ldvars.push_back(ZZ.M());
 
       HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
 
-      LD->setMeasurables(ldvars);
+
+      LD->setMeasurables(hangles);
       double sProb=LD->getSignalProbability();
       double bProb=LD->getBkgdProbability();
       double helicityLD=sProb/(sProb+bProb);
@@ -1180,16 +1162,8 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
       if( ZZ.M()>450. && ZZ.M()<550. )
         h1_helicityLD_MW500->Fill(helicityLD, eventWeight);
 
-      std::vector<double> ldvars_kinfit;
-      //variables in the order : costhetazll,costhetazjj,helphi,costhetastar ,helphizll ; only the first two can be swapped
-      ldvars_kinfit.push_back(hangles_kinfit.cosTheta1);
-      ldvars_kinfit.push_back(hangles_kinfit.cosTheta2);
-      ldvars_kinfit.push_back(hangles_kinfit.phi);
-      ldvars_kinfit.push_back(hangles_kinfit.cosThetaStar);
-      ldvars_kinfit.push_back(hangles_kinfit.phi1);
-      ldvars_kinfit.push_back(ZZ_kinfit_jets.M());
 
-      LD->setMeasurables(ldvars_kinfit);
+      LD->setMeasurables(hangles_kinfit);
       double sProb_kinfit=LD->getSignalProbability();
       double bProb_kinfit=LD->getBkgdProbability();
       double helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
@@ -1284,17 +1258,17 @@ exit(1);
 
         h1_deltaRZZ->Fill(bestZDiJet.DeltaR(diLepton), eventWeight);
 
-        h1_cosThetaStar->Fill(hangles.cosThetaStar, eventWeight);
-        h1_cosTheta1->Fill(hangles.cosTheta1, eventWeight);
-        h1_cosTheta2->Fill(hangles.cosTheta2, eventWeight);
-        h1_phi->Fill(hangles.phi, eventWeight);
-        h1_phi1->Fill(hangles.phi1, eventWeight);
+        h1_cosThetaStar->Fill(hangles.helCosThetaStar, eventWeight);
+        h1_cosTheta1->Fill(hangles.helCosTheta1, eventWeight);
+        h1_cosTheta2->Fill(hangles.helCosTheta2, eventWeight);
+        h1_phi->Fill(hangles.helPhi, eventWeight);
+        h1_phi1->Fill(hangles.helPhi1, eventWeight);
 
-        h1_cosThetaStar_kinfit->Fill(hangles_kinfit.cosThetaStar, eventWeight);
-        h1_cosTheta1_kinfit->Fill(hangles_kinfit.cosTheta1, eventWeight);
-        h1_cosTheta2_kinfit->Fill(hangles_kinfit.cosTheta2, eventWeight);
-        h1_phi_kinfit->Fill(hangles_kinfit.phi, eventWeight);
-        h1_phi1_kinfit->Fill(hangles_kinfit.phi1, eventWeight);
+        h1_cosThetaStar_kinfit->Fill(hangles_kinfit.helCosThetaStar, eventWeight);
+        h1_cosTheta1_kinfit->Fill(hangles_kinfit.helCosTheta1, eventWeight);
+        h1_cosTheta2_kinfit->Fill(hangles_kinfit.helCosTheta2, eventWeight);
+        h1_phi_kinfit->Fill(hangles_kinfit.helPhi, eventWeight);
+        h1_phi1_kinfit->Fill(hangles_kinfit.helPhi1, eventWeight);
 
 
         //
@@ -1408,7 +1382,8 @@ exit(1);
           h1_QGLikelihoodRevProd_norms_MW->Fill( QGLikelihoodRevProd_norms, eventWeight );
         } 
 
-        if( helicityLD > 0.765 )
+        //if( helicityLD > 0.765 )
+        if( helicityLD > 0.85 )
           h1_ZZInvMass_hiMass_helicityLD->Fill(ZZ.M(), eventWeight);
 
         //match to partons:
@@ -1439,12 +1414,6 @@ exit(1);
         }
         h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
         h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
-
-if( abs(partFlavor1)==15 && abs(partFlavor2)==15 ) {
-  nEvents_tautau += 1;
-if( ZZ.M()>350. && ZZ.M()<450. ) {
-  nEvents_tautau_MW += 1;
-}}
 
       } //if passes selection
 
@@ -1481,8 +1450,6 @@ if( ZZ.M()>350. && ZZ.M()<450. ) {
 //    << nEvents500_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj*1000. << "\t"
 //    << std::endl;
 
-std::cout << "nEvents_tautau: " << nEvents_tautau << std::endl;
-std::cout << "nEvents_tautau_MW: " << nEvents_tautau_MW << std::endl;
 
   outFile_->cd();
 
@@ -2128,9 +2095,9 @@ std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string his
 
 
 
-HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 ) {
+HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 ) {
 
-  HelicityAngles returnAngles;
+  HelicityLikelihoodDiscriminant::HelicityAngles returnAngles;
 
   TLorentzVector Zll = leptPlus + leptMinus;
   TLorentzVector Zjj = jet1 + jet2;
@@ -2184,7 +2151,7 @@ HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector le
   H_Zjjstar.Boost(-Zjj.BoostVector());
 
 
-  returnAngles.cosThetaStar = Zll_Hstar.CosTheta();
+  returnAngles.helCosThetaStar = Zll_Hstar.CosTheta();
 
 
   TVector3 v_pbeamLAB( 0.0, 0.0, 1.0 );
@@ -2228,20 +2195,22 @@ HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector le
   if(lept1_Hstar.Vect().Dot(v_3)>0.0)phi= +1.0 * phi;
   else phi= -1.0 * phi;
 
-  returnAngles.phi1 = phi1;
-  returnAngles.phi = phi;
+  returnAngles.helPhi1 = phi1;
+  returnAngles.helPhi = phi;
 
 
-  returnAngles.cosTheta1 =  (-1.0*(lept1_Zllstar.X()* H_Zllstar.X()+
+  returnAngles.helCosTheta1 =  (-1.0*(lept1_Zllstar.X()* H_Zllstar.X()+
                                    lept1_Zllstar.Y()* H_Zllstar.Y()+
                                    lept1_Zllstar.Z()* H_Zllstar.Z())/
                                   (lept1_Zllstar.Vect().Mag()* H_Zllstar.Vect().Mag())  );
 
 
-  returnAngles.cosTheta2 =  fabs( (jet1_Zjjstar.X()* H_Zjjstar.X()+
+  returnAngles.helCosTheta2 =  fabs( (jet1_Zjjstar.X()* H_Zjjstar.X()+
                                    jet1_Zjjstar.Y()* H_Zjjstar.Y()+
                                    jet1_Zjjstar.Z()* H_Zjjstar.Z())/
                                   (jet1_Zjjstar.Vect().Mag()* H_Zjjstar.Vect().Mag())  );
+
+  returnAngles.mzz = Higgs.M();
 
 
   return returnAngles;
