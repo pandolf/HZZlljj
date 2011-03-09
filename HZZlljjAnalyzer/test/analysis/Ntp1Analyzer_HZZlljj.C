@@ -731,8 +731,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // conversion rejection:
        // ---------------------
        int nMissingHits = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
-       bool convRej_VBTF95 = (nMissingHits<=nMissingHits_thresh95) && (fabs(convDistEle[iEle])>dist_thresh95 && fabs(convDcotEle[iEle])>deltaCotTheta_thresh95);
-       bool convRej_VBTF80 = (nMissingHits<=nMissingHits_thresh80) && (fabs(convDistEle[iEle])>dist_thresh80 && fabs(convDcotEle[iEle])>deltaCotTheta_thresh80);
+       bool convRej_VBTF95 = (nMissingHits<=nMissingHits_thresh95) && (fabs(convDistEle[iEle])>dist_thresh95 || fabs(convDcotEle[iEle])>deltaCotTheta_thresh95);
+       bool convRej_VBTF80 = (nMissingHits<=nMissingHits_thresh80) && (fabs(convDistEle[iEle])>dist_thresh80 || fabs(convDcotEle[iEle])>deltaCotTheta_thresh80);
 
 
 
@@ -944,8 +944,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 
      h1_nJets30->Fill(nJets30);
-    // if( leadJets.size()<2 ) continue;
-    // if( leadJets[1].Pt()<jetPt_thresh ) continue; //at least 2 jets over thresh
+     if( leadJets.size()<2 ) continue;
+     if( leadJets[1].Pt()<jetPt_thresh ) continue; //at least 2 jets over thresh
 
 
 
