@@ -7,7 +7,6 @@
 #include "TLorentzVector.h"
 #include "TRegexp.h"
 #include "TMVA/Reader.h"
-#include "QGLikelihoodCalculator.h"
 
 
 
@@ -379,8 +378,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      ptHat_ = (isMC_) ? genPtHat : ptHat_;
 
-     if( isMC_ ) 
-       if( (ptHat_ > ptHatMax_) || (ptHat_ < ptHatMin_) ) continue;
+   //if( isMC_ ) 
+   //  if( (ptHat_ > ptHatMax_) || (ptHat_ < ptHatMin_) ) continue;
 
 
      bool noLeptons = false;
@@ -645,8 +644,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        // CONVERSION REJECTION VARS:
        Int_t nMissingHits_thresh95 = 1;
-       Float_t deltaCotTheta_thresh95 = 99999.;
-       Float_t dist_thresh95 = 99999.;
+       Float_t deltaCotTheta_thresh95 = 0.;
+       Float_t dist_thresh95 = 0.;
 
        Int_t nMissingHits_thresh80 = 0;
        Float_t deltaCotTheta_thresh80 = 0.02;
@@ -732,8 +731,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // conversion rejection:
        // ---------------------
        int nMissingHits = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
-       bool convRej_VBTF95 = (nMissingHits<=nMissingHits_thresh95) && !(fabs(convDistEle[iEle])<dist_thresh95 && fabs(convDcotEle[iEle])<deltaCotTheta_thresh95);
-       bool convRej_VBTF80 = (nMissingHits<=nMissingHits_thresh80) && !(fabs(convDistEle[iEle])<dist_thresh80 && fabs(convDcotEle[iEle])<deltaCotTheta_thresh80);
+       bool convRej_VBTF95 = (nMissingHits<=nMissingHits_thresh95) && !(fabs(convDistEle[iEle])>dist_thresh95 && fabs(convDcotEle[iEle])>deltaCotTheta_thresh95);
+       bool convRej_VBTF80 = (nMissingHits<=nMissingHits_thresh80) && !(fabs(convDistEle[iEle])>dist_thresh80 && fabs(convDcotEle[iEle])>deltaCotTheta_thresh80);
 
 
 
@@ -934,7 +933,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // jet ID:
        int multiplicity = thisJet.nCharged +  thisJet.nNeutral + HFEMMultiplicityAK5PFJet[iJet] + HFHadronMultiplicityAK5PFJet[iJet];
        if( multiplicity < 2 ) continue;
-       if( fabs(thisJet.Eta())<2.4 && (thisJet.eChargedHadrons == 0. || thisJet.nChargedHadrons == 0) ) continue;
+       if( fabs(thisJet.Eta())<2.4 && thisJet.nChargedHadrons == 0 ) continue;
        if( thisJet.eNeutralHadrons >= 0.99*thisJet.Energy() ) continue;
        if( thisJet.ePhotons >= 0.99*thisJet.Energy() ) continue;
 
