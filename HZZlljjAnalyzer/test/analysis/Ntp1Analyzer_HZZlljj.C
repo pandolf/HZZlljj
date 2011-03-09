@@ -644,8 +644,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        // CONVERSION REJECTION VARS:
        Int_t nMissingHits_thresh95 = 1;
-       Float_t deltaCotTheta_thresh95 = 0.;
-       Float_t dist_thresh95 = 0.;
+       Float_t deltaCotTheta_thresh95 = -1.;
+       Float_t dist_thresh95 = -1.;
 
        Int_t nMissingHits_thresh80 = 0;
        Float_t deltaCotTheta_thresh80 = 0.02;
@@ -731,8 +731,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // conversion rejection:
        // ---------------------
        int nMissingHits = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
-       bool convRej_VBTF95 = (nMissingHits<=nMissingHits_thresh95) && !(fabs(convDistEle[iEle])>dist_thresh95 && fabs(convDcotEle[iEle])>deltaCotTheta_thresh95);
-       bool convRej_VBTF80 = (nMissingHits<=nMissingHits_thresh80) && !(fabs(convDistEle[iEle])>dist_thresh80 && fabs(convDcotEle[iEle])>deltaCotTheta_thresh80);
+       bool convRej_VBTF95 = (nMissingHits<=nMissingHits_thresh95) && (fabs(convDistEle[iEle])>dist_thresh95 && fabs(convDcotEle[iEle])>deltaCotTheta_thresh95);
+       bool convRej_VBTF80 = (nMissingHits<=nMissingHits_thresh80) && (fabs(convDistEle[iEle])>dist_thresh80 && fabs(convDcotEle[iEle])>deltaCotTheta_thresh80);
 
 
 
