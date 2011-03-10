@@ -41,9 +41,11 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Float_t absEtaLept2_;
 
    Float_t  ptJet1_;
+   Float_t  ptJet1_preKin_;
    Float_t absEtaJet1_;
 
    Float_t  ptJet2_;
+   Float_t  ptJet2_preKin_;
    Float_t absEtaJet2_;
 
    Float_t ptJetRecoil_;
@@ -52,12 +54,20 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Float_t deltaR_recoil_Zjj_;
    Float_t deltaR_recoil_Higgs_;
 
+   Float_t QGLikelihoodJet1_;
+   Float_t QGLikelihoodJet2_;
+   Float_t QGLikelihoodJetRecoil_;
+   Float_t QGLikelihoodJet1Jet2_;
+   Float_t QGLikelihoodJet1Jet2Recoil_;
+
    Float_t mZjj_;
    Float_t mZll_;
    Float_t deltaRjj_;
+   Float_t deltaRjj_preKin_;
    Float_t deltaRll_;
 
    Float_t ptZjj_;
+   Float_t ptZjj_preKin_;
    Float_t ptZll_;
 
    Float_t ptZZ_;
@@ -67,6 +77,9 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Float_t deltaAbsEtaZZ_;
    Float_t absDeltaEtaZZ_;
    Float_t absDeltaPhiZZ_;
+
+   Float_t helicityLD_;
+   Float_t helicityLD_kinFit_;
 
    TH1F* h1_mZjj; 
    TH1F* h1_mZjj_matched; 
