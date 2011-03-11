@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
-#include "DrawBase.h"
-#include "fitTools.h"
+#include "CommonTools/DrawBase.h"
+#include "CommonTools/fitTools.h"
 
 
 
@@ -38,22 +38,37 @@ int main(int argc, char* argv[]) {
 
   DrawBase* db = new DrawBase("HZZlljj");
   db->set_pdf_aussi((bool)false);
+  db->set_isCMSArticle((bool)true);
 
   std::string outputdir_str = "HZZlljjPlots_"+selType;
   //if( leptType!="ALL" ) outputdir_str += "_" + leptType;
   outputdir_str += "_" + leptType;
   db->set_outputdir(outputdir_str);
 
-  std::string lohi;
-  if( selType=="opt400" || selType=="opt500" || selType=="opt600" || selType=="tight" ) lohi="HI"; //temp solution
-  else if( selType=="loose" ) lohi="MED";
-  else lohi="LO";
+  std::string lohi="HI";//temp solution
+  if( selType=="opt300" ) lohi="300";
+  if( selType=="opt200" ) {
+    selType="loose";
+    lohi="200";
+  }
+  if( selType=="opt250" ) {
+    selType="loose";
+    lohi="250";
+  }
+  if( selType=="opt350" ) {
+    selType="opt300";
+    lohi="350";
+  }
+  if( selType=="opt450" ) {
+    selType="opt400";
+    lohi="450";
+  }
+//if( selType=="opt400" || selType=="opt500" || selType=="opt600" || selType=="tight" ) lohi="HI"; //temp solution
+//else if( selType=="loose" ) lohi="MED";
+//else lohi="LO";
 
-  std::string flags;
   if( lohi=="LO" ) {
     
-    flags = "loMass";
-
     std::string mcSignal130FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-130_7TeV-jhu-pythia6";
     mcSignal130FileName += "_" + selType;
     mcSignal130FileName += "_" + leptType;
@@ -70,23 +85,60 @@ int main(int argc, char* argv[]) {
     std::cout << "Opened mc file '" << mcSignal150FileName << "'." << std::endl;
     db->add_mcFile( mcSignal150File, "HZZ_qqll_gluonfusion_M150", "HZZlljj (150)", kOrange+1);
 
-  } else if( lohi=="MED" ) {
+  } else if( lohi=="200" ) {
 
-    flags = "medMass";
+    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-200_7TeV-jhu-pythia6";
+    //if( leptType!="ALL" ) mcSignalFileName += "_" + leptType;
+    mcSignalFileName += "_" + selType;
+    mcSignalFileName += "_" + leptType;
+    mcSignalFileName += ".root";
+    TFile* mcSignalFile = TFile::Open(mcSignalFileName.c_str());
+    std::cout << "Opened mc file '" << mcSignalFileName << "'." << std::endl;
+    db->add_mcFile( mcSignalFile, "HZZ_qqll_gluonfusion_M200", "HZZlljj (200)", kRed+1);
 
-    std::string mcSignal200FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-200_7TeV-jhu-pythia6";
-    //if( leptType!="ALL" ) mcSignal200FileName += "_" + leptType;
-    mcSignal200FileName += "_" + selType;
-    mcSignal200FileName += "_" + leptType;
-    mcSignal200FileName += ".root";
-    TFile* mcSignal200File = TFile::Open(mcSignal200FileName.c_str());
-    std::cout << "Opened mc file '" << mcSignal200FileName << "'." << std::endl;
-    db->add_mcFile( mcSignal200File, "HZZ_qqll_gluonfusion_M200", "HZZlljj (200)", kRed+1);
+  } else if( lohi=="250" ) {
+
+    std::string mcSignal250FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-250_7TeV-jhu-pythia6";
+    //if( leptType!="ALL" ) mcSignal250FileName += "_" + leptType;
+    mcSignal250FileName += "_" + selType;
+    mcSignal250FileName += "_" + leptType;
+    mcSignal250FileName += ".root";
+    TFile* mcSignal250File = TFile::Open(mcSignal250FileName.c_str());
+    std::cout << "Opened mc file '" << mcSignal250FileName << "'." << std::endl;
+    db->add_mcFile( mcSignal250File, "HZZ_qqll_gluonfusion_M250", "HZZlljj (250)", kRed+1);
+
+  } else if( lohi=="300" ) {
+
+    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6";
+    //if( leptType!="ALL" ) mcSignalFileName += "_" + leptType;
+    mcSignalFileName += "_" + selType;
+    mcSignalFileName += "_" + leptType;
+    mcSignalFileName += ".root";
+    TFile* mcSignalFile = TFile::Open(mcSignalFileName.c_str());
+    std::cout << "Opened mc file '" << mcSignalFileName << "'." << std::endl;
+    db->add_mcFile( mcSignalFile, "HZZ_qqll_gluonfusion_M300", "HZZlljj (300)", kRed+3);
+
+  } else if( lohi=="350" ) {
+
+    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-350_7TeV-jhu-pythia6";
+    mcSignalFileName += "_" + selType;
+    mcSignalFileName += "_" + leptType;
+    mcSignalFileName += ".root";
+    TFile* mcSignalFile = TFile::Open(mcSignalFileName.c_str());
+    std::cout << "Opened mc file '" << mcSignalFileName << "'." << std::endl;
+    db->add_mcFile( mcSignalFile, "HZZ_qqll_gluonfusion_M350", "HZZlljj (350)", kRed+3);
+
+  } else if( lohi=="450" ) {
+
+    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-450_7TeV-jhu-pythia6";
+    mcSignalFileName += "_" + selType;
+    mcSignalFileName += "_" + leptType;
+    mcSignalFileName += ".root";
+    TFile* mcSignalFile = TFile::Open(mcSignalFileName.c_str());
+    std::cout << "Opened mc file '" << mcSignalFileName << "'." << std::endl;
+    db->add_mcFile( mcSignalFile, "HZZ_qqll_gluonfusion_M450", "HZZlljj (450)", kRed+2);
 
   } else { //HI or 400 or 500
-
-    flags = "hiMass";
-    if( lohi=="400" || lohi=="500" ) flags=lohi;
 
     std::string mcSignal300FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6";
     mcSignal300FileName += "_" + selType;
@@ -135,38 +187,42 @@ int main(int argc, char* argv[]) {
   db->compareDifferentHistos( massZjj_Rch, "DiJet Invariant Mass [GeV/c^{2}]", "massZjj_vs_Rch");
 */
 
-  std::vector< HistoAndName > massZZ_QG;
-  HistoAndName hn1_ZZ;
-  hn1_ZZ.histoName = "ZZInvMass_hiMass";
-  hn1_ZZ.legendName = "Kinematic Selection";
-  massZZ_QG.push_back( hn1_ZZ );
-  HistoAndName hn2_ZZ;
-  hn2_ZZ.histoName = "ZZInvMass_hiMass_QGlikeli";
-  hn2_ZZ.legendName = "Kin. + Q-G Selection";
-  massZZ_QG.push_back( hn2_ZZ );
-  db->compareDifferentHistos( massZZ_QG, "ZZInvMass_QG", "ZZ Invariant Mass",  "GeV/c^{2}");
+  std::string massType = "hiMass";
+  if( lohi=="200" || lohi=="250" ) massType = "medMass";
+  if( lohi=="300" || lohi=="350" ) massType = "300Mass";
 
-/*
+//std::vector< HistoAndName > massZZ_QG;
+//HistoAndName hn1_ZZ;
+//hn1_ZZ.histoName = "mZZ_"+massType;
+//hn1_ZZ.legendName = "Kinematic Selection";
+//massZZ_QG.push_back( hn1_ZZ );
+//HistoAndName hn2_ZZ;
+//hn2_ZZ.histoName = "mZZ_"+massType+"_QGlikeli";
+//hn2_ZZ.legendName = "Kin. + Q-G Selection";
+//massZZ_QG.push_back( hn2_ZZ );
+//db->compareDifferentHistos( massZZ_QG, "mZZ_QG", "ZZ Invariant Mass",  "GeV/c^{2}");
+
+
   // do Z->JetJet comparisons on signal only:
   std::vector< HistoAndName > massZZ_kinfit;
-  HistoAndName hn1_ZZ;
-  hn1_ZZ.histoName = "ZZInvMass_hiMass_MCassoc";
-  hn1_ZZ.legendName = "Preselection";
-  massZZ_kinfit.push_back( hn1_ZZ );
-  HistoAndName hn2_ZZ;
-  hn2_ZZ.histoName = "ZZInvMass_hiMass_MCassoc_ZjjMassConstr";
-  hn2_ZZ.legendName = "M_{Z} Constraint";
-  massZZ_kinfit.push_back( hn2_ZZ );
-  HistoAndName hn3_ZZ;
-  hn3_ZZ.histoName = "ZZInvMass_hiMass_MCassoc_kinfit_jets";
-  hn3_ZZ.legendName = "Kin. Fit (PFJets)";
-  massZZ_kinfit.push_back( hn3_ZZ );
-  HistoAndName hn4_ZZ;
-  hn4_ZZ.histoName = "ZZInvMass_hiMass_MCassoc_kinfit_cands";
-  hn4_ZZ.legendName = "Kin. Fit (PFCands)";
-  massZZ_kinfit.push_back( hn4_ZZ );
-  db->compareDifferentHistos( massZZ_kinfit, "ZZ Invariant Mass [GeV/c^{2}]", "ZZInvMass_kinfit");
-*/
+  HistoAndName hn1_Zjj;
+  hn1_Zjj.histoName = "mZZ_"+massType;
+  hn1_Zjj.legendName = "No Correction";
+  massZZ_kinfit.push_back( hn1_Zjj );
+  HistoAndName hn2_Zjj;
+  hn2_Zjj.histoName = "mZZ_ZjjMassConstr_"+massType;
+  hn2_Zjj.legendName = "M_{Z} Constraint";
+  massZZ_kinfit.push_back( hn2_Zjj );
+  HistoAndName hn3_Zjj;
+  hn3_Zjj.histoName = "mZZ_kinfit_"+massType;
+  hn3_Zjj.legendName = "Kin. Fit";
+  massZZ_kinfit.push_back( hn3_Zjj );
+//HistoAndName hn4_ZZ;
+//hn4_ZZ.histoName = "mZZ_hiMass_MCassoc_kinfit_cands";
+//hn4_ZZ.legendName = "Kin. Fit (PFCands)";
+//massZZ_kinfit.push_back( hn4_ZZ );
+  db->compareDifferentHistos( massZZ_kinfit, "mZZ_kinfit", "ZZ Invariant Mass", "GeV/c^{2}");
+
 
   // then add bg:
 
@@ -229,20 +285,35 @@ int main(int argc, char* argv[]) {
   db->drawHisto("ptZjj_all_presel", "Dijet Transverse Momentum", "GeV/c", "Events", log);
 
 
+  db->drawHisto("kinFit_status", "Kinematic Fit Status", "", "Events");
+  db->drawHisto("kinFit_negEnergy", "Either Jet has Negative Energy", "", "Events");
+  db->drawHisto("kinFit_chi2", "Kinematic Fit Chi Square", "", "Events");
+
   db->drawHisto("ptLept1", "Leading Lepton Transverse Momentum", "GeV/c", "Events");
   db->drawHisto("ptLept2", "Subleading Lepton Transverse Momentum", "GeV/c", "Events");
   db->drawHisto("ptJet1", "Leading Jet Transverse Momentum", "GeV/c", "Events");
   db->drawHisto("ptJet2", "Subleading Jet Transverse Momentum", "GeV/c", "Events");
 
+  db->drawHisto("deltaRjj", "#DeltaR Between Jets", "", "Jet Pairs");
+
   db->drawHisto("partFlavorJet1", "Leading Jet Parton Flavor", "", "Events");
   db->drawHisto("partFlavorJet2", "Subleading Jet Parton Flavor", "", "Events");
   db->drawHisto("QGLikelihoodJet1", "Leading Jet Q-G Likelihood", "", "Events");
   db->drawHisto("QGLikelihoodJet2", "Subleading Jet Q-G Likelihood", "", "Events");
-  db->drawHisto("QGLikelihoodJet1_norms", "Leading Jet Q-G Likelihood", "", "Events");
-  db->drawHisto("QGLikelihoodJet2_norms", "Subleading Jet Q-G Likelihood", "", "Events");
-  db->drawHisto("QGLikelihoodSum", "Leading + Subleading Jet Q-G Likelihood", "", "Events");
+  db->drawHisto("QGLikelihoodProd", "Q-G Likelihood Product", "", "Events");
+  db->drawHisto("QGLikelihoodRevProd", "Q-G Likelihood Product", "", "Events");
 
-  db->drawHisto("QGLikelihoodSum", "Leading + Subleading Jet Q-G Likelihood", "", "Events");
+  db->drawHisto("cosThetaStar", "cos(#theta^{*})", "", "Events");
+  db->drawHisto("cosTheta1", "cos(#theta_{1})", "", "Events");
+  db->drawHisto("cosTheta2", "cos(#theta_{2})", "", "Events");
+  db->drawHisto("phi", "#phi", "rad", "Events");
+  db->drawHisto("phi1", "#phi_{1}", "rad", "Events");
+
+  db->drawHisto("helicityLD", "Helicity Likelihood Discriminant", "", "Events");
+  db->drawHisto("helicityLD_kinfit", "Helicity Likelihood Discriminant", "", "Events");
+
+  db->drawHisto("deltaRZZ", "#DeltaR Aperture Between Zs", "", "Events");
+
 
 
   const int nPtBins = 20;
@@ -276,9 +347,12 @@ int main(int argc, char* argv[]) {
   db->set_rebin(2);
   db->set_lumiNormalization(1000.);
   db->set_noStack((bool)false);
-  db->drawHisto("ZZInvMass_hiMass", "ZZ Invariant Mass", "GeV/c^{2}", "Events");
-  db->drawHisto("ZZInvMass_hiMass_QGlikeli", "ZZ Invariant Mass", "GeV/c^{2}", "Events");
+  db->drawHisto("mZjj", "DiJet Invariant Mass", "GeV/c^{2}", "Events", log);
+  db->drawHisto("mZZ_hiMass", "ZZ Invariant Mass", "GeV/c^{2}", "Events");
+  db->drawHisto("mZZ_kinfit_hiMass", "ZZ Invariant Mass", "GeV/c^{2}", "Events");
 
+  db->drawHisto("mZZ_medMass", "ZZ Invariant Mass", "GeV/c^{2}", "Events");
+  db->drawHisto("mZZ_kinfit_medMass", "ZZ Invariant Mass", "GeV/c^{2}", "Events");
 
   delete db;
   db = 0;
