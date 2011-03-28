@@ -36,7 +36,8 @@ if flags=="500":
 #outputmain = castordir+output
 # to write on local disks
 ################################################
-diskoutputdir = "/cmsrm/pc21_2/pandolf/MC/"+dataset
+#diskoutputdir = "/cmsrm/pc21_2/pandolf/MC/"+dataset
+diskoutputdir = "/cmsrm/pc23_2/pandolf/MC/"+dataset
 #outputmain = castordir
 diskoutputmain = diskoutputdir
 # prepare job to write on the cmst3 cluster disks
@@ -55,7 +56,7 @@ os.system("mkdir -p "+dir+"/src/")
 #else: os.system("mkdir -p "+outputroot)
 
 if diskoutputdir != "none": 
-    os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm21 mkdir -p "+diskoutputmain)
+    os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm23 mkdir -p "+diskoutputmain)
 
 #look for the current directory
 #######################################
@@ -91,9 +92,11 @@ while (len(inputfiles) > 0):
     #outputfile.write('cp '+pwd+'/Cert_132440-140399_7TeV_StreamExpress_Collisions10_CMSSWConfig.txt $WORKDIR\n')
     #outputfile.write('cp '+pwd+'/lumi_by_LS_132440_140401.csv $WORKDIR\n')
     #outputfile.write('cp -r  /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_3_8_7/src/HZZlljj/HZZlljjAnalyzer/test/analysis/Bins $WORKDIR\n')
+    outputfile.write('cp '+pwd+'/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root $WORKDIR\n')
     outputfile.write('cd $WORKDIR\n')
     #outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" _"+str(ijob)+"\n")
     outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" "+str(ijob)+"\n")
+    outputfile.write('rm QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root\n')
     outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm23:'+diskoutputmain+'/{}\n') 
     outputfile.close
     os.system("echo bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)

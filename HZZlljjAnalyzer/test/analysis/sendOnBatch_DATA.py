@@ -37,7 +37,7 @@ if analyzerType =="HZZlljj":
 #outputmain = castordir+output
 # to write on local disks
 ################################################
-diskoutputdir = "/cmsrm/pc21_2/pandolf/DATA/"+dirname
+diskoutputdir = "/cmsrm/pc23_2/pandolf/DATA/"+dirname
 #outputmain = castordir
 diskoutputmain = diskoutputdir
 # prepare job to write on the cmst3 cluster disks
