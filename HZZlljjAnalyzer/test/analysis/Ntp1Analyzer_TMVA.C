@@ -157,7 +157,7 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("ptZZ",  &ptZZ_,  "ptZZ_/F");
   reducedTree_->Branch("mZZ",  &mZZ_,  "mZZ_/F");
   reducedTree_->Branch("absEtaZZ",  &absEtaZZ_,  "absEtaZZ_/F");
-  reducedTree_->Branch("mZZ",  &mZZ_,  "mZZ_/F");
+  reducedTree_->Branch("mZZ_preKin",  &mZZ_preKin_,  "mZZ_preKin_/F");
 
   reducedTree_->Branch("pfMet",  &epfMet_,  "epfMet_/F");
 
@@ -947,11 +947,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      // fill mZjj before the kinfit:
      TLorentzVector diJet_pre = jet1 + jet2;
+     TLorentzVector ZZ_pre = diJet_pre + diLepton;
      mZjj_ = diJet_pre.M();
      ptJet1_preKin_ = jet1.Pt();
      ptJet2_preKin_ = jet2.Pt();
      ptZjj_preKin_ = diJet_pre.Pt();
      deltaRjj_preKin_ = jet1.DeltaR(jet2);
+     mZZ_preKin_ = ZZ_pre.M();
 
 
      //helicity angles: (also before the kinfit)
@@ -966,10 +968,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      helicityLD_ = sProb/(sProb+bProb);
 
 
+if( jet2.Energy()<0. ) std::cout << "BLABLA: " << jentry << std::endl;
 
      jet1.SetPtEtaPhiE( jet1_kinfit.Pt(), jet1_kinfit.Eta(), jet1_kinfit.Phi(), jet1_kinfit.E() );
      jet2.SetPtEtaPhiE( jet2_kinfit.Pt(), jet2_kinfit.Eta(), jet2_kinfit.Phi(), jet2_kinfit.E() );
 
+if( jet2.Energy()<0. ) std::cout << "jet2_kinfit.E(): " << jet2_kinfit.E() << std::endl;
      //helicity angles after kinfit:
      HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinFit;
      if( chargeLept1<0 ) hangles_kinFit = computeHelicityAngles(leptons[0], leptons[1], jet1, jet2);
@@ -1194,6 +1198,9 @@ HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVec
 
   returnAngles.helCosThetaStar = Zll_Hstar.CosTheta();
 
+if( jet1.Energy() < 0. ) std::cout << "jet1 energy < 0!!!!!!" << std::endl;
+if( jet2.Energy() < 0. ) std::cout << "jet2 energy < 0!!!!!!" << std::endl;
+if( jet1_Zjjstar.Energy() < 0. ) std::cout << "jet1_Zjjstar energy < 0!!!!!!" << std::endl;
 
   TVector3 v_pbeamLAB( 0.0, 0.0, 1.0 );
 
