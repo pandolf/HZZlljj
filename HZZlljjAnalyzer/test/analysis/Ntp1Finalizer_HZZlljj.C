@@ -231,8 +231,12 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_QGLikelihoodProd = new TH1D("QGLikelihoodProd", "", 60, 0., 1.);
   h1_QGLikelihoodProd->Sumw2();
+  TH1D* h1_QGLikelihoodProd_hi = new TH1D("QGLikelihoodProd_hi", "", 60, 0., 1.);
+  h1_QGLikelihoodProd_hi->Sumw2();
   TH1D* h1_QGLikelihoodRevProd = new TH1D("QGLikelihoodRevProd", "", 60, 0., 1.);
   h1_QGLikelihoodRevProd->Sumw2();
+  TH2D* h2_QGLikelihoodJet1_vs_Jet2 = new TH2D("QGLikelihoodJet1_vs_Jet2", "", 60, 0., 1.0001, 60, 0., 1.0001);
+  h2_QGLikelihoodJet1_vs_Jet2->Sumw2();
 
 
   TH1D* h1_mZjj= new TH1D("mZjj", "", nBins_invMass, 70., 120.);
@@ -273,6 +277,12 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_phi1_kinfit = new TH1D("phi1_kinfit", "", 45, -3.1416, 3.1416);
   h1_phi1_kinfit->Sumw2();
 
+  
+  TH1D* h1_kinfit_chiSquare = new TH1D("kinfit_chiSquare", "", 60, 0., 10.);
+  h1_kinfit_chiSquare->Sumw2();
+  TH1D* h1_kinfit_chiSquareProb = new TH1D("kinfit_chiSquareProb", "", 60, 0., 1.0001);
+  h1_kinfit_chiSquareProb->Sumw2();
+
   TH1D* h1_helicityLD = new TH1D("helicityLD", "", 60, 0., 1.);
   h1_helicityLD->Sumw2();
   TH1D* h1_helicityLD_MW200 = new TH1D("helicityLD_MW200", "", 100, 0., 1.);
@@ -291,34 +301,51 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_deltaRZZ= new TH1D("deltaRZZ", "", 60, 0., 6.);
   h1_deltaRZZ->Sumw2();
 
+  TH1D* h1_mZZ_merda = new TH1D("mZZ_merda", "", 100, 200., 700.);
+  h1_mZZ_merda->Sumw2();
   TH1D* h1_mZZ_UL = new TH1D("mZZ_UL", "", 900, 100., 1000.);
   h1_mZZ_UL->Sumw2();
-  TH1D* h1_mZZ_hiMass= new TH1D("mZZ_hiMass", "", nBins_invMass, 200., 600.);
+  TH1D* h1_mZZ_UL_kinfit = new TH1D("mZZ_UL_kinfit", "", 900, 100., 1000.);
+  h1_mZZ_UL_kinfit->Sumw2();
+  TH1D* h1_mZZ_hiMass= new TH1D("mZZ_hiMass", "", 90, 250., 700.);
   h1_mZZ_hiMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass= new TH1D("mZZ_kinfit_hiMass", "", nBins_invMass, 200., 600.);
+  TH1D* h1_mZZ_kinfit_hiMass= new TH1D("mZZ_kinfit_hiMass", "", 90, 250., 700.);
   h1_mZZ_kinfit_hiMass->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", nBins_invMass, 200., 600.);
+//TH1D* h1_mZZ_highestMass= new TH1D("mZZ_highestMass", "", 70, 350., 700.);
+//h1_mZZ_highestMass->Sumw2();
+//TH1D* h1_mZZ_kinfit_highestMass= new TH1D("mZZ_kinfit_highestMass", "", 70, 350., 700.);
+//h1_mZZ_kinfit_highestMass->Sumw2();
+  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 70, 250., 600.);
   h1_mZZ_ZjjMassConstr_hiMass->Sumw2();
-  TH1D* h1_mZZ_300Mass= new TH1D("mZZ_300Mass", "", nBins_invMass, 250., 500.);
+  TH1D* h1_mZZ_300Mass= new TH1D("mZZ_300Mass", "", 50, 250., 500.);
   h1_mZZ_300Mass->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_300Mass  = new TH1D("mZZ_ZjjMassConstr_300Mass", "", nBins_invMass, 250., 500.);
+  TH1D* h1_mZZ_ZjjMassConstr_300Mass  = new TH1D("mZZ_ZjjMassConstr_300Mass", "", 50, 250., 500.);
   h1_mZZ_ZjjMassConstr_300Mass->Sumw2();
-  TH1D* h1_mZZ_kinfit_300Mass= new TH1D("mZZ_kinfit_300Mass", "", nBins_invMass, 250., 500.);
+  TH1D* h1_mZZ_kinfit_300Mass= new TH1D("mZZ_kinfit_300Mass", "", 50, 250., 500.);
   h1_mZZ_kinfit_300Mass->Sumw2();
-  TH1D* h1_mZZ_medMass= new TH1D("mZZ_medMass", "", nBins_invMass, 150., 350.);
+  TH1D* h1_mZZ_medMass= new TH1D("mZZ_medMass", "", 70, 150., 350.);
   h1_mZZ_medMass->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_medMass  = new TH1D("mZZ_ZjjMassConstr_medMass", "", nBins_invMass, 150., 350.);
+  TH1D* h1_mZZ_ZjjMassConstr_medMass  = new TH1D("mZZ_ZjjMassConstr_medMass", "", 70, 150., 350.);
   h1_mZZ_ZjjMassConstr_medMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_medMass= new TH1D("mZZ_kinfit_medMass", "", nBins_invMass, 150., 350.);
+  TH1D* h1_mZZ_kinfit_medMass= new TH1D("mZZ_kinfit_medMass", "", 70, 150., 350.);
   h1_mZZ_kinfit_medMass->Sumw2();
-  TH1D* h1_mZZ_hiMass_QGlikeli = new TH1D("mZZ_hiMass_QGlikeli", "", nBins_invMass, 200., 600.);
+
+  TH1D* h1_ptZZ  = new TH1D("ptZZ", "", 100, 0., 300.);
+  h1_ptZZ->Sumw2();
+  TH1D* h1_ptZZ_kinfit  = new TH1D("ptZZ_kinfit", "", 100, 0., 300.);
+  h1_ptZZ_kinfit->Sumw2();
+  TH1D* h1_etaZZ  = new TH1D("etaZZ", "", 100, -5.5, 5.5);
+  h1_etaZZ->Sumw2();
+  TH1D* h1_etaZZ_kinfit  = new TH1D("etaZZ_kinfit", "", 100, -5.5, 5.5);
+  h1_etaZZ_kinfit->Sumw2();
+  
 
   TH1D* h1_mZZ_MCassoc  = new TH1D("mZZ_MCassoc", "", 100, 200., 600.);
   h1_mZZ_MCassoc->Sumw2();
   TH1D* h1_mZZ_MCassoc_ZjjMassConstr  = new TH1D("mZZ_MCassoc_ZjjMassConstr", "", 100, 200., 600.);
   h1_mZZ_MCassoc_ZjjMassConstr->Sumw2();
-  TH1D* h1_mZZ_MCassoc_kinfit_jets  = new TH1D("mZZ_MCassoc_kinfit_jets", "", 100, 200., 600.);
-  h1_mZZ_MCassoc_kinfit_jets->Sumw2();
+  TH1D* h1_mZZ_MCassoc_kinfit  = new TH1D("mZZ_MCassoc_kinfit", "", 100, 200., 600.);
+  h1_mZZ_MCassoc_kinfit->Sumw2();
   TH1D* h1_mZZ_MCassoc_kinfit_cands  = new TH1D("mZZ_MCassoc_kinfit_cands", "", 100, 200., 600.);
   h1_mZZ_MCassoc_kinfit_cands->Sumw2();
 
@@ -581,6 +608,10 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   float nEvents_pre_leptPt_leptMass_jetPt_jetMass=0.;
   float nEvents_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj=0.;
 
+  float nEventsPassed_fb_kinfit=0.;
+  float nEventsPassed_fb_nokinfit=0.;
+  int nEventsPassed_kinfit=0;
+  int nEventsPassed_nokinfit=0;
 
 
   int nEntries = tree_->GetEntries();
@@ -763,8 +794,8 @@ ofstream ofs("run_event.txt");
     //  jetPairs_selected.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
       if( jet1.Pt()>ptJet1_thresh_ && jet2.Pt()>ptJet2_thresh_ && fabs(jet1.Eta())<etaJet1_thresh_ && fabs(jet2.Eta())<etaJet1_thresh_ 
-       && jet1.DeltaR(jet2) < deltaRjj_thresh_ && diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ && diJet.Pt() > ptZjj_thresh_ 
-       && jet1.electronEnergyFraction < 0.5 && jet1.muonEnergyFraction < 0.4 && jet2.electronEnergyFraction < 0.5 && jet2.muonEnergyFraction < 0.4 )
+       && jet1.DeltaR(jet2) < deltaRjj_thresh_ && diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ && diJet.Pt() > ptZjj_thresh_ )
+//       && jet1.electronEnergyFraction < 0.5 && jet1.muonEnergyFraction < 0.4 && jet2.electronEnergyFraction < 0.5 && jet2.muonEnergyFraction < 0.4 )
         jetPairs_selected.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
 
@@ -875,12 +906,15 @@ ofstream ofs("run_event.txt");
 
         TLorentzVector jet1_kinfit(*fitJet1->getCurr4Vec());
         TLorentzVector jet2_kinfit(*fitJet2->getCurr4Vec());
-        TLorentzVector Zjj_kinfit_jets = jet1_kinfit + jet2_kinfit;
+        TLorentzVector Zjj_kinfit = jet1_kinfit + jet2_kinfit;
 
         TLorentzVector ZZ = bestZDiJet + diLepton;
         TLorentzVector ZZ_constr = diLepton + Zjj_constr;
-        TLorentzVector ZZ_kinfit_jets = diLepton + Zjj_kinfit_jets;
+        TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
 
+        h1_kinfit_chiSquare->Fill( fitter_jets->getS()/fitter_jets->getNDF(), eventWeight ); 
+        h1_kinfit_chiSquareProb->Fill( TMath::Prob(fitter_jets->getS(), fitter_jets->getNDF()), eventWeight ); 
+if( TMath::Prob(fitter_jets->getS(), fitter_jets->getNDF())<0.2 ) h1_mZZ_merda->Fill( ZZ_kinfit.M(), eventWeight );
 
 
     //// match to parton:
@@ -913,7 +947,7 @@ ofstream ofs("run_event.txt");
     //if( bothMatched ) {
     //  h1_mZZ_MCassoc->Fill( ZZ.M(), eventWeight );
     //  h1_mZZ_MCassoc_ZjjMassConstr->Fill( ZZ_constr.M(), eventWeight );
-    //  h1_mZZ_MCassoc_kinfit_jets->Fill( ZZ_kinfit_jets.M(), eventWeight );
+    //  h1_mZZ_MCassoc_kinfit->Fill( ZZ_kinfit.M(), eventWeight );
     //}
 
 //    // and now full kinematic fit with PFCands:
@@ -1109,17 +1143,6 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
       double sProb=LD->getSignalProbability();
       double bProb=LD->getBkgdProbability();
       double helicityLD=sProb/(sProb+bProb);
-    //h1_helicityLD->Fill(helicityLD, eventWeight);
-    //if( ZZ.M()>185. && ZZ.M()<215. )
-    //  h1_helicityLD_MW200->Fill(helicityLD, eventWeight);
-    //if( ZZ.M()>235. && ZZ.M()<265. )
-    //  h1_helicityLD_MW250->Fill(helicityLD, eventWeight);
-    //if( ZZ.M()>280. && ZZ.M()<320. )
-    //  h1_helicityLD_MW300->Fill(helicityLD, eventWeight);
-    //if( ZZ.M()>370. && ZZ.M()<430. )
-    //  h1_helicityLD_MW400->Fill(helicityLD, eventWeight);
-    //if( ZZ.M()>450. && ZZ.M()<550. )
-    //  h1_helicityLD_MW500->Fill(helicityLD, eventWeight);
 
 
       LD->setMeasurables(hangles_kinfit);
@@ -1184,6 +1207,9 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
       
       h1_QGLikelihoodRevProd->Fill( QGLikelihoodRevProd, eventWeight );
         
+      h2_QGLikelihoodJet1_vs_Jet2->Fill( QGLikelihoodJet2, QGLikelihoodJet1, eventWeight );
+
+      if( QGLikelihoodJet1>0.93 && QGLikelihoodJet2>0.93 ) h1_QGLikelihoodProd_hi->Fill(QGLikelihoodProd, eventWeight); 
 
       // last step of selection:
       // QG and helicity LD's
@@ -1191,6 +1217,19 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
       if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
       if( helicityLD < helicityLD_thresh_ ) continue;
 
+
+      // *****************************************
+      // *****  PASSED ANALYSIS SELECTION ********
+      // *****************************************
+
+      if( ZZ_kinfit.M() > mZZ_threshLo_ && ZZ_kinfit.M() < mZZ_threshHi_ ) {
+        nEventsPassed_fb_kinfit += eventWeight;
+        nEventsPassed_kinfit++;
+      }
+      if( ZZ.M() > mZZ_threshLo_ && ZZ.M() < mZZ_threshHi_ ) {
+        nEventsPassed_fb_nokinfit += eventWeight;
+        nEventsPassed_nokinfit++;
+      }
 
 
         // fill histograms:
@@ -1220,19 +1259,29 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
         h1_mZjj->Fill( bestZDiJet.M(), eventWeight);
         h1_mZZ_UL->Fill(ZZ.M(), eventWeight);
         h1_mZZ_hiMass->Fill(ZZ.M(), eventWeight);
+      //  h1_mZZ_highestMass->Fill(ZZ.M(), eventWeight);
         h1_mZZ_medMass->Fill(ZZ.M(), eventWeight);
         h1_mZZ_300Mass->Fill(ZZ.M(), eventWeight);
         h1_mZZ_ZjjMassConstr_hiMass->Fill(ZZ_constr.M(), eventWeight);
         h1_mZZ_ZjjMassConstr_medMass->Fill(ZZ_constr.M(), eventWeight);
         h1_mZZ_ZjjMassConstr_300Mass->Fill(ZZ_constr.M(), eventWeight);
-        h1_mZZ_kinfit_hiMass->Fill(ZZ_kinfit_jets.M(), eventWeight);
-        h1_mZZ_kinfit_medMass->Fill(ZZ_kinfit_jets.M(), eventWeight);
-        h1_mZZ_kinfit_300Mass->Fill(ZZ_kinfit_jets.M(), eventWeight);
+        h1_mZZ_UL_kinfit->Fill(ZZ_kinfit.M(), eventWeight);
+        h1_mZZ_kinfit_hiMass->Fill(ZZ_kinfit.M(), eventWeight);
+      //  h1_mZZ_kinfit_highestMass->Fill(ZZ_kinfit.M(), eventWeight);
+        h1_mZZ_kinfit_medMass->Fill(ZZ_kinfit.M(), eventWeight);
+        h1_mZZ_kinfit_300Mass->Fill(ZZ_kinfit.M(), eventWeight);
         h2_mZjj_vs_mZZ->Fill( ZZ.M(), bestZDiJet.M() );
-        h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit_jets.M(), bestZDiJet.M() );
+        h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), bestZDiJet.M() );
 
 
         h1_deltaRZZ->Fill(bestZDiJet.DeltaR(diLepton), eventWeight);
+
+        if( ZZ_kinfit.M()>390. && ZZ_kinfit.M()<460. ) {
+        h1_ptZZ->Fill( ZZ.Pt(), eventWeight );
+        h1_ptZZ_kinfit->Fill( ZZ_kinfit.Pt(), eventWeight );
+        h1_etaZZ->Fill( ZZ.Eta(), eventWeight );
+        h1_etaZZ_kinfit->Fill( ZZ_kinfit.Eta(), eventWeight );
+        }
 
         h1_cosThetaStar->Fill(hangles.helCosThetaStar, eventWeight);
         h1_cosTheta1->Fill(hangles.helCosTheta1, eventWeight);
@@ -1288,29 +1337,13 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
   } //for entries
 
 
-//std::string ofs400_name = "effTable400_tight_"+dataset_+".txt";
-//ofstream ofs400(ofs400_name.c_str());
-//ofs400 << "DATASET\tPreselection\tLepton pt\tLepton mass\tjet pt\tdijet mass\tjet deltaR" << std::endl;
-//ofs400 << dataset_ << "\t"
-//    << nEvents400_pre*1000. << "\t"
-//    << nEvents400_pre_leptPt*1000. << "\t"
-//    << nEvents400_pre_leptPt_leptMass*1000. << "\t"
-//    << nEvents400_pre_leptPt_leptMass_jetPt*1000. << "\t"
-//    << nEvents400_pre_leptPt_leptMass_jetPt_jetMass*1000. << "\t"
-//    << nEvents400_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj*1000. << "\t"
-//    << std::endl;
+  std::cout << std::endl << std::endl;
+  std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1  (" << nEventsPassed_kinfit << " events)" << std::endl;
+  std::cout << "----> PASSED SELECTION (no kinfit): " << 1000.*nEventsPassed_fb_nokinfit << " ev/fb-1 (" << nEventsPassed_nokinfit << " events)" << std::endl;
+  std::cout << std::endl;
 
-//std::string ofs500_name = "effTable500_tight_"+dataset_+".txt";
-//ofstream ofs500(ofs500_name.c_str());
-//ofs500 << "DATASET\tPreselection\tLepton pt\tLepton mass\tjet pt\tdijet mass\tjet deltaR" << std::endl;
-//ofs500 << dataset_ << "\t"
-//    << nEvents500_pre*1000. << "\t"
-//    << nEvents500_pre_leptPt*1000. << "\t"
-//    << nEvents500_pre_leptPt_leptMass*1000. << "\t"
-//    << nEvents500_pre_leptPt_leptMass_jetPt*1000. << "\t"
-//    << nEvents500_pre_leptPt_leptMass_jetPt_jetMass*1000. << "\t"
-//    << nEvents500_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj*1000. << "\t"
-//    << std::endl;
+
+
 
 
   outFile_->cd();
@@ -1383,6 +1416,9 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
   h1_cosTheta2_kinfit->Write();
   h1_phi_kinfit->Write();
   h1_phi1_kinfit->Write();
+
+  h1_kinfit_chiSquare->Write();
+  h1_kinfit_chiSquareProb->Write();
   
   h1_helicityLD->Write();
   h1_helicityLD_MW200->Write();
@@ -1392,16 +1428,25 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
   h1_helicityLD_MW500->Write();
   h1_helicityLD_kinfit->Write();
 
+  h1_mZZ_merda->Write();
   h1_mZZ_UL->Write();
+  h1_mZZ_UL_kinfit->Write();
   h1_mZZ_300Mass->Write();
   h1_mZZ_medMass->Write();
   h1_mZZ_hiMass->Write();
+//  h1_mZZ_highestMass->Write();
   h1_mZZ_ZjjMassConstr_300Mass->Write();
   h1_mZZ_ZjjMassConstr_medMass->Write();
   h1_mZZ_ZjjMassConstr_hiMass->Write();
   h1_mZZ_kinfit_300Mass->Write();
   h1_mZZ_kinfit_medMass->Write();
   h1_mZZ_kinfit_hiMass->Write();
+//  h1_mZZ_kinfit_highestMass->Write();
+
+  h1_ptZZ->Write();
+  h1_ptZZ_kinfit->Write();
+  h1_etaZZ->Write();
+  h1_etaZZ_kinfit->Write();
 
   h1_deltaR_part1->Write();
   h1_ptJet1->Write();
@@ -1419,7 +1464,7 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
 
   h1_mZZ_MCassoc->Write();
   h1_mZZ_MCassoc_ZjjMassConstr->Write();
-  h1_mZZ_MCassoc_kinfit_jets->Write();
+  h1_mZZ_MCassoc_kinfit->Write();
   h1_mZZ_MCassoc_kinfit_cands->Write();
 
   h2_mZjj_vs_mZZ->Write();
@@ -1442,6 +1487,8 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
   h1_QGLikelihoodJet1->Write();
   h1_QGLikelihoodJet2->Write();
   h1_QGLikelihoodProd->Write();
+  h1_QGLikelihoodProd_hi->Write();
+  h2_QGLikelihoodJet1_vs_Jet2->Write();
   h1_QGLikelihoodRevProd->Write();
 
   outFile_->mkdir("QGbins");
@@ -1552,6 +1599,52 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
 
+  } else if( selectionType=="opt250LD" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.4;
+    QGLikelihoodProd_thresh_ = 0.11;
+    mZZ_threshLo_ = 237.;
+    mZZ_threshHi_ = 260.;
+
+  } else if( selectionType=="opt300LD" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.58;
+    QGLikelihoodProd_thresh_ = 0.13;
+    mZZ_threshLo_ = 280.;
+    mZZ_threshHi_ = 323.;
+
   } else if( selectionType=="opt300" ) {
 
     ptLept1_thresh_ = 40.;
@@ -1575,6 +1668,29 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
 
+  } else if( selectionType=="opt350LD" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.01;
+    mZZ_threshLo_ = 330.;
+    mZZ_threshHi_ = 380.;
+
   } else if( selectionType=="opt400" ) {
 
     ptLept1_thresh_ = 40.;
@@ -1595,6 +1711,31 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 360.;
+    mZZ_threshHi_ = 440.;
+
+  } else if( selectionType=="opt400noLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 90.;
+    ptJet2_thresh_ = 55.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 81.;
+    mZll_threshHi_ = 101.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 1.2;
+    ptZll_thresh_ = 95.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.06;
+    mZZ_threshLo_ = 360.;
+    mZZ_threshHi_ = 440.;
 
   } else if( selectionType=="opt400LD" ) {
 
@@ -1616,6 +1757,54 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.66;
     QGLikelihoodProd_thresh_ = 0.06;
+    mZZ_threshLo_ = 390.;
+    mZZ_threshHi_ = 460.;
+
+  } else if( selectionType=="opt400LD2" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.03;
+    mZZ_threshLo_ = 380.;
+    mZZ_threshHi_ = 470.;
+
+  } else if( selectionType=="opt450LD" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.65;
+    QGLikelihoodProd_thresh_ = 0.05;
+    mZZ_threshLo_ = 420.;
+    mZZ_threshHi_ = 550.;
 
   } else if( selectionType=="opt500" ) {
 
@@ -1637,6 +1826,8 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 450.;
+    mZZ_threshHi_ = 550.;
 
   } else if( selectionType=="opt500LD" ) {
 
@@ -1658,6 +1849,31 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.75;
     QGLikelihoodProd_thresh_ = 0.15;
+    mZZ_threshLo_ = 470.;
+    mZZ_threshHi_ = 99999999.;
+
+  } else if( selectionType=="opt500LD2" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.73;
+    QGLikelihoodProd_thresh_ = 0.05;
+    mZZ_threshLo_ = 465.;
+    mZZ_threshHi_ = 99999999.;
 
   } else if( selectionType=="opt600" ) {
 
