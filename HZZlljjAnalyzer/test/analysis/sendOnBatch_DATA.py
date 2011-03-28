@@ -29,8 +29,7 @@ flags = ""
 if len(sys.argv) == 6:
     flags = sys.argv[5]
 application = "do2ndLevel_"+analyzerType
-if analyzerType =="HZZlljj":
-  application = application + "_DATA"
+application = application + "_DATA"
 # to write on the cmst3 cluster disks
 ################################################
 #castordir = "/castor/cern.ch/user/m/mpierini/CMST3/Vecbos/output/"
