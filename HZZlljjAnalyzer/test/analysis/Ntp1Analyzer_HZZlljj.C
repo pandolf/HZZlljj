@@ -532,6 +532,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      std::vector<AnalysisLepton> muons;
      int chargeFirstMuon;
 
+
      for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
 
        AnalysisLepton thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
@@ -1227,6 +1228,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 
    } //for entries
+
 
 } //loop
 

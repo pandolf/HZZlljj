@@ -23,6 +23,8 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
 
    virtual void CreateOutputFile();
    virtual void Loop();
+   //Double_t computeQGLikelihood(const Double_t jtpt, Int_t ncharged, Int_t nneutral, Double_t PtD, Double_t r);
+
 
 
 
@@ -49,6 +51,7 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t ptLept1_;
    Float_t etaLept1_;
    Float_t phiLept1_;
+   Int_t   chargeLept1_;
 
    Float_t eLept1Gen_;
    Float_t ptLept1Gen_;
@@ -59,16 +62,39 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t ptLept2_;
    Float_t etaLept2_;
    Float_t phiLept2_;
+   Int_t   chargeLept2_;
 
    Float_t eLept2Gen_;
    Float_t ptLept2Gen_;
    Float_t etaLept2Gen_;
    Float_t phiLept2Gen_;
 
+   Float_t  ptJetBest1_;
+   Float_t   eJetBest1_;
+   Float_t phiJetBest1_;
+   Float_t etaJetBest1_;
+   Float_t rmsCandJetBest1_;
+   Float_t ptDJetBest1_;
+   Int_t nChargedJetBest1_;
+   Int_t nNeutralJetBest1_;
+
+   Float_t  ptJetBest2_;
+   Float_t   eJetBest2_;
+   Float_t phiJetBest2_;
+   Float_t etaJetBest2_;
+   Float_t rmsCandJetBest2_;
+   Float_t ptDJetBest2_;
+   Int_t nChargedJetBest2_;
+   Int_t nNeutralJetBest2_;
+
    Float_t  ptJetRecoil_;
    Float_t   eJetRecoil_;
    Float_t phiJetRecoil_;
    Float_t etaJetRecoil_;
+   Float_t rmsCandJetRecoil_;
+   Float_t ptDJetRecoil_;
+   Int_t nChargedJetRecoil_;
+   Int_t nNeutralJetRecoil_;
 
    Float_t  ptJetLead_;
    Float_t   eJetLead_;
@@ -93,14 +119,15 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t phiJet1_[50];
    Float_t etaJet1_[50];
 
-// Float_t   ptJetGen1_;
-// Float_t    eJetGen1_;
-// Float_t  phiJetGen1_;
-// Float_t  etaJetGen1_;
-// Int_t    partIdJetGen1_;
+   Float_t ptDJet1_[50];
+   Float_t rmsCandJet1_[50];
+   Int_t nChargedJet1_[50];
+   Int_t nNeutralJet1_[50];
+   Float_t QGlikelihoodJet1_[50];
 
    Float_t  eChargedHadronsJet1_[50];
    Float_t  ePhotonsJet1_[50];
+   Float_t  eNeutralEmJet1_[50];
    Float_t  eNeutralHadronsJet1_[50];
    Float_t  eMuonsJet1_[50];
    Float_t  eElectronsJet1_[50];
@@ -128,19 +155,15 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t phiJet2_[50];
    Float_t etaJet2_[50];
 
-// Float_t   ptJetGen2_;
-// Float_t    eJetGen2_;
-// Float_t  phiJetGen2_;
-// Float_t  etaJetGen2_;
-// Int_t    partIdJetGen2_;
-
-// Float_t   ptPart2_;
-// Float_t    ePart2_;
-// Float_t  phiPart2_;
-// Float_t  etaPart2_;
+   Float_t ptDJet2_[50];
+   Float_t rmsCandJet2_[50];
+   Int_t nChargedJet2_[50];
+   Int_t nNeutralJet2_[50];
+   Float_t QGlikelihoodJet2_[50];
 
    Float_t  eChargedHadronsJet2_[50];
    Float_t  ePhotonsJet2_[50];
+   Float_t  eNeutralEmJet2_[50];
    Float_t  eNeutralHadronsJet2_[50];
    Float_t  eMuonsJet2_[50];
    Float_t  eElectronsJet2_[50];
@@ -183,6 +206,7 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    TH1F* h1_deltaRmatching_genjet_parton; 
    TH1F* h1_deltaRmatching_jet_genjet; 
    TH1F* h1_deltaRmatching_jet_leptonParton;
+   TH1F* h1_nJets30;
 // TH1F* h1_indexMatchedJet;
 // TH1F* h1_indexMatched05Jet;
 // TH1F* h1_nMatched_per_event;
