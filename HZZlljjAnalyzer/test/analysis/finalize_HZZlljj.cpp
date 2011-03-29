@@ -103,6 +103,30 @@ int main( int argc, char* argv[] ) {
     nf->addFile( "Z5Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" );
     nf->addFile( "Z5Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" );
 
+  } else if( dataset=="ZJets_alpgen_TuneZ2_Fall10_v2" ) {
+
+    nf->addFile( "Z0Jets_TuneZ2_7TeV-alpgen-tauola" );
+    nf->addFile( "Z1Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z1Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z1Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z1Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z2Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z2Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z2Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z2Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z3Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z3Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z3Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z3Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z4Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z4Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z4Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z4Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z5Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z5Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z5Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_v2" );
+    nf->addFile( "Z5Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola_v2" );
+
   } else if( dataset=="ZJets_alpgen_Spring10" ) {
 
     nf->addFile( "Z0Jets_Pt0to100-alpgen_Spring10" );
@@ -225,8 +249,6 @@ int main( int argc, char* argv[] ) {
     nf->addFile( dataset );
 
   }
-
-  std::cout << "-> Total integrated luminosity: " << nf->get_totalLumi() << " ub-1." << std::endl;
 
   nf->finalize();
 
