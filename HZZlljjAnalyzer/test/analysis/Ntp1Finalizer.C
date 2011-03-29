@@ -9,7 +9,6 @@ Ntp1Finalizer::Ntp1Finalizer( const std::string& analyzerType, const std::string
 
   tree_ = new TChain("reducedTree");
 
-  totalLumi_ = 0.;
 
   analyzerType_ = analyzerType;
   dataset_ = dataset;
@@ -96,13 +95,6 @@ void Ntp1Finalizer::addFile(const std::string& dataset) {
   tree_->Add(treeName.c_str());
   std::cout << "-> Added " << treeName << ". Tree has " << tree_->GetEntries() << " entries." << std::endl;
   TFile* infile = TFile::Open(infileName.c_str(), "READ");
-  TH1F* h1_lumi = (TH1F*)infile->Get("lumi");
-  if( h1_lumi!=0 ) {
-    totalLumi_ += h1_lumi->GetBinContent(1);
-    std::cout << "\tTotal lumi: " << totalLumi_ << " ub-1" << std::endl;
-  } else {
-    std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping." << std::endl;
-  }
   infile->Close();
 
 

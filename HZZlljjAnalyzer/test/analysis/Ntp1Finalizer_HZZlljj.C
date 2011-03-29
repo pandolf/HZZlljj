@@ -95,11 +95,6 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   if( outFile_==0 ) this->createOutputFile();
 
 
-  TH1F* h1_totalLumi = new TH1F("totalLumi", "", 1, 0., 1.);
-  if( dataset_=="Run2010B_runs146240_146733" )
-    h1_totalLumi->SetBinContent(1, 1220000.);
-  else
-    h1_totalLumi->SetBinContent(1, totalLumi_);
 
   TH1F* h1_run = new TH1F("run", "", 15149, 132440, 147589);
 
@@ -1348,7 +1343,6 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
 
   outFile_->cd();
 
-  h1_totalLumi->Write();
   h1_run->Write();
 
   h1_ptJet_all_presel->Write();

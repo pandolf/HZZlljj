@@ -32,12 +32,10 @@ class Ntp1Finalizer {
   std::vector<TH1F*> getResponseHistos(const std::string& name, unsigned binArraySize, Double_t* ptBins);
   void writeResponseHistos( TFile* file, std::vector<TH1F*> h1_response, std::string dirName );
 
-  Double_t get_totalLumi() { return totalLumi_; };
   TChain* get_tree() { return tree_; };
   TFile* get_outFile() { return outFile_; };
   bool get_DEBUG() { return DEBUG_; };
 
-  void set_totalLumi( double lumi ) { totalLumi_ = lumi; };
   void set_outFile( const std::string& fileName="", const std::string& suffix="" );
   void set_flags( const std::string& flags ) { flags_ = flags; };
   void set_DEBUG( bool DEBUG ) { DEBUG_ = DEBUG; };
@@ -45,7 +43,6 @@ class Ntp1Finalizer {
   virtual void finalize() = 0;
 
 
-  Double_t totalLumi_;
   TChain* tree_;
 
   std::string analyzerType_;
