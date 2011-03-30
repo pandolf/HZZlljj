@@ -44,6 +44,10 @@ class Ntp1Finalizer_HZZlljj : public Ntp1Finalizer {
    float deltaRjj_thresh_;
    float ptZll_thresh_;
    float ptZjj_thresh_;
+   float QGLikelihoodProd_thresh_;
+   float helicityLD_thresh_;
+   float mZZ_threshLo_;
+   float mZZ_threshHi_;
 
 };
 
