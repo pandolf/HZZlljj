@@ -142,6 +142,11 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Int_t  nHFHadronsJet1_[50];
    Int_t  nHFEMJet1_[50];
 
+   Float_t  ptJet1Gen_[50];
+   Float_t   eJet1Gen_[50];
+   Float_t phiJet1Gen_[50];
+   Float_t etaJet1Gen_[50];
+
    Int_t  nPFCand1_;
    Float_t  ePFCand1_[100];
    Float_t  ptPFCand1_[100];
@@ -177,6 +182,12 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Int_t  nElectronsJet2_[50];
    Int_t  nHFHadronsJet2_[50];
    Int_t  nHFEMJet2_[50];
+
+   Float_t  ptJet2Gen_[50];
+   Float_t   eJet2Gen_[50];
+   Float_t phiJet2Gen_[50];
+   Float_t etaJet2Gen_[50];
+
 
    Int_t  nPFCand2_;
    Float_t  ePFCand2_[100];

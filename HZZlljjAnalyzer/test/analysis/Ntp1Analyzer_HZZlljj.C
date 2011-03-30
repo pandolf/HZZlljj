@@ -54,6 +54,11 @@ class AnalysisJet : public TLorentzVector {
   int nNeutral;
   float QGlikelihood;
 
+  float ptGen;
+  float etaGen;
+  float phiGen;
+  float eGen;
+
 };
 
 
@@ -219,6 +224,11 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nHFHadronsJet1", nHFHadronsJet1_, "nHFHadronsJet1_[nPairs_]/I");
   reducedTree_->Branch("nHFEMJet1", nHFEMJet1_, "nHFEMJet1_[nPairs_]/I");
 
+  reducedTree_->Branch("eJet1Gen",  eJet1Gen_,  "eJet1Gen_[nPairs_]/F");
+  reducedTree_->Branch( "ptJet1Gen",  ptJet1Gen_,  "ptJet1Gen_[nPairs_]/F");
+  reducedTree_->Branch("etaJet1Gen", etaJet1Gen_, "etaJet1Gen_[nPairs_]/F");
+  reducedTree_->Branch("phiJet1Gen", phiJet1Gen_, "phiJet1Gen_[nPairs_]/F");
+
   reducedTree_->Branch("nPFCand1",  &nPFCand1_,  "nPFCand1_/I");
   reducedTree_->Branch("ePFCand1",  &ePFCand1_,  "ePFCand1_[nPFCand1_]/F");
   reducedTree_->Branch("ptPFCand1",  &ptPFCand1_,  "ptPFCand1_[nPFCand1_]/F");
@@ -254,6 +264,12 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nElectronsJet2", nElectronsJet2_, "nElectronsJet2_[nPairs_]/I");
   reducedTree_->Branch("nHFHadronsJet2", nHFHadronsJet2_, "nHFHadronsJet2_[nPairs_]/I");
   reducedTree_->Branch("nHFEMJet2", nHFEMJet2_, "nHFEMJet2_[nPairs_]/I");
+
+  reducedTree_->Branch("eJet2Gen",  eJet2Gen_,  "eJet2Gen_[nPairs_]/F");
+  reducedTree_->Branch( "ptJet2Gen",  ptJet2Gen_,  "ptJet2Gen_[nPairs_]/F");
+  reducedTree_->Branch("etaJet2Gen", etaJet2Gen_, "etaJet2Gen_[nPairs_]/F");
+  reducedTree_->Branch("phiJet2Gen", phiJet2Gen_, "phiJet2Gen_[nPairs_]/F");
+
 
   reducedTree_->Branch("nPFCand2",  &nPFCand2_,  "nPFCand2_/I");
   reducedTree_->Branch("ePFCand2",  &ePFCand2_,  "ePFCand2_[nPFCand2_]/F");
@@ -938,6 +954,23 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( thisJet.eNeutralHadrons >= 0.99*thisJet.Energy() ) continue;
        if( thisJet.ePhotons >= 0.99*thisJet.Energy() ) continue;
 
+       // match to genjet:
+       float bestDeltaR=999.;
+       TLorentzVector matchedGenJet;
+       for( unsigned iGenJet=0; iGenJet<nAK5GenJet; ++iGenJet ) {
+         TLorentzVector thisGenJet(pxAK5GenJet[iGenJet], pyAK5GenJet[iGenJet], pzAK5GenJet[iGenJet], energyAK5GenJet[iGenJet]);
+         if( thisGenJet.DeltaR(thisJet) < bestDeltaR ) {
+           bestDeltaR=thisGenJet.DeltaR(thisJet);
+           matchedGenJet=thisGenJet;
+         }
+       }
+   
+       
+       thisJet.ptGen  = matchedGenJet.Pt();
+       thisJet.etaGen = matchedGenJet.Eta();
+       thisJet.phiGen = matchedGenJet.Phi();
+       thisJet.eGen   = matchedGenJet.Energy();
+
        leadJets.push_back(thisJet);
        leadJetsIndex.push_back(iJet);
 
@@ -1011,6 +1044,11 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            nChargedJet1_[nPairs_] = leadJets[iJet].nCharged;
            nNeutralJet1_[nPairs_] = leadJets[iJet].nNeutral;
            QGlikelihoodJet1_[nPairs_] = leadJets[iJet].QGlikelihood;
+
+           eJet1Gen_[nPairs_] = leadJets[iJet].eGen;
+           ptJet1Gen_[nPairs_] = leadJets[iJet].ptGen;
+           etaJet1Gen_[nPairs_] = leadJets[iJet].etaGen;
+           phiJet1Gen_[nPairs_] = leadJets[iJet].phiGen;
             
            eJet2_[nPairs_] = leadJets[jJet].Energy();
            ptJet2_[nPairs_] = leadJets[jJet].Pt();
@@ -1033,6 +1071,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            nChargedJet2_[nPairs_] = leadJets[jJet].nCharged;
            nNeutralJet2_[nPairs_] = leadJets[jJet].nNeutral;
            QGlikelihoodJet2_[nPairs_] = leadJets[jJet].QGlikelihood;
+
+           eJet2Gen_[nPairs_] = leadJets[jJet].eGen;
+           ptJet2Gen_[nPairs_] = leadJets[jJet].ptGen;
+           etaJet2Gen_[nPairs_] = leadJets[jJet].etaGen;
+           phiJet2Gen_[nPairs_] = leadJets[jJet].phiGen;
+            
 
            nPairs_++;
           
