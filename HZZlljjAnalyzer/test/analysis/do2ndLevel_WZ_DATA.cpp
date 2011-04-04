@@ -1,5 +1,6 @@
 #include "Ntp1Analyzer_WZ.h"
 #include <stdlib.h>
+#include "TString.h"
 
 
 
@@ -21,19 +22,29 @@ int main( int argc, char* argv[]) {
     na = new Ntp1Analyzer_WZ(dataset, flags);
   }
 
-  na->AddRequiredTrigger( "HLT_Mu9" );
-  na->AddRequiredTrigger( "HLT_Mu15_v1" );
-  na->AddRequiredTrigger( "HLT_Ele10_LW_L1R" );
-  na->AddRequiredTrigger( "HLT_Ele15_LW_L1R" );
-  na->AddRequiredTrigger( "HLT_Ele15_SW_L1R" );
-  na->AddRequiredTrigger( "HLT_Ele15_SW_CaloEleId_L1R" );
-  na->AddRequiredTrigger( "HLT_Ele17_SW_CaloEleId_L1R" );
-  na->AddRequiredTrigger( "HLT_Ele17_SW_TightEleId_L1R" );
-  na->AddRequiredTrigger( "HLT_Ele17_SW_TighterEleIdIsol_L1R_v2" );
-  na->AddRequiredTrigger( "HLT_Ele17_SW_TighterEleIdIsol_L1R_v3" );
+  TString dataset_tstr(dataset);
 
-  //na->ReadJSONFile("Cert_132440-149442_7TeV_StreamExpress_Collisions10_CMSSWConfig_v3.txt");
-  na->ReadJSONFile("Cert_136033-149442_7TeV_Nov4ReReco_Collisions10_CMSSWConfig.txt");
+  if( dataset_tstr.Contains("2011") ) {
+  
+    na->ReadJSONFile("Cert_Run2011A-PromptReco_emenueleCert_CMSSWConfig.txt");
+
+  } else {
+
+    na->AddRequiredTrigger( "HLT_Mu9" );
+    na->AddRequiredTrigger( "HLT_Mu15_v1" );
+    na->AddRequiredTrigger( "HLT_Ele10_LW_L1R" );
+    na->AddRequiredTrigger( "HLT_Ele15_LW_L1R" );
+    na->AddRequiredTrigger( "HLT_Ele15_SW_L1R" );
+    na->AddRequiredTrigger( "HLT_Ele15_SW_CaloEleId_L1R" );
+    na->AddRequiredTrigger( "HLT_Ele17_SW_CaloEleId_L1R" );
+    na->AddRequiredTrigger( "HLT_Ele17_SW_TightEleId_L1R" );
+    na->AddRequiredTrigger( "HLT_Ele17_SW_TighterEleIdIsol_L1R_v2" );
+    na->AddRequiredTrigger( "HLT_Ele17_SW_TighterEleIdIsol_L1R_v3" );
+
+    //na->ReadJSONFile("Cert_132440-149442_7TeV_StreamExpress_Collisions10_CMSSWConfig_v3.txt");
+    na->ReadJSONFile("Cert_136033-149442_7TeV_Nov4ReReco_Collisions10_CMSSWConfig.txt");
+
+  }
 
   if( argc==2 ) {
     na->LoadInput();
