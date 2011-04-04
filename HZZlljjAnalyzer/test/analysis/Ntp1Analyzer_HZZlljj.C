@@ -151,48 +151,6 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("etaLept2Gen",  &etaLept2Gen_,  "etaLept2Gen_/F");
   reducedTree_->Branch("phiLept2Gen",  &phiLept2Gen_,  "phiLept2Gen_/F");
 
-  reducedTree_->Branch("eJetLead",  &eJetLead_,  "eJetLead_/F");
-  reducedTree_->Branch( "ptJetLead",  &ptJetLead_,  "ptJetLead_/F");
-  reducedTree_->Branch("etaJetLead", &etaJetLead_, "etaJetLead_/F");
-  reducedTree_->Branch("phiJetLead", &phiJetLead_, "phiJetLead_/F");
-
-  reducedTree_->Branch("eJetLead2",  &eJetLead2_,  "eJetLead2_/F");
-  reducedTree_->Branch( "ptJetLead2",  &ptJetLead2_,  "ptJetLead2_/F");
-  reducedTree_->Branch("etaJetLead2", &etaJetLead2_, "etaJetLead2_/F");
-  reducedTree_->Branch("phiJetLead2", &phiJetLead2_, "phiJetLead2_/F");
-
-  reducedTree_->Branch("eJetLead3",  &eJetLead3_,  "eJetLead3_/F");
-  reducedTree_->Branch( "ptJetLead3",  &ptJetLead3_,  "ptJetLead3_/F");
-  reducedTree_->Branch("etaJetLead3", &etaJetLead3_, "etaJetLead3_/F");
-  reducedTree_->Branch("phiJetLead3", &phiJetLead3_, "phiJetLead3_/F");
-
-  reducedTree_->Branch("eJetBest1",  &eJetBest1_,  "eJetBest1_/F");
-  reducedTree_->Branch( "ptJetBest1",  &ptJetBest1_,  "ptJetBest1_/F");
-  reducedTree_->Branch("etaJetBest1", &etaJetBest1_, "etaJetBest1_/F");
-  reducedTree_->Branch("phiJetBest1", &phiJetBest1_, "phiJetBest1_/F");
-  reducedTree_->Branch("rmsCandJetBest1", &rmsCandJetBest1_, "rmsCandJetBest1_/F");
-  reducedTree_->Branch("ptDJetBest1", &ptDJetBest1_, "ptDJetBest1_/F");
-  reducedTree_->Branch("nChargedJetBest1", &nChargedJetBest1_, "nChargedJetBest1_/I");
-  reducedTree_->Branch("nNeutralJetBest1", &nNeutralJetBest1_, "nNeutralJetBest1_/I");
-
-  reducedTree_->Branch("eJetBest2",  &eJetBest2_,  "eJetBest2_/F");
-  reducedTree_->Branch( "ptJetBest2",  &ptJetBest2_,  "ptJetBest2_/F");
-  reducedTree_->Branch("etaJetBest2", &etaJetBest2_, "etaJetBest2_/F");
-  reducedTree_->Branch("phiJetBest2", &phiJetBest2_, "phiJetBest2_/F");
-  reducedTree_->Branch("rmsCandJetBest2", &rmsCandJetBest2_, "rmsCandJetBest2_/F");
-  reducedTree_->Branch("ptDJetBest2", &ptDJetBest2_, "ptDJetBest2_/F");
-  reducedTree_->Branch("nChargedJetBest2", &nChargedJetBest2_, "nChargedJetBest2_/I");
-  reducedTree_->Branch("nNeutralJetBest2", &nNeutralJetBest2_, "nNeutralJetBest2_/I");
-
-  reducedTree_->Branch("eJetRecoil",  &eJetRecoil_,  "eJetRecoil_/F");
-  reducedTree_->Branch( "ptJetRecoil",  &ptJetRecoil_,  "ptJetRecoil_/F");
-  reducedTree_->Branch("etaJetRecoil", &etaJetRecoil_, "etaJetRecoil_/F");
-  reducedTree_->Branch("phiJetRecoil", &phiJetRecoil_, "phiJetRecoil_/F");
-  reducedTree_->Branch("rmsCandJetRecoil", &rmsCandJetRecoil_, "rmsCandJetRecoil_/F");
-  reducedTree_->Branch("ptDJetRecoil", &ptDJetRecoil_, "ptDJetRecoil_/F");
-  reducedTree_->Branch("nChargedJetRecoil", &nChargedJetRecoil_, "nChargedJetRecoil_/I");
-  reducedTree_->Branch("nNeutralJetRecoil", &nNeutralJetRecoil_, "nNeutralJetRecoil_/I");
-
   reducedTree_->Branch("nPairs", &nPairs_, "nPairs_/I");
 
   reducedTree_->Branch("iJet1",  iJet1_,  "iJet1_[nPairs_]/I");
@@ -284,6 +242,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("etaPart", etaPart_, "etaPart_[nPart_]/F");
   reducedTree_->Branch("phiPart", phiPart_, "phiPart_[nPart_]/F");
   reducedTree_->Branch("pdgIdPart", pdgIdPart_, "pdgIdPart_[nPart_]/I");
+  reducedTree_->Branch("motherPart", motherPart_, "motherPart_[nPart_]/I");
 
 
   reducedTree_->Branch("epfMet",&epfMet_,"epfMet_/F");
@@ -385,6 +344,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      eventWeight_ = -1.; //default
 
      if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
+
+     if( nPV==0 ) continue;
+     bool goodVertex = (ndofPV[0] >= 4.0 && sqrt(PVxPV[0]*PVxPV[0]+PVyPV[0]*PVyPV[0]) < 2. && fabs(PVzPV[0]) < 24. );
+     if( !goodVertex ) continue;
+  
+     nvertex_ = nPV;
+
 
      //trigger:
      // not yet
@@ -565,7 +531,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
        if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
-       if( pixelHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
+       //if( numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]==0 && numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
 
 
        // to compute dxy, look for primary vertex:
@@ -1083,16 +1049,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          }
 
 
-         TLorentzVector dijet = thisJet + otherJet;
-         float invMass = dijet.M();
-         if( (best_i==-1 && best_j==-1 ) || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
-           bestMass = invMass;
-           best_i = iJet;
-           best_j = jJet;
-           best_i_eventIndex = leadJetsIndex[iJet];
-           best_j_eventIndex = leadJetsIndex[jJet];
-
-         }
        } //for j
      } //for i
 
@@ -1101,74 +1057,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      //if( best_i==-1 || best_j==-1 ) continue; //means that less than 2 jets were found
 
 
-     
-     // look for hardest jet in event which is not already picked as best-Z pair (but no pt cut):
-     AnalysisJet recoilJet(0., 0., 0., 0.);
-     for( unsigned int iJet=0; iJet<leadJets.size() && recoilJet.Energy()==0.; ++iJet ) {
-
-       if( iJet==best_i || iJet==best_j ) {
-
-         continue;
-
-       } else {
-
-         recoilJet = leadJets[iJet];
-
-       }
-
-     }
-
-         
-
-     eJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].Energy() : 0.;
-     ptJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].Pt() : 0.;
-     etaJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].Eta() : 20.;
-     phiJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].Phi() : 0.;
-     rmsCandJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].rmsCand : 0.;
-     ptDJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].ptD : 0.;
-     nChargedJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].nCharged : 0;
-     nNeutralJetBest1_ = ( best_i!=-1 ) ? leadJets[best_i].nNeutral : 0;
-
-     eJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].Energy() : 0.;
-     ptJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].Pt() : 0.;
-     etaJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].Eta() : 20.;
-     phiJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].Phi() : 0.;
-     rmsCandJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].rmsCand : 0.;
-     ptDJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].ptD : 0.;
-     nChargedJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].nCharged : 0;
-     nNeutralJetBest2_ = ( best_j!=-1 ) ? leadJets[best_j].nNeutral : 0;
-
-     eJetRecoil_ = (recoilJet.Energy()==0.) ? 0. : recoilJet.Energy();
-     ptJetRecoil_ = (recoilJet.Energy()==0.) ? 0. : recoilJet.Pt();
-     etaJetRecoil_ = (recoilJet.Energy()==0.) ? 20. : recoilJet.Eta();
-     phiJetRecoil_ = (recoilJet.Energy()==0.) ? 0. : recoilJet.Phi();
-     rmsCandJetRecoil_ = ( recoilJet.Energy()==0. ) ? recoilJet.rmsCand : 0.;
-     ptDJetRecoil_ = ( recoilJet.Energy()==0. ) ? recoilJet.ptD : 0.;
-     nChargedJetRecoil_ = ( recoilJet.Energy()==0. ) ? recoilJet.nCharged : 0;
-     nNeutralJetRecoil_ = ( recoilJet.Energy()==0. ) ? recoilJet.nNeutral : 0;
-   //eChargedHadronsJetRecoil_ = recoilJet.eChargedHadrons;
-   //eNeutralHadronsJetRecoil_ = recoilJet.eNeutralHadrons;
-   //ePhotonsJetRecoil_ = recoilJet.ePhotons;
-   //eElectronsJetRecoil_ = recoilJet.eElectrons;
-   
-//     TLorentzVector leadJet(pxAK5PFJet[iLeadJet], pyAK5PFJet[iLeadJet], pzAK5PFJet[iLeadJet], energyAK5PFJet[iLeadJet] );
-
-     eJetLead_   = (leadJets.size()>0) ? leadJets[0].Energy() : 0.;
-     ptJetLead_  = (leadJets.size()>0) ? leadJets[0].Pt() : 0.;
-     etaJetLead_ = (leadJets.size()>0) ? leadJets[0].Eta() : 0.;
-     phiJetLead_ = (leadJets.size()>0) ? leadJets[0].Phi() : 0.;
-
-     eJetLead2_   = (leadJets.size()>1) ? leadJets[1].Energy() : 0.;
-     ptJetLead2_  = (leadJets.size()>1) ? leadJets[1].Pt() : 0.;
-     etaJetLead2_ = (leadJets.size()>1) ? leadJets[1].Eta() : 0.;
-     phiJetLead2_ = (leadJets.size()>1) ? leadJets[1].Phi() : 0.;
-
-     eJetLead3_   = (leadJets.size()>2) ? leadJets[2].Energy() : 0.;
-     ptJetLead3_  = (leadJets.size()>2) ? leadJets[2].Pt() : 0.;
-     etaJetLead3_ = (leadJets.size()>2) ? leadJets[2].Eta() : 0.;
-     phiJetLead3_ = (leadJets.size()>2) ? leadJets[2].Phi() : 0.;
 
 
+/*
 
     // and now full kinematic fit with PFCands:
     TLorentzVector ZZ_kinfit_cands;
@@ -1229,6 +1120,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      
      }
 
+*/
 
 
      if( isMC_ ) {
@@ -1249,6 +1141,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
              phiPart_[nPart_] = thisParticle->Phi();
              ePart_[nPart_] = thisParticle->Energy();
              pdgIdPart_[nPart_] = idMc[iMc];
+             motherPart_[nPart_] = idMc[mothMc[iMc]];
 
              nPart_++;
 
