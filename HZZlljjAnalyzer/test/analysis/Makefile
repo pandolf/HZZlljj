@@ -42,6 +42,10 @@ finalize_ComputeQGLikelihood: Ntp1Finalizer.o Ntp1Finalizer_ComputeQGLikelihood.
 finalize_GG: Ntp1Finalizer.o Ntp1Finalizer_GG.o finalize_GG.cpp fitTools.o
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_GG finalize_GG.cpp Ntp1Finalizer.o Ntp1Finalizer_GG.o fitTools.o $(ROOTFLAG) -lMinuit
 
+finalize_KinFit: Ntp1Finalizer.o Ntp1Finalizer_KinFit.o finalize_KinFit.cpp fitTools.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o QGLikelihoodCalculator.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -I$(CMSSW_BASE)/src/UserCode/pandolf/QGLikelihood -o finalize_KinFit finalize_KinFit.cpp Ntp1Finalizer.o Ntp1Finalizer_KinFit.o fitTools.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o QGLikelihoodCalculator.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o $(ROOTFLAG) -lMinuit
+
+
 do2ndLevel_JetStudies: Ntp1Analyzer.o Ntp1Analyzer_JetStudies.o 
 	$(CC) -Wall -o do2ndLevel_JetStudies do2ndLevel_JetStudies.cpp Ntp1Analyzer.o Ntp1Analyzer_JetStudies.o $(ROOTFLAG)
 
@@ -66,32 +70,35 @@ drawHZZlljj: DrawBase.o fitTools.o drawHZZlljj.cpp
 drawHZZlljj_DATA: DrawBase.o fitTools.o drawHZZlljj_DATA.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawHZZlljj_DATA drawHZZlljj_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
-drawGG_DATA: DrawBase.o fitTools.o drawGG_DATA.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawGG_DATA drawGG_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+drawKinFit: DrawBase.o fitTools.o drawKinFit.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf -o drawKinFit drawKinFit.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 drawMCHistos: DrawBase.o fitTools.o drawMCHistos.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawMCHistos drawMCHistos.cpp DrawBase.o fitTools.o $(ROOTFLAG)
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawMCHistos drawMCHistos.cpp DrawBase.o fitTools.o $(ROOTFLAG)
 
 drawJetStudies: DrawBase.o fitTools.o drawJetStudies.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawJetStudies drawJetStudies.cpp DrawBase.o fitTools.o $(ROOTFLAG)
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawJetStudies drawJetStudies.cpp DrawBase.o fitTools.o $(ROOTFLAG)
 
 drawZGamma: DrawBase.o fitTools.o drawZGamma.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawZGamma drawZGamma.cpp DrawBase.o fitTools.o $(ROOTFLAG)
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawZGamma drawZGamma.cpp DrawBase.o fitTools.o $(ROOTFLAG)
 
 drawZGamma_DATA: DrawBase.o fitTools.o drawZGamma_DATA.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawZGamma_DATA drawZGamma_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG)
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawZGamma_DATA drawZGamma_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG)
 
 drawQG: DrawBase.o fitTools.o drawQG.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawQG drawQG.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawQG drawQG.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 drawRej_vs_Eff: DrawBase.o fitTools.o drawRej_vs_Eff.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawRej_vs_Eff drawRej_vs_Eff.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawRej_vs_Eff drawRej_vs_Eff.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 drawRej_vs_Eff_LD: DrawBase.o fitTools.o drawRej_vs_Eff_LD.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawRej_vs_Eff_LD drawRej_vs_Eff_LD.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawRej_vs_Eff_LD drawRej_vs_Eff_LD.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 drawJetStudies_H: DrawBase.o fitTools.o drawJetStudies_H.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o drawJetStudies_H drawJetStudies_H.cpp DrawBase.o fitTools.o $(ROOTFLAG)
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawJetStudies_H drawJetStudies_H.cpp DrawBase.o fitTools.o $(ROOTFLAG)
+
+draw_Fall10_vs_Winter10: DrawBase.o fitTools.o draw_Fall10_vs_Winter10.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o draw_Fall10_vs_Winter10 draw_Fall10_vs_Winter10.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 
 
@@ -129,22 +136,22 @@ Ntp1Finalizer_HZZlljj.o: Ntp1Finalizer_HZZlljj.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ -I$(CMSSW_BASE)/src/UserCode/pandolf/QGLikelihood Ntp1Finalizer_HZZlljj.C $(ROOTFLAG)
 
 Ntp1Finalizer_ZGamma.o: Ntp1Finalizer_ZGamma.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_ZGamma.C $(ROOTFLAG)
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/  Ntp1Finalizer_ZGamma.C $(ROOTFLAG)
 
 Ntp1Finalizer_QG.o: Ntp1Finalizer_QG.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_QG.C $(ROOTFLAG)
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/  Ntp1Finalizer_QG.C $(ROOTFLAG)
 
 Ntp1Finalizer_QGTMVA.o: Ntp1Finalizer_QGTMVA.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_QGTMVA.C $(ROOTFLAG)
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/  Ntp1Finalizer_QGTMVA.C $(ROOTFLAG)
 
 Ntp1Finalizer_ComputeQGLikelihood.o: Ntp1Finalizer_ComputeQGLikelihood.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf Ntp1Finalizer_ComputeQGLikelihood.C $(ROOTFLAG)
 
 Ntp1Finalizer_GG.o: Ntp1Finalizer_GG.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_GG.C $(ROOTFLAG)
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/  Ntp1Finalizer_GG.C $(ROOTFLAG)
 
-Ntp1Finalizer_JESsyst.o: Ntp1Finalizer_JESsyst.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Finalizer_JESsyst.C $(ROOTFLAG)
+Ntp1Finalizer_KinFit.o: Ntp1Finalizer_KinFit.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ Ntp1Finalizer_KinFit.C $(ROOTFLAG)
 
 TFitParticleEtEtaPhi.o: TFitParticleEtEtaPhi.cc
 	$(CC) $(CFLAGS) TFitParticleEtEtaPhi.cc $(ROOTFLAG)
