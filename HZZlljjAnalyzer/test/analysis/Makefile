@@ -73,6 +73,9 @@ drawHZZlljj_DATA: DrawBase.o fitTools.o drawHZZlljj_DATA.cpp
 drawKinFit: DrawBase.o fitTools.o drawKinFit.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf -o drawKinFit drawKinFit.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
+drawWZ_DATA: DrawBase.o fitTools.o drawWZ_DATA.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf -o drawWZ_DATA drawWZ_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+
 drawMCHistos: DrawBase.o fitTools.o drawMCHistos.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawMCHistos drawMCHistos.cpp DrawBase.o fitTools.o $(ROOTFLAG)
 
