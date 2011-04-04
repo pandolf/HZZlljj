@@ -247,6 +247,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      bool goodVertex = (ndofPV[0] >= 4.0 && sqrt(PVxPV[0]*PVxPV[0]+PVyPV[0]*PVyPV[0]) < 2. && fabs(PVzPV[0]) < 24. );
      if( !goodVertex ) continue;
 
+     nvertex_ = nPV;
+
 
      bool isMC = ( runNumber < 5 );
 
