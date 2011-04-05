@@ -7,10 +7,7 @@
 #include "TLorentzVector.h"
 #include "TRegexp.h"
 
-#include "TFitConstraintM.h"
-#include "TFitParticleEtEtaPhi.h"
-#include "TKinFitter.h"
-
+#include "KinematicFit/DiJetKinFitter.h"
 #include "QGLikelihood/QGLikelihoodCalculator.h"
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
 
@@ -127,10 +124,18 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch( "ptJet1",  &ptJet1_,  "ptJet1_/F");
   reducedTree_->Branch( "ptJet1_preKin",  &ptJet1_preKin_,  "ptJet1_preKin_/F");
   reducedTree_->Branch("absEtaJet1", &absEtaJet1_, "absEtaJet1_/F");
+  reducedTree_->Branch("nChargedJet1", &nChargedJet1_, "nChargedJet1_/I");
+  reducedTree_->Branch("nNeutralJet1", &nNeutralJet1_, "nNeutralJet1_/I");
+  reducedTree_->Branch("rmsCandJet1", &rmsCandJet1_, "rmsCandJet1_/F");
+  reducedTree_->Branch("ptDJet1", &ptDJet1_, "ptDJet1_/F");
 
   reducedTree_->Branch( "ptJet2",  &ptJet2_,  "ptJet2_/F");
   reducedTree_->Branch( "ptJet2_preKin",  &ptJet2_preKin_,  "ptJet2_preKin_/F");
   reducedTree_->Branch("absEtaJet2", &absEtaJet2_, "absEtaJet2_/F");
+  reducedTree_->Branch("nChargedJet2", &nChargedJet2_, "nChargedJet2_/I");
+  reducedTree_->Branch("nNeutralJet2", &nNeutralJet2_, "nNeutralJet2_/I");
+  reducedTree_->Branch("rmsCandJet2", &rmsCandJet2_, "rmsCandJet2_/F");
+  reducedTree_->Branch("ptDJet2", &ptDJet2_, "ptDJet2_/F");
 
   reducedTree_->Branch( "ptJetRecoil",  &ptJetRecoil_,  "ptJetRecoil_/F");
   reducedTree_->Branch("absEtaJetRecoil", &absEtaJetRecoil_, "absEtaJetRecoil_/F");
@@ -1002,9 +1007,17 @@ if( jet2.Energy()<0. ) std::cout << "jet2_kinfit.E(): " << jet2_kinfit.E() << st
 
      ptJet1_ = jet1.Pt();
      absEtaJet1_ = fabs(jet1.Eta());
+     nChargedJet1_ = jet1.nCharged;
+     nNeutralJet1_ = jet1.nNeutral;
+     ptDJet1_ = jet1.ptD;
+     rmsCandJet1_ = jet1.rmsCand;
      
      ptJet2_ = jet2.Pt();
      absEtaJet2_ = fabs(jet2.Eta());
+     nChargedJet2_ = jet2.nCharged;
+     nNeutralJet2_ = jet2.nNeutral;
+     ptDJet2_ = jet2.ptD;
+     rmsCandJet2_ = jet2.rmsCand;
 
 
      ptJetRecoil_ = (jetRecoil.E()>0.) ? jetRecoil.Pt() : 0.;
