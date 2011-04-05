@@ -9,13 +9,14 @@
 #include "TProfile.h"
 #include "TRegexp.h"
 
-#include "TFitConstraintM.h"
-#include "TFitParticleEtEtaPhi.h"
-#include "TKinFitter.h"
+#include "KinematicFit/TFitConstraintM.h"
+#include "KinematicFit/TFitParticleEtEtaPhi.h"
+#include "KinematicFit/TKinFitter.h"
 
 #include "QGLikelihood/QGLikelihoodCalculator.h"
 #include "CommonTools/fitTools.h"
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
+#include "KinematicFit/DiJetKinFitter.h"
 
 
 
@@ -807,6 +808,8 @@ ofstream ofs("run_event.txt");
         //   KINEMATIC FIT: BEGIN
         // ------------------------
 
+        DiJetKinFitter kinfitter;
+        std::pair<TLorentzVector,TLorentzVector> jets_kinfit = kinfitter.fit(jet1, jet2);
 
         TMatrixD m_jet1(3,3);
         TMatrixD m_jet2(3,3);
