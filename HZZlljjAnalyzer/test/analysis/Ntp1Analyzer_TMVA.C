@@ -74,11 +74,6 @@ class AnalysisLepton : public TLorentzVector {
 HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
 
 
-double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
-
-Double_t ErrEt(Float_t Et, Float_t Eta);
-Double_t ErrEta(Float_t Et, Float_t Eta);
-Double_t ErrPhi(Float_t Et, Float_t Eta);
 
 
 
@@ -864,6 +859,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        continue; //means that less than 2 jets were found
      }
 
+
      AnalysisJet jet1, jet2, jetRecoil;
 
      if( jetChoice_ == "BESTZ" ) {
@@ -883,6 +879,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        exit(919);
      }
      
+
 
      if( (best_i_bestZ==matchedIndex_quark0 && best_j_bestZ==matchedIndex_quark1) || (best_i_bestZ==matchedIndex_quark1 && best_j_bestZ==matchedIndex_quark0) )
        nCorrectPairs_bestZ++;
@@ -912,46 +909,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      QGLikelihoodJet1Jet2_ = QGLikelihoodJet1_*QGLikelihoodJet2_;
      QGLikelihoodJet1Jet2Recoil_ = (QGLikelihoodJetRecoil_>=0.) ? QGLikelihoodJet1_*QGLikelihoodJet2_*QGLikelihoodJetRecoil_ : QGLikelihoodJet1_*QGLikelihoodJet2_;
 
-     // ------------------------
-     //   KINEMATIC FIT: BEGIN
-     // ------------------------
-     
-     TMatrixD m_jet1(3,3);
-     TMatrixD m_jet2(3,3);
-     
-     m_jet1(0,0) = 0.5*ErrEt (jet1.Et(), jet1.Eta()); // et
-     m_jet1(1,1) = 0.5*ErrEta(jet1.Et(), jet1.Eta()); // eta
-     m_jet1(2,2) = 0.5*ErrPhi(jet1.Et(), jet1.Eta()); // phi
-     m_jet2(0,0) = 0.5*ErrEt (jet2.Et(), jet2.Eta()); // et
-     m_jet2(1,1) = 0.5*ErrEta(jet2.Et(), jet2.Eta()); // eta
-     m_jet2(2,2) = 0.5*ErrPhi(jet2.Et(), jet2.Eta()); // phi
-     
-     TFitParticleEtEtaPhi *fitJet1 = new TFitParticleEtEtaPhi( "Jet1", "Jet1", &jet1, &m_jet1 );
-     TFitParticleEtEtaPhi *fitJet2 = new TFitParticleEtEtaPhi( "Jet2", "Jet2", &jet2, &m_jet2 );
-     
-     TFitConstraintM *mCons_jets = new TFitConstraintM( "ZMassConstraint_jets", "ZMass-Constraint", 0, 0 , 91.19);
-     mCons_jets->addParticles1( fitJet1, fitJet2 );
-     
-     TKinFitter* fitter_jets = new TKinFitter("fitter_jets", "fitter_jets");
-     fitter_jets->addMeasParticle( fitJet1 );
-     fitter_jets->addMeasParticle( fitJet2 );
-     fitter_jets->addConstraint( mCons_jets );
-     
-     //Set convergence criteria
-     fitter_jets->setMaxNbIter( 30 );
-     fitter_jets->setMaxDeltaS( 1e-2 );
-     fitter_jets->setMaxF( 1e-1 );
-     fitter_jets->setVerbosity(0);
-     
-     //Perform the fit
-     fitter_jets->fit();
-     
-
-     TLorentzVector jet1_kinfit(*fitJet1->getCurr4Vec());
-     TLorentzVector jet2_kinfit(*fitJet2->getCurr4Vec());
 
      // fill mZjj before the kinfit:
      TLorentzVector diJet_pre = jet1 + jet2;
+     if( diJet_pre.M() < 50. || diJet_pre.M() > 150. ) continue; //loose cut to avoid kinfit crashes
      TLorentzVector ZZ_pre = diJet_pre + diLepton;
      mZjj_ = diJet_pre.M();
      ptJet1_preKin_ = jet1.Pt();
@@ -973,9 +934,17 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      helicityLD_ = sProb/(sProb+bProb);
 
 
-if( jet2.Energy()<0. ) std::cout << "BLABLA: " << jentry << std::endl;
+     // ------------------------
+     //   KINEMATIC FIT: BEGIN
+     // ------------------------
+     
+     DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", Zmass );
+     std::pair<TLorentzVector,TLorentzVector> jets_kinfit = fitter_jets->fit(jet1, jet2);
+     TLorentzVector jet1_kinfit(jets_kinfit.first);
+     TLorentzVector jet2_kinfit(jets_kinfit.second);
 
-     jet1.SetPtEtaPhiE( jet1_kinfit.Pt(), jet1_kinfit.Eta(), jet1_kinfit.Phi(), jet1_kinfit.E() );
+
+  //   jet1.SetPtEtaPhiE( jet1_kinfit.Pt(), jet1_kinfit.Eta(), jet1_kinfit.Phi(), jet1_kinfit.E() );
      jet2.SetPtEtaPhiE( jet2_kinfit.Pt(), jet2_kinfit.Eta(), jet2_kinfit.Phi(), jet2_kinfit.E() );
 
 if( jet2.Energy()<0. ) std::cout << "jet2_kinfit.E(): " << jet2_kinfit.E() << std::endl;
@@ -1095,63 +1064,6 @@ exit(1);
 } //loop
 
 
-double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz) {
-  float elePt = sqrt(elePx*elePx + elePy*elePy);
-  return ( - (eleVx-PVx)*elePy + (eleVy-PVy)*elePx ) / elePt;
-}
-
-// error functions for jets:
-
-Double_t ErrEt(Float_t Et, Float_t Eta) {
-  Double_t InvPerr2, a, b, c;
-  if(fabs(Eta) < 1.4){
-    a = 5.6;
-    b = 1.25;
-    c = 0.033;
-  }
-  else{
-    a = 4.8;
-    b = 0.89;
-    c = 0.043;
-  }
-  InvPerr2 = (a * a) + (b * b) * Et + (c * c) * Et * Et;
-  return InvPerr2;
-}
-
-
-
-Double_t ErrEta(Float_t Et, Float_t Eta) {
-  Double_t InvPerr2, a, b, c;
-  if(fabs(Eta) < 1.4){
-    a = 1.215;
-    b = 0.037;
-    c = 7.941 * 0.0001;
-  }
-  else{
-    a = 1.773;
-    b = 0.034;
-    c = 3.56 * 0.0001;
-  }
-  InvPerr2 = a/(Et * Et) + b/Et + c;
-  return InvPerr2;
-}
-
-Double_t ErrPhi(Float_t Et, Float_t Eta) {
-  Double_t InvPerr2, a, b, c;
-  if(fabs(Eta) < 1.4){
-    a = 6.65;
-    b = 0.04;
-    c = 8.49 * 0.00001;
-  }
-  else{
-    a = 2.908;
-    b = 0.021;
-    c = 2.59 * 0.0001;
-  }
-  InvPerr2 = a/(Et * Et) + b/Et + c;
-  return InvPerr2;
-}
-               
 
 HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 ) {
 
