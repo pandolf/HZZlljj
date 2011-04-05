@@ -61,6 +61,12 @@ class AnalysisJet : public TLorentzVector {
   float phiGen;
   float eGen;
 
+  //btags:
+  float simpleSecondaryVertexHighEffBJetTag;
+  float simpleSecondaryVertexHighPurBJetTag;
+  float jetBProbabilityBJetTag;
+  float jetProbabilityBJetTag;
+
 };
 
 
@@ -185,6 +191,11 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nHFHadronsJet1", nHFHadronsJet1_, "nHFHadronsJet1_[nPairs_]/I");
   reducedTree_->Branch("nHFEMJet1", nHFEMJet1_, "nHFEMJet1_[nPairs_]/I");
 
+  reducedTree_->Branch("simpleSecondaryVertexHighEffBJetTagJet1", simpleSecondaryVertexHighEffBJetTagJet1_, "simpleSecondaryVertexHighEffBJetTagJet1_[nPairs_]/F");
+  reducedTree_->Branch("simpleSecondaryVertexHighPurBJetTagJet1", simpleSecondaryVertexHighPurBJetTagJet1_, "simpleSecondaryVertexHighPurBJetTagJet1_[nPairs_]/F");
+  reducedTree_->Branch("jetBProbabilityBJetTagJet1", jetBProbabilityBJetTagJet1_, "jetBProbabilityBJetTagJet1_[nPairs_]/F");
+  reducedTree_->Branch("jetProbabilityBJetTagJet1", jetProbabilityBJetTagJet1_, "jetProbabilityBJetTagJet1_[nPairs_]/F");
+
   reducedTree_->Branch("eJet1Gen",  eJet1Gen_,  "eJet1Gen_[nPairs_]/F");
   reducedTree_->Branch( "ptJet1Gen",  ptJet1Gen_,  "ptJet1Gen_[nPairs_]/F");
   reducedTree_->Branch("etaJet1Gen", etaJet1Gen_, "etaJet1Gen_[nPairs_]/F");
@@ -225,6 +236,11 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nElectronsJet2", nElectronsJet2_, "nElectronsJet2_[nPairs_]/I");
   reducedTree_->Branch("nHFHadronsJet2", nHFHadronsJet2_, "nHFHadronsJet2_[nPairs_]/I");
   reducedTree_->Branch("nHFEMJet2", nHFEMJet2_, "nHFEMJet2_[nPairs_]/I");
+
+  reducedTree_->Branch("simpleSecondaryVertexHighEffBJetTagJet2", simpleSecondaryVertexHighEffBJetTagJet2_, "simpleSecondaryVertexHighEffBJetTagJet2_[nPairs_]/F");
+  reducedTree_->Branch("simpleSecondaryVertexHighPurBJetTagJet2", simpleSecondaryVertexHighPurBJetTagJet2_, "simpleSecondaryVertexHighPurBJetTagJet2_[nPairs_]/F");
+  reducedTree_->Branch("jetBProbabilityBJetTagJet2", jetBProbabilityBJetTagJet2_, "jetBProbabilityBJetTagJet2_[nPairs_]/F");
+  reducedTree_->Branch("jetProbabilityBJetTagJet2", jetProbabilityBJetTagJet2_, "jetProbabilityBJetTagJet2_[nPairs_]/F");
 
   reducedTree_->Branch("eJet2Gen",  eJet2Gen_,  "eJet2Gen_[nPairs_]/F");
   reducedTree_->Branch( "ptJet2Gen",  ptJet2Gen_,  "ptJet2Gen_[nPairs_]/F");
@@ -729,12 +745,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // electron ID:
        // --------------
-       bool eleID_VBTF95 = (covIEtaIEtaSC[iEle] < sigmaIetaIeta_thresh95) &&
+       int scIndex = (superClusterIndexEle[iEle]>=0) ? superClusterIndexEle[iEle] : PFsuperClusterIndexEle[iEle];
+       bool eleID_VBTF95 = (covIEtaIEtaSC[scIndex] < sigmaIetaIeta_thresh95) &&
                            (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh95) &&
                            (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh95) &&
                            (hOverEEle[iEle] < hOverE_thresh95);
 
-       bool eleID_VBTF80 = (covIEtaIEtaSC[iEle] < sigmaIetaIeta_thresh80) &&
+       bool eleID_VBTF80 = (covIEtaIEtaSC[scIndex] < sigmaIetaIeta_thresh80) &&
                            (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh80) &&
                            (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh80) &&
                            (hOverEEle[iEle] < hOverE_thresh80);
@@ -936,6 +953,11 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisJet.rmsCand =  rmsCandAK5PFJet[iJet];
        thisJet.ptD =  ptDAK5PFJet[iJet];
 
+       thisJet.simpleSecondaryVertexHighEffBJetTag = simpleSecondaryVertexHighEffBJetTagsAK5PFJet[iJet];
+       thisJet.simpleSecondaryVertexHighPurBJetTag = simpleSecondaryVertexHighPurBJetTagsAK5PFJet[iJet];
+       thisJet.jetBProbabilityBJetTag = jetBProbabilityBJetTagsAK5PFJet[iJet];
+       thisJet.jetProbabilityBJetTag = jetProbabilityBJetTagsAK5PFJet[iJet];
+
        //thisJet.QGlikelihood = qglc.ComputeLikelihood( thisJet.Pt(), thisJet.nCharged, thisJet.nNeutral, thisJet.ptD, thisJet.rmsCand );
 
        if( thisJet.Pt()>jetPt_thresh ) nJets30++;
@@ -1045,6 +1067,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            nNeutralJet1_[nPairs_] = leadJets[iJet].nNeutral;
            QGlikelihoodJet1_[nPairs_] = leadJets[iJet].QGlikelihood;
 
+           simpleSecondaryVertexHighEffBJetTagJet1_[nPairs_] = leadJets[iJet].simpleSecondaryVertexHighEffBJetTag;
+           simpleSecondaryVertexHighPurBJetTagJet1_[nPairs_] = leadJets[iJet].simpleSecondaryVertexHighPurBJetTag;
+           jetBProbabilityBJetTagJet1_[nPairs_] = leadJets[iJet].jetBProbabilityBJetTag;
+           jetProbabilityBJetTagJet1_[nPairs_] = leadJets[iJet].jetProbabilityBJetTag;
+
+
            eJet1Gen_[nPairs_] = leadJets[iJet].eGen;
            ptJet1Gen_[nPairs_] = leadJets[iJet].ptGen;
            etaJet1Gen_[nPairs_] = leadJets[iJet].etaGen;
@@ -1071,6 +1099,11 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            nChargedJet2_[nPairs_] = leadJets[jJet].nCharged;
            nNeutralJet2_[nPairs_] = leadJets[jJet].nNeutral;
            QGlikelihoodJet2_[nPairs_] = leadJets[jJet].QGlikelihood;
+
+           simpleSecondaryVertexHighEffBJetTagJet2_[nPairs_] = leadJets[jJet].simpleSecondaryVertexHighEffBJetTag;
+           simpleSecondaryVertexHighPurBJetTagJet2_[nPairs_] = leadJets[jJet].simpleSecondaryVertexHighPurBJetTag;
+           jetBProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetBProbabilityBJetTag;
+           jetProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetProbabilityBJetTag;
 
            eJet2Gen_[nPairs_] = leadJets[jJet].eGen;
            ptJet2Gen_[nPairs_] = leadJets[jJet].ptGen;
