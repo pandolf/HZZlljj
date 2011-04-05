@@ -9,8 +9,8 @@ merge_and_setWeights: merge_and_setWeights.cpp
 #do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o QGLikelihoodCalculator.o do2ndLevel_HZZlljj.cpp
 #	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o QGLikelihoodCalculator.o $(ROOTFLAG) -lCore -lTMVA
 
-do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o do2ndLevel_HZZlljj.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o $(ROOTFLAG) 
+do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o do2ndLevel_HZZlljj.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o $(ROOTFLAG) 
 
 do2ndLevel_WZ: Ntp1Analyzer.o Ntp1Analyzer_WZ.o do2ndLevel_WZ.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_WZ do2ndLevel_WZ.cpp Ntp1Analyzer.o Ntp1Analyzer_WZ.o $(ROOTFLAG) 
@@ -102,6 +102,9 @@ drawJetStudies_H: DrawBase.o fitTools.o drawJetStudies_H.cpp
 
 draw_Fall10_vs_Winter10: DrawBase.o fitTools.o draw_Fall10_vs_Winter10.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o draw_Fall10_vs_Winter10 draw_Fall10_vs_Winter10.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+
+drawThresholds_vs_Mass: DrawBase.o fitTools.o drawThresholds_vs_Mass.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawThresholds_vs_Mass drawThresholds_vs_Mass.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 
 
@@ -204,6 +207,15 @@ RooSpinZero5DV2.o: $(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscrimi
 RooBkgd2L2JV2.o: $(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscriminant/PDFs/RooBkgd2L2JV2.cc 
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscriminant/PDFs $(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscriminant/PDFs/RooBkgd2L2JV2.cc $(ROOTFLAG)
 
+
+AnalysisElectron.o: AnalysisElectron.cc AnalysisLepton.o
+	$(CC) $(CFLAGS) AnalysisElectron.cc $(ROOTFLAG)
+
+AnalysisMuon.o: AnalysisMuon.cc AnalysisLepton.o
+	$(CC) $(CFLAGS) AnalysisMuon.cc $(ROOTFLAG)
+
+AnalysisLepton.o: AnalysisLepton.h
+	$(CC) $(CFLAGS) AnalysisLepton.h $(ROOTFLAG)
 
 
 

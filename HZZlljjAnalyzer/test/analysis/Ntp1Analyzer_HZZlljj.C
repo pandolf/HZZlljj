@@ -8,6 +8,8 @@
 #include "TRegexp.h"
 #include "TMVA/Reader.h"
 
+#include "AnalysisElectron.h"
+#include "AnalysisMuon.h"
 
 
 //#include "fitTools.h"
@@ -63,6 +65,7 @@ class AnalysisJet : public TLorentzVector {
 
 
 
+/*
 class AnalysisLepton : public TLorentzVector {
 
  public:
@@ -79,7 +82,7 @@ class AnalysisLepton : public TLorentzVector {
 
 };
 
-
+*/
 
 
 Ntp1Analyzer_HZZlljj::Ntp1Analyzer_HZZlljj( const std::string& dataset, const std::string& flags, TTree* tree ) :
@@ -511,13 +514,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // MUONS
      // ------------------
 
-     std::vector<AnalysisLepton> muons;
+     std::vector<AnalysisMuon> muons;
      int chargeFirstMuon;
 
 
      for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
 
-       AnalysisLepton thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
+       AnalysisMuon thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
        thisMuon.charge = chargeMuon[iMuon];
 
        // --------------
@@ -525,13 +528,16 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        if( thisMuon.Pt() < 20. ) continue;
 
+       thisMuon.isGlobalMuonPromptTight = (muonIdMuon[iMuon]>>8)&1;
+       thisMuon.isAllTrackerMuon = (muonIdMuon[iMuon]>>11)&1;
 
-       // --------------
-       // ID:
-       // --------------
-       if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
-       if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
-       //if( numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]==0 && numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
+
+//     // --------------
+//     // ID:
+//     // --------------
+//     if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
+//     if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
+//     //if( numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]==0 && numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
 
 
        // to compute dxy, look for primary vertex:
@@ -553,13 +559,20 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
                               pxTrack[trackIndexMuon[iMuon]], pyTrack[trackIndexMuon[iMuon]], pzTrack[trackIndexMuon[iMuon]]));
        }
 
-       if( dxy > 0.02 ) continue;
+//       if( dxy > 0.02 ) continue;
 
 
        float dz = fabs(trackVzTrack[trackIndexMuon[iMuon]]-PVzPV[hardestPV]);
-       if(dz > 1.0) continue;
+//       if(dz > 1.0) continue;
 
+       thisMuon.dxy = dxy;
+       thisMuon.dz = dz;
 
+       thisMuon.sumPt03 = sumPt03Muon[iMuon];
+       thisMuon.emEt03  = emEt03Muon[iMuon];
+       thisMuon.hadEt03 = hadEt03Muon[iMuon];
+
+       if( !thisMuon.passedVBTF() ) continue;
 
        // --------------
        // isolation:
@@ -567,7 +580,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // (this is sum pt tracks)
        //if( sumPt03Muon[iMuon] >= 3. ) continue;
        // combined isolation < 15%:
-       if( (sumPt03Muon[iMuon] + emEt03Muon[iMuon] + hadEt03Muon[iMuon]) >= 0.15*thisMuon.Pt() ) continue;
+//       if( (sumPt03Muon[iMuon] + emEt03Muon[iMuon] + hadEt03Muon[iMuon]) >= 0.15*thisMuon.Pt() ) continue;
 
 
 
@@ -589,13 +602,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // ELECTRONS
      // ------------------
 
-     std::vector<AnalysisLepton> electrons;
+     std::vector<AnalysisElectron> electrons;
      int chargeFirstEle = 0;
      bool firstPassedVBTF80 = false;
 
      for( unsigned int iEle=0; (iEle<nEle) && (electrons.size()<2); ++iEle ) {
 
-       AnalysisLepton thisEle( pxEle[iEle], pyEle[iEle], pzEle[iEle], energyEle[iEle] );
+       AnalysisElectron thisEle( pxEle[iEle], pyEle[iEle], pzEle[iEle], energyEle[iEle] );
        thisEle.charge = chargeEle[iEle];
 
 
@@ -605,7 +618,23 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( thisEle.Pt() < 20. ) continue;
        if( (fabs(thisEle.Eta()) > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) continue;
 
+       // isolation
+       thisEle.dr03TkSumPt = dr03TkSumPtEle[iEle];
+       thisEle.dr03EcalRecHitSumEt = dr03EcalRecHitSumEtEle[iEle];
+       thisEle.dr03HcalTowerSumEt = dr03HcalTowerSumEtEle[iEle];
 
+       // electron ID
+       thisEle.sigmaIetaIeta = (superClusterIndexEle[iEle]>=0) ? covIEtaIEtaSC[superClusterIndexEle[iEle]] : covIEtaIEtaSC[PFsuperClusterIndexEle[iEle]];
+       thisEle.deltaPhiAtVtx = deltaPhiAtVtxEle[iEle];
+       thisEle.deltaEtaAtVtx = deltaEtaAtVtxEle[iEle];
+       thisEle.hOverE = hOverEEle[iEle];
+
+       // conversion rejection
+       thisEle.expInnerLayersGsfTrack = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
+       thisEle.convDist = convDistEle[iEle];
+       thisEle.convDcot = convDcotEle[iEle];
+
+/*
        // ELE ID vars:
        Float_t dr03TkSumPt_thresh95;
        Float_t dr03EcalRecHitSumEt_thresh95;
@@ -721,13 +750,18 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        bool passed_VBTF95 = (iso_VBTF95 && eleID_VBTF95 && convRej_VBTF95);
        bool passed_VBTF80 = (iso_VBTF80 && eleID_VBTF80 && convRej_VBTF80);
+*/
 
+
+
+       bool passed_VBTF95 = thisEle.passedVBTF95();
+       bool passed_VBTF80 = thisEle.passedVBTF80();
 
        if( !passed_VBTF95 ) continue;
 
        // check that not matched to muon (clean electrons faked by muon MIP):
        bool matchedtomuon=false;
-       for( std::vector<AnalysisLepton>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu )
+       for( std::vector<AnalysisMuon>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu )
          if( iMu->DeltaR(thisEle)<0.1 ) matchedtomuon=true;
 
        if( matchedtomuon ) continue;
