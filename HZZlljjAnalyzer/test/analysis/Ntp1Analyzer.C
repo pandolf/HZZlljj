@@ -2,6 +2,7 @@
 #include "TH1F.h"
 #include <cstdlib>
 #include <fstream>
+#include <cmath>
 
 
 
@@ -1261,4 +1262,11 @@ GenEventParameters Ntp1Analyzer::getGenEventParameters() {
 
    return returnGenPars;
 
+}
+
+
+
+double Ntp1Analyzer::trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz) {
+  float elePt = sqrt(elePx*elePx + elePy*elePy);
+  return ( - (eleVx-PVx)*elePy + (eleVy-PVy)*elePx ) / elePt;
 }

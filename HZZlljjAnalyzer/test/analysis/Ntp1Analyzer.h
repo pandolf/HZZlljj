@@ -1317,6 +1317,8 @@ public :
    virtual void     UpdateCache();
    virtual bool     isGoodEvent();
    virtual GenEventParameters     getGenEventParameters ();
+   double           trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
+
 
    //virtual void BookStuff()=0;
 
