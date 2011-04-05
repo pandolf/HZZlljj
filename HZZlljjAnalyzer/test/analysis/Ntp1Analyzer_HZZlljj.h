@@ -69,47 +69,6 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t etaLept2Gen_;
    Float_t phiLept2Gen_;
 
-   Float_t  ptJetBest1_;
-   Float_t   eJetBest1_;
-   Float_t phiJetBest1_;
-   Float_t etaJetBest1_;
-   Float_t rmsCandJetBest1_;
-   Float_t ptDJetBest1_;
-   Int_t nChargedJetBest1_;
-   Int_t nNeutralJetBest1_;
-
-   Float_t  ptJetBest2_;
-   Float_t   eJetBest2_;
-   Float_t phiJetBest2_;
-   Float_t etaJetBest2_;
-   Float_t rmsCandJetBest2_;
-   Float_t ptDJetBest2_;
-   Int_t nChargedJetBest2_;
-   Int_t nNeutralJetBest2_;
-
-   Float_t  ptJetRecoil_;
-   Float_t   eJetRecoil_;
-   Float_t phiJetRecoil_;
-   Float_t etaJetRecoil_;
-   Float_t rmsCandJetRecoil_;
-   Float_t ptDJetRecoil_;
-   Int_t nChargedJetRecoil_;
-   Int_t nNeutralJetRecoil_;
-
-   Float_t  ptJetLead_;
-   Float_t   eJetLead_;
-   Float_t phiJetLead_;
-   Float_t etaJetLead_;
-
-   Float_t  ptJetLead2_;
-   Float_t   eJetLead2_;
-   Float_t phiJetLead2_;
-   Float_t etaJetLead2_;
-
-   Float_t  ptJetLead3_;
-   Float_t   eJetLead3_;
-   Float_t phiJetLead3_;
-   Float_t etaJetLead3_;
 
    Int_t nPairs_;
 
@@ -202,6 +161,7 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t phiPart_[20];
    Float_t etaPart_[20];
    Int_t pdgIdPart_[20];
+   Int_t motherPart_[20];
 
 
    Float_t epfMet_;
