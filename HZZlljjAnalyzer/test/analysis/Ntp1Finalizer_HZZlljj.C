@@ -45,6 +45,11 @@ class AnalysisJet : public TLorentzVector {
   float muonEnergyFraction;
   float electronEnergyFraction;
 
+  float ptGen;
+  float etaGen;
+  float phiGen;
+  float eGen;
+
 };
 
 
@@ -144,19 +149,32 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_eMuonsJet2 = new TH1D("eMuonsJet2", "", 60, 0., 1.0001);
   h1_eMuonsJet2->Sumw2();
 
-  TH1D* h1_ptJetBest1 = new TH1D("ptJetBest1", "", 27, 30., 400.);
-  h1_ptJetBest1->Sumw2();
+  TH1D* h1_ptResoJet1_beforeKin = new TH1D("ptResoJet1_beforeKin", "", 100, -1., 1.);
+  h1_ptResoJet1_beforeKin->Sumw2();
+  TH1D* h1_ptResoJet2_beforeKin = new TH1D("ptResoJet2_beforeKin", "", 100, -1., 1.);
+  h1_ptResoJet2_beforeKin->Sumw2();
 
-  TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 27, 30., 400.);
-  h1_ptJetRecoil->Sumw2();
-  TH1D* h1_ptDJetRecoil = new TH1D("ptDJetRecoil", "", 60, 0., 1.);
-  h1_ptDJetRecoil->Sumw2();
-  TH1D* h1_rmsCandJetRecoil = new TH1D("rmsCandJetRecoil", "", 60, 0., 0.07);
-  h1_rmsCandJetRecoil->Sumw2();
-  TH1D* h1_nChargedJetRecoil = new TH1D("nChargedJetRecoil", "", 41, -0.5, 40.5);
-  h1_nChargedJetRecoil->Sumw2();
-  TH1D* h1_nNeutralJetRecoil = new TH1D("nNeutralJetRecoil", "", 41, -0.5, 40.5);
-  h1_nNeutralJetRecoil->Sumw2();
+  TH1D* h1_ptResoJet1_afterKin = new TH1D("ptResoJet1_afterKin", "", 100, -1., 1.);
+  h1_ptResoJet1_afterKin->Sumw2();
+  TH1D* h1_ptResoJet2_afterKin = new TH1D("ptResoJet2_afterKin", "", 100, -1., 1.);
+  h1_ptResoJet2_afterKin->Sumw2();
+
+  TH1D* h1_ptZreso_beforeKin = new TH1D("ptZreso_beforeKin", "", 100, -1., 1.);
+  h1_ptZreso_beforeKin->Sumw2();
+  TH1D* h1_ptZreso_afterKin = new TH1D("ptZreso_afterKin", "", 100, -1., 1.);
+  h1_ptZreso_afterKin->Sumw2();
+
+
+//TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 27, 30., 400.);
+//h1_ptJetRecoil->Sumw2();
+//TH1D* h1_ptDJetRecoil = new TH1D("ptDJetRecoil", "", 60, 0., 1.);
+//h1_ptDJetRecoil->Sumw2();
+//TH1D* h1_rmsCandJetRecoil = new TH1D("rmsCandJetRecoil", "", 60, 0., 0.07);
+//h1_rmsCandJetRecoil->Sumw2();
+//TH1D* h1_nChargedJetRecoil = new TH1D("nChargedJetRecoil", "", 41, -0.5, 40.5);
+//h1_nChargedJetRecoil->Sumw2();
+//TH1D* h1_nNeutralJetRecoil = new TH1D("nNeutralJetRecoil", "", 41, -0.5, 40.5);
+//h1_nNeutralJetRecoil->Sumw2();
 
   int nBins_invMass = 80;
   float invMassMin = 30.;
@@ -424,84 +442,6 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   Int_t chargeLept2;
   tree_->SetBranchAddress("chargeLept2", &chargeLept2);
 
-  Float_t eJetLead;
-  tree_->SetBranchAddress("eJetLead", &eJetLead);
-  Float_t ptJetLead;
-  tree_->SetBranchAddress("ptJetLead", &ptJetLead);
-  Float_t etaJetLead;
-  tree_->SetBranchAddress("etaJetLead", &etaJetLead);
-  Float_t phiJetLead;
-  tree_->SetBranchAddress("phiJetLead", &phiJetLead);
-
-  Float_t eJetLead2;
-  tree_->SetBranchAddress("eJetLead2", &eJetLead2);
-  Float_t ptJetLead2;
-  tree_->SetBranchAddress("ptJetLead2", &ptJetLead2);
-  Float_t etaJetLead2;
-  tree_->SetBranchAddress("etaJetLead2", &etaJetLead2);
-  Float_t phiJetLead2;
-  tree_->SetBranchAddress("phiJetLead2", &phiJetLead2);
-
-  Float_t eJetLead3;
-  tree_->SetBranchAddress("eJetLead3", &eJetLead3);
-  Float_t ptJetLead3;
-  tree_->SetBranchAddress("ptJetLead3", &ptJetLead3);
-  Float_t etaJetLead3;
-  tree_->SetBranchAddress("etaJetLead3", &etaJetLead3);
-  Float_t phiJetLead3;
-  tree_->SetBranchAddress("phiJetLead3", &phiJetLead3);
-
-  Float_t eJetBest1;
-  tree_->SetBranchAddress("eJetBest1", &eJetBest1);
-  Float_t ptJetBest1;
-  tree_->SetBranchAddress("ptJetBest1", &ptJetBest1);
-  Float_t etaJetBest1;
-  tree_->SetBranchAddress("etaJetBest1", &etaJetBest1);
-  Float_t phiJetBest1;
-  tree_->SetBranchAddress("phiJetBest1", &phiJetBest1);
-  Float_t rmsCandJetBest1;
-  tree_->SetBranchAddress("rmsCandJetBest1", &rmsCandJetBest1);
-  Float_t ptDJetBest1;
-  tree_->SetBranchAddress("ptDJetBest1", &ptDJetBest1);
-  Int_t nChargedJetBest1;
-  tree_->SetBranchAddress("nChargedJetBest1", &nChargedJetBest1);
-  Int_t nNeutralJetBest1;
-  tree_->SetBranchAddress("nNeutralJetBest1", &nNeutralJetBest1);
-
-  Float_t eJetBest2;
-  tree_->SetBranchAddress("eJetBest2", &eJetBest2);
-  Float_t ptJetBest2;
-  tree_->SetBranchAddress("ptJetBest2", &ptJetBest2);
-  Float_t etaJetBest2;
-  tree_->SetBranchAddress("etaJetBest2", &etaJetBest2);
-  Float_t phiJetBest2;
-  tree_->SetBranchAddress("phiJetBest2", &phiJetBest2);
-  Float_t rmsCandJetBest2;
-  tree_->SetBranchAddress("rmsCandJetBest2", &rmsCandJetBest2);
-  Float_t ptDJetBest2;
-  tree_->SetBranchAddress("ptDJetBest2", &ptDJetBest2);
-  Int_t nChargedJetBest2;
-  tree_->SetBranchAddress("nChargedJetBest2", &nChargedJetBest2);
-  Int_t nNeutralJetBest2;
-  tree_->SetBranchAddress("nNeutralJetBest2", &nNeutralJetBest2);
-
-  Float_t eJetRecoil;
-  tree_->SetBranchAddress("eJetRecoil", &eJetRecoil);
-  Float_t ptJetRecoil;
-  tree_->SetBranchAddress("ptJetRecoil", &ptJetRecoil);
-  Float_t etaJetRecoil;
-  tree_->SetBranchAddress("etaJetRecoil", &etaJetRecoil);
-  Float_t phiJetRecoil;
-  tree_->SetBranchAddress("phiJetRecoil", &phiJetRecoil);
-  Float_t rmsCandJetRecoil;
-  tree_->SetBranchAddress("rmsCandJetRecoil", &rmsCandJetRecoil);
-  Float_t ptDJetRecoil;
-  tree_->SetBranchAddress("ptDJetRecoil", &ptDJetRecoil);
-  Int_t nChargedJetRecoil;
-  tree_->SetBranchAddress("nChargedJetRecoil", &nChargedJetRecoil);
-  Int_t nNeutralJetRecoil;
-  tree_->SetBranchAddress("nNeutralJetRecoil", &nNeutralJetRecoil);
-
 
   Int_t nPairs;
   tree_->SetBranchAddress("nPairs", &nPairs);
@@ -516,6 +456,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("etaJet1", etaJet1);
   Float_t phiJet1[50];
   tree_->SetBranchAddress("phiJet1", phiJet1);
+  Float_t eJet1Gen[50];
+  tree_->SetBranchAddress("eJet1Gen", eJet1Gen);
+  Float_t ptJet1Gen[50];
+  tree_->SetBranchAddress("ptJet1Gen", ptJet1Gen);
+  Float_t etaJet1Gen[50];
+  tree_->SetBranchAddress("etaJet1Gen", etaJet1Gen);
+  Float_t phiJet1Gen[50];
+  tree_->SetBranchAddress("phiJet1Gen", phiJet1Gen);
   Float_t eChargedHadronsJet1[50];
   tree_->SetBranchAddress("eChargedHadronsJet1", eChargedHadronsJet1);
   Float_t rmsCandJet1[50];
@@ -554,6 +502,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("etaJet2", etaJet2);
   Float_t phiJet2[50];
   tree_->SetBranchAddress("phiJet2", phiJet2);
+  Float_t eJet2Gen[50];
+  tree_->SetBranchAddress("eJet2Gen", eJet2Gen);
+  Float_t ptJet2Gen[50];
+  tree_->SetBranchAddress("ptJet2Gen", ptJet2Gen);
+  Float_t etaJet2Gen[50];
+  tree_->SetBranchAddress("etaJet2Gen", etaJet2Gen);
+  Float_t phiJet2Gen[50];
+  tree_->SetBranchAddress("phiJet2Gen", phiJet2Gen);
   Float_t eChargedHadronsJet2[50];
   tree_->SetBranchAddress("eChargedHadronsJet2", eChargedHadronsJet2);
   Float_t rmsCandJet2[50];
@@ -634,9 +590,10 @@ ofstream ofs("run_event.txt");
     }
 
 
+    bool isMC = (run<5);
 
-    if( run>5 ) { //is not MC:
-    
+
+    if( !isMC ) { 
 
       // remove duplicate events:
 
@@ -699,30 +656,6 @@ ofstream ofs("run_event.txt");
 
     TLorentzVector diLepton = lept1+lept2;
 
-    TLorentzVector jetLead;
-    jetLead.SetPtEtaPhiE( ptJetLead, etaJetLead, phiJetLead, eJetLead );
-    TLorentzVector jetLead2;
-    jetLead2.SetPtEtaPhiE( ptJetLead2, etaJetLead2, phiJetLead2, eJetLead2 );
-
-//  TLorentzVector jetBest1;
-//  jetBest1.SetPtEtaPhiE( ptJetBest1, etaJetBest1, phiJetBest1, eJetBest1 );
-//  TLorentzVector jetBest2;
-//  jetBest2.SetPtEtaPhiE( ptJetBest2, etaJetBest2, phiJetBest2, eJetBest2 );
-
-    TLorentzVector jetRecoil;
-    jetRecoil.SetPtEtaPhiE( ptJetRecoil, etaJetRecoil, phiJetRecoil, eJetRecoil );
-
-//  h1_ptJetBest1->Fill(ptJetBest1, eventWeight);
-//  h1_ptJetBest2->Fill(ptJetBest2, eventWeight);
-
-    h1_ptJetRecoil->Fill(ptJetRecoil, eventWeight);
-//  if( ptJetRecoil>0. ) {
-//  h1_rmsCandJetRecoil->Fill(rmsCandJetRecoil, eventWeight);
-//  h1_ptDJetRecoil->Fill(ptDJetRecoil, eventWeight);
-//  h1_nChargedJetRecoil->Fill(nChargedJetRecoil, eventWeight);
-//  h1_nNeutralJetRecoil->Fill(nNeutralJetRecoil, eventWeight);
-//  }
-
 
 
     std::vector< std::pair< AnalysisJet, AnalysisJet > > jetPairs_selected;
@@ -775,12 +708,22 @@ ofstream ofs("run_event.txt");
       jet1.muonEnergyFraction = eMuonsJet1[iJetPair]/jet1.Energy();
       jet1.electronEnergyFraction = eElectronsJet1[iJetPair]/jet1.Energy();
 
+      jet1.ptGen = ptJet1Gen[iJetPair];
+      jet1.etaGen = etaJet1Gen[iJetPair];
+      jet1.phiGen = phiJet1Gen[iJetPair];
+      jet1.eGen = eJet1Gen[iJetPair];
+
       jet2.rmsCand = rmsCandJet2[iJetPair];
       jet2.ptD = ptDJet2[iJetPair];
       jet2.nCharged = nChargedJet2[iJetPair];
       jet2.nNeutral = nNeutralJet2[iJetPair];
       jet2.muonEnergyFraction = eMuonsJet2[iJetPair]/jet2.Energy();
       jet2.electronEnergyFraction = eElectronsJet2[iJetPair]/jet2.Energy();
+
+      jet2.ptGen =   ptJet2Gen[iJetPair];
+      jet2.etaGen = etaJet2Gen[iJetPair];
+      jet2.phiGen = phiJet2Gen[iJetPair];
+      jet2.eGen =     eJet2Gen[iJetPair];
 
       TLorentzVector diJet = jet1 + jet2;
 
@@ -901,7 +844,54 @@ ofstream ofs("run_event.txt");
 
         TLorentzVector jet1_kinfit(*fitJet1->getCurr4Vec());
         TLorentzVector jet2_kinfit(*fitJet2->getCurr4Vec());
+
+
+        TLorentzVector matchedPart1, matchedPart2;
+        float bestDeltaRPart1=999.;
+        float bestDeltaRPart2=999.;
+        for( unsigned iPart=0; iPart<nPart; ++iPart ) {
+          if( abs(pdgIdPart[iPart])>6 ) continue;
+          TLorentzVector thisPart;
+          thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+          if( jet1.DeltaR(thisPart) < bestDeltaRPart1 ) {
+            bestDeltaRPart1 = jet1.DeltaR(thisPart);
+            matchedPart1 = thisPart;
+          }
+          if( jet2.DeltaR(thisPart) < bestDeltaRPart2 ) {
+            bestDeltaRPart2 = jet2.DeltaR(thisPart);
+            matchedPart2 = thisPart;
+          }
+        }
+      //float ptReso1_before = (isMC) ? ( jet1.Pt()-jet1.ptGen )/jet1.ptGen : 0.;
+      //float ptReso2_before = (isMC) ? ( jet2.Pt()-jet2.ptGen )/jet2.ptGen : 0.;
+        float ptReso1_before = (isMC) ? ( jet1.Pt()-matchedPart1.Pt() )/matchedPart1.Pt() : 0.;
+        float ptReso2_before = (isMC) ? ( jet2.Pt()-matchedPart2.Pt() )/matchedPart2.Pt() : 0.;
+        h1_ptResoJet1_beforeKin->Fill( ptReso1_before, eventWeight );
+        h1_ptResoJet2_beforeKin->Fill( ptReso2_before, eventWeight );
+
+        float ptReso1_after = (isMC) ? ( jet1_kinfit.Pt()-matchedPart1.Pt() )/matchedPart1.Pt() : 0.;
+        float ptReso2_after = (isMC) ? ( jet2_kinfit.Pt()-matchedPart2.Pt() )/matchedPart2.Pt() : 0.;
+        h1_ptResoJet1_afterKin->Fill( ptReso1_after, eventWeight );
+        h1_ptResoJet2_afterKin->Fill( ptReso2_after, eventWeight );
+
         TLorentzVector Zjj_kinfit = jet1_kinfit + jet2_kinfit;
+
+        TLorentzVector matchedZ;
+        float bestDeltaRZ=999.;
+        for( unsigned iPart=0; iPart<nPart; ++iPart ) {
+          if( pdgIdPart[iPart]!=23 ) continue;
+          TLorentzVector thisZ;
+          thisZ.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+          if( Zjj_kinfit.DeltaR(thisZ) < bestDeltaRZ ) {
+            bestDeltaRZ = Zjj_kinfit.DeltaR(thisZ);
+            matchedZ = thisZ;
+          }
+        }
+
+        float ptZreso_before = (isMC) ? (bestZDiJet.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
+        float ptZreso_after  = (isMC) ? (Zjj_kinfit.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
+        h1_ptZreso_beforeKin->Fill( ptZreso_before, eventWeight);
+        h1_ptZreso_afterKin->Fill( ptZreso_after, eventWeight);
 
         TLorentzVector ZZ = bestZDiJet + diLepton;
         TLorentzVector ZZ_constr = diLepton + Zjj_constr;
@@ -1350,23 +1340,13 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
   h1_nJets_presel->Write();
   h1_nPairs_presel->Write();
 
-//h1_ptJetBest1->Write();
-//h1_ptDJetBest1->Write();
-//h1_rmsCandJetBest1->Write();
-//h1_nChargedJetBest1->Write();
-//h1_nNeutralJetBest1->Write();
+  h1_ptResoJet1_beforeKin->Write();
+  h1_ptResoJet2_beforeKin->Write();
+  h1_ptResoJet1_afterKin->Write();
+  h1_ptResoJet2_afterKin->Write();
 
-//h1_ptJetBest2->Write();
-//h1_ptDJetBest2->Write();
-//h1_rmsCandJetBest2->Write();
-//h1_nChargedJetBest2->Write();
-//h1_nNeutralJetBest2->Write();
-
-  h1_ptJetRecoil->Write();
-  h1_ptDJetRecoil->Write();
-  h1_rmsCandJetRecoil->Write();
-  h1_nChargedJetRecoil->Write();
-  h1_nNeutralJetRecoil->Write();
+  h1_ptZreso_beforeKin->Write();
+  h1_ptZreso_afterKin->Write();
 
   h1_deltaRll_presel->Write();
   h1_deltaRjj_all_presel->Write();
@@ -1550,6 +1530,8 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 0.;
+    mZZ_threshHi_ = 10000.;
 
   } else if( selectionType=="tight" ) {
 
@@ -1659,8 +1641,8 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
-    helicityLD_thresh_ = 0.;
-    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 270.;
+    mZZ_threshHi_ = 330.;
 
   } else if( selectionType=="opt350LD" ) {
 
@@ -1695,8 +1677,10 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptJet2_thresh_ = 55.;
     etaJet1_thresh_ = 2.4;
     etaJet2_thresh_ = 2.4;
-    mZll_threshLo_ = 81.;
-    mZll_threshHi_ = 101.;
+  //mZll_threshLo_ = 81.;
+  //mZll_threshHi_ = 101.;
+    mZll_threshLo_ = 50.;
+    mZll_threshHi_ = 120.;
     mZjj_threshLo_ = 81.;
     mZjj_threshHi_ = 101.;
     deltaRll_thresh_ = 999.;
@@ -1903,6 +1887,8 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
 
 // error functions for jets:
 
+/*
+// calojet resolution:
 Double_t ErrEt(Float_t Et, Float_t Eta) {
   Double_t InvPerr2, a, b, c;
   if(fabs(Eta) < 1.4){
@@ -1916,6 +1902,55 @@ Double_t ErrEt(Float_t Et, Float_t Eta) {
     c = 0.043;
   }
   InvPerr2 = (a * a) + (b * b) * Et + (c * c) * Et * Et;
+  return InvPerr2;
+}
+*/
+
+
+// pfjet resolutions. taken from AN-2010-371
+Double_t ErrEt(Float_t Et, Float_t Eta) {
+  Double_t InvPerr2, N, S, C, m;
+  if(fabs(Eta) < 0.5 ) {
+    N = 3.96859;
+    S = 0.18348;
+    C = 0.;
+    m = 0.62627;
+  } else if( fabs(Eta) < 1. ) {
+    N = 3.55226;
+    S = 0.24026;
+    C = 0.;
+    m = 0.52571;
+  } else if( fabs(Eta) < 1.5 ) {
+    N = 4.54826;
+    S = 0.22652;
+    C = 0.;
+    m = 0.58963;
+  } else if( fabs(Eta) < 2. ) {
+    N = 4.62622;
+    S = 0.23664;
+    C = 0.;
+    m = 0.48738;
+  } else if( fabs(Eta) < 2.5 ) {
+    N = 2.53324;
+    S = 0.34306;
+    C = 0.;
+    m = 0.28662;
+  } else if( fabs(Eta) < 3. ) {
+    N = -3.33814;
+    S = 0.73360;
+    C = 0.;
+    m = 0.08264;
+  } else if( fabs(Eta) < 5. ) {
+    N = 2.95397;
+    S = 0.11619;
+    C = 0.;
+    m = 0.96086;
+  }
+
+
+  // this is the absolute resolution (squared), not sigma(pt)/pt
+  // so have to multiply by pt^2, thats why m+1 instead of m-1
+  InvPerr2 =  (N * fabs(N) ) + (S * S) * pow(Et, m+1) + (C * C) * Et * Et ;
   return InvPerr2;
 }
 
