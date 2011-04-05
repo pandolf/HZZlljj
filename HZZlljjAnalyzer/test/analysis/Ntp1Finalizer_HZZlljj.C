@@ -9,10 +9,6 @@
 #include "TProfile.h"
 #include "TRegexp.h"
 
-#include "KinematicFit/TFitConstraintM.h"
-#include "KinematicFit/TFitParticleEtEtaPhi.h"
-#include "KinematicFit/TKinFitter.h"
-
 #include "QGLikelihood/QGLikelihoodCalculator.h"
 #include "CommonTools/fitTools.h"
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
@@ -51,6 +47,12 @@ class AnalysisJet : public TLorentzVector {
   float phiGen;
   float eGen;
 
+  //btags:
+  float simpleSecondaryVertexHighEffBJetTag;
+  float simpleSecondaryVertexHighPurBJetTag;
+  float jetBProbabilityBJetTag;
+  float jetProbabilityBJetTag;
+
 };
 
 
@@ -61,13 +63,6 @@ HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVec
 
 
 
-void print(TKinFitter *fitter);
-Double_t ErrEt(Float_t Et, Float_t Eta);
-Double_t ErrEta(Float_t Et, Float_t Eta);
-Double_t ErrPhi(Float_t Et, Float_t Eta);
-Double_t ErrEt(Float_t Et, Float_t Eta, int particleType);
-Double_t ErrEta(Float_t Et, Float_t Eta, int particleType);
-Double_t ErrPhi(Float_t Et, Float_t Eta, int particleType);
 
 int getNJets( int nPairs );
 
@@ -223,8 +218,21 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   std::vector<TH1D*> vh1_QGLikelihoodJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet1", 60, 0., 1.);
   TH1D* h1_QGLikelihoodJet1 = new TH1D("QGLikelihoodJet1", "", 60, 0., 1.);
   h1_QGLikelihoodJet1->Sumw2();
+  TH1D* h1_QGLikelihoodJet1_antiBtag_highEff = new TH1D("QGLikelihoodJet1_antiBtag_highEff", "", 60, 0., 1.);
+  h1_QGLikelihoodJet1_antiBtag_highEff->Sumw2();
+  TH1D* h1_QGLikelihoodJet1_antiBtag_highPur = new TH1D("QGLikelihoodJet1_antiBtag_highPur", "", 60, 0., 1.);
+  h1_QGLikelihoodJet1_antiBtag_highPur->Sumw2();
   TH1D* h1_QGLikelihoodJet1_eta2 = new TH1D("QGLikelihoodJet1_eta2", "", 60, 0., 1.);
   h1_QGLikelihoodJet1_eta2->Sumw2();
+
+  TH1D* h1_simpleSecondaryVertexHighEffBJetTagJet1 = new TH1D("simpleSecondaryVertexHighEffBJetTagJet1", "", 50, -1.5, 4.);
+  h1_simpleSecondaryVertexHighEffBJetTagJet1->Sumw2();
+  TH1D* h1_simpleSecondaryVertexHighPurBJetTagJet1 = new TH1D("simpleSecondaryVertexHighPurBJetTagJet1", "", 50, -1.5, 4.);
+  h1_simpleSecondaryVertexHighPurBJetTagJet1->Sumw2();
+  TH1D* h1_jetBProbabilityBJetTagJet1 = new TH1D("jetBProbabilityBJetTagJet1", "", 50, 0., 8.);
+  h1_jetBProbabilityBJetTagJet1->Sumw2();
+  TH1D* h1_jetProbabilityBJetTagJet1 = new TH1D("jetProbabilityBJetTagJet1", "", 50, 0., 2.5);
+  h1_jetProbabilityBJetTagJet1->Sumw2();
 
 
   TH1D* h1_deltaR_part2 = new TH1D("deltaR_part2", "", 60, 0., 0.8);
@@ -240,8 +248,21 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   std::vector<TH1D*> vh1_QGLikelihoodJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet2", 60, 0., 1.);
   TH1D* h1_QGLikelihoodJet2 = new TH1D("QGLikelihoodJet2", "", 60, 0., 1.);
   h1_QGLikelihoodJet2->Sumw2();
+  TH1D* h1_QGLikelihoodJet2_antiBtag_highEff = new TH1D("QGLikelihoodJet2_antiBtag_highEff", "", 60, 0., 1.);
+  h1_QGLikelihoodJet2_antiBtag_highEff->Sumw2();
+  TH1D* h1_QGLikelihoodJet2_antiBtag_highPur = new TH1D("QGLikelihoodJet2_antiBtag_highPur", "", 60, 0., 1.);
+  h1_QGLikelihoodJet2_antiBtag_highPur->Sumw2();
   TH1D* h1_QGLikelihoodJet2_eta2 = new TH1D("QGLikelihoodJet2_eta2", "", 60, 0., 1.);
   h1_QGLikelihoodJet2_eta2->Sumw2();
+
+  TH1D* h1_simpleSecondaryVertexHighEffBJetTagJet2 = new TH1D("simpleSecondaryVertexHighEffBJetTagJet2", "", 50, -1.5, 4.);
+  h1_simpleSecondaryVertexHighEffBJetTagJet2->Sumw2();
+  TH1D* h1_simpleSecondaryVertexHighPurBJetTagJet2 = new TH1D("simpleSecondaryVertexHighPurBJetTagJet2", "", 50, -1.5, 4.);
+  h1_simpleSecondaryVertexHighPurBJetTagJet2->Sumw2();
+  TH1D* h1_jetBProbabilityBJetTagJet2 = new TH1D("jetBProbabilityBJetTagJet2", "", 50, 0., 8.);
+  h1_jetBProbabilityBJetTagJet2->Sumw2();
+  TH1D* h1_jetProbabilityBJetTagJet2 = new TH1D("jetProbabilityBJetTagJet2", "", 50, 0., 2.5);
+  h1_jetProbabilityBJetTagJet2->Sumw2();
 
   TH1D* h1_QGLikelihoodProd = new TH1D("QGLikelihoodProd", "", 60, 0., 1.);
   h1_QGLikelihoodProd->Sumw2();
@@ -479,6 +500,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("eMuonsJet1", eMuonsJet1);
   Float_t eElectronsJet1[50];
   tree_->SetBranchAddress("eElectronsJet1", eElectronsJet1);
+  Float_t simpleSecondaryVertexHighEffBJetTagJet1[50];
+  tree_->SetBranchAddress("simpleSecondaryVertexHighEffBJetTagJet1", simpleSecondaryVertexHighEffBJetTagJet1);
+  Float_t simpleSecondaryVertexHighPurBJetTagJet1[50];
+  tree_->SetBranchAddress("simpleSecondaryVertexHighPurBJetTagJet1", simpleSecondaryVertexHighPurBJetTagJet1);
+  Float_t jetBProbabilityBJetTagJet1[50];
+  tree_->SetBranchAddress("jetBProbabilityBJetTagJet1", jetBProbabilityBJetTagJet1);
+  Float_t jetProbabilityBJetTagJet1[50];
+  tree_->SetBranchAddress("jetProbabilityBJetTagJet1", jetProbabilityBJetTagJet1);
 
   Int_t nPFCand1;
   tree_->SetBranchAddress("nPFCand1", &nPFCand1);
@@ -525,6 +554,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("eMuonsJet2", eMuonsJet2);
   Float_t eElectronsJet2[50];
   tree_->SetBranchAddress("eElectronsJet2", eElectronsJet2);
+  Float_t simpleSecondaryVertexHighEffBJetTagJet2[50];
+  tree_->SetBranchAddress("simpleSecondaryVertexHighEffBJetTagJet2", simpleSecondaryVertexHighEffBJetTagJet2);
+  Float_t simpleSecondaryVertexHighPurBJetTagJet2[50];
+  tree_->SetBranchAddress("simpleSecondaryVertexHighPurBJetTagJet2", simpleSecondaryVertexHighPurBJetTagJet2);
+  Float_t jetBProbabilityBJetTagJet2[50];
+  tree_->SetBranchAddress("jetBProbabilityBJetTagJet2", jetBProbabilityBJetTagJet2);
+  Float_t jetProbabilityBJetTagJet2[50];
+  tree_->SetBranchAddress("jetProbabilityBJetTagJet2", jetProbabilityBJetTagJet2);
 
   Int_t nPFCand2;
   tree_->SetBranchAddress("nPFCand2", &nPFCand2);
@@ -589,6 +626,7 @@ ofstream ofs("run_event.txt");
       if( leptType_=="ELE" && leptType==0 ) continue;
       if( leptType_=="MU" && leptType==1 ) continue;
     }
+
 
 
     bool isMC = (run<5);
@@ -709,6 +747,12 @@ ofstream ofs("run_event.txt");
       jet1.muonEnergyFraction = eMuonsJet1[iJetPair]/jet1.Energy();
       jet1.electronEnergyFraction = eElectronsJet1[iJetPair]/jet1.Energy();
 
+      jet1.simpleSecondaryVertexHighEffBJetTag = simpleSecondaryVertexHighEffBJetTagJet1[iJetPair];
+      jet1.simpleSecondaryVertexHighPurBJetTag = simpleSecondaryVertexHighPurBJetTagJet1[iJetPair];
+      jet1.jetBProbabilityBJetTag              = jetBProbabilityBJetTagJet1[iJetPair];
+      jet1.jetProbabilityBJetTag               = jetProbabilityBJetTagJet1[iJetPair];
+
+
       jet1.ptGen = ptJet1Gen[iJetPair];
       jet1.etaGen = etaJet1Gen[iJetPair];
       jet1.phiGen = phiJet1Gen[iJetPair];
@@ -720,6 +764,11 @@ ofstream ofs("run_event.txt");
       jet2.nNeutral = nNeutralJet2[iJetPair];
       jet2.muonEnergyFraction = eMuonsJet2[iJetPair]/jet2.Energy();
       jet2.electronEnergyFraction = eElectronsJet2[iJetPair]/jet2.Energy();
+
+      jet2.simpleSecondaryVertexHighEffBJetTag = simpleSecondaryVertexHighEffBJetTagJet2[iJetPair];
+      jet2.simpleSecondaryVertexHighPurBJetTag = simpleSecondaryVertexHighPurBJetTagJet2[iJetPair];
+      jet2.jetBProbabilityBJetTag              = jetBProbabilityBJetTagJet2[iJetPair];
+      jet2.jetProbabilityBJetTag               = jetProbabilityBJetTagJet2[iJetPair];
 
       jet2.ptGen =   ptJet2Gen[iJetPair];
       jet2.etaGen = etaJet2Gen[iJetPair];
@@ -805,48 +854,13 @@ ofstream ofs("run_event.txt");
 
 
         // ------------------------
-        //   KINEMATIC FIT: BEGIN
+        //   KINEMATIC FIT : BEGIN
         // ------------------------
 
-        DiJetKinFitter kinfitter;
-        std::pair<TLorentzVector,TLorentzVector> jets_kinfit = kinfitter.fit(jet1, jet2);
-
-        TMatrixD m_jet1(3,3);
-        TMatrixD m_jet2(3,3);
-
-        m_jet1(0,0) = 0.5*ErrEt (jet1.Et(), jet1.Eta()); // et
-        m_jet1(1,1) = 0.5*ErrEta(jet1.Et(), jet1.Eta()); // eta
-        m_jet1(2,2) = 0.5*ErrPhi(jet1.Et(), jet1.Eta()); // phi
-        m_jet2(0,0) = 0.5*ErrEt (jet2.Et(), jet2.Eta()); // et
-        m_jet2(1,1) = 0.5*ErrEta(jet2.Et(), jet2.Eta()); // eta
-        m_jet2(2,2) = 0.5*ErrPhi(jet2.Et(), jet2.Eta()); // phi
-
-        TFitParticleEtEtaPhi *fitJet1 = new TFitParticleEtEtaPhi( "Jet1", "Jet1", &jet1, &m_jet1 );
-        TFitParticleEtEtaPhi *fitJet2 = new TFitParticleEtEtaPhi( "Jet2", "Jet2", &jet2, &m_jet2 );
-        
-        TFitConstraintM *mCons_jets = new TFitConstraintM( "ZMassConstraint_jets", "ZMass-Constraint", 0, 0 , 91.19);
-        mCons_jets->addParticles1( fitJet1, fitJet2 );
-
-        TKinFitter* fitter_jets = new TKinFitter("fitter_jets", "fitter_jets");
-        fitter_jets->addMeasParticle( fitJet1 );
-        fitter_jets->addMeasParticle( fitJet2 );
-        fitter_jets->addConstraint( mCons_jets );
-
-        //Set convergence criteria
-        fitter_jets->setMaxNbIter( 30 );
-        fitter_jets->setMaxDeltaS( 1e-2 );
-        fitter_jets->setMaxF( 1e-1 );
-        fitter_jets->setVerbosity(0);
-
-        //Perform the fit
-        fitter_jets->fit();
-
-        TLorentzVector Zjj_constr;
-        Zjj_constr.SetXYZM( bestZDiJet.Px(), bestZDiJet.Py(), bestZDiJet.Pz(), Zmass);
-
-
-        TLorentzVector jet1_kinfit(*fitJet1->getCurr4Vec());
-        TLorentzVector jet2_kinfit(*fitJet2->getCurr4Vec());
+        DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", Zmass );
+        std::pair<TLorentzVector,TLorentzVector> jets_kinfit = fitter_jets->fit(jet1, jet2);
+        TLorentzVector jet1_kinfit(jets_kinfit.first);
+        TLorentzVector jet2_kinfit(jets_kinfit.second);
 
 
         TLorentzVector matchedPart1, matchedPart2;
@@ -877,6 +891,7 @@ ofstream ofs("run_event.txt");
         h1_ptResoJet1_afterKin->Fill( ptReso1_after, eventWeight );
         h1_ptResoJet2_afterKin->Fill( ptReso2_after, eventWeight );
 
+
         TLorentzVector Zjj_kinfit = jet1_kinfit + jet2_kinfit;
 
         TLorentzVector matchedZ;
@@ -895,6 +910,9 @@ ofstream ofs("run_event.txt");
         float ptZreso_after  = (isMC) ? (Zjj_kinfit.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
         h1_ptZreso_beforeKin->Fill( ptZreso_before, eventWeight);
         h1_ptZreso_afterKin->Fill( ptZreso_after, eventWeight);
+
+        TLorentzVector Zjj_constr;
+        Zjj_constr.SetXYZM( bestZDiJet.Px(), bestZDiJet.Py(), bestZDiJet.Pz(), Zmass);
 
         TLorentzVector ZZ = bestZDiJet + diLepton;
         TLorentzVector ZZ_constr = diLepton + Zjj_constr;
@@ -1168,6 +1186,19 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
         }
       }
 
+      bool btag_highPur = ( jet1.simpleSecondaryVertexHighPurBJetTag>2. || jet2.simpleSecondaryVertexHighPurBJetTag>2. );
+      bool btag_highEff = ( jet1.simpleSecondaryVertexHighEffBJetTag>2. || jet2.simpleSecondaryVertexHighEffBJetTag>2. );
+
+      h1_simpleSecondaryVertexHighEffBJetTagJet1->Fill(jet1.simpleSecondaryVertexHighEffBJetTag, eventWeight);
+      h1_simpleSecondaryVertexHighPurBJetTagJet1->Fill(jet1.simpleSecondaryVertexHighPurBJetTag, eventWeight);
+      h1_jetBProbabilityBJetTagJet1->Fill(jet1.jetBProbabilityBJetTag, eventWeight);
+      h1_jetProbabilityBJetTagJet1->Fill(jet1.jetProbabilityBJetTag, eventWeight);
+
+      h1_simpleSecondaryVertexHighEffBJetTagJet2->Fill(jet2.simpleSecondaryVertexHighEffBJetTag, eventWeight);
+      h1_simpleSecondaryVertexHighPurBJetTagJet2->Fill(jet2.simpleSecondaryVertexHighPurBJetTag, eventWeight);
+      h1_jetBProbabilityBJetTagJet2->Fill(jet2.jetBProbabilityBJetTag, eventWeight);
+      h1_jetProbabilityBJetTagJet2->Fill(jet2.jetProbabilityBJetTag, eventWeight);
+
       vh1_rmsCandJet1[jet1PtBin]->Fill( jet1.rmsCand, eventWeight );
       vh1_ptDJet1[jet1PtBin]->Fill( jet1.ptD, eventWeight );
       vh1_nChargedJet1[jet1PtBin]->Fill( jet1.nCharged, eventWeight );
@@ -1176,6 +1207,8 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
 
       vh1_QGLikelihoodJet1[jet1PtBin]->Fill( QGLikelihoodJet1, eventWeight );
       h1_QGLikelihoodJet1->Fill( QGLikelihoodJet1, eventWeight );
+      if( !btag_highEff ) h1_QGLikelihoodJet1_antiBtag_highEff->Fill( QGLikelihoodJet1, eventWeight );
+      if( !btag_highPur ) h1_QGLikelihoodJet1_antiBtag_highPur->Fill( QGLikelihoodJet1, eventWeight );
       if( fabs(jet1.Eta())<2. ) h1_QGLikelihoodJet1_eta2->Fill(QGLikelihoodJet1, eventWeight);
       
       vh1_rmsCandJet2[jet2PtBin]->Fill( jet2.rmsCand, eventWeight );
@@ -1186,6 +1219,8 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
 
       vh1_QGLikelihoodJet2[jet2PtBin]->Fill( QGLikelihoodJet2, eventWeight );
       h1_QGLikelihoodJet2->Fill( QGLikelihoodJet2, eventWeight );
+      if( !btag_highEff ) h1_QGLikelihoodJet2_antiBtag_highEff->Fill( QGLikelihoodJet2, eventWeight );
+      if( !btag_highPur ) h1_QGLikelihoodJet2_antiBtag_highPur->Fill( QGLikelihoodJet2, eventWeight );
       if( fabs(jet2.Eta())<2. ) h1_QGLikelihoodJet2_eta2->Fill(QGLikelihoodJet2, eventWeight);
 
       float QGLikelihoodProd = QGLikelihoodJet1*QGLikelihoodJet2;
@@ -1463,6 +1498,10 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
 
   h1_QGLikelihoodJet1->Write();
   h1_QGLikelihoodJet2->Write();
+  h1_QGLikelihoodJet1_antiBtag_highEff->Write();
+  h1_QGLikelihoodJet2_antiBtag_highEff->Write();
+  h1_QGLikelihoodJet1_antiBtag_highPur->Write();
+  h1_QGLikelihoodJet2_antiBtag_highPur->Write();
   h1_QGLikelihoodProd->Write();
   h1_QGLikelihoodProd_hi->Write();
   h2_QGLikelihoodJet1_vs_Jet2->Write();
@@ -1483,6 +1522,24 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
 
 
   outFile_->Close();
+
+
+  std::string btagFileName = "btagfile_" + selectionType_ + ".root";
+  TFile* btagFile = TFile::Open(btagFileName.c_str(), "RECREATE");
+  btagFile->cd();
+
+  h1_simpleSecondaryVertexHighEffBJetTagJet1->Write();
+  h1_simpleSecondaryVertexHighPurBJetTagJet1->Write();
+  h1_jetBProbabilityBJetTagJet1->Write();
+  h1_jetProbabilityBJetTagJet1->Write();
+
+  h1_simpleSecondaryVertexHighEffBJetTagJet2->Write();
+  h1_simpleSecondaryVertexHighPurBJetTagJet2->Write();
+  h1_jetBProbabilityBJetTagJet2->Write();
+  h1_jetProbabilityBJetTagJet2->Write();
+
+  btagFile->Close();
+
 
 } // finalize()
 
@@ -1910,6 +1967,8 @@ Double_t ErrEt(Float_t Et, Float_t Eta) {
 */
 
 
+/*
+
 // pfjet resolutions. taken from AN-2010-371
 Double_t ErrEt(Float_t Et, Float_t Eta) {
   Double_t InvPerr2, N, S, C, m;
@@ -2130,6 +2189,7 @@ Double_t ErrPhi(Float_t Et, Float_t Eta, int particleType) {
 }
 
 
+
 void print(TKinFitter *fitter)
 {
   std::cout << "=============================================" << std ::endl;
@@ -2150,6 +2210,7 @@ void print(TKinFitter *fitter)
   std::cout << "=============================================" << std ::endl;
 }
 
+*/
 
 int getNJets( int nPairs ) {
 
