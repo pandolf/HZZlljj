@@ -181,10 +181,13 @@ EventsAndLumi addInput( const std::string& dataset ) {
 
 float getWeight( const std::string& dataset, int nEvents ) {
 
+  TString dataset_tstr(dataset);
   float xSection = -1.;
 
+  bool isAlpgenZJets = false;
+
   // all cross sections in pb-1:
-  if( dataset=="ZJets_madgraph" ) {
+  if( dataset=="ZJets_madgraph" || dataset=="DYJetsToLL_TuneZ2_M-50_madgraph_Fall10" ) {
     xSection = 3048.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="Z0Jets_Pt0to100-alpgen_Spring10" ) {
     xSection = 2350.*0.853 ; // sigma x filter efficiency taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/ProductionReProcessingSpring10#ALPGEN
@@ -228,48 +231,93 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 0.164*0.103; // sigma x filter efficiency
   } else if( dataset=="Z5Jets_Pt800to1600-alpgen_Spring10" ) {
     xSection = 0.000588*0.109; // sigma x filter efficiency
-  } else if( dataset=="Z0Jets_TuneD6T" || dataset=="Z0Jets_TuneZ2_7TeV-alpgen-tauola" ) {
+  } else if( dataset_tstr.BeginsWith("Z0Jets") ) {
     xSection = 1929. ; // cross sections taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/ProductionFall2010#ALPGEN
-  } else if( dataset=="Z1Jets_ptZ-0to100_TuneD6T" || dataset=="Z1Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z1Jets_ptZ-0to100") ) {
     xSection = 380.8; 
-  } else if( dataset=="Z1Jets_ptZ-100to300_TuneD6T" || dataset=="Z1Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z1Jets_ptZ-100to300") ) {
     xSection = 8.721;
-  } else if( dataset=="Z1Jets_ptZ-300to800_TuneD6T" || dataset=="Z1Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z1Jets_ptZ-300to800") ) {
     xSection = 0.07386;
-  } else if( dataset=="Z1Jets_ptZ-800to1600_TuneD6T" || dataset=="Z1Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z1Jets_ptZ-800to1600") ) {
     xSection = 0.0001374;
-  } else if( dataset=="Z2Jets_ptZ-0to100_TuneD6T" || dataset=="Z2Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z2Jets_ptZ-0to100") ) {
     xSection = 103.5;
-  } else if( dataset=="Z2Jets_ptZ-100to300_TuneD6T" || dataset=="Z2Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z2Jets_ptZ-100to300") ) {
     xSection = 8.534;
-  } else if( dataset=="Z2Jets_ptZ-300to800_TuneD6T" || dataset=="Z2Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z2Jets_ptZ-300to800") ) {
     xSection = 0.1151;
-  } else if( dataset=="Z2Jets_ptZ-800to1600_TuneD6T" || dataset=="Z2Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z2Jets_ptZ-800to1600") ) {
     xSection = 0.0003023;
-  } else if( dataset=="Z3Jets_ptZ-0to100_TuneD6T" || dataset=="Z3Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z3Jets_ptZ-0to100") ) {
     xSection = 22.89; 
-  } else if( dataset=="Z3Jets_ptZ-100to300_TuneD6T" || dataset=="Z3Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z3Jets_ptZ-100to300") ) {
     xSection = 3.951;
-  } else if( dataset=="Z3Jets_ptZ-300to800_TuneD6T" || dataset=="Z3Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z3Jets_ptZ-300to800") ) {
     xSection = 0.08344;
-  } else if( dataset=="Z3Jets_ptZ-800to1600_TuneD6T" || dataset=="Z3Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z3Jets_ptZ-800to1600") ) {
     xSection = 0.0002480;
-  } else if( dataset=="Z4Jets_ptZ-0to100_TuneD6T" || dataset=="Z4Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z4Jets_ptZ-0to100") ) {
     xSection = 4.619;
-  } else if( dataset=="Z4Jets_ptZ-100to300_TuneD6T" || dataset=="Z4Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z4Jets_ptZ-100to300") ) {
     xSection = 1.298;
-  } else if( dataset=="Z4Jets_ptZ-300to800_TuneD6T" || dataset=="Z4Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" ) {
-    xSection = 0.03935;
-  } else if( dataset=="Z4Jets_ptZ-800to1600_TuneD6T" || dataset=="Z4Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("ZBB0Jets") ) {
+    xSection = 1.703;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("ZBB1Jets") ) {
+    xSection = 9.620e-01;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("ZBB2Jets") ) {
+    xSection = 3.639e-01;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("ZBB3Jets") ) {
+    xSection = 1.598e-01;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("ZCC0Jets") ) {
+    xSection = 1.707;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("ZCC1Jets") ) {
+    xSection = 9.526e-01;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("ZCC2Jets") ) {
+    xSection = 3.659e-01;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("ZCC3Jets") ) {
+    xSection = 1.643e-01;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z4Jets_ptZ-800to1600") ) {
     xSection = 0.0001394;
-  } else if( dataset=="Z5Jets_ptZ-0to100_TuneD6T" || dataset=="Z5Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-0to100") ) {
     xSection = 1.135;
-  } else if( dataset=="Z5Jets_ptZ-100to300_TuneD6T" || dataset=="Z5Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-100to300") ) {
     xSection = 0.4758;
-  } else if( dataset=="Z5Jets_ptZ-300to800_TuneD6T" || dataset=="Z5Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-300to800") ) {
     xSection = 0.01946;
-  } else if( dataset=="Z5Jets_ptZ-800to1600_TuneD6T" || dataset=="Z5Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola" ) {
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-800to1600") ) {
     xSection = 0.00007195;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("ZBB2JetsToLNu") ) {
+    xSection = 
+    isAlpgenZJets = true;
   } else if( dataset=="HZZ_qqll_gluonfusion_M130" ) {
     xSection = 25.560*0.03913*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M150" ) {
@@ -283,24 +331,26 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 4.8236*0.2664*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M500" ) {
     xSection = 2.1914*0.2602*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM200_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-200_7TeV-jhu-pythia6" ) {
+  } else if( dataset=="JHUgen_HiggsSM200_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-200_7TeV-jhu-pythia6") ) {
     xSection = (5.4218+0.64243+0.015972+0.056746+0.10830)*0.2537*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM250_2l2j_FASTSIM"  || dataset=="SMHiggsToZZTo2L2Q_M-250_7TeV-jhu-pythia6") {
+  } else if( dataset=="JHUgen_HiggsSM250_2l2j_FASTSIM"  || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-250_7TeV-jhu-pythia6")) {
     xSection = (3.4120+0.43490+0.0073067+0.023553+0.044954)*0.2951*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM300_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6" ) {
+  } else if( dataset=="JHUgen_HiggsSM300_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6") ) {
     xSection = (2.5001+0.30317+0.0038098+0.010992+0.021079)*0.3053*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM350_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-350_7TeV-jhu-pythia6" ) {
+  } else if( dataset=="JHUgen_HiggsSM350_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-350_7TeV-jhu-pythia6") ) {
     xSection = (2.4983+0.21635+0.0021911+0.0055876+0.010794)*0.3023*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM400_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-400_7TeV-jhu-pythia6" ) {
+  } else if( dataset=="JHUgen_HiggsSM400_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-400_7TeV-jhu-pythia6") ) {
     xSection = (2.0608+0.15739+0.0054837+0.00030308+0.0059045)*0.2664*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM450_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-450_7TeV-jhu-pythia6" ) {
+  } else if( dataset=="JHUgen_HiggsSM450_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-450_7TeV-jhu-pythia6") ) {
     xSection = (1.3445+0.11630+0.00087374+0.0017291+0.00033991)*0.2582*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM500_2l2j"|| dataset=="JHUgen_HiggsSM500_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-500_7TeV-jhu-pythia6" ) {
+  } else if( dataset=="JHUgen_HiggsSM500_2l2j"|| dataset=="JHUgen_HiggsSM500_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-500_7TeV-jhu-pythia6") ) {
     xSection = (0.83396+0.087068+0.00058401+0.0010272+0.0020377)*0.2602*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM550_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-550_7TeV-jhu-pythia6" ) {
+  } else if( dataset=="JHUgen_HiggsSM550_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-550_7TeV-jhu-pythia6") ) {
     xSection = (0.51418+0.065912+0.00039969+0.00063066+0.0012623)*0.2657*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM600_2l2j_FASTSIM" || dataset=="SMHiggsToZZTo2L2Q_M-600_7TeV-jhu-pythia6" ) {
+  } else if( dataset=="JHUgen_HiggsSM600_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-600_7TeV-jhu-pythia6") ) {
     xSection = (0.31942+0.050376+0.00027833+0.00039795+0.00080323)*0.2724*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="GluGluToHToZZTo4L_M-400_7TeV-powheg-pythia6_Fall10" ) {
+    xSection = (2.0608)*0.2724*0.100974*0.100974; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->ll) (l=e,m,t)
   } else if( dataset=="TTbar_2l_Spring10" ) {
     xSection = 157.4*0.1080*0.1080*3.*3.; //NLO x BR(W->lnu) see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="TTJets_TuneD6T" || dataset=="TTJets_TuneZ2_7TeV-madgraph-tauola_Fall10" ) {
@@ -344,14 +394,10 @@ float getWeight( const std::string& dataset, int nEvents ) {
     return 1.;
   }
 
-  TString dataset_tstr(dataset.c_str());
-  TRegexp re("alpgen");
-  TRegexp re2("Z");
-  TRegexp re3("Jets");
-  TRegexp re4("TuneD6T");
-  if( dataset_tstr.Contains(re)||(dataset_tstr.Contains(re2)&&dataset_tstr.Contains(re3)&&dataset_tstr.Contains(re4)) ) {
+
+  if( isAlpgenZJets ) {
     std::cout << "-> Scaling LO alpgen cross-section to NNLO." << std::endl;
-    xSection*=1.31; // K factor
+    xSection*=1.27; // K factor
   }
 
 
