@@ -62,6 +62,8 @@ class AnalysisJet : public TLorentzVector {
   float eGen;
 
   //btags:
+  float trackCountingHighEffBJetTag;
+  float trackCountingHighPurBJetTag;
   float simpleSecondaryVertexHighEffBJetTag;
   float simpleSecondaryVertexHighPurBJetTag;
   float jetBProbabilityBJetTag;
@@ -191,6 +193,8 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nHFHadronsJet1", nHFHadronsJet1_, "nHFHadronsJet1_[nPairs_]/I");
   reducedTree_->Branch("nHFEMJet1", nHFEMJet1_, "nHFEMJet1_[nPairs_]/I");
 
+  reducedTree_->Branch("trackCountingHighEffBJetTagJet1", trackCountingHighEffBJetTagJet1_, "trackCountingHighEffBJetTagJet1_[nPairs_]/F");
+  reducedTree_->Branch("trackCountingHighPurBJetTagJet1", trackCountingHighPurBJetTagJet1_, "trackCountingHighPurBJetTagJet1_[nPairs_]/F");
   reducedTree_->Branch("simpleSecondaryVertexHighEffBJetTagJet1", simpleSecondaryVertexHighEffBJetTagJet1_, "simpleSecondaryVertexHighEffBJetTagJet1_[nPairs_]/F");
   reducedTree_->Branch("simpleSecondaryVertexHighPurBJetTagJet1", simpleSecondaryVertexHighPurBJetTagJet1_, "simpleSecondaryVertexHighPurBJetTagJet1_[nPairs_]/F");
   reducedTree_->Branch("jetBProbabilityBJetTagJet1", jetBProbabilityBJetTagJet1_, "jetBProbabilityBJetTagJet1_[nPairs_]/F");
@@ -237,6 +241,8 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nHFHadronsJet2", nHFHadronsJet2_, "nHFHadronsJet2_[nPairs_]/I");
   reducedTree_->Branch("nHFEMJet2", nHFEMJet2_, "nHFEMJet2_[nPairs_]/I");
 
+  reducedTree_->Branch("trackCountingHighEffBJetTagJet2", trackCountingHighEffBJetTagJet2_, "trackCountingHighEffBJetTagJet2_[nPairs_]/F");
+  reducedTree_->Branch("trackCountingHighPurBJetTagJet2", trackCountingHighPurBJetTagJet2_, "trackCountingHighPurBJetTagJet2_[nPairs_]/F");
   reducedTree_->Branch("simpleSecondaryVertexHighEffBJetTagJet2", simpleSecondaryVertexHighEffBJetTagJet2_, "simpleSecondaryVertexHighEffBJetTagJet2_[nPairs_]/F");
   reducedTree_->Branch("simpleSecondaryVertexHighPurBJetTagJet2", simpleSecondaryVertexHighPurBJetTagJet2_, "simpleSecondaryVertexHighPurBJetTagJet2_[nPairs_]/F");
   reducedTree_->Branch("jetBProbabilityBJetTagJet2", jetBProbabilityBJetTagJet2_, "jetBProbabilityBJetTagJet2_[nPairs_]/F");
@@ -953,6 +959,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisJet.rmsCand =  rmsCandAK5PFJet[iJet];
        thisJet.ptD =  ptDAK5PFJet[iJet];
 
+       thisJet.trackCountingHighEffBJetTag = trackCountingHighEffBJetTagsAK5PFJet[iJet];
+       thisJet.trackCountingHighPurBJetTag = trackCountingHighPurBJetTagsAK5PFJet[iJet];
        thisJet.simpleSecondaryVertexHighEffBJetTag = simpleSecondaryVertexHighEffBJetTagsAK5PFJet[iJet];
        thisJet.simpleSecondaryVertexHighPurBJetTag = simpleSecondaryVertexHighPurBJetTagsAK5PFJet[iJet];
        thisJet.jetBProbabilityBJetTag = jetBProbabilityBJetTagsAK5PFJet[iJet];
@@ -1067,6 +1075,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            nNeutralJet1_[nPairs_] = leadJets[iJet].nNeutral;
            QGlikelihoodJet1_[nPairs_] = leadJets[iJet].QGlikelihood;
 
+           trackCountingHighEffBJetTagJet1_[nPairs_] = leadJets[iJet].trackCountingHighEffBJetTag;
+           trackCountingHighPurBJetTagJet1_[nPairs_] = leadJets[iJet].trackCountingHighPurBJetTag;
            simpleSecondaryVertexHighEffBJetTagJet1_[nPairs_] = leadJets[iJet].simpleSecondaryVertexHighEffBJetTag;
            simpleSecondaryVertexHighPurBJetTagJet1_[nPairs_] = leadJets[iJet].simpleSecondaryVertexHighPurBJetTag;
            jetBProbabilityBJetTagJet1_[nPairs_] = leadJets[iJet].jetBProbabilityBJetTag;
@@ -1100,6 +1110,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            nNeutralJet2_[nPairs_] = leadJets[jJet].nNeutral;
            QGlikelihoodJet2_[nPairs_] = leadJets[jJet].QGlikelihood;
 
+           trackCountingHighEffBJetTagJet2_[nPairs_] = leadJets[jJet].trackCountingHighEffBJetTag;
+           trackCountingHighPurBJetTagJet2_[nPairs_] = leadJets[jJet].trackCountingHighPurBJetTag;
            simpleSecondaryVertexHighEffBJetTagJet2_[nPairs_] = leadJets[jJet].simpleSecondaryVertexHighEffBJetTag;
            simpleSecondaryVertexHighPurBJetTagJet2_[nPairs_] = leadJets[jJet].simpleSecondaryVertexHighPurBJetTag;
            jetBProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetBProbabilityBJetTag;
