@@ -55,8 +55,11 @@ do2ndLevel_Zbb: Ntp1Analyzer.o Ntp1Analyzer_Zbb.o do2ndLevel_Zbb.cpp
 do2ndLevel_ZGamma: Ntp1Analyzer.o Ntp1Analyzer_ZGamma.o 
 	$(CC) -Wall -o do2ndLevel_ZGamma do2ndLevel_ZGamma.cpp Ntp1Analyzer.o Ntp1Analyzer_ZGamma.o $(ROOTFLAG)
 
-do2ndLevel_TMVA: Ntp1Analyzer.o Ntp1Analyzer_TMVA.o do2ndLevel_TMVA.cpp QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o
-	$(CC) -Wall -o do2ndLevel_TMVA do2ndLevel_TMVA.cpp Ntp1Analyzer.o Ntp1Analyzer_TMVA.o QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o $(ROOTFLAG) 
+do2ndLevel_TMVA: Ntp1Analyzer.o Ntp1Analyzer_TMVA.o do2ndLevel_TMVA.cpp QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o
+	$(CC) -Wall -o do2ndLevel_TMVA do2ndLevel_TMVA.cpp Ntp1Analyzer.o Ntp1Analyzer_TMVA.o QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o $(ROOTFLAG) 
+
+do2ndLevel_Marini: Ntp1Analyzer.o Ntp1Analyzer_Marini.o do2ndLevel_Marini.cpp QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o
+	$(CC) -Wall -o do2ndLevel_Marini do2ndLevel_Marini.cpp Ntp1Analyzer.o Ntp1Analyzer_Marini.o QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o $(ROOTFLAG) 
 
 do2ndLevel_QG: Ntp1Analyzer.o Ntp1Analyzer_QG.o do2ndLevel_QG.cpp
 	$(CC) -Wall -o do2ndLevel_QG do2ndLevel_QG.cpp Ntp1Analyzer.o Ntp1Analyzer_QG.o $(ROOTFLAG)
@@ -125,6 +128,9 @@ Ntp1Analyzer_ZGamma.o: Ntp1Analyzer_ZGamma.C
 
 Ntp1Analyzer_TMVA.o: Ntp1Analyzer_TMVA.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ Ntp1Analyzer_TMVA.C $(ROOTFLAG)
+
+Ntp1Analyzer_Marini.o: Ntp1Analyzer_Marini.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ Ntp1Analyzer_Marini.C $(ROOTFLAG)
 
 Ntp1Analyzer_QG.o: Ntp1Analyzer_QG.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_QG.C $(ROOTFLAG)

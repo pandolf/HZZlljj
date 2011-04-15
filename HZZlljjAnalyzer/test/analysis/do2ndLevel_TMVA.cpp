@@ -14,9 +14,6 @@ int main( int argc, char* argv[]) {
 
   Ntp1Analyzer_TMVA* na;
 
-  na = new Ntp1Analyzer_TMVA(dataset, "BESTZ");
-
-
   std::string flags = "";
   if( argc<4 ) {
     na = new Ntp1Analyzer_TMVA(dataset, "BESTZ");

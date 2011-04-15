@@ -159,6 +159,9 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("absEtaZZ",  &absEtaZZ_,  "absEtaZZ_/F");
   reducedTree_->Branch("mZZ_preKin",  &mZZ_preKin_,  "mZZ_preKin_/F");
 
+  reducedTree_->Branch("kinfit_chiSquare",  &kinfit_chiSquare_,  "kinfit_chiSquare_/F");
+  reducedTree_->Branch("kinfit_chiSquareProb",  &kinfit_chiSquareProb_,  "kinfit_chiSquareProb_/F");
+
   reducedTree_->Branch("pfMet",  &epfMet_,  "epfMet_/F");
 
   reducedTree_->Branch("helicityLD", &helicityLD_, "helicityLD_/F");
@@ -943,6 +946,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      TLorentzVector jet1_kinfit(jets_kinfit.first);
      TLorentzVector jet2_kinfit(jets_kinfit.second);
 
+     kinfit_chiSquare_ = fitter_jets->getS()/fitter_jets->getNDF();
+     kinfit_chiSquareProb_ = TMath::Prob(fitter_jets->getS(), fitter_jets->getNDF());
 
   //   jet1.SetPtEtaPhiE( jet1_kinfit.Pt(), jet1_kinfit.Eta(), jet1_kinfit.Phi(), jet1_kinfit.E() );
      jet2.SetPtEtaPhiE( jet2_kinfit.Pt(), jet2_kinfit.Eta(), jet2_kinfit.Phi(), jet2_kinfit.E() );
