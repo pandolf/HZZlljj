@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
-#include "DrawBase.h"
-#include "fitTools.h"
+#include "CommonTools/DrawBase.h"
+#include "CommonTools/fitTools.h"
 
 
 
@@ -40,10 +40,10 @@ int main(int argc, char* argv[]) {
   //db->set_rebin(2);
 
 
-//drawCompare_vs_pt( db, "ptD", "p_{T}D" );
-//drawCompare_vs_pt( db, "rmsCand", "PFCandidate p_{T}-Weighted Spread");
-//drawCompare_vs_pt( db, "nCharged", "Jet Charged Multiplicity");
-//drawCompare_vs_pt( db, "nNeutral", "Jet Neutral Multiplicity");
+  drawCompare_vs_pt( db, "ptD", "p_{T} Distribution" );
+  drawCompare_vs_pt( db, "rmsCand", "PFCandidate p_{T}-Weighted Spread");
+  drawCompare_vs_pt( db, "nCharged", "Jet Charged Multiplicity");
+  drawCompare_vs_pt( db, "nNeutral", "Jet Neutral Multiplicity");
 
 
   DrawBase* db2 = new DrawBase("QG");
@@ -58,20 +58,23 @@ int main(int argc, char* argv[]) {
   drawCompare_vs_pt( db2, "QGLikelihood", "Likelihood" );
   drawCompare_vs_pt( db2, "QGLikelihood_norms", "Likelihood" );
   drawCompare_vs_pt( db2, "QGLikelihood_norms_noptD", "Likelihood" );
+  drawCompare_vs_pt( db2, "QGLikelihood_onlyNch", "Likelihood" );
+  //drawCompare_vs_pt( db2, "rmsCand_cutOnQGLikelihood_norms", "RMS Cands" );
 
 
+/*
   TFile* file_HZZlljj = TFile::Open("HZZlljj_SMHiggsToZZTo2L2Q_M-400_7TeV-jhu-pythia6_opt400_ALL.root");
 
-  drawCompareHZZ_vs_pt( db, file_HZZlljj, "quark", "ptD", "p_{T}D" );
-  drawCompareHZZ_vs_pt( db, file_HZZlljj, "quark", "rmsCand", "PFCandidate p_{T}-Weighted Spread", (bool)true );
-  drawCompareHZZ_vs_pt( db, file_HZZlljj, "quark", "nCharged", "Jet Charged Multiplicity");
-  drawCompareHZZ_vs_pt( db, file_HZZlljj, "quark", "nNeutral", "Jet Neutral Multiplicity");
-  drawCompareHZZ_vs_pt( db2, file_HZZlljj, "quark", "QGLikelihood", "Likelihood" );
+//drawCompareHZZ_vs_pt( db, file_HZZlljj, "quark", "ptD", "p_{T}D" );
+//drawCompareHZZ_vs_pt( db, file_HZZlljj, "quark", "rmsCand", "PFCandidate p_{T}-Weighted Spread", (bool)true );
+//drawCompareHZZ_vs_pt( db, file_HZZlljj, "quark", "nCharged", "Jet Charged Multiplicity");
+//drawCompareHZZ_vs_pt( db, file_HZZlljj, "quark", "nNeutral", "Jet Neutral Multiplicity");
+//drawCompareHZZ_vs_pt( db2, file_HZZlljj, "quark", "QGLikelihood", "Likelihood" );
   drawCompareHZZ_vs_pt( db2, file_HZZlljj, "quark", "QGLikelihood_norms", "Likelihood" );
 //  drawCompareHZZ_vs_pt( db2, file_HZZlljj, "quark", "QGLikelihood_norms_noptD", "Likelihood" );
 
   drawEffRej_vs_pt( db2 );
-
+*/
 
   delete db;
   db = 0;
@@ -144,11 +147,11 @@ void drawCompareHZZ_vs_pt( DrawBase* db, TFile* file_HZZlljj, const std::string&
     TH1F* h1_quark = (TH1F*)file_QCD->Get(name_quark);
     
     char name_HZZ1[200];
-    sprintf( name_HZZ1, "%sJet1_pt_%.0f_%.0f", name.c_str(), ptMin, ptMax );
+    sprintf( name_HZZ1, "QGbins/%sJet1_pt_%.0f_%.0f", name.c_str(), ptMin, ptMax );
     TH1F* h1_HZZ1 = (TH1F*)file_HZZlljj->Get(name_HZZ1);
     
     char name_HZZ2[200];
-    sprintf( name_HZZ2, "%sJet2_pt_%.0f_%.0f", name.c_str(), ptMin, ptMax );
+    sprintf( name_HZZ2, "QGbins/%sJet2_pt_%.0f_%.0f", name.c_str(), ptMin, ptMax );
     TH1F* h1_HZZ2 = (TH1F*)file_HZZlljj->Get(name_HZZ2);
 
     float xMin = h1_quark->GetXaxis()->GetXmin();
@@ -167,10 +170,16 @@ void drawCompareHZZ_vs_pt( DrawBase* db, TFile* file_HZZlljj, const std::string&
     h1_quark->SetFillStyle(3004);
 
     h1_HZZ1->SetLineColor(46);
+    h1_HZZ1->SetMarkerColor(46);
+    h1_HZZ1->SetMarkerSize(1.1);
+    h1_HZZ1->SetMarkerStyle(20);
     h1_HZZ1->SetLineWidth(2);
     if( h1_HZZ1->GetNbinsX() != h1_quark->GetNbinsX() ) h1_HZZ1->Rebin(2);
 
     h1_HZZ2->SetLineColor(kRed+3);
+    h1_HZZ2->SetMarkerColor(kRed+3);
+    h1_HZZ2->SetMarkerSize(1.1);
+    h1_HZZ2->SetMarkerStyle(21);
     h1_HZZ2->SetLineWidth(2);
     if( h1_HZZ2->GetNbinsX() != h1_quark->GetNbinsX() ) h1_HZZ2->Rebin(2);
 
@@ -279,8 +288,14 @@ void drawEffRej_vs_pt( DrawBase* db ) {
     sprintf( name_ptbin, "eff_vs_rej_norms_pt%.0f_%.0f", ptMin, ptMax );
     TGraphErrors* gr_eff_vs_rej_norms = (TGraphErrors*)file->Get(name_ptbin);
 
+    sprintf( name_ptbin, "eff_vs_rej_noptD_pt%.0f_%.0f", ptMin, ptMax );
+    TGraphErrors* gr_eff_vs_rej_noptD = (TGraphErrors*)file->Get(name_ptbin);
+
     sprintf( name_ptbin, "eff_vs_rej_norms_noptD_pt%.0f_%.0f", ptMin, ptMax );
     TGraphErrors* gr_eff_vs_rej_norms_noptD = (TGraphErrors*)file->Get(name_ptbin);
+
+    sprintf( name_ptbin, "eff_vs_rej_onlyNch_pt%.0f_%.0f", ptMin, ptMax );
+    TGraphErrors* gr_eff_vs_rej_onlyNch = (TGraphErrors*)file->Get(name_ptbin);
 
     TH2D* h2_axes = new TH2D("axes", "", 10, 0., 1.00001, 10, 0., 1.00001);
     h2_axes->SetXTitle("Quark Jet Efficiency");
@@ -296,9 +311,17 @@ void drawEffRej_vs_pt( DrawBase* db ) {
     gr_eff_vs_rej_norms->SetMarkerColor(kOrange);
     gr_eff_vs_rej_norms->SetMarkerStyle(21);
 
+    gr_eff_vs_rej_noptD->SetMarkerSize(1.8);
+    gr_eff_vs_rej_noptD->SetMarkerColor(kOrange+4);
+    gr_eff_vs_rej_noptD->SetMarkerStyle(22);
+
     gr_eff_vs_rej_norms_noptD->SetMarkerSize(1.5);
     gr_eff_vs_rej_norms_noptD->SetMarkerColor(46);
     gr_eff_vs_rej_norms_noptD->SetMarkerStyle(20);
+
+    gr_eff_vs_rej_onlyNch->SetMarkerSize(1.5);
+    gr_eff_vs_rej_onlyNch->SetMarkerColor(38);
+    gr_eff_vs_rej_onlyNch->SetMarkerStyle(20);
 
     for( unsigned iPoint=0; iPoint<gr_eff_vs_rej->GetN()-1; ++iPoint ) {
 
@@ -354,11 +377,15 @@ void drawEffRej_vs_pt( DrawBase* db ) {
     legend_norms->SetTextSize(0.038);
     legend_norms->AddEntry(gr_eff_vs_rej, "All", "P");
     legend_norms->AddEntry(gr_eff_vs_rej_norms, "No RMS", "P");
+    legend_norms->AddEntry(gr_eff_vs_rej_noptD, "No p_{T}D", "P");
     legend_norms->AddEntry(gr_eff_vs_rej_norms_noptD, "No RMS, no p_{T}D", "P");
+    legend_norms->AddEntry(gr_eff_vs_rej_onlyNch, "Only N_{ch}", "P");
 
     legend_norms->Draw("same");
     gr_eff_vs_rej_norms->Draw("psame");
+    gr_eff_vs_rej_noptD->Draw("psame");
     gr_eff_vs_rej_norms_noptD->Draw("psame");
+    gr_eff_vs_rej_onlyNch->Draw("psame");
     gr_eff_vs_rej->Draw("psame");
 
     sprintf( canvasName, "%s/eff_vs_rej_norms_pt%.0f_%.0f.eps", (db->get_outputdir()).c_str(), ptMin, ptMax);
