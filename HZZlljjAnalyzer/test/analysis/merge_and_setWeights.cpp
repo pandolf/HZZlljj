@@ -13,14 +13,10 @@ TChain* tree = 0;
 std::string analysisType_;
 std::string flags_;
 
-struct EventsAndLumi {
-  int nTotalEvents;
-  float totalLumi;
-};
 
 
 
-EventsAndLumi addInput( const std::string& dataset );
+int addInput( const std::string& dataset );
 float getWeight( const std::string& dataset, int nEvents );
 
 
@@ -48,12 +44,13 @@ int main( int argc, char* argv[] ) {
 
   tree = new TChain("reducedTree");
 
-  EventsAndLumi evlu;
-  evlu = addInput( dataset );
+  int nTotalEvents = addInput( dataset );
 
   std::cout << std::endl << "-> Finished adding. Total entries: " << tree->GetEntries() << std::endl;
 
-  float weight = getWeight( dataset, evlu.nTotalEvents );
+  float weight = getWeight( dataset, nTotalEvents );
+
+  float nTotalEventsW = (float)nTotalEvents*weight;
 
   // and now set the weights
   tree->SetBranchStatus( "eventWeight", 0 );
@@ -64,10 +61,10 @@ int main( int argc, char* argv[] ) {
   TFile* outfile = new TFile(outfilename.c_str(), "recreate");
   outfile->cd();
 
-  TH1F* h1_lumi = new TH1F("lumi", "", 1, 0., 1.);
-  h1_lumi->SetBinContent(1, evlu.totalLumi);
   TH1F* h1_nCounter = new TH1F("nCounter", "", 1, 0., 1.);
-  h1_nCounter->SetBinContent(1, evlu.nTotalEvents);
+  h1_nCounter->SetBinContent(1, nTotalEvents);
+  TH1F* h1_nCounterW = new TH1F("nCounterW", "", 1, 0., 1.);
+  h1_nCounterW->SetBinContent(1, nTotalEventsW);
 
   TTree* newTree = tree->CloneTree(0);
   Float_t newWeight;
@@ -88,8 +85,8 @@ int main( int argc, char* argv[] ) {
 
   } //for entries
 
-  h1_lumi->Write();
   h1_nCounter->Write();
+  h1_nCounterW->Write();
   newTree->Write();
   outfile->Write();
   outfile->Close();
@@ -99,16 +96,14 @@ int main( int argc, char* argv[] ) {
 }
 
 
-EventsAndLumi addInput( const std::string& dataset ) {
+int addInput( const std::string& dataset ) {
 
   std::string infileName = "files_"+analysisType_+"_2ndLevel_" + dataset;
   if( flags_!="" ) infileName += "_" + flags_;
   infileName += ".txt";
-  TH1F* h1_lumi;
   TH1F* h1_nCounter;
 
   int totalEvents = 0;
-  float totalLumi = 0.;
 
   //open from file.txt:
   FILE* iff = fopen(infileName.c_str(),"r");
@@ -126,13 +121,6 @@ EventsAndLumi addInput( const std::string& dataset ) {
       totalEvents += h1_nCounter->GetBinContent(1);
     } else {
       std::cout << " WARNING! File '" << infileName << "' has no nCounter information. Skipping." << std::endl;
-    }
-    h1_lumi = (TH1F*)infile->Get("lumi");
-    if( h1_lumi!=0 ) {
-      totalLumi += h1_lumi->GetBinContent(1);
-      std::cout << "\tTotal lumi: " << totalLumi << " ub-1";
-    } else {
-      //std::cout << " WARNING! File '" << infileName << "' has no lumi information. Skipping.";
     }
     std::cout << std::endl;
     infile->Close();
@@ -155,13 +143,6 @@ EventsAndLumi addInput( const std::string& dataset ) {
       } else {
         std::cout << std::endl << " WARNING! File '" << rootfilename << "' has no nCounter information. Skipping." << std::endl;
       }
-      h1_lumi = (TH1F*)infile->Get("lumi");
-      if( h1_lumi!=0 ) {
-        totalLumi += h1_lumi->GetBinContent(1);
-        std::cout << "\tTotal lumi: " << totalLumi << " ub-1";
-      } else {
-        //std::cout << std::endl << " WARNING! File '" << rootfilename << "' has no lumi information. Skipping." << std::endl;
-      }
       std::cout << std::endl;
       infile->Close();
 
@@ -170,11 +151,7 @@ EventsAndLumi addInput( const std::string& dataset ) {
 
   }
 
-  EventsAndLumi evlu;
-  evlu.nTotalEvents = totalEvents;
-  evlu.totalLumi = totalLumi;
-
-  return evlu;
+  return totalEvents;
 
 } //addinput
 
