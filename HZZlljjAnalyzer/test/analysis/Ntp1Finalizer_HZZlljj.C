@@ -1881,8 +1881,10 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
-    mZZ_threshLo_ = 360.;
-    mZZ_threshHi_ = 440.;
+    mZZ_threshLo_ = 0.;
+    mZZ_threshHi_ = 99999999999999999999.;
+//  mZZ_threshLo_ = 360.;
+//  mZZ_threshHi_ = 440.;
 
   } else if( selectionType=="opt400noLD" ) {
 
