@@ -37,7 +37,7 @@ if flags=="500":
 # to write on local disks
 ################################################
 #diskoutputdir = "/cmsrm/pc21_2/pandolf/MC/"+dataset
-diskoutputdir = "/cmsrm/pc23_2/pandolf/MC/"+dataset
+diskoutputdir = "/cmsrm/pc23_2/pandolf/MC/Spring11/"+dataset
 #outputmain = castordir
 diskoutputmain = diskoutputdir
 # prepare job to write on the cmst3 cluster disks
