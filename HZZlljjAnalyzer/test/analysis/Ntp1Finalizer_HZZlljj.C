@@ -38,6 +38,7 @@ class AnalysisJet : public TLorentzVector {
   float ptD;
   int nCharged;
   int nNeutral;
+  float QGLikelihood;
 
   float muonEnergyFraction;
   float electronEnergyFraction;
@@ -455,14 +456,7 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_deltaPt_gamma = new TH1D("deltaPt_gamma", "", 100, -1., 1.);
   TH1D* h1_deltaPt_nh = new TH1D("deltaPt_nh", "", 100, -1., 1.);
 
-//Double_t ptBins[16];
-//fitTools::getBins_int( 16, ptBins, 20., 500.);
 
-//TProfile* hp_ptJetGenMean = new TProfile("ptJetGenMean", "", 15, ptBins);
-//std::vector<TH1F*> h1_response_vs_pt = getResponseHistos("response", 16, ptBins);
-//std::vector<TH1F*> h1_response_vs_pt_Rch050 = getResponseHistos("response_Rch050", 16, ptBins);
-//std::vector<TH1F*> h1_response_vs_pt_Rch5070 = getResponseHistos("response_Rch5070", 16, ptBins);
-//std::vector<TH1F*> h1_response_vs_pt_Rch70100 = getResponseHistos("response_Rch70100", 16, ptBins);
 
 
 
@@ -645,12 +639,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("pdgIdPart", pdgIdPart);
 
 
-  float nEvents_pre=0.;
-  float nEvents_pre_leptPt=0.;
-  float nEvents_pre_leptPt_leptMass =0.;
-  float nEvents_pre_leptPt_leptMass_jetPt=0.;
-  float nEvents_pre_leptPt_leptMass_jetPt_jetMass=0.;
-  float nEvents_pre_leptPt_leptMass_jetPt_jetMass_deltaRjj=0.;
+  
+
 
   float nEventsPassed_fb_kinfit=0.;
   float nEventsPassed_fb_nokinfit=0.;
@@ -667,6 +657,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   float Zmass = 91.1876;
   DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", Zmass );
   HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
+  float helicityLD_selected = -1.;
+  float helicityLD_kinfit_selected = -1.;
 
 
 float nEventsTot = 0.;
@@ -674,6 +666,8 @@ float nEvents_hiChiSquareProb = 0.;
 float nEvents_mZjj_cut = 0.;
 
 ofstream ofs("run_event.txt");
+
+
 
 
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
@@ -873,25 +867,6 @@ ofstream ofs("run_event.txt");
       if( jet1.Pt()!=cached_jetpt ) {
         h1_ptJet_all_presel->Fill( jet1.Pt(), eventWeight );
         h1_etaJet_all_presel->Fill( jet1.Eta(), eventWeight );
-
-     // int jetPtBin = -1;
-     // for( unsigned iPtBin=0; iPtBin<nPtBins-1; ++iPtBin ) {
-     //   if( jet1.Pt()>ptBins[iPtBin] && jet1.Pt()<ptBins[iPtBin+1] ) {
-     //     jetPtBin=iPtBin;
-     //     break;
-     //   }
-     //   if( iPtBin==nPtBins-2 ) jetPtBin=iPtBin; //jets with pt higher that max pt are put in last bin
-     // } 
-     // if( jetPtBin<0 ) {
-     //   std::cout << "there must be an error this is not possible." << std::endl;
-     //   exit(9187);
-     // }
-
-     // vh1_rmsCandJet_all_presel[jetPtBin]->Fill( rmsCandJet1[iJetPair], eventWeight );
-     // vh1_ptDJet_all_presel[jetPtBin]->Fill( ptDJet1[iJetPair], eventWeight );
-     // vh1_nChargedJet_all_presel[jetPtBin]->Fill( nChargedJet1[iJetPair], eventWeight );
-     // vh1_nNeutralJet_all_presel[jetPtBin]->Fill( nNeutralJet1[iJetPair], eventWeight );
-        
         cached_jetpt = jet1.Pt();
       }
 
@@ -920,6 +895,8 @@ ofstream ofs("run_event.txt");
       float QGLikelihoodProd = QGLikelihoodJet1*QGLikelihoodJet2;
       if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
 
+      jet1.QGLikelihood = QGLikelihoodJet1;
+      jet2.QGLikelihood = QGLikelihoodJet2;
 
 
 
@@ -959,14 +936,14 @@ ofstream ofs("run_event.txt");
       double bProb=LD->getBkgdProbability();
       double helicityLD=sProb/(sProb+bProb);
     
-    //HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinfit;
-    //if( chargeLept1<0 ) hangles_kinfit = computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
-    //else                hangles_kinfit = computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
+      HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinfit;
+      if( chargeLept1<0 ) hangles_kinfit = computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
+      else                hangles_kinfit = computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
     
-    //LD->setMeasurables(hangles_kinfit);
-    //double sProb_kinfit=LD->getSignalProbability();
-    //double bProb_kinfit=LD->getBkgdProbability();
-    //double helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
+      LD->setMeasurables(hangles_kinfit);
+      double sProb_kinfit=LD->getSignalProbability();
+      double bProb_kinfit=LD->getBkgdProbability();
+      double helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
      
       // still cutting on helicity LD pre-kinfit!! 
       if( helicityLD < helicityLD_thresh_ ) continue;
@@ -980,6 +957,8 @@ ofstream ofs("run_event.txt");
         nEventsPassed_kinfit++;
         jet1_selected = jet1;
         jet2_selected = jet2;
+        helicityLD_selected = helicityLD;
+        helicityLD_kinfit_selected = helicityLD_kinfit;
         foundJets = true;
         foundJets_ZZmass = true;
       }
@@ -990,6 +969,7 @@ ofstream ofs("run_event.txt");
           bestMass = invMass;
           jet1_selected = jet1;
           jet2_selected = jet2;
+          helicityLD_selected = helicityLD;
           foundJets = true;
         }
       }
@@ -1000,6 +980,11 @@ ofstream ofs("run_event.txt");
 
     if( !foundJets ) continue;
 
+    if( helicityLD_selected < 0. ) 
+      std::cout << "helicityLD_selected is less than 0!!! THIS IS NOT POSSIBLE!!" << std::endl;
+
+    if( helicityLD_kinfit_selected < 0. ) 
+      std::cout << "helicityLD_kinfit_selected is less than 0!!! THIS IS NOT POSSIBLE!!" << std::endl;
 
 
 
@@ -1018,6 +1003,28 @@ ofstream ofs("run_event.txt");
       nEventsPassed_fb_nokinfit += eventWeight;
       nEventsPassed_nokinfit++;
     }
+
+    bool btag_TChighPur =  ( jet1_selected.trackCountingHighPurBJetTag>5.         || jet2_selected.trackCountingHighPurBJetTag>5. );
+    bool btag_TChighEff =  ( jet1_selected.trackCountingHighEffBJetTag>5.         || jet2_selected.trackCountingHighEffBJetTag>5. );
+    bool btag_SSVhighPur = ( jet1_selected.simpleSecondaryVertexHighPurBJetTag>2. || jet2_selected.simpleSecondaryVertexHighPurBJetTag>2. );
+    bool btag_SSVhighEff = ( jet1_selected.simpleSecondaryVertexHighEffBJetTag>2. || jet2_selected.simpleSecondaryVertexHighEffBJetTag>2. );
+    bool btag_SSVhighPurhighEff = ( ( jet1_selected.simpleSecondaryVertexHighPurBJetTag>2. && jet2_selected.simpleSecondaryVertexHighEffBJetTag>2. ) ||
+                                    ( jet1_selected.simpleSecondaryVertexHighEffBJetTag>2. && jet2_selected.simpleSecondaryVertexHighPurBJetTag>2. ) );
+
+    h1_simpleSecondaryVertexHighEffBJetTagJet1->Fill(jet1_selected.simpleSecondaryVertexHighEffBJetTag, eventWeight);
+    h1_simpleSecondaryVertexHighPurBJetTagJet1->Fill(jet1_selected.simpleSecondaryVertexHighPurBJetTag, eventWeight);
+    h1_jetBProbabilityBJetTagJet1->Fill(jet1_selected.jetBProbabilityBJetTag, eventWeight);
+    h1_jetProbabilityBJetTagJet1->Fill(jet1_selected.jetProbabilityBJetTag, eventWeight);
+
+    h1_simpleSecondaryVertexHighEffBJetTagJet2->Fill(jet2_selected.simpleSecondaryVertexHighEffBJetTag, eventWeight);
+    h1_simpleSecondaryVertexHighPurBJetTagJet2->Fill(jet2_selected.simpleSecondaryVertexHighPurBJetTag, eventWeight);
+    h1_jetBProbabilityBJetTagJet2->Fill(jet2_selected.jetBProbabilityBJetTag, eventWeight);
+    h1_jetProbabilityBJetTagJet2->Fill(jet2_selected.jetProbabilityBJetTag, eventWeight);
+
+    bool twoTags = (jet1_selected.trackCountingHighEffBJetTag>=4. && jet2_selected.trackCountingHighEffBJetTag>=4.);
+    bool oneTag = (jet1_selected.trackCountingHighEffBJetTag>=4. && jet2_selected.trackCountingHighEffBJetTag<4.)
+                || (jet1_selected.trackCountingHighEffBJetTag<4. && jet2_selected.trackCountingHighEffBJetTag>=4.);
+    bool zeroTags = (jet1_selected.trackCountingHighEffBJetTag<4. && jet2_selected.trackCountingHighEffBJetTag<4.);
 
 
     // match to partons:
@@ -1098,23 +1105,6 @@ ofstream ofs("run_event.txt");
 
 
 
-
-    bool btag_TChighPur =  ( jet1_selected.trackCountingHighPurBJetTag>5.         || jet2_selected.trackCountingHighPurBJetTag>5. );
-    bool btag_TChighEff =  ( jet1_selected.trackCountingHighEffBJetTag>5.         || jet2_selected.trackCountingHighEffBJetTag>5. );
-    bool btag_SSVhighPur = ( jet1_selected.simpleSecondaryVertexHighPurBJetTag>2. || jet2_selected.simpleSecondaryVertexHighPurBJetTag>2. );
-    bool btag_SSVhighEff = ( jet1_selected.simpleSecondaryVertexHighEffBJetTag>2. || jet2_selected.simpleSecondaryVertexHighEffBJetTag>2. );
-    bool btag_SSVhighPurhighEff = ( ( jet1_selected.simpleSecondaryVertexHighPurBJetTag>2. && jet2_selected.simpleSecondaryVertexHighEffBJetTag>2. ) ||
-                                    ( jet1_selected.simpleSecondaryVertexHighEffBJetTag>2. && jet2_selected.simpleSecondaryVertexHighPurBJetTag>2. ) );
-
-    h1_simpleSecondaryVertexHighEffBJetTagJet1->Fill(jet1_selected.simpleSecondaryVertexHighEffBJetTag, eventWeight);
-    h1_simpleSecondaryVertexHighPurBJetTagJet1->Fill(jet1_selected.simpleSecondaryVertexHighPurBJetTag, eventWeight);
-    h1_jetBProbabilityBJetTagJet1->Fill(jet1_selected.jetBProbabilityBJetTag, eventWeight);
-    h1_jetProbabilityBJetTagJet1->Fill(jet1_selected.jetProbabilityBJetTag, eventWeight);
-
-    h1_simpleSecondaryVertexHighEffBJetTagJet2->Fill(jet2_selected.simpleSecondaryVertexHighEffBJetTag, eventWeight);
-    h1_simpleSecondaryVertexHighPurBJetTagJet2->Fill(jet2_selected.simpleSecondaryVertexHighPurBJetTag, eventWeight);
-    h1_jetBProbabilityBJetTagJet2->Fill(jet2_selected.jetBProbabilityBJetTag, eventWeight);
-    h1_jetProbabilityBJetTagJet2->Fill(jet2_selected.jetProbabilityBJetTag, eventWeight);
 
 
 
