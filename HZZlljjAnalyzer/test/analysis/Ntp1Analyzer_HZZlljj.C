@@ -352,23 +352,19 @@ void Ntp1Analyzer_HZZlljj::Loop()
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
      nb = fChain->GetEntry(jentry);   nbytes += nb;
-     // if (Cut(ientry) < 0) continue;
 
 if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      if( (jentry%100000) == 0 ) std::cout << "Event #" << jentry  << " of " << nentries << std::endl;
 
 
-   //HLT_Mu11_ = this->PassedHLT("HLT_Mu11");
-   //HLT_Ele17_SW_EleId_L1R_ = this->PassedHLT("HLT_Ele17_SW_EleId_L1R");
-   //HLT_DoubleMu3_ = this->PassedHLT("HLT_DoubleMu3");
 
      run_ = runNumber;
      LS_ = lumiBlock;
      event_ = eventNumber;
      eventWeight_ = -1.; //default
 
-     if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
+     if( !isGoodEvent() ) continue; //this takes care also of trigger
 
      if( nPV==0 ) continue;
      bool goodVertex = (ndofPV[0] >= 4.0 && sqrt(PVxPV[0]*PVxPV[0]+PVyPV[0]*PVyPV[0]) < 2. && fabs(PVzPV[0]) < 24. );
@@ -377,16 +373,11 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      nvertex_ = nPV;
 
 
-     //trigger:
-     // not yet
-
      //bool isMC = ( runNumber < 5 );
 
 
      ptHat_ = (isMC_) ? genPtHat : ptHat_;
 
-   //if( isMC_ ) 
-   //  if( (ptHat_ > ptHatMax_) || (ptHat_ < ptHatMin_) ) continue;
 
 
      bool noLeptons = false;
@@ -554,14 +545,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisMuon.isAllTrackerMuon = (muonIdMuon[iMuon]>>11)&1;
 
 
-//     // --------------
-//     // ID:
-//     // --------------
-//     if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
-//     if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
-//     //if( numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]==0 && numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
-
-
        // to compute dxy, look for primary vertex:
        int hardestPV = -1;
        float sumPtMax = 0.0;
@@ -581,11 +564,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
                               pxTrack[trackIndexMuon[iMuon]], pyTrack[trackIndexMuon[iMuon]], pzTrack[trackIndexMuon[iMuon]]));
        }
 
-//       if( dxy > 0.02 ) continue;
-
 
        float dz = fabs(trackVzTrack[trackIndexMuon[iMuon]]-PVzPV[hardestPV]);
-//       if(dz > 1.0) continue;
 
        thisMuon.dxy = dxy;
        thisMuon.dz = dz;
@@ -595,15 +575,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisMuon.hadEt03 = hadEt03Muon[iMuon];
 
        if( !thisMuon.passedVBTF() ) continue;
-
-       // --------------
-       // isolation:
-       // --------------
-       // (this is sum pt tracks)
-       //if( sumPt03Muon[iMuon] >= 3. ) continue;
-       // combined isolation < 15%:
-//       if( (sumPt03Muon[iMuon] + emEt03Muon[iMuon] + hadEt03Muon[iMuon]) >= 0.15*thisMuon.Pt() ) continue;
-
 
 
        // for now simple selection, will have to optimize this (T&P?)
@@ -655,126 +626,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisEle.expInnerLayersGsfTrack = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
        thisEle.convDist = convDistEle[iEle];
        thisEle.convDcot = convDcotEle[iEle];
-
-/*
-       // ELE ID vars:
-       Float_t dr03TkSumPt_thresh95;
-       Float_t dr03EcalRecHitSumEt_thresh95;
-       Float_t dr03HcalTowerSumEt_thresh95;
-       Float_t combinedIsoRel_thresh95;
-       Float_t sigmaIetaIeta_thresh95;
-       Float_t deltaPhiAtVtx_thresh95;
-       Float_t deltaEtaAtVtx_thresh95;
-       Float_t hOverE_thresh95;
-
-       Float_t dr03TkSumPt_thresh80;
-       Float_t dr03EcalRecHitSumEt_thresh80;
-       Float_t dr03HcalTowerSumEt_thresh80;
-       Float_t combinedIsoRel_thresh80;
-       Float_t sigmaIetaIeta_thresh80;
-       Float_t deltaPhiAtVtx_thresh80;
-       Float_t deltaEtaAtVtx_thresh80;
-       Float_t hOverE_thresh80;
-
-       // CONVERSION REJECTION VARS:
-       Int_t nMissingHits_thresh95 = 1;
-       Float_t deltaCotTheta_thresh95 = -1.;
-       Float_t dist_thresh95 = -1.;
-
-       Int_t nMissingHits_thresh80 = 0;
-       Float_t deltaCotTheta_thresh80 = 0.02;
-       Float_t dist_thresh80 = 0.02;
-
-
-       if( fabs(thisEle.Eta())<1.4442 ) {
-         dr03TkSumPt_thresh95 = 0.15;
-         dr03EcalRecHitSumEt_thresh95 = 2.;
-         dr03HcalTowerSumEt_thresh95 = 0.12;
-         combinedIsoRel_thresh95 = 0.15;
-
-         dr03TkSumPt_thresh80 = 0.09;
-         dr03EcalRecHitSumEt_thresh80 = 0.07;
-         dr03HcalTowerSumEt_thresh80 = 0.10;
-         combinedIsoRel_thresh80 = 0.07;
-
-         sigmaIetaIeta_thresh95 = 0.01;
-         deltaPhiAtVtx_thresh95 = 0.8;
-         deltaEtaAtVtx_thresh95 = 0.007;
-         hOverE_thresh95 = 0.15;
-
-         sigmaIetaIeta_thresh80 = 0.01;
-         deltaPhiAtVtx_thresh80 = 0.06;
-         deltaEtaAtVtx_thresh80 = 0.004;
-         hOverE_thresh80 = 0.04;
-
-       } else {
-         dr03TkSumPt_thresh95 = 0.08;
-         dr03EcalRecHitSumEt_thresh95 = 0.06;
-         dr03HcalTowerSumEt_thresh95 = 0.05;
-         combinedIsoRel_thresh95 = 0.1;
-
-         dr03TkSumPt_thresh80 = 0.04;
-         dr03EcalRecHitSumEt_thresh80 = 0.05;
-         dr03HcalTowerSumEt_thresh80 = 0.025;
-         combinedIsoRel_thresh80 = 0.06;
-
-         sigmaIetaIeta_thresh80 = 0.03;
-         deltaPhiAtVtx_thresh80 = 0.7;
-         deltaEtaAtVtx_thresh80 = 0.007;
-         hOverE_thresh80 = 0.025;
-
-         sigmaIetaIeta_thresh95 = 0.03;
-         deltaPhiAtVtx_thresh95 = 0.7;
-         deltaEtaAtVtx_thresh95 = 0.01; 
-         hOverE_thresh95 = 0.07;
-       }
-
-
-       // --------------
-       // isolation:
-       // --------------
-     //// no relative iso, using combined
-     //if( dr03TkSumPtEle[iEle]/thisEle.Pt() > dr03TkSumPt_thresh ) continue;
-     //if( dr03EcalRecHitSumEtEle[iEle]/thisEle.Pt() > dr03EcalRecHitSumEt_thresh ) continue;
-     //if( dr03HcalTowerSumEtEle[iEle]/thisEle.Pt() > dr03HcalTowerSumEt_thresh ) continue;
-
-       Float_t combinedIsoRel;
-       if( fabs(thisEle.Eta())<1.4442 )
-         combinedIsoRel = ( dr03TkSumPtEle[iEle] + TMath::Max(0., dr03EcalRecHitSumEtEle[iEle] - 1.) + dr03HcalTowerSumEtEle[iEle] ) / thisEle.Pt();
-       else
-         combinedIsoRel = ( dr03TkSumPtEle[iEle] + dr03EcalRecHitSumEtEle[iEle] + dr03HcalTowerSumEtEle[iEle] ) / thisEle.Pt();
-
-       bool iso_VBTF95 = (combinedIsoRel < combinedIsoRel_thresh95);
-       bool iso_VBTF80 = (combinedIsoRel < combinedIsoRel_thresh80);
-
-       
-       // --------------
-       // electron ID:
-       // --------------
-       int scIndex = (superClusterIndexEle[iEle]>=0) ? superClusterIndexEle[iEle] : PFsuperClusterIndexEle[iEle];
-       bool eleID_VBTF95 = (covIEtaIEtaSC[scIndex] < sigmaIetaIeta_thresh95) &&
-                           (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh95) &&
-                           (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh95) &&
-                           (hOverEEle[iEle] < hOverE_thresh95);
-
-       bool eleID_VBTF80 = (covIEtaIEtaSC[scIndex] < sigmaIetaIeta_thresh80) &&
-                           (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh80) &&
-                           (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh80) &&
-                           (hOverEEle[iEle] < hOverE_thresh80);
-       
-       // ---------------------
-       // conversion rejection:
-       // ---------------------
-       int nMissingHits = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
-       bool convRej_VBTF95 = (nMissingHits<=nMissingHits_thresh95) && (fabs(convDistEle[iEle])>dist_thresh95 || fabs(convDcotEle[iEle])>deltaCotTheta_thresh95);
-       bool convRej_VBTF80 = (nMissingHits<=nMissingHits_thresh80) && (fabs(convDistEle[iEle])>dist_thresh80 || fabs(convDcotEle[iEle])>deltaCotTheta_thresh80);
-
-
-
-       bool passed_VBTF95 = (iso_VBTF95 && eleID_VBTF95 && convRej_VBTF95);
-       bool passed_VBTF80 = (iso_VBTF80 && eleID_VBTF80 && convRej_VBTF80);
-*/
-
 
 
        bool passed_VBTF95 = thisEle.passedVBTF95();
@@ -936,35 +787,34 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      std::vector<int> leadJetsIndex; //index in the event collection (needed afterwards for PFCandidates)
      int nJets30=0;
 
-     //QGLikelihoodCalculator qglc;
-     for( unsigned int iJet=0; iJet<nAK5PFJet; ++iJet ) {
+     for( unsigned int iJet=0; iJet<nAK5PFPUcorrJet; ++iJet ) {
 
-       AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
+       AnalysisJet thisJet( pxAK5PFPUcorrJet[iJet], pyAK5PFPUcorrJet[iJet], pzAK5PFPUcorrJet[iJet], energyAK5PFPUcorrJet[iJet] );
 
-       thisJet.eChargedHadrons = chargedHadronEnergyAK5PFJet[iJet];
-       thisJet.ePhotons        = photonEnergyAK5PFJet[iJet];
-       thisJet.eNeutralEm      = neutralEmEnergyAK5PFJet[iJet];
-       thisJet.eNeutralHadrons = neutralHadronEnergyAK5PFJet[iJet];
-       thisJet.eElectrons      = electronEnergyAK5PFJet[iJet];
-       thisJet.eMuons          = muonEnergyAK5PFJet[iJet];
+       thisJet.eChargedHadrons = chargedHadronEnergyAK5PFPUcorrJet[iJet];
+       thisJet.ePhotons        = photonEnergyAK5PFPUcorrJet[iJet];
+       thisJet.eNeutralEm      = neutralEmEnergyAK5PFPUcorrJet[iJet];
+       thisJet.eNeutralHadrons = neutralHadronEnergyAK5PFPUcorrJet[iJet];
+       thisJet.eElectrons      = electronEnergyAK5PFPUcorrJet[iJet];
+       thisJet.eMuons          = muonEnergyAK5PFPUcorrJet[iJet];
 
-       thisJet.nChargedHadrons = chargedHadronMultiplicityAK5PFJet[iJet];
-       thisJet.nPhotons        = photonMultiplicityAK5PFJet[iJet];
-       thisJet.nNeutralHadrons = neutralHadronMultiplicityAK5PFJet[iJet];
-       thisJet.nElectrons      = electronMultiplicityAK5PFJet[iJet];
-       thisJet.nMuons          = muonMultiplicityAK5PFJet[iJet];
+       thisJet.nChargedHadrons = chargedHadronMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nPhotons        = photonMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nNeutralHadrons = neutralHadronMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nElectrons      = electronMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nMuons          = muonMultiplicityAK5PFPUcorrJet[iJet];
 
-       thisJet.nCharged = chargedHadronMultiplicityAK5PFJet[iJet]+electronMultiplicityAK5PFJet[iJet]+muonMultiplicityAK5PFJet[iJet];
-       thisJet.nNeutral = neutralHadronMultiplicityAK5PFJet[iJet]+photonMultiplicityAK5PFJet[iJet];
-       thisJet.rmsCand =  rmsCandAK5PFJet[iJet];
-       thisJet.ptD =  ptDAK5PFJet[iJet];
+       thisJet.nCharged = chargedHadronMultiplicityAK5PFPUcorrJet[iJet]+electronMultiplicityAK5PFPUcorrJet[iJet]+muonMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nNeutral = neutralHadronMultiplicityAK5PFPUcorrJet[iJet]+photonMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.rmsCand =  rmsCandAK5PFPUcorrJet[iJet];
+       thisJet.ptD =  ptDAK5PFPUcorrJet[iJet];
 
-       thisJet.trackCountingHighEffBJetTag = trackCountingHighEffBJetTagsAK5PFJet[iJet];
-       thisJet.trackCountingHighPurBJetTag = trackCountingHighPurBJetTagsAK5PFJet[iJet];
-       thisJet.simpleSecondaryVertexHighEffBJetTag = simpleSecondaryVertexHighEffBJetTagsAK5PFJet[iJet];
-       thisJet.simpleSecondaryVertexHighPurBJetTag = simpleSecondaryVertexHighPurBJetTagsAK5PFJet[iJet];
-       thisJet.jetBProbabilityBJetTag = jetBProbabilityBJetTagsAK5PFJet[iJet];
-       thisJet.jetProbabilityBJetTag = jetProbabilityBJetTagsAK5PFJet[iJet];
+       thisJet.trackCountingHighEffBJetTag = trackCountingHighEffBJetTagsAK5PFPUcorrJet[iJet];
+       thisJet.trackCountingHighPurBJetTag = trackCountingHighPurBJetTagsAK5PFPUcorrJet[iJet];
+       thisJet.simpleSecondaryVertexHighEffBJetTag = simpleSecondaryVertexHighEffBJetTagsAK5PFPUcorrJet[iJet];
+       thisJet.simpleSecondaryVertexHighPurBJetTag = simpleSecondaryVertexHighPurBJetTagsAK5PFPUcorrJet[iJet];
+       thisJet.jetBProbabilityBJetTag = jetBProbabilityBJetTagsAK5PFPUcorrJet[iJet];
+       thisJet.jetProbabilityBJetTag = jetProbabilityBJetTagsAK5PFPUcorrJet[iJet];
 
        //thisJet.QGlikelihood = qglc.ComputeLikelihood( thisJet.Pt(), thisJet.nCharged, thisJet.nNeutral, thisJet.ptD, thisJet.rmsCand );
 
@@ -978,7 +828,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( thisJet.DeltaR( leptons[1] ) <= 0.5 ) continue;
 
        // jet ID:
-       int multiplicity = thisJet.nCharged +  thisJet.nNeutral + HFEMMultiplicityAK5PFJet[iJet] + HFHadronMultiplicityAK5PFJet[iJet];
+       int multiplicity = thisJet.nCharged +  thisJet.nNeutral + HFEMMultiplicityAK5PFPUcorrJet[iJet] + HFHadronMultiplicityAK5PFPUcorrJet[iJet];
        if( multiplicity < 2 ) continue;
        if( fabs(thisJet.Eta())<2.4 && thisJet.nChargedHadrons == 0 ) continue;
        if( thisJet.eNeutralHadrons >= 0.99*thisJet.Energy() ) continue;
