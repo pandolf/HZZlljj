@@ -16,6 +16,9 @@ Ntp1Finalizer::Ntp1Finalizer( const std::string& analyzerType, const std::string
 
   outFile_ = 0;
 
+  nCounter_ = 0.;
+  nCounterW_ = 0.;
+
 } //constructor
 
 
@@ -95,6 +98,14 @@ void Ntp1Finalizer::addFile(const std::string& dataset) {
   tree_->Add(treeName.c_str());
   std::cout << "-> Added " << treeName << ". Tree has " << tree_->GetEntries() << " entries." << std::endl;
   TFile* infile = TFile::Open(infileName.c_str(), "READ");
+  TH1F* h1_nCounter = (TH1F*)infile->Get("nCounter");
+  TH1F* h1_nCounterW = (TH1F*)infile->Get("nCounterW");
+  if( h1_nCounter!= 0 && h1_nCounterW != 0 ) {
+    nCounter_ += h1_nCounter->GetBinContent(1);
+    nCounterW_ += h1_nCounterW->GetBinContent(1);
+  } else {
+    std::cout << "WARNING!! Dataset '" << dataset << "' has no nCounter information!!!" << std::endl;
+  }
   infile->Close();
 
 

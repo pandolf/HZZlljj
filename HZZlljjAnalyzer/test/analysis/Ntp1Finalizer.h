@@ -45,6 +45,9 @@ class Ntp1Finalizer {
 
   TChain* tree_;
 
+  float nCounter_;
+  float nCounterW_;
+
   std::string analyzerType_;
   std::string dataset_;
   std::string flags_;
