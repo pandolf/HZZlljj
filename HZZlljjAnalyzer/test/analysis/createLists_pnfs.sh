@@ -13,7 +13,7 @@ do
 rm -f files_$i.txt
 for j in `ls $maindir/$i`
 do
-echo dcap://cmsrm-se01.roma1.infn.it$maindir$i/$j >> files_$i.txt
+echo dcap://cmsrm-se01.roma1.infn.it$maindir/$i/$j >> files_$i.txt
 done
 done
 
