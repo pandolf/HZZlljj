@@ -48,6 +48,7 @@ class Ntp1Finalizer_HZZlljj : public Ntp1Finalizer {
    float helicityLD_thresh_;
    float mZZ_threshLo_;
    float mZZ_threshHi_;
+   int requiredBTags_;
 
 };
 

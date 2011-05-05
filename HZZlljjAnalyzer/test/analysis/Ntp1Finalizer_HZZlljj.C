@@ -899,6 +899,22 @@ ofstream ofs("run_event.txt");
       jet2.QGLikelihood = QGLikelihoodJet2;
 
 
+      // ----------
+      // B-TAGGING:
+      // ----------
+
+      bool btagJet1 =  ( jet1.trackCountingHighEffBJetTag>4. ); 
+      bool btagJet2 =  ( jet2.trackCountingHighEffBJetTag>4. ); 
+
+      int nBTags = btagJet1 + btagJet2;
+
+      if( requiredBTags_ != -1 ) if( nBTags != requiredBTags_ ) continue;
+
+
+
+      // --------------
+      // KINEMATIC FIT:
+      // --------------
 
       std::pair<TLorentzVector,TLorentzVector> jets_kinfit = fitter_jets->fit(jet1, jet2);
       TLorentzVector jet1_kinfit(jets_kinfit.first);
@@ -1471,6 +1487,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
+    requiredBTags_ = -1;
 
   } else if( selectionType_=="loose" ) {
 
@@ -1494,6 +1511,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.;
     mZZ_threshLo_ = 0.;
     mZZ_threshHi_ = 10000.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="tight" ) {
 
@@ -1515,6 +1533,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="loMass" ) {
 
@@ -1536,6 +1555,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt250LD" ) {
 
@@ -1559,6 +1579,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.11;
     mZZ_threshLo_ = 237.;
     mZZ_threshHi_ = 260.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt300LD" ) {
 
@@ -1582,6 +1603,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.13;
     mZZ_threshLo_ = 280.;
     mZZ_threshHi_ = 323.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt300" ) {
 
@@ -1593,8 +1615,8 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptJet2_thresh_ = 35.;
     etaJet1_thresh_ = 2.4;
     etaJet2_thresh_ = 2.4;
-    mZll_threshLo_ = 81.;
-    mZll_threshHi_ = 101.;
+    mZll_threshLo_ = 50.;
+    mZll_threshHi_ = 120.;
     mZjj_threshLo_ = 81.;
     mZjj_threshHi_ = 101.;
     deltaRll_thresh_ = 999.;
@@ -1605,6 +1627,31 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.;
     mZZ_threshLo_ = 270.;
     mZZ_threshHi_ = 330.;
+    requiredBTags_ = -1;
+
+  } else if( selectionType=="opt350" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 55.;
+    ptJet2_thresh_ = 35.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 50.;
+    mZll_threshHi_ = 120.;
+    mZjj_threshLo_ = 81.;
+    mZjj_threshHi_ = 101.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 1.7;
+    ptZll_thresh_ = 60.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 315.;
+    mZZ_threshHi_ = 385.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt350LD" ) {
 
@@ -1628,6 +1675,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.01;
     mZZ_threshLo_ = 330.;
     mZZ_threshHi_ = 380.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt400" ) {
 
@@ -1653,6 +1701,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.;
     mZZ_threshLo_ = 360.;
     mZZ_threshHi_ = 440.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt400noLD" ) {
 
@@ -1676,6 +1725,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.06;
     mZZ_threshLo_ = 360.;
     mZZ_threshHi_ = 440.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt400LD" ) {
 
@@ -1699,6 +1749,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.06;
     mZZ_threshLo_ = 390.;
     mZZ_threshHi_ = 460.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt400LD2" ) {
 
@@ -1722,6 +1773,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.03;
     mZZ_threshLo_ = 380.;
     mZZ_threshHi_ = 470.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt450LD" ) {
 
@@ -1745,6 +1797,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.05;
     mZZ_threshLo_ = 420.;
     mZZ_threshHi_ = 550.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt500" ) {
 
@@ -1768,6 +1821,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.;
     mZZ_threshLo_ = 450.;
     mZZ_threshHi_ = 550.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt500LD" ) {
 
@@ -1791,6 +1845,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.15;
     mZZ_threshLo_ = 470.;
     mZZ_threshHi_ = 99999999.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt500LD2" ) {
 
@@ -1814,6 +1869,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.05;
     mZZ_threshLo_ = 465.;
     mZZ_threshHi_ = 99999999.;
+    requiredBTags_ = -1;
 
   } else if( selectionType=="opt600" ) {
 
@@ -1835,6 +1891,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
+    requiredBTags_ = -1;
 
   } else {
 
