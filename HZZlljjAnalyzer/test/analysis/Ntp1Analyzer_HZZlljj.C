@@ -114,6 +114,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("event",&event_,"event_/I");
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
+  reducedTree_->Branch("leptTypeMC",&leptTypeMC_,"leptTypeMC_/I");
 
 //// triggers:
 //reducedTree_->Branch("HLT_Mu11", &HLT_Mu11_, "HLT_Mu11_/O");
@@ -363,6 +364,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      LS_ = lumiBlock;
      event_ = eventNumber;
      eventWeight_ = -1.; //default
+     leptTypeMC_ = -1;
+
 
      if( !isGoodEvent() ) continue; //this takes care also of trigger
 
@@ -432,16 +435,17 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        for( unsigned iMc=0; iMc<nMc; ++iMc ) {
 
-         if( statusMc[iMc] != 1 ) continue;
+         // partons only
+         if( statusMc[iMc] != 3 ) continue;
 
          TLorentzVector* thisParticle = new TLorentzVector();
          thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
 
-         // remember: a stable lepton is daughter of a parton lepton, which is daughter of the Z:
-         if( idMc[mothMc[mothMc[iMc]]]==23 ) {
-           zIndexll = mothMc[mothMc[iMc]]; 
-           if( fabs(idMc[iMc])==11 && idMc[mothMc[mothMc[iMc]]]==23 ) electronsMC.push_back( *thisParticle );
-           if( fabs(idMc[iMc])==13 && idMc[mothMc[mothMc[iMc]]]==23 ) muonsMC.push_back( *thisParticle );
+       
+         if( idMc[mothMc[iMc]]==23 ) {
+           zIndexll = mothMc[iMc]; 
+           if( fabs(idMc[iMc])==11 && idMc[mothMc[iMc]]==23 ) electronsMC.push_back( *thisParticle );
+           if( fabs(idMc[iMc])==13 && idMc[mothMc[iMc]]==23 ) muonsMC.push_back( *thisParticle );
          }
 
          delete thisParticle;
@@ -475,6 +479,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        }
 
 
+
        if( !noLeptons ) {
 
          TLorentzVector ZllMC;
@@ -484,6 +489,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          eZllMC_   = ZllMC.Energy();
          etaZllMC_ = ZllMC.Eta();
          phiZllMC_ = ZllMC.Phi();
+
+         if( muonsMC.size() > 0 ) leptTypeMC_ = 0;
+         else if( electronsMC.size() > 0 ) leptTypeMC_ = 1;
 
        }
 
@@ -661,7 +669,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 //   for( std::vector<TLorentzVector>::iterator iEle=electrons.begin(); iEle!=electrons.end(); ++iEle ) {
 //     for( std::vector<TLorentzVector>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu ) {
 //       if( iMu->DeltaR(*iEle)<0.1 ) {
-//         std::cout << "lll" << std::endl;
 //         electrons.erase(iEle);
 //       }
 //     } //for ele
