@@ -97,7 +97,8 @@ Ntp1Analyzer_HZZlljj::Ntp1Analyzer_HZZlljj( const std::string& dataset, const st
      Ntp1Analyzer( "HZZlljj", dataset, flags, tree ) {
 
 
-  //nothing to do here
+  h1_nCounter_Zee_ = new TH1D("nCounter_Zee", "", 1, 0., 1.);
+  h1_nCounter_Zmumu_ = new TH1D("nCounter_Zmumu", "", 1, 0., 1.);
 
 
 } //constructor
@@ -305,6 +306,8 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
 Ntp1Analyzer_HZZlljj::~Ntp1Analyzer_HZZlljj() {
 
   outfile_->cd();
+  h1_nCounter_Zee_->Write();
+  h1_nCounter_Zmumu_->Write();
   h1_nEvents_vs_ptEle->Write();
   h1_nEvents_vs_ptMuon->Write();
   h1_passed_vs_ptEle->Write();
@@ -337,6 +340,13 @@ void Ntp1Analyzer_HZZlljj::Loop()
    DEBUG_VERBOSE_ = false;
 
    if (fChain == 0) return;
+
+
+   // to fix Z->ee BR bug, compute number of events having Z->ee and Z->mumu
+   int nCounterZee = (isMC_) ? fChain->GetEntries("statusMc==3 && idMc==11") : 0;
+   int nCounterZmumu = (isMC_) ? fChain->GetEntries("statusMc==3 && idMc==13") : 0;
+   h1_nCounter_Zee_->SetBinContent( 1, nCounterZee );
+   h1_nCounter_Zmumu_->SetBinContent( 1, nCounterZmumu );
 
 
    Long64_t nentries;
@@ -665,16 +675,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      if( electrons.size() < 2 && muons.size() < 2 ) continue;
 
-//   // clean electrons faked by muon MIP in ECAL
-//   for( std::vector<TLorentzVector>::iterator iEle=electrons.begin(); iEle!=electrons.end(); ++iEle ) {
-//     for( std::vector<TLorentzVector>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu ) {
-//       if( iMu->DeltaR(*iEle)<0.1 ) {
-//         electrons.erase(iEle);
-//       }
-//     } //for ele
-//   } //for mu
-
-//   if( electrons.size() < 2 && muons.size() < 2 ) continue;
 
 
      std::vector< AnalysisLepton > leptons;
@@ -853,10 +853,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        }
    
        
-       thisJet.ptGen  = matchedGenJet.Pt();
-       thisJet.etaGen = matchedGenJet.Eta();
-       thisJet.phiGen = matchedGenJet.Phi();
-       thisJet.eGen   = matchedGenJet.Energy();
+       thisJet.ptGen  = (isMC_) ? matchedGenJet.Pt() : 0.;
+       thisJet.etaGen = (isMC_) ? matchedGenJet.Eta() : 20.;
+       thisJet.phiGen = (isMC_) ? matchedGenJet.Phi() : 0.;
+       thisJet.eGen   = (isMC_) ? matchedGenJet.Energy() : 0.;
 
        leadJets.push_back(thisJet);
        leadJetsIndex.push_back(iJet);
@@ -870,13 +870,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 
 
-     // now look for best invariant mass jet pair 
-     float Zmass = 91.19;
-     float bestMass = 0.;
-     int best_i=-1;
-     int best_j=-1;
-     int best_i_eventIndex=-1;
-     int best_j_eventIndex=-1;
+   //// now look for best invariant mass jet pair 
+   //float Zmass = 91.19;
+   //float bestMass = 0.;
+   //int best_i=-1;
+   //int best_j=-1;
+   //int best_i_eventIndex=-1;
+   //int best_j_eventIndex=-1;
 
      nPairs_ = 0;
      nPart_ = 0;
