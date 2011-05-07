@@ -7,6 +7,9 @@
 #include "TLorentzVector.h"
 #include "TRegexp.h"
 
+#include "AnalysisElectron.h"
+#include "AnalysisMuon.h"
+
 #include "KinematicFit/DiJetKinFitter.h"
 #include "QGLikelihood/QGLikelihoodCalculator.h"
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
@@ -51,24 +54,12 @@ class AnalysisJet : public TLorentzVector {
   int nNeutral;
   float QGlikelihood;
 
-};
-
-
-class AnalysisLepton : public TLorentzVector {
-
- public:
-
-  AnalysisLepton( float x=0., float y=0., float z=0., float t=0.) : TLorentzVector( x, y, z, t ) {
-    charge=0;
-  }
-
-  AnalysisLepton( const TLorentzVector &v) : TLorentzVector( v ) {
-    charge=0;
-  }
-
-  int charge;
+  //btags:
+  float trackCountingHighEffBJetTag;
 
 };
+
+
 
 
 HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
@@ -80,6 +71,9 @@ HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVec
 Ntp1Analyzer_TMVA::Ntp1Analyzer_TMVA( const std::string& dataset, const std::string& jetChoice, const std::string& flags, TTree* tree ) :
      Ntp1Analyzer( "TMVA", dataset, flags, tree ) {
 
+
+  h1_nCounter_Zee_ = new TH1D("nCounter_Zee", "", 1, 0., 1.);
+  h1_nCounter_Zmumu_ = new TH1D("nCounter_Zmumu", "", 1, 0., 1.);
 
   jetChoice_ = jetChoice;
   PRESEL_ = 0;
@@ -105,6 +99,8 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
 
   
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
+  reducedTree_->Branch("leptTypeMC",&leptTypeMC_,"leptTypeMC_/I");
+  reducedTree_->Branch("leptType",&leptType_,"leptType_/I");
 
   reducedTree_->Branch("ptLept1",  &ptLept1_,  "ptLept1_/F");
   reducedTree_->Branch("absEtaLept1",  &absEtaLept1_,  "absEtaLept1_/F");
@@ -167,6 +163,8 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("helicityLD", &helicityLD_, "helicityLD_/F");
   reducedTree_->Branch("helicityLD_kinFit", &helicityLD_kinFit_, "helicityLD_kinFit_/F");
 
+  reducedTree_->Branch("nBTags", &nBTags_, "nBTags_/I");
+
   h1_mZjj = new TH1F("mZjj", "", 50, 0., 300.);
   h1_mZjj_matched = new TH1F("mZjj_matched", "", 50, 0., 300.);
 
@@ -181,6 +179,8 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
 Ntp1Analyzer_TMVA::~Ntp1Analyzer_TMVA() {
 
   outfile_->cd();
+  h1_nCounter_Zee_->Write();
+  h1_nCounter_Zmumu_->Write();
   h1_mZjj->Write();
   h1_mZjj_matched->Write();
   h1_mZjj_bestZ->Write();
@@ -199,6 +199,11 @@ void Ntp1Analyzer_TMVA::Loop()
 
    if (fChain == 0) return;
 
+   // to fix Z->ee BR bug, compute number of events having Z->ee and Z->mumu
+   int nCounterZee = (isMC_) ? fChain->GetEntries("statusMc==3 && idMc==11") : 0;
+   int nCounterZmumu = (isMC_) ? fChain->GetEntries("statusMc==3 && idMc==13") : 0;
+   h1_nCounter_Zee_->SetBinContent( 1, nCounterZee );
+   h1_nCounter_Zmumu_->SetBinContent( 1, nCounterZmumu );
 
    Long64_t nentries;
 
@@ -279,57 +284,33 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      }
 
-
-
      // now look for Z->ll
 
-     bool noLeptons = false;
-     TLorentzVector lept1MC, lept2MC;
      std::vector<TLorentzVector> electronsMC;
      std::vector<TLorentzVector> muonsMC;
 
      for( unsigned iMc=0; iMc<nMc; ++iMc ) {
 
-       if( statusMc[iMc] != 1 ) continue;
+       // partons only
+       if( statusMc[iMc] != 3 ) continue;
 
        TLorentzVector* thisParticle = new TLorentzVector();
        thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
 
-       // remember: a stable lepton is daughter of a parton lepton, which is daughter of the Z:
-       if( idMc[mothMc[mothMc[iMc]]]==23 ) {
-         if( fabs(idMc[iMc])==11 && idMc[mothMc[mothMc[iMc]]]==23 ) electronsMC.push_back( *thisParticle );
-         if( fabs(idMc[iMc])==13 && idMc[mothMc[mothMc[iMc]]]==23 ) muonsMC.push_back( *thisParticle );
-       }
+       if( fabs(idMc[iMc])==11 && idMc[mothMc[iMc]]==23 ) electronsMC.push_back( *thisParticle );
+       if( fabs(idMc[iMc])==13 && idMc[mothMc[iMc]]==23 ) muonsMC.push_back( *thisParticle );
 
        delete thisParticle;
        thisParticle = 0;
 
      }
 
-     if( electronsMC.size()==2 ) {
-       if( electronsMC[0].Pt() > electronsMC[1].Pt() ) {
-         lept1MC = electronsMC[0];
-         lept2MC = electronsMC[1];
-       } else {
-         lept1MC = electronsMC[1];
-         lept2MC = electronsMC[0];
-       }
-     } else if( muonsMC.size()==2 ) {
-       if( muonsMC[0].Pt() > muonsMC[1].Pt() ) {
-         lept1MC = muonsMC[0];
-         lept2MC = muonsMC[1];
-       } else {
-         lept1MC = muonsMC[1];
-         lept2MC = muonsMC[0];
-       }
-     } else {
-       //taus
-       noLeptons = true;
-     }
+
+     if( muonsMC.size() > 0 ) leptTypeMC_ = 0;
+     else if( electronsMC.size() > 0 ) leptTypeMC_ = 1;
 
 
-     if( !noLeptons )
-       if( lept1MC.Pt() < lept2MC.Pt() ) std::cout << "WARNING MC leptons not ordered in pt!!" << std::endl;
+
 
 
 
@@ -346,12 +327,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // MUONS
      // ------------------
 
-     std::vector<AnalysisLepton> muons;
+     std::vector<AnalysisMuon> muons;
      int chargeFirstMuon;
 
      for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
 
-       AnalysisLepton thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
+       AnalysisMuon thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
        thisMuon.charge = chargeMuon[iMuon];
 
        // --------------
@@ -359,13 +340,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        if( thisMuon.Pt() < 20. ) continue;
 
-
-       // --------------
-       // ID:
-       // --------------
-       if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
-       if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuons
-       if( pixelHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
+       thisMuon.isGlobalMuonPromptTight = (muonIdMuon[iMuon]>>8)&1;
+       thisMuon.isAllTrackerMuon = (muonIdMuon[iMuon]>>11)&1;
 
 
        // to compute dxy, look for primary vertex:
@@ -387,22 +363,17 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
                               pxTrack[trackIndexMuon[iMuon]], pyTrack[trackIndexMuon[iMuon]], pzTrack[trackIndexMuon[iMuon]]));
        }
 
-       if( dxy > 0.02 ) continue;
-
 
        float dz = fabs(trackVzTrack[trackIndexMuon[iMuon]]-PVzPV[hardestPV]);
-       if(dz > 1.0) continue;
 
+       thisMuon.dxy = dxy;
+       thisMuon.dz = dz;
 
+       thisMuon.sumPt03 = sumPt03Muon[iMuon];
+       thisMuon.emEt03  = emEt03Muon[iMuon];
+       thisMuon.hadEt03 = hadEt03Muon[iMuon];
 
-       // --------------
-       // isolation:
-       // --------------
-       // (this is sum pt tracks)
-       //if( sumPt03Muon[iMuon] >= 3. ) continue;
-       // combined isolation < 15%:
-       if( (sumPt03Muon[iMuon] + emEt03Muon[iMuon] + hadEt03Muon[iMuon]) >= 0.15*thisMuon.Pt() ) continue;
-
+       if( !thisMuon.passedVBTF() ) continue;
 
 
        // for now simple selection, will have to optimize this (T&P?)
@@ -423,13 +394,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // ELECTRONS
      // ------------------
 
-     std::vector<AnalysisLepton> electrons;
+     std::vector<AnalysisElectron> electrons;
      int chargeFirstEle = 0;
      bool firstPassedVBTF80 = false;
 
      for( unsigned int iEle=0; (iEle<nEle) && (electrons.size()<2); ++iEle ) {
 
-       AnalysisLepton thisEle( pxEle[iEle], pyEle[iEle], pzEle[iEle], energyEle[iEle] );
+       AnalysisElectron thisEle( pxEle[iEle], pyEle[iEle], pzEle[iEle], energyEle[iEle] );
        thisEle.charge = chargeEle[iEle];
 
 
@@ -439,129 +410,31 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( thisEle.Pt() < 20. ) continue;
        if( (fabs(thisEle.Eta()) > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) continue;
 
+       // isolation
+       thisEle.dr03TkSumPt = dr03TkSumPtEle[iEle];
+       thisEle.dr03EcalRecHitSumEt = dr03EcalRecHitSumEtEle[iEle];
+       thisEle.dr03HcalTowerSumEt = dr03HcalTowerSumEtEle[iEle];
 
-       // ELE ID vars:
-       Float_t dr03TkSumPt_thresh95;
-       Float_t dr03EcalRecHitSumEt_thresh95;
-       Float_t dr03HcalTowerSumEt_thresh95;
-       Float_t combinedIsoRel_thresh95;
-       Float_t sigmaIetaIeta_thresh95;
-       Float_t deltaPhiAtVtx_thresh95;
-       Float_t deltaEtaAtVtx_thresh95;
-       Float_t hOverE_thresh95;
+       // electron ID
+       thisEle.sigmaIetaIeta = (superClusterIndexEle[iEle]>=0) ? covIEtaIEtaSC[superClusterIndexEle[iEle]] : covIEtaIEtaSC[PFsuperClusterIndexEle[iEle]];
+       thisEle.deltaPhiAtVtx = deltaPhiAtVtxEle[iEle];
+       thisEle.deltaEtaAtVtx = deltaEtaAtVtxEle[iEle];
+       thisEle.hOverE = hOverEEle[iEle];
 
-       Float_t dr03TkSumPt_thresh80;
-       Float_t dr03EcalRecHitSumEt_thresh80;
-       Float_t dr03HcalTowerSumEt_thresh80;
-       Float_t combinedIsoRel_thresh80;
-       Float_t sigmaIetaIeta_thresh80;
-       Float_t deltaPhiAtVtx_thresh80;
-       Float_t deltaEtaAtVtx_thresh80;
-       Float_t hOverE_thresh80;
-
-       // CONVERSION REJECTION VARS:
-       Int_t nMissingHits_thresh95 = 1;
-       Float_t deltaCotTheta_thresh95 = -1.;
-       Float_t dist_thresh95 = -1.;
-
-       Int_t nMissingHits_thresh80 = 0;
-       Float_t deltaCotTheta_thresh80 = 0.02;
-       Float_t dist_thresh80 = 0.02;
+       // conversion rejection
+       thisEle.expInnerLayersGsfTrack = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
+       thisEle.convDist = convDistEle[iEle];
+       thisEle.convDcot = convDcotEle[iEle];
 
 
-       if( fabs(thisEle.Eta())<1.4442 ) {
-         dr03TkSumPt_thresh95 = 0.15;
-         dr03EcalRecHitSumEt_thresh95 = 2.;
-         dr03HcalTowerSumEt_thresh95 = 0.12;
-         combinedIsoRel_thresh95 = 0.15;
-
-         dr03TkSumPt_thresh80 = 0.09;
-         dr03EcalRecHitSumEt_thresh80 = 0.07;
-         dr03HcalTowerSumEt_thresh80 = 0.10;
-         combinedIsoRel_thresh80 = 0.07;
-
-         sigmaIetaIeta_thresh95 = 0.01;
-         deltaPhiAtVtx_thresh95 = 0.8;
-         deltaEtaAtVtx_thresh95 = 0.007;
-         hOverE_thresh95 = 0.15;
-
-         sigmaIetaIeta_thresh80 = 0.01;
-         deltaPhiAtVtx_thresh80 = 0.06;
-         deltaEtaAtVtx_thresh80 = 0.004;
-         hOverE_thresh80 = 0.04;
-
-       } else {
-         dr03TkSumPt_thresh95 = 0.08;
-         dr03EcalRecHitSumEt_thresh95 = 0.06;
-         dr03HcalTowerSumEt_thresh95 = 0.05;
-         combinedIsoRel_thresh95 = 0.1;
-
-         dr03TkSumPt_thresh80 = 0.04;
-         dr03EcalRecHitSumEt_thresh80 = 0.05;
-         dr03HcalTowerSumEt_thresh80 = 0.025;
-         combinedIsoRel_thresh80 = 0.06;
-
-         sigmaIetaIeta_thresh80 = 0.03;
-         deltaPhiAtVtx_thresh80 = 0.7;
-         deltaEtaAtVtx_thresh80 = 0.007;
-         hOverE_thresh80 = 0.025;
-
-         sigmaIetaIeta_thresh95 = 0.03;
-         deltaPhiAtVtx_thresh95 = 0.7;
-         deltaEtaAtVtx_thresh95 = 0.01; 
-         hOverE_thresh95 = 0.07;
-       }
-
-
-       // --------------
-       // isolation:
-       // --------------
-     //// no relative iso, using combined
-     //if( dr03TkSumPtEle[iEle]/thisEle.Pt() > dr03TkSumPt_thresh ) continue;
-     //if( dr03EcalRecHitSumEtEle[iEle]/thisEle.Pt() > dr03EcalRecHitSumEt_thresh ) continue;
-     //if( dr03HcalTowerSumEtEle[iEle]/thisEle.Pt() > dr03HcalTowerSumEt_thresh ) continue;
-
-       Float_t combinedIsoRel;
-       if( fabs(thisEle.Eta())<1.4442 )
-         combinedIsoRel = ( dr03TkSumPtEle[iEle] + TMath::Max(0., dr03EcalRecHitSumEtEle[iEle] - 1.) + dr03HcalTowerSumEtEle[iEle] ) / thisEle.Pt();
-       else
-         combinedIsoRel = ( dr03TkSumPtEle[iEle] + dr03EcalRecHitSumEtEle[iEle] + dr03HcalTowerSumEtEle[iEle] ) / thisEle.Pt();
-
-       bool iso_VBTF95 = (combinedIsoRel < combinedIsoRel_thresh95);
-       bool iso_VBTF80 = (combinedIsoRel < combinedIsoRel_thresh80);
-
-       
-       // --------------
-       // electron ID:
-       // --------------
-       bool eleID_VBTF95 = (covIEtaIEtaSC[iEle] < sigmaIetaIeta_thresh95) &&
-                           (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh95) &&
-                           (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh95) &&
-                           (hOverEEle[iEle] < hOverE_thresh95);
-
-       bool eleID_VBTF80 = (covIEtaIEtaSC[iEle] < sigmaIetaIeta_thresh80) &&
-                           (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh80) &&
-                           (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh80) &&
-                           (hOverEEle[iEle] < hOverE_thresh80);
-       
-       // ---------------------
-       // conversion rejection:
-       // ---------------------
-       int nMissingHits = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
-       bool convRej_VBTF95 = (nMissingHits<=nMissingHits_thresh95) && (fabs(convDistEle[iEle])>dist_thresh95 || fabs(convDcotEle[iEle])>deltaCotTheta_thresh95);
-       bool convRej_VBTF80 = (nMissingHits<=nMissingHits_thresh80) && (fabs(convDistEle[iEle])>dist_thresh80 || fabs(convDcotEle[iEle])>deltaCotTheta_thresh80);
-
-
-
-       bool passed_VBTF95 = (iso_VBTF95 && eleID_VBTF95 && convRej_VBTF95);
-       bool passed_VBTF80 = (iso_VBTF80 && eleID_VBTF80 && convRej_VBTF80);
-
+       bool passed_VBTF95 = thisEle.passedVBTF95();
+       bool passed_VBTF80 = thisEle.passedVBTF80();
 
        if( !passed_VBTF95 ) continue;
 
        // check that not matched to muon (clean electrons faked by muon MIP):
        bool matchedtomuon=false;
-       for( std::vector<AnalysisLepton>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu )
+       for( std::vector<AnalysisMuon>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu )
          if( iMu->DeltaR(thisEle)<0.1 ) matchedtomuon=true;
 
        if( matchedtomuon ) continue;
@@ -583,17 +456,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      if( electrons.size() < 2 && muons.size() < 2 ) continue;
 
-//   // clean electrons faked by muon MIP in ECAL
-//   for( std::vector<TLorentzVector>::iterator iEle=electrons.begin(); iEle!=electrons.end(); ++iEle ) {
-//     for( std::vector<TLorentzVector>::iterator iMu=muons.begin(); iMu!=muons.end(); ++iMu ) {
-//       if( iMu->DeltaR(*iEle)<0.1 ) {
-//         std::cout << "lll" << std::endl;
-//         electrons.erase(iEle);
-//       }
-//     } //for ele
-//   } //for mu
-
-//   if( electrons.size() < 2 && muons.size() < 2 ) continue;
 
 
      std::vector< AnalysisLepton > leptons;
@@ -672,27 +534,29 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      std::vector<int> leadJetsIndex; //index in the event collection (needed afterwards for PFCandidates)
      int nJets30=0;
 
-     for( unsigned int iJet=0; iJet<nAK5PFJet; ++iJet ) {
+     for( unsigned int iJet=0; iJet<nAK5PFPUcorrJet; ++iJet ) {
 
-       AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
+       AnalysisJet thisJet( pxAK5PFPUcorrJet[iJet], pyAK5PFPUcorrJet[iJet], pzAK5PFPUcorrJet[iJet], energyAK5PFPUcorrJet[iJet] );
 
-       thisJet.eChargedHadrons = chargedHadronEnergyAK5PFJet[iJet];
-       thisJet.ePhotons        = photonEnergyAK5PFJet[iJet];
-       thisJet.eNeutralEm      = neutralEmEnergyAK5PFJet[iJet];
-       thisJet.eNeutralHadrons = neutralHadronEnergyAK5PFJet[iJet];
-       thisJet.eElectrons      = electronEnergyAK5PFJet[iJet];
-       thisJet.eMuons          = muonEnergyAK5PFJet[iJet];
+       thisJet.eChargedHadrons = chargedHadronEnergyAK5PFPUcorrJet[iJet];
+       thisJet.ePhotons        = photonEnergyAK5PFPUcorrJet[iJet];
+       thisJet.eNeutralEm      = neutralEmEnergyAK5PFPUcorrJet[iJet];
+       thisJet.eNeutralHadrons = neutralHadronEnergyAK5PFPUcorrJet[iJet];
+       thisJet.eElectrons      = electronEnergyAK5PFPUcorrJet[iJet];
+       thisJet.eMuons          = muonEnergyAK5PFPUcorrJet[iJet];
 
-       thisJet.nChargedHadrons = chargedHadronMultiplicityAK5PFJet[iJet];
-       thisJet.nPhotons        = photonMultiplicityAK5PFJet[iJet];
-       thisJet.nNeutralHadrons = neutralHadronMultiplicityAK5PFJet[iJet];
-       thisJet.nElectrons      = electronMultiplicityAK5PFJet[iJet];
-       thisJet.nMuons          = muonMultiplicityAK5PFJet[iJet];
+       thisJet.nChargedHadrons = chargedHadronMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nPhotons        = photonMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nNeutralHadrons = neutralHadronMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nElectrons      = electronMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nMuons          = muonMultiplicityAK5PFPUcorrJet[iJet];
 
-       thisJet.nCharged = chargedHadronMultiplicityAK5PFJet[iJet]+electronMultiplicityAK5PFJet[iJet]+muonMultiplicityAK5PFJet[iJet];
-       thisJet.nNeutral = neutralHadronMultiplicityAK5PFJet[iJet]+photonMultiplicityAK5PFJet[iJet];
-       thisJet.rmsCand =  rmsCandAK5PFJet[iJet];
-       thisJet.ptD =  ptDAK5PFJet[iJet];
+       thisJet.nCharged = chargedHadronMultiplicityAK5PFPUcorrJet[iJet]+electronMultiplicityAK5PFPUcorrJet[iJet]+muonMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nNeutral = neutralHadronMultiplicityAK5PFPUcorrJet[iJet]+photonMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.rmsCand =  rmsCandAK5PFPUcorrJet[iJet];
+       thisJet.ptD =  ptDAK5PFPUcorrJet[iJet];
+
+       thisJet.trackCountingHighEffBJetTag =  trackCountingHighEffBJetTagsAK5PFPUcorrJet[iJet];
 
        //thisJet.QGlikelihood = qglc.ComputeLikelihood( thisJet.Pt(), thisJet.nCharged, thisJet.nNeutral, thisJet.ptD, thisJet.rmsCand );
 
@@ -706,7 +570,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( thisJet.DeltaR( leptons[1] ) <= 0.5 ) continue;
 
        // jet ID:
-       int multiplicity = thisJet.nCharged +  thisJet.nNeutral + HFEMMultiplicityAK5PFJet[iJet] + HFHadronMultiplicityAK5PFJet[iJet];
+       int multiplicity = thisJet.nCharged +  thisJet.nNeutral + HFEMMultiplicityAK5PFPUcorrJet[iJet] + HFHadronMultiplicityAK5PFPUcorrJet[iJet];
        if( multiplicity < 2 ) continue;
        if( fabs(thisJet.Eta())<2.4 && thisJet.nChargedHadrons == 0 ) continue;
        if( thisJet.eNeutralHadrons >= 0.99*thisJet.Energy() ) continue;
@@ -907,7 +771,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
    //if( jetRecoil.Energy()>0. jetRecoil.ptD>=0. && jetRecoil.nCharged>) {
    //  if( fabs(jetRecoil.Eta())<2. ) {
    //    QGLikeli_recoil = qglikeli->computeQGLikelihood( jetRecoil.Pt(), jetRecoil.nCharged, jetRecoil.nNeutral, jetRecoil.ptD, -1. );
-     QGLikelihoodJetRecoil_ = (jetRecoil.Pt()>30.) ? qglikeli->computeQGLikelihood( jetRecoil.Pt(), jetRecoil.nCharged, jetRecoil.nNeutral, jetRecoil.ptD, -1. ) : -1.;
+     QGLikelihoodJetRecoil_ = (jetRecoil.Pt()>15.) ? qglikeli->computeQGLikelihood( jetRecoil.Pt(), jetRecoil.nCharged, jetRecoil.nNeutral, jetRecoil.ptD, -1. ) : -1.;
 
      QGLikelihoodJet1Jet2_ = QGLikelihoodJet1_*QGLikelihoodJet2_;
      QGLikelihoodJet1Jet2Recoil_ = (QGLikelihoodJetRecoil_>=0.) ? QGLikelihoodJet1_*QGLikelihoodJet2_*QGLikelihoodJetRecoil_ : QGLikelihoodJet1_*QGLikelihoodJet2_;
@@ -1013,58 +877,34 @@ if( jet2.Energy()<0. ) std::cout << "jet2_kinfit.E(): " << jet2_kinfit.E() << st
      mZZ_ = ZZ.M();
      absEtaZZ_ = fabs(ZZ.Eta());
 
-/*
-if( !(sProb>0. && sProb<1.) ) {
-  std::cout << std::endl << "jentry: " << jentry << std::endl;
-  std::cout << "sProb: " << sProb << std::endl;
-  std::cout << "bProb: " << bProb << std::endl;
-  std::cout << "helicityLD_: " << helicityLD_ << std::endl;
-  std::cout << "hangles.helPhi: " << hangles.helPhi << std::endl;
-  std::cout << "hangles.helPhi1: " << hangles.helPhi1 << std::endl;
-  std::cout << "hangles.helCosThetaStar: " << hangles.helCosThetaStar << std::endl;
-  std::cout << "hangles.helCosTheta1: " << hangles.helCosTheta1 << std::endl;
-  std::cout << "hangles.helCosTheta2: " << hangles.helCosTheta2 << std::endl;
-  std::cout << "hangles.mzz: " << hangles.mzz << std::endl;
-exit(1);
-}*/
      
-     bool eventOK = true;
 
-  // if( PRESEL_!=0 ) {
-  //   if( ptLept1_ < 50. ) eventOK = false;
-  //   if( absEtaLept1_ > 2.1 ) eventOK = false;
-  //   if( deltaRll_ > 2. ) eventOK = false;
-  //   if( ptJet1_ < 70. ) eventOK = false;
-  //   if( mZjj_ < 60. ) eventOK = false;
-  //   if( mZjj_ > 200. ) eventOK = false;
-  //   if( deltaRjj_ > 2. ) eventOK = false;
-  //   if( PRESEL_==400 ) {
-  //     if( mZZ_ < 320. ) eventOK = false;
-  //     if( mZZ_ > 480. ) eventOK = false;
-  //   } else if( PRESEL_==500 ) {
-  //     if( mZZ_ < 420. ) eventOK = false;
-  //     if( mZZ_ > 580. ) eventOK = false;
-  //   }
-  // }
+     bool twotags = jet1.trackCountingHighEffBJetTag>=4. && jet2.trackCountingHighEffBJetTag>=4.;
+     bool onetag  = (jet1.trackCountingHighEffBJetTag>=4. && jet2.trackCountingHighEffBJetTag<4.)
+                 || (jet1.trackCountingHighEffBJetTag<4. && jet2.trackCountingHighEffBJetTag>=4.);
+     bool zerotags = jet1.trackCountingHighEffBJetTag<4. && jet2.trackCountingHighEffBJetTag<4.;
      
-     if( eventOK )
-       reducedTree_->Fill(); 
 
+     if( twotags ) nBTags_ = 2;
+     else if( onetag ) nBTags_ = 1;
+     else if( zerotags ) nBTags_ = 0;
+
+     reducedTree_->Fill(); 
 
    } //for entries
 
 
-   std::cout << "BEST Z: " << std::endl;
-   std::cout << "Correct Pairs: " << nCorrectPairs_bestZ << " (" << (float)nCorrectPairs_bestZ/((float)nCorrectPairs_bestZ+(float)nIncorrectPairs_bestZ)*100. << "%)" << std::endl;
-   std::cout << "Incorrect Pairs: " << nIncorrectPairs_bestZ << " (" << (float)nIncorrectPairs_bestZ/((float)nCorrectPairs_bestZ+(float)nIncorrectPairs_bestZ)*100. << "%)" << std::endl;
+// std::cout << "BEST Z: " << std::endl;
+// std::cout << "Correct Pairs: " << nCorrectPairs_bestZ << " (" << (float)nCorrectPairs_bestZ/((float)nCorrectPairs_bestZ+(float)nIncorrectPairs_bestZ)*100. << "%)" << std::endl;
+// std::cout << "Incorrect Pairs: " << nIncorrectPairs_bestZ << " (" << (float)nIncorrectPairs_bestZ/((float)nCorrectPairs_bestZ+(float)nIncorrectPairs_bestZ)*100. << "%)" << std::endl;
 
-   std::cout << std::endl << "BEST H: " << std::endl;
-   std::cout << "Correct Pairs: " << nCorrectPairs_bestH << " (" << (float)nCorrectPairs_bestH/((float)nCorrectPairs_bestH+(float)nIncorrectPairs_bestH)*100. << "%)" << std::endl;
-   std::cout << "Incorrect Pairs: " << nIncorrectPairs_bestH << " (" << (float)nIncorrectPairs_bestH/((float)nCorrectPairs_bestH+(float)nIncorrectPairs_bestH)*100. << "%)" << std::endl;
+// std::cout << std::endl << "BEST H: " << std::endl;
+// std::cout << "Correct Pairs: " << nCorrectPairs_bestH << " (" << (float)nCorrectPairs_bestH/((float)nCorrectPairs_bestH+(float)nIncorrectPairs_bestH)*100. << "%)" << std::endl;
+// std::cout << "Incorrect Pairs: " << nIncorrectPairs_bestH << " (" << (float)nIncorrectPairs_bestH/((float)nCorrectPairs_bestH+(float)nIncorrectPairs_bestH)*100. << "%)" << std::endl;
 
-   std::cout << std::endl << "CLOSEST PAIR:" << std::endl;
-   std::cout << "Correct Pairs: " << nCorrectPairs_closestPair << " (" << (float)nCorrectPairs_closestPair/((float)nCorrectPairs_closestPair+(float)nIncorrectPairs_closestPair)*100. << "%)" << std::endl;
-   std::cout << "Incorrect Pairs: " << nIncorrectPairs_closestPair << " (" << (float)nIncorrectPairs_closestPair/((float)nCorrectPairs_closestPair+(float)nIncorrectPairs_closestPair)*100. << "%)" << std::endl;
+// std::cout << std::endl << "CLOSEST PAIR:" << std::endl;
+// std::cout << "Correct Pairs: " << nCorrectPairs_closestPair << " (" << (float)nCorrectPairs_closestPair/((float)nCorrectPairs_closestPair+(float)nIncorrectPairs_closestPair)*100. << "%)" << std::endl;
+// std::cout << "Incorrect Pairs: " << nIncorrectPairs_closestPair << " (" << (float)nIncorrectPairs_closestPair/((float)nCorrectPairs_closestPair+(float)nIncorrectPairs_closestPair)*100. << "%)" << std::endl;
 
 } //loop
 

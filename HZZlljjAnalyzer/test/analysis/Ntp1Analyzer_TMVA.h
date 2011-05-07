@@ -30,7 +30,10 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
 
  private:
 
+   Int_t nBTags_;
+
    Int_t leptType_;
+   Int_t leptTypeMC_;
 
    Float_t epfMet_;
 
@@ -92,6 +95,9 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
 
    Float_t helicityLD_;
    Float_t helicityLD_kinFit_;
+
+   TH1D* h1_nCounter_Zee_;
+   TH1D* h1_nCounter_Zmumu_;
 
    TH1F* h1_mZjj; 
    TH1F* h1_mZjj_matched; 
