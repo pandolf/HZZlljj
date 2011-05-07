@@ -116,48 +116,6 @@ public :
    Int_t           eleIdCutsEle[150];   //[nEle]
    Float_t         eleIdLikelihoodEle[150];   //[nEle]
    Float_t         pflowMVAEle[150];   //[nEle]
-   Int_t           nPFEle;
-   Int_t           chargePFEle[150];   //[nPFEle]
-   Float_t         energyPFEle[150];   //[nPFEle]
-   Float_t         thetaPFEle[150];   //[nPFEle]
-   Float_t         etaPFEle[150];   //[nPFEle]
-   Float_t         phiPFEle[150];   //[nPFEle]
-   Float_t         pxPFEle[150];   //[nPFEle]
-   Float_t         pyPFEle[150];   //[nPFEle]
-   Float_t         pzPFEle[150];   //[nPFEle]
-   Float_t         vertexXPFEle[150];   //[nPFEle]
-   Float_t         vertexYPFEle[150];   //[nPFEle]
-   Float_t         vertexZPFEle[150];   //[nPFEle]
-   Float_t         MvaOutputPFEle[150];   //[nPFEle]
-   Float_t         PS1EnergyPFEle[150];   //[nPFEle]
-   Float_t         PS2EnergyPFEle[150];   //[nPFEle]
-   Float_t         EcalEnergyPFEle[150];   //[nPFEle]
-   Float_t         HcalEnergyPFEle[150];   //[nPFEle]
-   Float_t         RawEcalEnergyPFEle[150];   //[nPFEle]
-   Float_t         RawHcalEnergyPFEle[150];   //[nPFEle]
-   Float_t         PositionAtEcalXPFEle[150];   //[nPFEle]
-   Float_t         PositionAtEcalYPFEle[150];   //[nPFEle]
-   Float_t         PositionAtEcalZPFEle[150];   //[nPFEle]
-   Int_t           gsfTrackIndexPFEle[150];   //[nPFEle]
-   Int_t           trackIndexPFEle[150];   //[nPFEle]
-   Float_t         chIso03vetoPFEle[150];   //[nPFEle]
-   Float_t         chIso04vetoPFEle[150];   //[nPFEle]
-   Float_t         chIso05vetoPFEle[150];   //[nPFEle]
-   Float_t         chIso03noVetoPFEle[150];   //[nPFEle]
-   Float_t         chIso04noVetoPFEle[150];   //[nPFEle]
-   Float_t         chIso05noVetoPFEle[150];   //[nPFEle]
-   Float_t         nhIso03vetoPFEle[150];   //[nPFEle]
-   Float_t         nhIso04vetoPFEle[150];   //[nPFEle]
-   Float_t         nhIso05vetoPFEle[150];   //[nPFEle]
-   Float_t         nhIso03noVetoPFEle[150];   //[nPFEle]
-   Float_t         nhIso04noVetoPFEle[150];   //[nPFEle]
-   Float_t         nhIso05noVetoPFEle[150];   //[nPFEle]
-   Float_t         phIso03vetoPFEle[150];   //[nPFEle]
-   Float_t         phIso04vetoPFEle[150];   //[nPFEle]
-   Float_t         phIso05vetoPFEle[150];   //[nPFEle]
-   Float_t         phIso03noVetoPFEle[150];   //[nPFEle]
-   Float_t         phIso04noVetoPFEle[150];   //[nPFEle]
-   Float_t         phIso05noVetoPFEle[150];   //[nPFEle]
    Int_t           nSC;
    Int_t           nBCSC[200];   //[nSC]
    Int_t           nCrystalsSC[200];   //[nSC]
@@ -293,15 +251,6 @@ public :
    Int_t           numberOfValidStripTIDHitsTrack[500];   //[nTrack]
    Int_t           numberOfValidStripTOBHitsTrack[500];   //[nTrack]
    Int_t           numberOfValidStripTECHitsTrack[500];   //[nTrack]
-   Float_t         truncatedDeDxTrack[500];   //[nTrack]
-   Float_t         truncatedDeDxErrorTrack[500];   //[nTrack]
-   Float_t         truncatedDeDxNoMTrack[500];   //[nTrack]
-   Float_t         medianDeDxTrack[500];   //[nTrack]
-   Float_t         medianDeDxErrorTrack[500];   //[nTrack]
-   Float_t         medianDeDxNoMTrack[500];   //[nTrack]
-   Float_t         harmonic2DeDxTrack[500];   //[nTrack]
-   Float_t         harmonic2DeDxErrorTrack[500];   //[nTrack]
-   Float_t         harmonic2DeDxNoMTrack[500];   //[nTrack]
    Int_t           nGsfTrack;
    Float_t         pxGsfTrack[150];   //[nGsfTrack]
    Float_t         pyGsfTrack[150];   //[nGsfTrack]
@@ -943,15 +892,6 @@ public :
    TBranch        *b_numberOfValidStripTIDHitsTrack;   //!
    TBranch        *b_numberOfValidStripTOBHitsTrack;   //!
    TBranch        *b_numberOfValidStripTECHitsTrack;   //!
-   TBranch        *b_truncatedDeDxTrack;   //!
-   TBranch        *b_truncatedDeDxErrorTrack;   //!
-   TBranch        *b_truncatedDeDxNoMTrack;   //!
-   TBranch        *b_medianDeDxTrack;   //!
-   TBranch        *b_medianDeDxErrorTrack;   //!
-   TBranch        *b_medianDeDxNoMTrack;   //!
-   TBranch        *b_harmonic2DeDxTrack;   //!
-   TBranch        *b_harmonic2DeDxErrorTrack;   //!
-   TBranch        *b_harmonic2DeDxNoMTrack;   //!
    TBranch        *b_nGsfTrack;   //!
    TBranch        *b_pxGsfTrack;   //!
    TBranch        *b_pyGsfTrack;   //!
