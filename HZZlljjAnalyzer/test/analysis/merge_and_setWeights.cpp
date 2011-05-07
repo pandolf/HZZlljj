@@ -16,7 +16,7 @@ std::string flags_;
 
 
 
-int addInput( const std::string& dataset );
+float addInput( const std::string& dataset );
 float getWeight( const std::string& dataset, int nEvents );
 
 
@@ -44,7 +44,7 @@ int main( int argc, char* argv[] ) {
 
   tree = new TChain("reducedTree");
 
-  int nTotalEvents = addInput( dataset );
+  float nTotalEvents = addInput( dataset );
 
   std::cout << std::endl << "-> Finished adding. Total entries: " << tree->GetEntries() << std::endl;
 
@@ -96,14 +96,19 @@ int main( int argc, char* argv[] ) {
 }
 
 
-int addInput( const std::string& dataset ) {
+float addInput( const std::string& dataset ) {
 
   std::string infileName = "files_"+analysisType_+"_2ndLevel_" + dataset;
   if( flags_!="" ) infileName += "_" + flags_;
   infileName += ".txt";
   TH1F* h1_nCounter;
+  TH1F* h1_nCounter_Zee;
+  TH1F* h1_nCounter_Zmumu;
 
-  int totalEvents = 0;
+  float totalEvents = 0;
+  // these are needed to fix the Spring11 ZJets Zee BR bug:
+  int totalEvents_Zee = 0;
+  int totalEvents_Zmumu = 0;
 
   //open from file.txt:
   FILE* iff = fopen(infileName.c_str(),"r");
@@ -121,6 +126,14 @@ int addInput( const std::string& dataset ) {
       totalEvents += h1_nCounter->GetBinContent(1);
     } else {
       std::cout << " WARNING! File '" << infileName << "' has no nCounter information. Skipping." << std::endl;
+    }
+    h1_nCounter_Zee = (TH1F*)infile->Get("nCounter_Zee");
+    if( h1_nCounter_Zee!=0 ) {
+      totalEvents_Zee += h1_nCounter_Zee->GetBinContent(1);
+    }
+    h1_nCounter_Zmumu = (TH1F*)infile->Get("nCounter_Zmumu");
+    if( h1_nCounter_Zmumu!=0 ) {
+      totalEvents_Zmumu += h1_nCounter_Zmumu->GetBinContent(1);
     }
     std::cout << std::endl;
     infile->Close();
@@ -143,11 +156,35 @@ int addInput( const std::string& dataset ) {
       } else {
         std::cout << std::endl << " WARNING! File '" << rootfilename << "' has no nCounter information. Skipping." << std::endl;
       }
+      h1_nCounter_Zee = (TH1F*)infile->Get("nCounter_Zee");
+      if( h1_nCounter_Zee!=0 ) {
+        totalEvents_Zee += h1_nCounter_Zee->GetBinContent(1);
+      }
+      h1_nCounter_Zmumu = (TH1F*)infile->Get("nCounter_Zmumu");
+      if( h1_nCounter_Zmumu!=0 ) {
+        totalEvents_Zmumu += h1_nCounter_Zmumu->GetBinContent(1);
+      }
       std::cout << std::endl;
       infile->Close();
 
     }
     fclose(iff);
+
+  }
+
+  //correct bug in Zee BR (Spring11 alpgen ZJets) only:
+  TString dataset_tstr(dataset);
+  if( dataset_tstr.Contains("Spring11") && ( dataset_tstr.BeginsWith("Z0Jet") 
+                                          || dataset_tstr.BeginsWith("Z1Jet") 
+                                          || dataset_tstr.BeginsWith("Z2Jet")
+                                          || dataset_tstr.BeginsWith("Z3Jet")
+                                          || dataset_tstr.BeginsWith("Z4Jet")
+                                          || dataset_tstr.BeginsWith("Z5Jet") ) ) {
+
+    std::cout << std::endl << "!!! Correcting bug in Z->ee BR (Spring11 Alpgen Z+Jets samples) " << std::endl;
+    // reduces to = totalEvents when totalEvents_Zmumu+totalEvents_Zee = 2/3 totalEvents:
+    //totalEvents = 2.*totalEvents*totalEvents / ( 3.* (float)(totalEvents_Zmumu+totalEvents_Zee) );
+    totalEvents = 3.*(totalEvents_Zmumu+totalEvents_Zee)/2.;
 
   }
 
@@ -253,6 +290,24 @@ float getWeight( const std::string& dataset, int nEvents ) {
   } else if( dataset_tstr.BeginsWith("Z4Jets_ptZ-100to300") ) {
     xSection = 1.298;
     isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z4Jets_ptZ-300to800") ) {
+    xSection = 3.935e-02;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z4Jets_ptZ-800to1600") ) {
+    xSection = 1.394e-04;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-0to100") ) {
+    xSection = 1.135;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-100to300") ) {
+    xSection = 4.758e-01;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-300to800") ) {
+    xSection = 1.946e-02;
+    isAlpgenZJets = true;
+  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-800to1600") ) {
+    xSection = 1.374e-04;
+    isAlpgenZJets = true;
   } else if( dataset_tstr.BeginsWith("ZBB0Jets") ) {
     xSection = 1.703;
     isAlpgenZJets = true;
@@ -276,24 +331,6 @@ float getWeight( const std::string& dataset, int nEvents ) {
     isAlpgenZJets = true;
   } else if( dataset_tstr.BeginsWith("ZCC3Jets") ) {
     xSection = 1.643e-01;
-    isAlpgenZJets = true;
-  } else if( dataset_tstr.BeginsWith("Z4Jets_ptZ-800to1600") ) {
-    xSection = 0.0001394;
-    isAlpgenZJets = true;
-  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-0to100") ) {
-    xSection = 1.135;
-    isAlpgenZJets = true;
-  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-100to300") ) {
-    xSection = 0.4758;
-    isAlpgenZJets = true;
-  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-300to800") ) {
-    xSection = 0.01946;
-    isAlpgenZJets = true;
-  } else if( dataset_tstr.BeginsWith("Z5Jets_ptZ-800to1600") ) {
-    xSection = 0.00007195;
-    isAlpgenZJets = true;
-  } else if( dataset_tstr.BeginsWith("ZBB2JetsToLNu") ) {
-    xSection = 
     isAlpgenZJets = true;
   } else if( dataset=="HZZ_qqll_gluonfusion_M130" ) {
     xSection = 25.560*0.03913*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
@@ -330,13 +367,13 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = (2.0608)*0.2724*0.100974*0.100974; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->ll) (l=e,m,t)
   } else if( dataset=="TTbar_2l_Spring10" ) {
     xSection = 157.4*0.1080*0.1080*3.*3.; //NLO x BR(W->lnu) see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
-  } else if( dataset=="TTJets_TuneD6T" || dataset=="TTJets_TuneZ2_7TeV-madgraph-tauola_Fall10" ) {
+  } else if( dataset_tstr.BeginsWith("TTJets") ) {
     xSection = 157.4; //NLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
-  } else if( dataset=="ZZ_Spring10" || dataset=="ZZtoAnything_TuneZ2" || dataset=="ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" ) {
+  } else if( dataset_tstr.BeginsWith("ZZtoAnything") ) {
     xSection = 5.9*1.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt plus factor 1.3 to account for glu-glu
-  } else if( dataset=="WZtoAnything_TuneZ2" || dataset=="WZtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" ) {
+  } else if( dataset_tstr.BeginsWith("WZtoAnything") ) {
     xSection = 18.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
-  } else if( dataset=="WWtoAnything_TuneZ2" || dataset=="WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" ) {
+  } else if( dataset_tstr.BeginsWith("WWtoAnything") ) {
     xSection = 42.9; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
   } else if( dataset=="Zmumu_Pythia" ) {
     xSection = 3048./3.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
