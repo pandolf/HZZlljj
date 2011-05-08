@@ -45,28 +45,45 @@ int main(int argc, char* argv[]) {
   outputdir_str += "_" + leptType;
   db->set_outputdir(outputdir_str);
 
-  std::string lohi="HI";//temp solution
-  if( selType=="opt300" ) lohi="300";
-  if( selType=="opt200" ) {
-    selType="loose";
-    lohi="200";
-  }
-  if( selType=="opt250" ) {
-    selType="loose";
-    lohi="250";
-  }
-  if( selType=="opt350" ) {
-    selType="opt300";
-    lohi="350";
-  }
-  if( selType=="opt450" ) {
-    selType="opt400";
-    lohi="450";
-  }
-//if( selType=="opt400" || selType=="opt500" || selType=="opt600" || selType=="tight" ) lohi="HI"; //temp solution
-//else if( selType=="loose" ) lohi="MED";
-//else lohi="LO";
 
+
+  TString selType_tstr(selType);
+
+  int mass;
+  if( selType_tstr.Contains("250") )
+    mass = 250;
+  else if( selType_tstr.Contains("300") )
+    mass = 300;
+  else if( selType_tstr.Contains("350") )
+    mass = 350;
+  else if( selType_tstr.Contains("400") )
+    mass = 400;
+  else if( selType_tstr.Contains("450") )
+    mass = 450;
+  else if( selType_tstr.Contains("500") )
+    mass = 500;
+  else {
+    std::cout << "-> Picking default mass (400). " << std::endl;
+    mass = 400;
+  }
+
+  
+  char signalLabel[200];
+  sprintf( signalLabel, "HZZlljj (%d)", mass );
+  std::string signalLabel_str(signalLabel);
+
+  char mcSignalFileName[500];
+  sprintf( mcSignalFileName, "HZZlljj_SMHiggsToZZTo2L2Q_M-%d_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1", mass );
+  std::string mcSignalFileName_str(mcSignalFileName);
+
+  if( mass==400 || mass==450 ) mcSignalFileName_str += "_2";
+  mcSignalFileName_str += "_" + selType;
+  mcSignalFileName_str += "_" + leptType;
+  mcSignalFileName_str += ".root";
+  TFile* mcSignalFile = TFile::Open(mcSignalFileName_str.c_str());
+  db->add_mcFile( mcSignalFile, "HZZ_qqll_gluonfusion", signalLabel_str, kRed+3);
+
+/*
   if( lohi=="LO" ) {
     
     std::string mcSignal130FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-130_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1";
@@ -169,6 +186,9 @@ int main(int argc, char* argv[]) {
     }
 
   }
+*/
+
+
 
   db->set_noStack( (bool)true );
   db->set_shapeNormalization();
@@ -187,9 +207,9 @@ int main(int argc, char* argv[]) {
   db->compareDifferentHistos( massZjj_Rch, "DiJet Invariant Mass [GeV/c^{2}]", "massZjj_vs_Rch");
 */
 
-  std::string massType = "hiMass";
-  if( lohi=="200" || lohi=="250" ) massType = "medMass";
-  if( lohi=="300" || lohi=="350" ) massType = "300Mass";
+//std::string massType = "hiMass";
+//if( lohi=="200" || lohi=="250" ) massType = "medMass";
+//if( lohi=="300" || lohi=="350" ) massType = "300Mass";
 
 //std::vector< HistoAndName > massZZ_QG;
 //HistoAndName hn1_ZZ;
@@ -202,6 +222,8 @@ int main(int argc, char* argv[]) {
 //massZZ_QG.push_back( hn2_ZZ );
 //db->compareDifferentHistos( massZZ_QG, "mZZ_QG", "ZZ Invariant Mass",  "GeV/c^{2}");
 
+
+  std::string massType = (mass<=300) ? "medMass" : "hiMass";
 
   // do Z->JetJet comparisons on signal only:
   std::vector< HistoAndName > massZZ_kinfit;
@@ -226,7 +248,8 @@ int main(int argc, char* argv[]) {
 
   // then add bg:
 
-  std::string mcZJetsFileName = "HZZlljj_ZJets_alpgen_TuneZ2_Fall10";
+  //std::string mcZJetsFileName = "HZZlljj_ZJets_alpgen_TuneZ2_Fall10";
+  std::string mcZJetsFileName = "HZZlljj_ZJets_alpgen_TuneZ2_Spring11";
   //if( leptType!="ALL" ) mcZJetsFileName += "_" + leptType;
   mcZJetsFileName += "_" + selType;
   mcZJetsFileName += "_" + leptType;
@@ -293,10 +316,17 @@ int main(int argc, char* argv[]) {
   db->drawHisto("ptLept2", "Subleading Lepton Transverse Momentum", "GeV/c", "Events");
   db->drawHisto("ptJet1", "Leading Jet Transverse Momentum", "GeV/c", "Events");
   db->drawHisto("ptJet2", "Subleading Jet Transverse Momentum", "GeV/c", "Events");
+  db->drawHisto("ptJet1_MW", "Leading Jet Transverse Momentum", "GeV/c", "Events");
+  db->drawHisto("ptJet2_MW", "Subleading Jet Transverse Momentum", "GeV/c", "Events");
+  db->drawHisto("ptJet1_prekin", "Leading Jet Transverse Momentum", "GeV/c", "Events");
+  db->drawHisto("ptJet2_prekin", "Subleading Jet Transverse Momentum", "GeV/c", "Events");
 
   db->drawHisto("deltaRjj", "#DeltaR Between Jets", "", "Jet Pairs");
+  db->drawHisto("deltaRjj_MW", "#DeltaR Between Jets", "", "Jet Pairs");
+  db->drawHisto("deltaRjj_prekin", "#DeltaR Between Jets", "", "Jet Pairs");
 
   db->drawHisto("ptZll", "Dilepton Transverse Momentum", "GeV/c", "Events", log);
+  db->drawHisto("ptZll_MW", "Dilepton Transverse Momentum", "GeV/c", "Events", log);
   db->drawHisto("ptZjj", "Dijet Transverse Momentum", "GeV/c", "Events", log);
 
 //db->drawHisto("partFlavorJet1", "Leading Jet Parton Flavor", "", "Events");
@@ -304,6 +334,7 @@ int main(int argc, char* argv[]) {
   db->drawHisto("QGLikelihoodJet1", "Leading Jet Q-G Likelihood", "", "Events");
   db->drawHisto("QGLikelihoodJet2", "Subleading Jet Q-G Likelihood", "", "Events");
   db->drawHisto("QGLikelihoodProd", "Q-G Likelihood Product", "", "Events");
+  db->drawHisto("QGLikelihoodProd_MW", "Q-G Likelihood Product", "", "Events");
 //db->drawHisto("QGLikelihoodRevProd", "Q-G Likelihood Product", "", "Events");
 
 //db->drawHisto("cosThetaStar", "cos(#theta^{*})", "", "Events");
