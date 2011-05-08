@@ -31,6 +31,7 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
  private:
 
    int leptType_; //0: muon; 1: electron
+   int leptTypeMC_; //0: muon; 1: electron
 
    Float_t eZqqMC_;
    Float_t ptZqqMC_;
@@ -180,6 +181,9 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
 
    Float_t epfMet_;
    Float_t phipfMet_;
+
+   TH1D* h1_nCounter_Zee_;
+   TH1D* h1_nCounter_Zmumu_;
 
    TH1F* h1_nEvents_vs_ptEle; 
    TH1F* h1_nEvents_vs_ptMuon; 
