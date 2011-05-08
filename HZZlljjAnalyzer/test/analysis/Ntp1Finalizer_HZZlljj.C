@@ -67,7 +67,7 @@ class AnalysisJet : public TLorentzVector {
 
 
 
-HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
+//HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
 
 
 
@@ -138,14 +138,18 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_nPairs_presel = new TH1D("nPairs_presel", "", 21, 0.5, 21.5);
   h1_nPairs_presel->Sumw2();
 
-  TH1D* h1_ptLept1= new TH1D("ptLept1", "", 25, 20., 300.);
+  TH1D* h1_ptLept1= new TH1D("ptLept1", "", 56, 20., 300.);
   h1_ptLept1->Sumw2();
-  TH1D* h1_ptLept2= new TH1D("ptLept2", "", 25, 20., 150.);
+  TH1D* h1_ptLept2= new TH1D("ptLept2", "", 52, 20., 150.);
   h1_ptLept2->Sumw2();
-  TH1D* h1_ptJet1 = new TH1D("ptJet1", "", 27, 30., 400.);
+  TH1D* h1_ptJet1 = new TH1D("ptJet1", "", 80, 0., 400.);
   h1_ptJet1->Sumw2();
-  TH1D* h1_ptJet2 = new TH1D("ptJet2", "", 27, 30., 150.);
+  TH1D* h1_ptJet2 = new TH1D("ptJet2", "", 60, 0., 150.);
   h1_ptJet2->Sumw2();
+  TH1D* h1_ptJet1_prekin = new TH1D("ptJet1_prekin", "", 54, 30., 400.);
+  h1_ptJet1_prekin->Sumw2();
+  TH1D* h1_ptJet2_prekin = new TH1D("ptJet2_prekin", "", 48, 30., 150.);
+  h1_ptJet2_prekin->Sumw2();
   TH1D* h1_eElectronsJet1 = new TH1D("eElectronsJet1", "", 60, 0., 1.0001);
   h1_eElectronsJet1->Sumw2();
   TH1D* h1_eElectronsJet2 = new TH1D("eElectronsJet2", "", 60, 0., 1.0001);
@@ -324,13 +328,15 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   TH1D* h1_ptZjj_all_presel = new TH1D("ptZjj_all_presel", "", 40, 0., 160.);
   h1_ptZjj_all_presel->Sumw2();
 
-  TH1D* h1_ptZll = new TH1D("ptZll", "", 40, 0., 160.);
+  TH1D* h1_ptZll = new TH1D("ptZll", "", 50, 0., 300.);
   h1_ptZll->Sumw2();
-  TH1D* h1_ptZjj = new TH1D("ptZjj", "", 40, 0., 160.);
+  TH1D* h1_ptZjj = new TH1D("ptZjj", "", 50, 0., 300.);
   h1_ptZjj->Sumw2();
 
-  TH1D* h1_deltaRjj= new TH1D("deltaRjj", "", 36, 0.5, 5.);
+  TH1D* h1_deltaRjj= new TH1D("deltaRjj", "", 50, 0.5, 5.);
   h1_deltaRjj->Sumw2();
+  TH1D* h1_deltaRjj_prekin= new TH1D("deltaRjj_prekin", "", 50, 0.5, 5.);
+  h1_deltaRjj_prekin->Sumw2();
 
   TH1D* h1_cosThetaStar = new TH1D("cosThetaStar", "", 45, -1.001, 1.001);
   h1_cosThetaStar->Sumw2();
@@ -789,6 +795,17 @@ ofstream ofs("run_event.txt");
     }
 
 
+
+
+    // --------------------
+    // FULL EVENT VARIABLES
+    // --------------------
+ 
+    if( pfMetThresh_ > 0. && pfMet > pfMetThresh_ ) continue;
+
+    
+
+
     // ----------------------------
     // KINEMATIC SELECTION: LEPTONS
     // ----------------------------
@@ -944,8 +961,8 @@ ofstream ofs("run_event.txt");
       // ------------
 
       HelicityLikelihoodDiscriminant::HelicityAngles hangles;
-      if( chargeLept1<0 ) hangles = computeHelicityAngles(lept1, lept2, jet1, jet2);
-      else                hangles = computeHelicityAngles(lept2, lept1, jet1, jet2);
+      if( chargeLept1<0 ) hangles = LD->computeHelicityAngles(lept1, lept2, jet1, jet2);
+      else                hangles = LD->computeHelicityAngles(lept2, lept1, jet1, jet2);
     
       LD->setMeasurables(hangles);
       double sProb=LD->getSignalProbability();
@@ -953,8 +970,8 @@ ofstream ofs("run_event.txt");
       double helicityLD=sProb/(sProb+bProb);
     
       HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinfit;
-      if( chargeLept1<0 ) hangles_kinfit = computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
-      else                hangles_kinfit = computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
+      if( chargeLept1<0 ) hangles_kinfit = LD->computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
+      else                hangles_kinfit = LD->computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
     
       LD->setMeasurables(hangles_kinfit);
       double sProb_kinfit=LD->getSignalProbability();
@@ -999,8 +1016,8 @@ ofstream ofs("run_event.txt");
     if( helicityLD_selected < 0. ) 
       std::cout << "helicityLD_selected is less than 0!!! THIS IS NOT POSSIBLE!!" << std::endl;
 
-    if( helicityLD_kinfit_selected < 0. ) 
-      std::cout << "helicityLD_kinfit_selected is less than 0!!! THIS IS NOT POSSIBLE!!" << std::endl;
+  //if( helicityLD_kinfit_selected < 0. ) 
+  //  std::cout << "helicityLD_kinfit_selected is less than 0!!! THIS IS NOT POSSIBLE!!" << std::endl;
 
 
 
@@ -1164,9 +1181,13 @@ ofstream ofs("run_event.txt");
     if( jet1_selected.Pt()>jet2_selected.Pt() ) {
       h1_ptJet1->Fill( jet1_selected.Pt(), eventWeight );
       h1_ptJet2->Fill( jet2_selected.Pt(), eventWeight );
+      h1_ptJet1_prekin->Fill( jet1_nokinfit.Pt(), eventWeight );
+      h1_ptJet2_prekin->Fill( jet2_nokinfit.Pt(), eventWeight );
     } else {
       h1_ptJet1->Fill( jet2_selected.Pt(), eventWeight );
       h1_ptJet2->Fill( jet1_selected.Pt(), eventWeight );
+      h1_ptJet1_prekin->Fill( jet2_nokinfit.Pt(), eventWeight );
+      h1_ptJet2_prekin->Fill( jet1_nokinfit.Pt(), eventWeight );
     }
     h1_eMuonsJet1->Fill( jet1_selected.muonEnergyFraction, eventWeight );
     h1_eMuonsJet2->Fill( jet2_selected.muonEnergyFraction, eventWeight );
@@ -1176,6 +1197,7 @@ ofstream ofs("run_event.txt");
     h1_ptLept1->Fill( lept1.Pt(), eventWeight );
     h1_ptLept2->Fill( lept2.Pt(), eventWeight );
     h1_deltaRjj->Fill( jet1_selected.DeltaR(jet2_selected), eventWeight);
+    h1_deltaRjj->Fill( jet1_nokinfit.DeltaR(jet2_nokinfit), eventWeight);
     h1_ptZll->Fill( diLepton.Pt(), eventWeight);
     h1_ptZjj->Fill( Zjj_kinfit.Pt(), eventWeight);
     if( leptType==0 )
@@ -1184,6 +1206,12 @@ ofstream ofs("run_event.txt");
       h1_mZee->Fill( diLepton.M(), eventWeight );
     h1_mZll->Fill( diLepton.M(), eventWeight);
     h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
+
+    
+    h1_QGLikelihoodJet1->Fill( jet1_selected.QGLikelihood, eventWeight );
+    h1_QGLikelihoodJet2->Fill( jet2_selected.QGLikelihood, eventWeight );
+    h1_QGLikelihoodRevProd->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+
     h1_mZZ_UL->Fill(ZZ_nokinfit.M(), eventWeight);
     h1_mZZ_hiMass->Fill(ZZ_nokinfit.M(), eventWeight);
     h1_mZZ_medMass->Fill(ZZ_nokinfit.M(), eventWeight);
@@ -1205,6 +1233,8 @@ ofstream ofs("run_event.txt");
     h1_ptZZ_kinfit->Fill( ZZ_kinfit.Pt(), eventWeight );
     h1_etaZZ->Fill( ZZ_nokinfit.Eta(), eventWeight );
     h1_etaZZ_kinfit->Fill( ZZ_kinfit.Eta(), eventWeight );
+
+    h1_helicityLD->Fill( helicityLD_selected, eventWeight );
 
   //h1_cosThetaStar->Fill(hangles.helCosThetaStar, eventWeight);
   //h1_cosTheta1->Fill(hangles.helCosTheta1, eventWeight);
@@ -1255,7 +1285,7 @@ ofstream ofs("run_event.txt");
 
 
   std::cout << std::endl << std::endl;
-  std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1  (" << nEventsPassed_kinfit << " events)" << " + ANTIBTAG: " << nEventsPassed_kinfit_antiBtag << " events  (" << 100.*nEventsPassed_kinfit_antiBtag/nEventsPassed_kinfit << "%)" << std::endl;
+  std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1  (" << nEventsPassed_kinfit << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_kinfit/nCounterW_ << "%" << std::endl;
   std::cout << "----> PASSED SELECTION (no kinfit): " << 1000.*nEventsPassed_fb_nokinfit << " ev/fb-1 (" << nEventsPassed_nokinfit << " events)" << std::endl;
   std::cout << std::endl;
 
@@ -1311,6 +1341,7 @@ ofstream ofs("run_event.txt");
   h1_ptZjj_all_presel->Write();
 
   h1_deltaRjj->Write();
+  h1_deltaRjj_prekin->Write();
 
   h1_ptZjj->Write();
   h1_ptZll->Write();
@@ -1363,12 +1394,14 @@ ofstream ofs("run_event.txt");
 
   h1_deltaR_part1->Write();
   h1_ptJet1->Write();
+  h1_ptJet1_prekin->Write();
   h1_eElectronsJet1->Write();
   h1_eMuonsJet1->Write();
   h1_partFlavorJet1->Write();
 
   h1_deltaR_part2->Write();
   h1_ptJet2->Write();
+  h1_ptJet2_prekin->Write();
   h1_eElectronsJet2->Write();
   h1_eMuonsJet2->Write();
   h1_partFlavorJet2->Write();
@@ -1488,6 +1521,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType_=="loose" ) {
 
@@ -1512,6 +1546,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 0.;
     mZZ_threshHi_ = 10000.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="tight" ) {
 
@@ -1534,28 +1569,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
     requiredBTags_ = -1;
-
-  } else if( selectionType=="loMass" ) {
-
-    ptLept1_thresh_ = 40.;
-    ptLept2_thresh_ = 20.;
-    etaLept1_thresh_ = 3.;
-    etaLept2_thresh_ = 3.;
-    ptJet1_thresh_ = 55.;
-    ptJet2_thresh_ = 35.;
-    etaJet1_thresh_ = 2.4;
-    etaJet2_thresh_ = 2.4;
-    mZll_threshLo_ = 40.;
-    mZll_threshHi_ = 80.;
-    mZjj_threshLo_ = 81.;
-    mZjj_threshHi_ = 101.;
-    deltaRll_thresh_ = 999.;
-    deltaRjj_thresh_ = 999.;
-    ptZll_thresh_ = 0.;
-    ptZjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.;
-    QGLikelihoodProd_thresh_ = 0.;
-    requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt250LD" ) {
 
@@ -1580,6 +1594,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 237.;
     mZZ_threshHi_ = 260.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt300LD" ) {
 
@@ -1604,6 +1619,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 280.;
     mZZ_threshHi_ = 323.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt300" ) {
 
@@ -1628,6 +1644,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 270.;
     mZZ_threshHi_ = 330.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt350" ) {
 
@@ -1652,6 +1669,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 315.;
     mZZ_threshHi_ = 385.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt350LD" ) {
 
@@ -1676,6 +1694,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 330.;
     mZZ_threshHi_ = 380.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt400" ) {
 
@@ -1702,6 +1721,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 360.;
     mZZ_threshHi_ = 440.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt400noLD" ) {
 
@@ -1726,6 +1746,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 360.;
     mZZ_threshHi_ = 440.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt400LD" ) {
 
@@ -1750,8 +1771,9 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 390.;
     mZZ_threshHi_ = 460.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
-  } else if( selectionType=="opt400LD2" ) {
+  } else if( selectionType=="opt250_FIXLD_0BTAGS" ) {
 
     ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
@@ -1769,11 +1791,137 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 9999.;
     ptZll_thresh_ = 0.;
     ptZjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.5;
-    QGLikelihoodProd_thresh_ = 0.03;
-    mZZ_threshLo_ = 380.;
-    mZZ_threshHi_ = 470.;
-    requiredBTags_ = -1;
+    helicityLD_thresh_ = 0.7;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 239.;
+    mZZ_threshHi_ = 262.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt300_FIXLD_0BTAGS" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.7;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 290.;
+    mZZ_threshHi_ = 324.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt350_FIXLD_0BTAGS" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.7;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 335.;
+    mZZ_threshHi_ = 378.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt400_FIXLD_0BTAGS" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.7;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 375.;
+    mZZ_threshHi_ = 456.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt450_FIXLD_0BTAGS" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.7;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 418.;
+    mZZ_threshHi_ = 522.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt500_FIXLD_0BTAGS" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.7;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 467.;
+    mZZ_threshHi_ = 600.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt450LD" ) {
 
@@ -1798,6 +1946,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 420.;
     mZZ_threshHi_ = 550.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt500" ) {
 
@@ -1822,6 +1971,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 450.;
     mZZ_threshHi_ = 550.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt500LD" ) {
 
@@ -1846,30 +1996,7 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 470.;
     mZZ_threshHi_ = 99999999.;
     requiredBTags_ = -1;
-
-  } else if( selectionType=="opt500LD2" ) {
-
-    ptLept1_thresh_ = 20.;
-    ptLept2_thresh_ = 20.;
-    etaLept1_thresh_ = 3.;
-    etaLept2_thresh_ = 3.;
-    ptJet1_thresh_ = 30.;
-    ptJet2_thresh_ = 30.;
-    etaJet1_thresh_ = 2.4;
-    etaJet2_thresh_ = 2.4;
-    mZll_threshLo_ = 70.;
-    mZll_threshHi_ = 110.;
-    mZjj_threshLo_ = 75.;
-    mZjj_threshHi_ = 105.;
-    deltaRll_thresh_ = 9999.;
-    deltaRjj_thresh_ = 9999.;
-    ptZll_thresh_ = 0.;
-    ptZjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.73;
-    QGLikelihoodProd_thresh_ = 0.05;
-    mZZ_threshLo_ = 465.;
-    mZZ_threshHi_ = 99999999.;
-    requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
 
   } else if( selectionType=="opt600" ) {
 
@@ -1891,7 +2018,85 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 540.;
+    mZZ_threshHi_ = 660.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="3502l2b" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 81.;
+    mZll_threshHi_ = 101.;
+    mZjj_threshLo_ = 76.;
+    mZjj_threshHi_ = 106.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 1.7;
+    ptZll_thresh_ = 90.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 315.;
+    mZZ_threshHi_ = 385.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 35.;
+
+  } else if( selectionType=="4002l2b" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 81.;
+    mZll_threshHi_ = 101.;
+    mZjj_threshLo_ = 76.;
+    mZjj_threshHi_ = 106.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 1.6;
+    ptZll_thresh_ = 110.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 360.;
+    mZZ_threshHi_ = 440.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="4502l2b" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 81.;
+    mZll_threshHi_ = 101.;
+    mZjj_threshLo_ = 76.;
+    mZjj_threshHi_ = 106.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 1.5;
+    ptZll_thresh_ = 130.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 405.;
+    mZZ_threshHi_ = 495.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 0.;
 
   } else {
 
@@ -1946,7 +2151,7 @@ std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string his
 }
 
 
-
+/*
 HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 ) {
 
   HelicityLikelihoodDiscriminant::HelicityAngles returnAngles;
@@ -2068,6 +2273,7 @@ HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVec
   return returnAngles;
 
 }
+*/
 
 
 
