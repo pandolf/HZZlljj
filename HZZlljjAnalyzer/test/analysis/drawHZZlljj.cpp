@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 
   if( lohi=="LO" ) {
     
-    std::string mcSignal130FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-130_7TeV-jhu-pythia6";
+    std::string mcSignal130FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-130_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1";
     mcSignal130FileName += "_" + selType;
     mcSignal130FileName += "_" + leptType;
     mcSignal130FileName += ".root";
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Opened mc file '" << mcSignal130FileName << "'." << std::endl;
     db->add_mcFile( mcSignal130File, "HZZ_qqll_gluonfusion_M130", "HZZlljj (130)", kRed+1);
 
-    std::string mcSignal150FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-150_7TeV-jhu-pythia6";
+    std::string mcSignal150FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-150_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1";
     mcSignal150FileName += "_" + selType;
     mcSignal150FileName += "_" + leptType;
     mcSignal150FileName += ".root";
@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
 
   } else if( lohi=="200" ) {
 
-    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-200_7TeV-jhu-pythia6";
+    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-200_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1";
     //if( leptType!="ALL" ) mcSignalFileName += "_" + leptType;
     mcSignalFileName += "_" + selType;
     mcSignalFileName += "_" + leptType;
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
 
   } else if( lohi=="250" ) {
 
-    std::string mcSignal250FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-250_7TeV-jhu-pythia6";
+    std::string mcSignal250FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-250_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1";
     //if( leptType!="ALL" ) mcSignal250FileName += "_" + leptType;
     mcSignal250FileName += "_" + selType;
     mcSignal250FileName += "_" + leptType;
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
 
   } else if( lohi=="300" ) {
 
-    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6";
+    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1";
     //if( leptType!="ALL" ) mcSignalFileName += "_" + leptType;
     mcSignalFileName += "_" + selType;
     mcSignalFileName += "_" + leptType;
@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
 
   } else if( lohi=="350" ) {
 
-    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-350_7TeV-jhu-pythia6";
+    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-350_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1";
     mcSignalFileName += "_" + selType;
     mcSignalFileName += "_" + leptType;
     mcSignalFileName += ".root";
@@ -130,7 +130,7 @@ int main(int argc, char* argv[]) {
 
   } else if( lohi=="450" ) {
 
-    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-450_7TeV-jhu-pythia6";
+    std::string mcSignalFileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-450_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1_2";
     mcSignalFileName += "_" + selType;
     mcSignalFileName += "_" + leptType;
     mcSignalFileName += ".root";
@@ -140,7 +140,7 @@ int main(int argc, char* argv[]) {
 
   } else { //HI or 400 or 500
 
-    std::string mcSignal300FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6";
+    std::string mcSignal300FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1";
     mcSignal300FileName += "_" + selType;
     mcSignal300FileName += "_" + leptType;
     mcSignal300FileName += ".root";
@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
   //std::cout << "Opened mc file '" << mcSignal300FileName << "'." << std::endl;
   //db->add_mcFile( mcSignal300File, "HZZ_qqll_gluonfusion_M300", "HZZlljj (300)", kRed+3);
 
-    std::string mcSignal400FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-400_7TeV-jhu-pythia6";
+    std::string mcSignal400FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-400_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1_2";
     mcSignal400FileName += "_" + selType;
     mcSignal400FileName += "_" + leptType;
     mcSignal400FileName += ".root";
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
       db->add_mcFile( mcSignal400File, "HZZ_qqll_gluonfusion_M400", "HZZlljj (400)", kOrange);
     }
 
-    std::string mcSignal500FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-500_7TeV-jhu-pythia6";
+    std::string mcSignal500FileName = "HZZlljj_SMHiggsToZZTo2L2Q_M-500_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1";
     mcSignal500FileName += "_" + selType;
     mcSignal500FileName += "_" + leptType;
     mcSignal500FileName += ".root";
@@ -285,9 +285,9 @@ int main(int argc, char* argv[]) {
   db->drawHisto("ptZjj_all_presel", "Dijet Transverse Momentum", "GeV/c", "Events", log);
 
 
-  db->drawHisto("kinFit_status", "Kinematic Fit Status", "", "Events");
-  db->drawHisto("kinFit_negEnergy", "Either Jet has Negative Energy", "", "Events");
-  db->drawHisto("kinFit_chi2", "Kinematic Fit Chi Square", "", "Events");
+//db->drawHisto("kinFit_status", "Kinematic Fit Status", "", "Events");
+//db->drawHisto("kinFit_negEnergy", "Either Jet has Negative Energy", "", "Events");
+//db->drawHisto("kinFit_chi2", "Kinematic Fit Chi Square", "", "Events");
 
   db->drawHisto("ptLept1", "Leading Lepton Transverse Momentum", "GeV/c", "Events");
   db->drawHisto("ptLept2", "Subleading Lepton Transverse Momentum", "GeV/c", "Events");
@@ -296,18 +296,21 @@ int main(int argc, char* argv[]) {
 
   db->drawHisto("deltaRjj", "#DeltaR Between Jets", "", "Jet Pairs");
 
-  db->drawHisto("partFlavorJet1", "Leading Jet Parton Flavor", "", "Events");
-  db->drawHisto("partFlavorJet2", "Subleading Jet Parton Flavor", "", "Events");
+  db->drawHisto("ptZll", "Dilepton Transverse Momentum", "GeV/c", "Events", log);
+  db->drawHisto("ptZjj", "Dijet Transverse Momentum", "GeV/c", "Events", log);
+
+//db->drawHisto("partFlavorJet1", "Leading Jet Parton Flavor", "", "Events");
+//db->drawHisto("partFlavorJet2", "Subleading Jet Parton Flavor", "", "Events");
   db->drawHisto("QGLikelihoodJet1", "Leading Jet Q-G Likelihood", "", "Events");
   db->drawHisto("QGLikelihoodJet2", "Subleading Jet Q-G Likelihood", "", "Events");
   db->drawHisto("QGLikelihoodProd", "Q-G Likelihood Product", "", "Events");
-  db->drawHisto("QGLikelihoodRevProd", "Q-G Likelihood Product", "", "Events");
+//db->drawHisto("QGLikelihoodRevProd", "Q-G Likelihood Product", "", "Events");
 
-  db->drawHisto("cosThetaStar", "cos(#theta^{*})", "", "Events");
-  db->drawHisto("cosTheta1", "cos(#theta_{1})", "", "Events");
-  db->drawHisto("cosTheta2", "cos(#theta_{2})", "", "Events");
-  db->drawHisto("phi", "#phi", "rad", "Events");
-  db->drawHisto("phi1", "#phi_{1}", "rad", "Events");
+//db->drawHisto("cosThetaStar", "cos(#theta^{*})", "", "Events");
+//db->drawHisto("cosTheta1", "cos(#theta_{1})", "", "Events");
+//db->drawHisto("cosTheta2", "cos(#theta_{2})", "", "Events");
+//db->drawHisto("phi", "#phi", "rad", "Events");
+//db->drawHisto("phi1", "#phi_{1}", "rad", "Events");
 
   db->drawHisto("helicityLD", "Helicity Likelihood Discriminant", "", "Events");
   db->drawHisto("helicityLD_kinfit", "Helicity Likelihood Discriminant", "", "Events");
@@ -324,7 +327,8 @@ int main(int argc, char* argv[]) {
 //draw_vs_pt_plots( db, nPtBins, ptBins, "QGLikelihoodJet2", "Subleading Jet Q-G Likelihood");
 
 
-  std::string mcVVFileName = "HZZlljj_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10";
+  //std::string mcVVFileName = "HZZlljj_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10";
+  std::string mcVVFileName = "HZZlljj_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11";
   //if( leptType!="ALL" ) mcZme += "_" + selType;
   mcVVFileName += "_" + selType;
   mcVVFileName += "_" + leptType;
@@ -333,7 +337,8 @@ int main(int argc, char* argv[]) {
   std::cout << "Opened mc file '" << mcVVFileName << "'." << std::endl;
   db->add_mcFile( mcVVFile, "VVtoAnything_TuneZ2", "ZZ/WZ/WW", kCyan+1, 3003);
 
-  std::string mcTTbarFileName = "HZZlljj_TTJets_TuneZ2_7TeV-madgraph-tauola_Fall10";
+  //std::string mcTTbarFileName = "HZZlljj_TTJets_TuneZ2_7TeV-madgraph-tauola_Fall10";
+  std::string mcTTbarFileName = "HZZlljj_TT_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3";
   //if( leptType!="ALL" ) mcZZFileName += "_" + leptType;
   mcTTbarFileName += "_" + selType;
   mcTTbarFileName += "_" + leptType;
