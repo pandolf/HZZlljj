@@ -11,9 +11,9 @@ void draw_vs_pt_plots( DrawBase* db, int nPtBins, Double_t* ptBins, const std::s
 
 int main(int argc, char* argv[]) {
 
-  if(  argc != 2 && argc != 3 ) {
+  if(  argc != 2 && argc != 3 && argc != 4 ) {
     //std::cout << "USAGE: ./drawHZZlljj [(string) LO/HI/MED] [(string) ZJets dataset=\"ZJets_alpgen\"]" << std::endl;
-    std::cout << "USAGE: ./drawHZZlljj [(string) selectionType] [(string) leptType=\"ALL\"]" << std::endl;
+    std::cout << "USAGE: ./drawHZZlljj [(string) selectionType] [(string) leptType=\"ALL\"] [mass=400]" << std::endl;
     exit(23);
   }
 
@@ -36,12 +36,21 @@ int main(int argc, char* argv[]) {
     leptType = leptType_str;
   }
 
+  std::string mass_str = "400";
+  if( argc==4 ) {
+    std::string mass_str_tmp(argv[3]);
+    mass_str = mass_str_tmp;
+  }
+
+  int mass = atoi(mass_str.c_str());
+
   DrawBase* db = new DrawBase("HZZlljj");
   db->set_pdf_aussi((bool)false);
   db->set_isCMSArticle((bool)true);
 
   std::string outputdir_str = "HZZlljjPlots_"+selType;
   //if( leptType!="ALL" ) outputdir_str += "_" + leptType;
+  outputdir_str += "_M" + mass_str;
   outputdir_str += "_" + leptType;
   db->set_outputdir(outputdir_str);
 
@@ -49,7 +58,6 @@ int main(int argc, char* argv[]) {
 
   TString selType_tstr(selType);
 
-  int mass;
   if( selType_tstr.Contains("250") )
     mass = 250;
   else if( selType_tstr.Contains("300") )
@@ -63,8 +71,7 @@ int main(int argc, char* argv[]) {
   else if( selType_tstr.Contains("500") )
     mass = 500;
   else {
-    std::cout << "-> Picking default mass (400). " << std::endl;
-    mass = 400;
+    std::cout << "-> Picking mass: " << mass_str << ". " << std::endl;
   }
 
   
@@ -211,19 +218,25 @@ int main(int argc, char* argv[]) {
 //if( lohi=="200" || lohi=="250" ) massType = "medMass";
 //if( lohi=="300" || lohi=="350" ) massType = "300Mass";
 
-//std::vector< HistoAndName > massZZ_QG;
-//HistoAndName hn1_ZZ;
-//hn1_ZZ.histoName = "mZZ_"+massType;
-//hn1_ZZ.legendName = "Kinematic Selection";
-//massZZ_QG.push_back( hn1_ZZ );
-//HistoAndName hn2_ZZ;
-//hn2_ZZ.histoName = "mZZ_"+massType+"_QGlikeli";
-//hn2_ZZ.legendName = "Kin. + Q-G Selection";
-//massZZ_QG.push_back( hn2_ZZ );
-//db->compareDifferentHistos( massZZ_QG, "mZZ_QG", "ZZ Invariant Mass",  "GeV/c^{2}");
-
-
   std::string massType = (mass<=300) ? "medMass" : "hiMass";
+  if( mass_str=="300" ) massType="300Mass";
+
+  std::vector< HistoAndName > massZZ_QG;
+  HistoAndName hn1_ZZ;
+  hn1_ZZ.histoName = "mZZ_kinfit_"+massType+"_loQG";
+  hn1_ZZ.legendName = "QG Product < 0.1";
+  massZZ_QG.push_back( hn1_ZZ );
+  HistoAndName hn2_ZZ;
+  hn2_ZZ.histoName = "mZZ_kinfit_"+massType+"_hiQG";
+  hn2_ZZ.legendName = "QG Product > 0.1";
+  massZZ_QG.push_back( hn2_ZZ );
+  char legendMassTitle[200];
+  sprintf( legendMassTitle, "m_{H} = %d GeV/c^{2}", mass); 
+  db->set_legendTitle( legendMassTitle );
+  if( mass_str=="500" ) 
+    db->set_yAxisMaxScale( 1.6 );
+  db->compareDifferentHistos( massZZ_QG, "mZZ_QG", "ZZ Invariant Mass",  "GeV/c^{2}");
+
 
   // do Z->JetJet comparisons on signal only:
   std::vector< HistoAndName > massZZ_kinfit;
@@ -245,6 +258,7 @@ int main(int argc, char* argv[]) {
 //massZZ_kinfit.push_back( hn4_ZZ );
   db->compareDifferentHistos( massZZ_kinfit, "mZZ_kinfit", "ZZ Invariant Mass", "GeV/c^{2}");
 
+  db->set_legendTitle( "" );
 
   // then add bg:
 
@@ -324,6 +338,8 @@ int main(int argc, char* argv[]) {
   db->drawHisto("deltaRjj", "#DeltaR Between Jets", "", "Jet Pairs");
   db->drawHisto("deltaRjj_MW", "#DeltaR Between Jets", "", "Jet Pairs");
   db->drawHisto("deltaRjj_prekin", "#DeltaR Between Jets", "", "Jet Pairs");
+
+  db->drawHisto("mZjj_MW", "DiJet Invariant Mass", "GeV/c^{2}", "Events", log);
 
   db->drawHisto("ptZll", "Dilepton Transverse Momentum", "GeV/c", "Events", log);
   db->drawHisto("ptZll_MW", "Dilepton Transverse Momentum", "GeV/c", "Events", log);
