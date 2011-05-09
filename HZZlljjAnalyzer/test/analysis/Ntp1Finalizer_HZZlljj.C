@@ -146,6 +146,10 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_ptJet1->Sumw2();
   TH1D* h1_ptJet2 = new TH1D("ptJet2", "", 60, 0., 150.);
   h1_ptJet2->Sumw2();
+  TH1D* h1_ptJet1_MW = new TH1D("ptJet1_MW", "", 80, 0., 400.);
+  h1_ptJet1_MW->Sumw2();
+  TH1D* h1_ptJet2_MW = new TH1D("ptJet2_MW", "", 60, 0., 150.);
+  h1_ptJet2_MW->Sumw2();
   TH1D* h1_ptJet1_prekin = new TH1D("ptJet1_prekin", "", 54, 30., 400.);
   h1_ptJet1_prekin->Sumw2();
   TH1D* h1_ptJet2_prekin = new TH1D("ptJet2_prekin", "", 48, 30., 150.);
@@ -272,10 +276,14 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_QGLikelihoodProd = new TH1D("QGLikelihoodProd", "", 60, 0., 1.0001);
   h1_QGLikelihoodProd->Sumw2();
+  TH1D* h1_QGLikelihoodProd_MW = new TH1D("QGLikelihoodProd_MW", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProd_MW->Sumw2();
 
 
   TH1D* h1_mZjj= new TH1D("mZjj", "", nBins_invMass, 70., 120.);
   h1_mZjj->Sumw2();
+  TH1D* h1_mZjj_MW = new TH1D("mZjj_MW", "", nBins_invMass, 70., 120.);
+  h1_mZjj_MW->Sumw2();
   TH1D* h1_mZjj_loChiSquareProb= new TH1D("mZjj_loChiSquareProb", "", 100, 30., 200.);
   h1_mZjj_loChiSquareProb->Sumw2();
   TH1D* h1_mZjj_hiChiSquareProb= new TH1D("mZjj_hiChiSquareProb", "", 100, 30., 200.);
@@ -288,6 +296,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1D* h1_ptZll = new TH1D("ptZll", "", 50, 0., 300.);
   h1_ptZll->Sumw2();
+  TH1D* h1_ptZll_MW = new TH1D("ptZll_MW", "", 50, 0., 300.);
+  h1_ptZll_MW->Sumw2();
   TH1D* h1_ptZjj = new TH1D("ptZjj", "", 50, 0., 300.);
   h1_ptZjj->Sumw2();
 
@@ -295,6 +305,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_deltaRjj->Sumw2();
   TH1D* h1_deltaRjj_prekin= new TH1D("deltaRjj_prekin", "", 50, 0.5, 5.);
   h1_deltaRjj_prekin->Sumw2();
+  TH1D* h1_deltaRjj_MW= new TH1D("deltaRjj_MW", "", 50, 0.5, 5.);
+  h1_deltaRjj_MW->Sumw2();
 
   TH1D* h1_cosThetaStar = new TH1D("cosThetaStar", "", 45, -1.001, 1.001);
   h1_cosThetaStar->Sumw2();
@@ -358,24 +370,36 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   h1_mZZ_hiMass->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass= new TH1D("mZZ_kinfit_hiMass", "", 90, 250., 700.);
   h1_mZZ_kinfit_hiMass->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 90, 250., 700.);
+  h1_mZZ_kinfit_hiMass_hiQG->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 90, 250., 700.);
+  h1_mZZ_kinfit_hiMass_loQG->Sumw2();
 //TH1D* h1_mZZ_highestMass= new TH1D("mZZ_highestMass", "", 70, 350., 700.);
 //h1_mZZ_highestMass->Sumw2();
 //TH1D* h1_mZZ_kinfit_highestMass= new TH1D("mZZ_kinfit_highestMass", "", 70, 350., 700.);
 //h1_mZZ_kinfit_highestMass->Sumw2();
   TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 70, 250., 600.);
   h1_mZZ_ZjjMassConstr_hiMass->Sumw2();
-  TH1D* h1_mZZ_300Mass= new TH1D("mZZ_300Mass", "", 50, 250., 500.);
+  TH1D* h1_mZZ_300Mass= new TH1D("mZZ_300Mass", "", 50, 250., 450.);
   h1_mZZ_300Mass->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_300Mass  = new TH1D("mZZ_ZjjMassConstr_300Mass", "", 50, 250., 500.);
+  TH1D* h1_mZZ_ZjjMassConstr_300Mass  = new TH1D("mZZ_ZjjMassConstr_300Mass", "", 50, 250., 450.);
   h1_mZZ_ZjjMassConstr_300Mass->Sumw2();
-  TH1D* h1_mZZ_kinfit_300Mass= new TH1D("mZZ_kinfit_300Mass", "", 50, 250., 500.);
+  TH1D* h1_mZZ_kinfit_300Mass= new TH1D("mZZ_kinfit_300Mass", "", 50, 250., 450.);
   h1_mZZ_kinfit_300Mass->Sumw2();
+  TH1D* h1_mZZ_kinfit_300Mass_loQG= new TH1D("mZZ_kinfit_300Mass_loQG", "", 50, 250., 450.);
+  h1_mZZ_kinfit_300Mass_loQG->Sumw2();
+  TH1D* h1_mZZ_kinfit_300Mass_hiQG= new TH1D("mZZ_kinfit_300Mass_hiQG", "", 50, 250., 450.);
+  h1_mZZ_kinfit_300Mass_hiQG->Sumw2();
   TH1D* h1_mZZ_medMass= new TH1D("mZZ_medMass", "", 70, 150., 350.);
   h1_mZZ_medMass->Sumw2();
   TH1D* h1_mZZ_ZjjMassConstr_medMass  = new TH1D("mZZ_ZjjMassConstr_medMass", "", 70, 150., 350.);
   h1_mZZ_ZjjMassConstr_medMass->Sumw2();
   TH1D* h1_mZZ_kinfit_medMass= new TH1D("mZZ_kinfit_medMass", "", 70, 150., 350.);
   h1_mZZ_kinfit_medMass->Sumw2();
+  TH1D* h1_mZZ_kinfit_medMass_hiQG= new TH1D("mZZ_kinfit_medMass_hiQG", "", 70, 150., 350.);
+  h1_mZZ_kinfit_medMass_hiQG->Sumw2();
+  TH1D* h1_mZZ_kinfit_medMass_loQG= new TH1D("mZZ_kinfit_medMass_loQG", "", 70, 150., 350.);
+  h1_mZZ_kinfit_medMass_loQG->Sumw2();
 
   TH1D* h1_ptZZ  = new TH1D("ptZZ", "", 100, 0., 300.);
   h1_ptZZ->Sumw2();
@@ -952,6 +976,13 @@ ofstream ofs("run_event.txt");
         helicityLD_kinfit_selected = helicityLD_kinfit;
         foundJets = true;
         foundJets_ZZmass = true;
+        // fill MW (mass window) histograms:
+        h1_ptZll_MW->Fill( diLepton.Pt(), eventWeight );
+        h1_ptJet1_MW->Fill( jet1_selected.Pt(), eventWeight );
+        h1_ptJet2_MW->Fill( jet2_selected.Pt(), eventWeight );
+        h1_deltaRjj_MW->Fill( jet1_selected.DeltaR(jet2_selected), eventWeight );
+        h1_QGLikelihoodProd_MW->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+        h1_mZjj_MW->Fill( diJet.M(), eventWeight );
       }
 
       float invMass = diJet.M();
@@ -1170,6 +1201,16 @@ ofstream ofs("run_event.txt");
     h1_QGLikelihoodJet2->Fill( jet2_selected.QGLikelihood, eventWeight );
     h1_QGLikelihoodProd->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
 
+    if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood < 0.1 ) {
+      h1_mZZ_kinfit_medMass_loQG->Fill(ZZ_kinfit.M(), eventWeight);
+      h1_mZZ_kinfit_300Mass_loQG->Fill(ZZ_kinfit.M(), eventWeight);
+      h1_mZZ_kinfit_hiMass_loQG->Fill(ZZ_kinfit.M(), eventWeight);
+    } else {
+      h1_mZZ_kinfit_medMass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
+      h1_mZZ_kinfit_300Mass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
+      h1_mZZ_kinfit_hiMass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
+    }
+
     h1_mZZ_UL->Fill(ZZ_nokinfit.M(), eventWeight);
     h1_mZZ_hiMass->Fill(ZZ_nokinfit.M(), eventWeight);
     h1_mZZ_medMass->Fill(ZZ_nokinfit.M(), eventWeight);
@@ -1243,6 +1284,7 @@ ofstream ofs("run_event.txt");
 
 
   std::cout << std::endl << std::endl;
+  std::cout << "----> SELECTION: " << selectionType_ << "    DATASET: " << dataset_ << std::endl;
   std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1  (" << nEventsPassed_kinfit << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_kinfit/nCounterW_ << "%" << std::endl;
   std::cout << "----> PASSED SELECTION (no kinfit): " << 1000.*nEventsPassed_fb_nokinfit << " ev/fb-1 (" << nEventsPassed_nokinfit << " events)" << std::endl;
   std::cout << std::endl;
@@ -1327,6 +1369,13 @@ ofstream ofs("run_event.txt");
   h1_helicityLD_MW500->Write();
   h1_helicityLD_kinfit->Write();
 
+  h1_ptZll_MW->Write();
+  h1_ptJet1_MW->Write();
+  h1_ptJet2_MW->Write();
+  h1_deltaRjj_MW->Write();
+  h1_QGLikelihoodProd_MW->Write();
+  h1_mZjj_MW->Write();
+
   h1_mZZ_hiChiSquareProb->Write();
   h1_mZZ_loChiSquareProb->Write();
   h1_mZZ_mZjj_cut->Write();
@@ -1341,8 +1390,14 @@ ofstream ofs("run_event.txt");
   h1_mZZ_ZjjMassConstr_medMass->Write();
   h1_mZZ_ZjjMassConstr_hiMass->Write();
   h1_mZZ_kinfit_300Mass->Write();
+  h1_mZZ_kinfit_300Mass_loQG->Write();
+  h1_mZZ_kinfit_300Mass_hiQG->Write();
   h1_mZZ_kinfit_medMass->Write();
+  h1_mZZ_kinfit_medMass_hiQG->Write();
+  h1_mZZ_kinfit_medMass_loQG->Write();
   h1_mZZ_kinfit_hiMass->Write();
+  h1_mZZ_kinfit_hiMass_hiQG->Write();
+  h1_mZZ_kinfit_hiMass_loQG->Write();
 //  h1_mZZ_kinfit_highestMass->Write();
 
   h1_ptZZ->Write();
@@ -1487,6 +1542,31 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     mZZ_threshLo_ = 0.;
     mZZ_threshHi_ = 10000.;
     requiredBTags_ = -1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType_=="loose_0btag" ) {
+
+    ptLept1_thresh_ = 10.;
+    ptLept2_thresh_ = 10.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 40.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 70.;
+    mZjj_threshHi_ = 110.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 0.;
+    mZZ_threshHi_ = 10000.;
+    requiredBTags_ = 0.;
     pfMetThresh_ = 0.;
 
   } else if( selectionType=="tight" ) {
@@ -1964,6 +2044,31 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     requiredBTags_ = -1;
     pfMetThresh_ = 0.;
 
+  } else if( selectionType=="3002l2b" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 81.;
+    mZll_threshHi_ = 101.;
+    mZjj_threshLo_ = 76.;
+    mZjj_threshHi_ = 106.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 1.8;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 270.;
+    mZZ_threshHi_ = 330.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 35.;
+
   } else if( selectionType=="3502l2b" ) {
 
     ptLept1_thresh_ = 20.;
@@ -2036,6 +2141,631 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.;
     mZZ_threshLo_ = 405.;
     mZZ_threshHi_ = 495.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="5002l2b" ) {
+
+    ptLept1_thresh_ = 20.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 81.;
+    mZll_threshHi_ = 101.;
+    mZjj_threshLo_ = 76.;
+    mZjj_threshHi_ = 106.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 1.4;
+    ptZll_thresh_ = 150.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 450.;
+    mZZ_threshHi_ = 550.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt250_0btag_optKin" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 59.7;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 1.5;
+    ptZll_thresh_ = 56.2;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 239.;
+    mZZ_threshHi_ = 262.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt300_0btag_optKin" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 65.6;
+    ptJet2_thresh_ = 31.4;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 1.5;
+    ptZll_thresh_ = 73.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 290.;
+    mZZ_threshHi_ = 324.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt350_0btag_optKin" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 71.5;
+    ptJet2_thresh_ = 38.8;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 1.5;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 89.9;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 335.;
+    mZZ_threshHi_ = 378.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt400_0btag_optKin" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 77.4;
+    ptJet2_thresh_ = 46.2;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 1.5;
+    ptZll_thresh_ = 106.6;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 375.;
+    mZZ_threshHi_ = 456.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt450_0btag_optKin" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 83.3;
+    ptJet2_thresh_ = 53.6;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 1.5;
+    ptZll_thresh_ = 123.4;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 418.;
+    mZZ_threshHi_ = 522.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt500_0btag_optKin" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 89.2;
+    ptJet2_thresh_ = 61.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 1.5;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 140.2;
+    helicityLD_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 467.;
+    mZZ_threshHi_ = 600.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt250_0btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.459;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 239.;
+    mZZ_threshHi_ = 262.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt300_0btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.524;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 290.;
+    mZZ_threshHi_ = 324.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt350_0btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.589;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 335.;
+    mZZ_threshHi_ = 378.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt400_0btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.654;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 375.;
+    mZZ_threshHi_ = 456.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt450_0btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.719;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 418.;
+    mZZ_threshHi_ = 522.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt500_0btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.78;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 467.;
+    mZZ_threshHi_ = 600.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt250_1btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.428;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 239.;
+    mZZ_threshHi_ = 262.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt300_1btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.474;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 290.;
+    mZZ_threshHi_ = 324.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt350_1btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.519;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 335.;
+    mZZ_threshHi_ = 378.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt400_1btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.565;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 375.;
+    mZZ_threshHi_ = 456.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt450_1btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.610;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 418.;
+    mZZ_threshHi_ = 522.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt500_1btag_optLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.656;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 467.;
+    mZZ_threshHi_ = 600.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="250_2btag_LD05" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 225.;
+    mZZ_threshHi_ = 275.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 35.;
+
+  } else if( selectionType=="300_2btag_LD05" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 270.;
+    mZZ_threshHi_ = 330.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 35.;
+
+  } else if( selectionType=="350_2btag_LD05" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 315.;
+    mZZ_threshHi_ = 385.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 35.;
+
+  } else if( selectionType=="400_2btag_LD05" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 360.;
+    mZZ_threshHi_ = 440.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="450_2btag_LD05" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 405.;
+    mZZ_threshHi_ = 495.;
+    requiredBTags_ = 2;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="500_2btag_LD05" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 450.;
+    mZZ_threshHi_ = 550.;
     requiredBTags_ = 2;
     pfMetThresh_ = 0.;
 
