@@ -15,7 +15,7 @@ inputlist = "files_"+dataset+".txt"
 # choose among cmt3 8nm 1nh 8nh 1nd 1nw 
 #queue = "cmst3"
 #queue = "cms8nht3"
-queue = "cmsShort"
+queue = "cmslong"
 #ijobmax = 40
 ijobmax = int(sys.argv[2])
 #application = "VecbosApp"
@@ -91,14 +91,11 @@ while (len(inputfiles) > 0):
     outputfile.write("cp Cert* "+dir+"/res/job_"+str(ijob)+"\n")
     #outputfile.write("cp "+application+" "+dir+"/res/job_"+str(ijob)+"\n")
     outputfile.write("cd "+dir+"/res/job_"+str(ijob)+"\n")
-    outputfile.write(pwd+'/'+application+" "+dataset_name+" "+recoType+" "+jetAlgo+" "+inputfilename+" _"+str(ijob)+"\n") 
-    # select this for GENJETS ntuples:
-    #outputfile.write(pwd+'/'+application+" "+dataset_name+" "+recoType+" "+jetAlgo+" "+inputfilename+" _"+str(ijob)+" true\n")
-    outputfile.write('mv *.root '+diskoutputmain+'\n') 
-    #outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} cmsrm-ui02:'+diskoutputmain+'/{}\n') 
+    outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" "+str(ijob)+"\n")
+    outputfile.write('mv *.root '+diskoutputmain+'\n')
     outputfile.close
-    os.system("echo bsub -q "+queue+" -o "+dir+"/log/"+dataset_name+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
-    os.system("bsub -q "+queue+" -o "+dir+"/log/"+dataset_name+"_"+str(ijob)+".log source "+pwd+"/"+outputname+" -copyInput="+dataset_name+"_"+str(ijob))
+    os.system("echo bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
+    os.system("bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname+" -copyInput="+dataset+"_"+str(ijob))
     ijob = ijob+1
-    #time.sleep(2.)
+
     continue
