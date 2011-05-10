@@ -49,6 +49,7 @@ class Ntp1Finalizer_HZZlljj : public Ntp1Finalizer {
    float mZZ_threshLo_;
    float mZZ_threshHi_;
    int requiredBTags_;
+   float pfMetThresh_;
 
 };
 
