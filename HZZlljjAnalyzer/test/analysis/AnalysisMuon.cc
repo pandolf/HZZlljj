@@ -4,7 +4,9 @@
 
 bool AnalysisMuon::passedMuonID() {
 
-  bool passed = ( isGlobalMuonPromptTight && isAllTrackerMuon && (dxy<0.02) && (dz<1.) );
+  bool passed = ( isGlobalMuonPromptTight && isAllTrackerMuon 
+                && pixelHits>0 && trackerHits>10 
+                && (dxy<0.02) && (dz<1.) );
 
   return passed;
 

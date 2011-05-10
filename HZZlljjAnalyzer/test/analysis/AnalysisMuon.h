@@ -32,6 +32,9 @@ class AnalysisMuon : public AnalysisLepton {
   bool isGlobalMuonPromptTight;
   bool isAllTrackerMuon;
 
+  int pixelHits;
+  int trackerHits;
+
   double dxy;
   double dz;
 
