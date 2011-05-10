@@ -31,6 +31,7 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
  private:
 
    Int_t nBTags_;
+   Int_t nBTagsLoose_;
 
    Int_t leptType_;
    Int_t leptTypeMC_;

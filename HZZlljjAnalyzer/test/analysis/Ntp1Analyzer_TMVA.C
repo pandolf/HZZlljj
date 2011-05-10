@@ -164,6 +164,7 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("helicityLD_kinFit", &helicityLD_kinFit_, "helicityLD_kinFit_/F");
 
   reducedTree_->Branch("nBTags", &nBTags_, "nBTags_/I");
+  reducedTree_->Branch("nBTagsLoose", &nBTagsLoose_, "nBTagsLoose_/I");
 
   h1_mZjj = new TH1F("mZjj", "", 50, 0., 300.);
   h1_mZjj_matched = new TH1F("mZjj_matched", "", 50, 0., 300.);
@@ -878,6 +879,16 @@ if( jet2.Energy()<0. ) std::cout << "jet2_kinfit.E(): " << jet2_kinfit.E() << st
      absEtaZZ_ = fabs(ZZ.Eta());
 
      
+     bool twotags_loose  = (jet1.trackCountingHighEffBJetTag>=4. && jet2.trackCountingHighEffBJetTag>1.85)
+                        || (jet1.trackCountingHighEffBJetTag>1.85 && jet2.trackCountingHighEffBJetTag>1.85);
+     bool onetag_loose  = ( !twotags_loose ) && ( jet1.trackCountingHighEffBJetTag>1.85 || jet2.trackCountingHighEffBJetTag>1.85 );
+     bool zerotags_loose = ( !twotags_loose && !onetag_loose );
+
+     if( twotags_loose ) nBTagsLoose_ = 2;
+     else if( onetag_loose ) nBTagsLoose_ = 1;
+     else if( zerotags_loose ) nBTagsLoose_ = 0;
+
+
 
      bool twotags = jet1.trackCountingHighEffBJetTag>=4. && jet2.trackCountingHighEffBJetTag>=4.;
      bool onetag  = (jet1.trackCountingHighEffBJetTag>=4. && jet2.trackCountingHighEffBJetTag<4.)
