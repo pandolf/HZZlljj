@@ -344,6 +344,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisMuon.isGlobalMuonPromptTight = (muonIdMuon[iMuon]>>8)&1;
        thisMuon.isAllTrackerMuon = (muonIdMuon[iMuon]>>11)&1;
 
+       thisMuon.pixelHits = numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]+numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]];
+       thisMuon.trackerHits = trackValidHitsTrack[trackIndexMuon[iMuon]];
+
 
        // to compute dxy, look for primary vertex:
        int hardestPV = -1;
@@ -417,7 +420,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisEle.dr03HcalTowerSumEt = dr03HcalTowerSumEtEle[iEle];
 
        // electron ID
-       thisEle.sigmaIetaIeta = (superClusterIndexEle[iEle]>=0) ? covIEtaIEtaSC[superClusterIndexEle[iEle]] : covIEtaIEtaSC[PFsuperClusterIndexEle[iEle]];
+       thisEle.sigmaIetaIeta = (superClusterIndexEle[iEle]>=0) ? sqrt(covIEtaIEtaSC[superClusterIndexEle[iEle]]) : sqrt(covIEtaIEtaSC[PFsuperClusterIndexEle[iEle]]);
        thisEle.deltaPhiAtVtx = deltaPhiAtVtxEle[iEle];
        thisEle.deltaEtaAtVtx = deltaEtaAtVtxEle[iEle];
        thisEle.hOverE = hOverEEle[iEle];
