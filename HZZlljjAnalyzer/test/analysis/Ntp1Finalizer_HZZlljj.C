@@ -16,6 +16,8 @@
 
 
 
+
+
 class AnalysisJet : public TLorentzVector {
 
  public:
@@ -96,7 +98,17 @@ Ntp1Finalizer_HZZlljj::Ntp1Finalizer_HZZlljj( const std::string& dataset, const 
 }
 
 
+void Ntp1Finalizer_HZZlljj::set_useLooseBTags( bool useLooseBTags ) {
+  
+  useLooseBTags_ = useLooseBTags;
 
+  std::string flags = flags_;
+
+  flags += "_looseBTag";
+
+  this->set_flags(flags);
+
+}
 
 
 void Ntp1Finalizer_HZZlljj::finalize() {
@@ -878,7 +890,7 @@ ofstream ofs("run_event.txt");
       if( jet1.Pt() < ptJet1_thresh_ ) continue;
       if( jet2.Pt() < ptJet2_thresh_ ) continue;
       if( fabs(jet1.Eta()) > etaJet1_thresh_ ) continue;
-      if( fabs(jet2.Eta()) > etaJet1_thresh_ ) continue;
+      if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
       if( jet1.DeltaR(jet2) > deltaRjj_thresh_ ) continue;
       if( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) continue;
       if( diJet.Pt() < ptZjj_thresh_ ) continue;
@@ -902,10 +914,30 @@ ofstream ofs("run_event.txt");
       // B-TAGGING:
       // ----------
 
-      bool btagJet1 =  ( jet1.trackCountingHighEffBJetTag>4. ); 
-      bool btagJet2 =  ( jet2.trackCountingHighEffBJetTag>4. ); 
+      bool btagJet1_loose =  ( jet1.trackCountingHighEffBJetTag>1.83 ); 
+      bool btagJet2_loose =  ( jet2.trackCountingHighEffBJetTag>1.83 ); 
 
-      int nBTags = btagJet1 + btagJet2;
+      bool btagJet1_medium =  ( jet1.trackCountingHighEffBJetTag>4. ); 
+      bool btagJet2_medium =  ( jet2.trackCountingHighEffBJetTag>4. ); 
+
+      int nBTags;
+
+      if( useLooseBTags_ ) {
+
+        bool twoBTags  = ( btagJet1_medium && btagJet2_loose  )
+                      || ( btagJet1_loose  && btagJet2_medium );
+        bool oneBTag   = (!twoBTags) && ( btagJet1_loose || btagJet2_loose );
+        //bool zeroBTags = (!twoBTags) && (!oneBTag);
+
+        if( twoBTags ) nBTags=2;
+        else if( oneBTag ) nBTags=1;
+        else nBTags=0;
+
+      } else {
+
+        nBTags = btagJet1_medium + btagJet2_medium;
+
+      }
 
       if( requiredBTags_ != -1 ) if( nBTags != requiredBTags_ ) continue;
 
@@ -1516,6 +1548,8 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     ptZjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 0.;
+    mZZ_threshHi_ = 10000.;
     requiredBTags_ = -1;
     pfMetThresh_ = 0.;
 
@@ -2319,6 +2353,173 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     requiredBTags_ = 0;
     pfMetThresh_ = 0.;
 
+  } else if( selectionType=="opt250_0btag_optLD_QG06" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.392;
+    else
+      helicityLD_thresh_ = 0.459;
+    QGLikelihoodProd_thresh_ = 0.06;
+    mZZ_threshLo_ = 239.;
+    mZZ_threshHi_ = 262.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt300_0btag_optLD_QG06" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.476;
+    else
+      helicityLD_thresh_ = 0.524;
+    QGLikelihoodProd_thresh_ = 0.06;
+    mZZ_threshLo_ = 290.;
+    mZZ_threshHi_ = 324.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt350_0btag_optLD_QG06" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.56;
+    else
+      helicityLD_thresh_ = 0.589;
+    QGLikelihoodProd_thresh_ = 0.06;
+    mZZ_threshLo_ = 335.;
+    mZZ_threshHi_ = 378.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt400_0btag_optLD_QG06" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.644;
+    else
+      helicityLD_thresh_ = 0.654;
+    QGLikelihoodProd_thresh_ = 0.06;
+    mZZ_threshLo_ = 375.;
+    mZZ_threshHi_ = 456.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt450_0btag_optLD_QG06" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.728;
+    else
+      helicityLD_thresh_ = 0.719;
+    QGLikelihoodProd_thresh_ = 0.06;
+    mZZ_threshLo_ = 418.;
+    mZZ_threshHi_ = 522.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt500_0btag_optLD_QG06" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.812;
+    else
+      helicityLD_thresh_ = 0.78;
+    QGLikelihoodProd_thresh_ = 0.06;
+    mZZ_threshLo_ = 467.;
+    mZZ_threshHi_ = 600.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
   } else if( selectionType=="opt250_0btag_optLD" ) {
 
     ptLept1_thresh_ = 40.;
@@ -2337,7 +2538,10 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 9999.;
     ptZll_thresh_ = 0.;
     ptZjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.459;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.453;
+    else
+      helicityLD_thresh_ = 0.459;
     QGLikelihoodProd_thresh_ = 0.1;
     mZZ_threshLo_ = 239.;
     mZZ_threshHi_ = 262.;
@@ -2362,7 +2566,10 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 9999.;
     ptZll_thresh_ = 0.;
     ptZjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.524;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.515;
+    else
+      helicityLD_thresh_ = 0.524;
     QGLikelihoodProd_thresh_ = 0.1;
     mZZ_threshLo_ = 290.;
     mZZ_threshHi_ = 324.;
@@ -2387,7 +2594,10 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 9999.;
     ptZll_thresh_ = 0.;
     ptZjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.589;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.577;
+    else
+      helicityLD_thresh_ = 0.589;
     QGLikelihoodProd_thresh_ = 0.1;
     mZZ_threshLo_ = 335.;
     mZZ_threshHi_ = 378.;
@@ -2412,7 +2622,10 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 9999.;
     ptZll_thresh_ = 0.;
     ptZjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.654;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.639;
+    else
+      helicityLD_thresh_ = 0.654;
     QGLikelihoodProd_thresh_ = 0.1;
     mZZ_threshLo_ = 375.;
     mZZ_threshHi_ = 456.;
@@ -2437,7 +2650,10 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 9999.;
     ptZll_thresh_ = 0.;
     ptZjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.719;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.701;
+    else
+      helicityLD_thresh_ = 0.719;
     QGLikelihoodProd_thresh_ = 0.1;
     mZZ_threshLo_ = 418.;
     mZZ_threshHi_ = 522.;
@@ -2462,7 +2678,10 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 9999.;
     ptZll_thresh_ = 0.;
     ptZjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.78;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.763;
+    else
+      helicityLD_thresh_ = 0.78;
     QGLikelihoodProd_thresh_ = 0.1;
     mZZ_threshLo_ = 467.;
     mZZ_threshHi_ = 600.;
@@ -2616,6 +2835,156 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     QGLikelihoodProd_thresh_ = 0.1;
     mZZ_threshLo_ = 467.;
     mZZ_threshHi_ = 600.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="250_1btag_LD055" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.55;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 225.;
+    mZZ_threshHi_ = 275.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 35.;
+
+  } else if( selectionType=="300_1btag_LD055" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.55;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 270.;
+    mZZ_threshHi_ = 330.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 35.;
+
+  } else if( selectionType=="350_1btag_LD055" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.55;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 315.;
+    mZZ_threshHi_ = 385.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 35.;
+
+  } else if( selectionType=="400_1btag_LD055" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.55;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 360.;
+    mZZ_threshHi_ = 440.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="450_1btag_LD055" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.55;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 405.;
+    mZZ_threshHi_ = 495.;
+    requiredBTags_ = 1;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="500_1btag_LD055" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 999.;
+    deltaRjj_thresh_ = 999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    helicityLD_thresh_ = 0.55;
+    QGLikelihoodProd_thresh_ = 0.;
+    mZZ_threshLo_ = 450.;
+    mZZ_threshHi_ = 550.;
     requiredBTags_ = 1;
     pfMetThresh_ = 0.;
 
