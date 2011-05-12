@@ -365,10 +365,16 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = (0.3275+0.05763+0.00027833+0.00039795+0.00080323)*0.2724*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="GluGluToHToZZTo4L_M-400_7TeV-powheg-pythia6_Fall10" ) {
     xSection = (2.0608)*0.2724*0.100974*0.100974; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->ll) (l=e,m,t)
-  } else if( dataset=="TTbar_2l_Spring10" ) {
-    xSection = 157.4*0.1080*0.1080*3.*3.; //NLO x BR(W->lnu) see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset_tstr.BeginsWith("TTJets") || dataset_tstr.BeginsWith("TT_") ) {
     xSection = 157.4; //NLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
+  } else if( dataset_tstr.BeginsWith("TToBLNu") && dataset_tstr.Contains("s-channel") ) {
+    xSection = 4.6;
+  } else if( dataset_tstr.BeginsWith("TToBLNu") && dataset_tstr.Contains("t-channel") ) {
+    xSection = 62.8;
+  } else if( dataset_tstr.BeginsWith("TToBLNu") && dataset_tstr.Contains("tW-channel") ) {
+    xSection = 10.56; 
+  } else if( dataset_tstr.BeginsWith("TTToBLNu") ) {
+    xSection = 157.4*0.1080*0.1080*9.; //TTbar cross section x BR(W->lnu) x BR(W->lnu) x 9 combinations (3 leptons)
   } else if( dataset_tstr.BeginsWith("ZZtoAnything") ) {
     xSection = 5.9*1.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt plus factor 1.3 to account for glu-glu
   } else if( dataset_tstr.BeginsWith("WZtoAnything") ) {
