@@ -114,6 +114,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("LS",&LS_,"LS_/I");
   reducedTree_->Branch("event",&event_,"event_/I");
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
+  reducedTree_->Branch("rhoPF",&rhoPF_,"rhoPF_/F");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
   reducedTree_->Branch("leptTypeMC",&leptTypeMC_,"leptTypeMC_/I");
 
@@ -384,6 +385,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      if( !goodVertex ) continue;
   
      nvertex_ = nPV;
+     rhoPF_ = rhoFastjet;
 
 
      //bool isMC = ( runNumber < 5 );
