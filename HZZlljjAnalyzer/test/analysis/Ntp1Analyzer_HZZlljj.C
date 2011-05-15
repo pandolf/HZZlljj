@@ -564,6 +564,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisMuon.isGlobalMuonPromptTight = (muonIdMuon[iMuon]>>8)&1;
        thisMuon.isAllTrackerMuon = (muonIdMuon[iMuon]>>11)&1;
 
+       thisMuon.pixelHits = numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]+numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]];
+       thisMuon.trackerHits = trackValidHitsTrack[trackIndexMuon[iMuon]];
+
 
        // to compute dxy, look for primary vertex:
        int hardestPV = -1;
