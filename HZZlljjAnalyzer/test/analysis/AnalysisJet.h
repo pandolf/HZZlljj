@@ -40,8 +40,8 @@ class AnalysisJet : public TLorentzVector {
   float phiGen;
   float eGen;
 
-  bool btag_loose();
-  bool btag_medium();
+  bool btag_loose() const;
+  bool btag_medium() const;
 
   //btags:
   float trackCountingHighEffBJetTag;
