@@ -1,5 +1,5 @@
 
-#include "Ntp1Finalizer_HZZlljj.h"
+#include "Ntp1Finalizer_HZZlljjRM.h"
 #include "TMath.h"
 #include <iostream>
 
@@ -26,7 +26,7 @@ float delta_phi(float phi1, float phi2) {
 int main( int argc, char* argv[] ) {
 
   if( argc!=3 && argc!=4 ) {
-    std::cout << "USAGE: ./finalize_HZZlljj [dataset] [selectionType] [leptType=\"ALL\"]" <<std::endl;
+    std::cout << "USAGE: ./finalize_HZZlljjRM [dataset] [selectionType] [leptType=\"ALL\"]" <<std::endl;
     return 13;
   }
 
@@ -42,10 +42,8 @@ int main( int argc, char* argv[] ) {
 
 
 
-  Ntp1Finalizer_HZZlljj* nf = new Ntp1Finalizer_HZZlljj( dataset, selectionType, leptType );
-
-  nf->set_useLooseBTags(true);
-
+  Ntp1Finalizer_HZZlljjRM* nf = new Ntp1Finalizer_HZZlljjRM( dataset, selectionType, leptType );
+  nf->set_inputAnalyzerType("HZZlljj");
 
   if( dataset=="DATA_EG_37X" ) {
 
