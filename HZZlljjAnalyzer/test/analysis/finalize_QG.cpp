@@ -93,8 +93,6 @@ int main( int argc, char* argv[] ) {
 
  
 
-  std::cout << "-> Total integrated luminosity: " << nf->get_totalLumi() << " ub-1." << std::endl;
-
   nf->finalize();
 
   delete nf;
