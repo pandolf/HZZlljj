@@ -58,9 +58,6 @@ class Ntp1Finalizer {
 
   bool DEBUG_;
 
-  float nCounter_;
-  float nCounterW_;
-
  private:
 
 };
