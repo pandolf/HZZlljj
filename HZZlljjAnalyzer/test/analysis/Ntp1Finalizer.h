@@ -37,6 +37,7 @@ class Ntp1Finalizer {
   bool get_DEBUG() { return DEBUG_; };
 
   void set_outFile( const std::string& fileName="", const std::string& suffix="" );
+  void set_inputAnalyzerType( const std::string& analyzerType ) { inputAnalyzerType_ = analyzerType; };
   void set_flags( const std::string& flags ) { flags_ = flags; };
   void set_DEBUG( bool DEBUG ) { DEBUG_ = DEBUG; };
 
@@ -49,6 +50,7 @@ class Ntp1Finalizer {
   float nCounterW_;
 
   std::string analyzerType_;
+  std::string inputAnalyzerType_;
   std::string dataset_;
   std::string flags_;
 
@@ -56,6 +58,8 @@ class Ntp1Finalizer {
 
   bool DEBUG_;
 
+  float nCounter_;
+  float nCounterW_;
 
  private:
 

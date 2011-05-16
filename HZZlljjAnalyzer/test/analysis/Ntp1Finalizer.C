@@ -11,6 +11,7 @@ Ntp1Finalizer::Ntp1Finalizer( const std::string& analyzerType, const std::string
 
 
   analyzerType_ = analyzerType;
+  inputAnalyzerType_ = analyzerType;
   dataset_ = dataset;
   flags_ = flags;
 
@@ -93,7 +94,7 @@ void Ntp1Finalizer::set_outFile( const std::string& fileName, const std::string&
 
 void Ntp1Finalizer::addFile(const std::string& dataset) {
 
-  std::string infileName = analyzerType_ + "_2ndLevelTreeW_" + dataset + ".root"; //the W is important: means that files have passed treatment (merging and weights)
+  std::string infileName = inputAnalyzerType_ + "_2ndLevelTreeW_" + dataset + ".root"; //the W is important: means that files have passed treatment (merging and weights)
   std::string treeName = infileName +"/reducedTree";
   tree_->Add(treeName.c_str());
   std::cout << "-> Added " << treeName << ". Tree has " << tree_->GetEntries() << " entries." << std::endl;
