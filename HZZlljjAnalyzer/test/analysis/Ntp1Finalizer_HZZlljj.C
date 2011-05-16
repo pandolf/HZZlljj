@@ -9,6 +9,8 @@
 #include "TProfile.h"
 #include "TRegexp.h"
 
+#include "AnalysisJet.h"
+
 #include "QGLikelihood/QGLikelihoodCalculator.h"
 #include "CommonTools/fitTools.h"
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
@@ -17,6 +19,7 @@
 
 
 
+/*
 
 class AnalysisJet : public TLorentzVector {
 
@@ -64,7 +67,7 @@ class AnalysisJet : public TLorentzVector {
   float jetProbabilityBJetTag;
 
 };
-
+*/
 
 
 
@@ -121,6 +124,11 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 
   TH1F* h1_run = new TH1F("run", "", 15149, 132440, 147589);
 
+
+  TH1D* h1_rhoPF_presel = new TH1D("rhoPF_presel", "", 50, 0., 20.);
+  h1_rhoPF_presel->Sumw2();
+  TH1D* h1_rhoPF = new TH1D("rhoPF", "", 50, 0., 20.);
+  h1_rhoPF->Sumw2();
 
   TH1D* h1_ptLept1_presel = new TH1D("ptLept1_presel", "", 25, 20., 300.);
   h1_ptLept1_presel->Sumw2();
@@ -252,6 +260,11 @@ void Ntp1Finalizer_HZZlljj::finalize() {
 //std::vector<TH1D*> vh1_QGLikelihoodJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet1", 60, 0., 1.);
   TH1D* h1_QGLikelihoodJet1 = new TH1D("QGLikelihoodJet1", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet1->Sumw2();
+
+  TH1D* h1_QGLikelihood_100_123 = new TH1D("QGLikelihood_100_123", "", 50, 0., 1.0001);
+  h1_QGLikelihood_100_123->Sumw2();
+  TH1D* h1_QGLikelihood_66_81 = new TH1D("QGLikelihood_66_81", "", 50, 0., 1.0001);
+  h1_QGLikelihood_66_81->Sumw2();
 
   TH1D* h1_simpleSecondaryVertexHighEffBJetTagJet1 = new TH1D("simpleSecondaryVertexHighEffBJetTagJet1", "", 50, -1.5, 4.);
   h1_simpleSecondaryVertexHighEffBJetTagJet1->Sumw2();
@@ -464,6 +477,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   tree_->SetBranchAddress("run", &run);
   Int_t nvertex;
   tree_->SetBranchAddress("nvertex", &nvertex);
+  Float_t rhoPF;
+  tree_->SetBranchAddress("rhoPF", &rhoPF);
   Int_t LS;
   tree_->SetBranchAddress("LS", &LS);
   Int_t event;
@@ -653,7 +668,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   std::map< int, std::map<int, std::vector<int> > > run_lumi_ev_map;
 
 
-  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_3_8_7/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root", nPtBins);
+  //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_3_8_7/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root", nPtBins);
+  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
   float Zmass = 91.1876;
   DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", Zmass );
   HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
@@ -744,6 +760,9 @@ ofstream ofs("run_event.txt");
     
     } //if is not mc
 
+
+
+    h1_rhoPF_presel->Fill( rhoPF, eventWeight);
 
 
     TLorentzVector lept1, lept2;
@@ -901,8 +920,10 @@ ofstream ofs("run_event.txt");
       // Q-G DISCRIMINATION:
       // -------------------
 
-      float QGLikelihoodJet1 = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
-      float QGLikelihoodJet2 = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
+      float QGLikelihoodJet1 = qglikeli->computeQGLikelihoodPU( jet1.Pt(), rhoPF, jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
+      float QGLikelihoodJet2 = qglikeli->computeQGLikelihoodPU( jet2.Pt(), rhoPF, jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
+//    float QGLikelihoodJet1 = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
+//    float QGLikelihoodJet2 = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
       float QGLikelihoodProd = QGLikelihoodJet1*QGLikelihoodJet2;
       if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
 
@@ -914,19 +935,19 @@ ofstream ofs("run_event.txt");
       // B-TAGGING:
       // ----------
 
-      bool btagJet1_loose =  ( jet1.trackCountingHighEffBJetTag>1.83 ); 
-      bool btagJet2_loose =  ( jet2.trackCountingHighEffBJetTag>1.83 ); 
+//    bool btagJet1_loose =  ( jet1.trackCountingHighEffBJetTag>1.83 ); 
+//    bool btagJet2_loose =  ( jet2.trackCountingHighEffBJetTag>1.83 ); 
 
-      bool btagJet1_medium =  ( jet1.trackCountingHighEffBJetTag>4. ); 
-      bool btagJet2_medium =  ( jet2.trackCountingHighEffBJetTag>4. ); 
+//    bool btagJet1_medium =  ( jet1.trackCountingHighEffBJetTag>4. ); 
+//    bool btagJet2_medium =  ( jet2.trackCountingHighEffBJetTag>4. ); 
 
       int nBTags;
 
       if( useLooseBTags_ ) {
 
-        bool twoBTags  = ( btagJet1_medium && btagJet2_loose  )
-                      || ( btagJet1_loose  && btagJet2_medium );
-        bool oneBTag   = (!twoBTags) && ( btagJet1_loose || btagJet2_loose );
+        bool twoBTags  = ( jet1.btag_medium() && jet2.btag_loose()  )
+                      || ( jet1.btag_loose()  && jet2.btag_medium() );
+        bool oneBTag   = (!twoBTags) && ( jet1.btag_loose() || jet2.btag_loose() );
         //bool zeroBTags = (!twoBTags) && (!oneBTag);
 
         if( twoBTags ) nBTags=2;
@@ -935,11 +956,11 @@ ofstream ofs("run_event.txt");
 
       } else {
 
-        nBTags = btagJet1_medium + btagJet2_medium;
+        nBTags = jet1.btag_medium() + jet2.btag_medium();
 
       }
 
-      if( requiredBTags_ != -1 ) if( nBTags != requiredBTags_ ) continue;
+    //  if( requiredBTags_ != -1 ) if( nBTags != requiredBTags_ ) continue;
 
 
 
@@ -1199,6 +1220,9 @@ ofstream ofs("run_event.txt");
 
     // fill histograms:
 
+    h1_rhoPF->Fill( rhoPF, eventWeight );
+
+
     if( jet1_selected.Pt()>jet2_selected.Pt() ) {
       h1_ptJet1->Fill( jet1_selected.Pt(), eventWeight );
       h1_ptJet2->Fill( jet2_selected.Pt(), eventWeight );
@@ -1232,6 +1256,12 @@ ofstream ofs("run_event.txt");
     h1_QGLikelihoodJet1->Fill( jet1_selected.QGLikelihood, eventWeight );
     h1_QGLikelihoodJet2->Fill( jet2_selected.QGLikelihood, eventWeight );
     h1_QGLikelihoodProd->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+
+    if( jet1_selected.Pt()>100. && jet1_selected.Pt()<123. ) h1_QGLikelihood_100_123->Fill( jet1_selected.QGLikelihood, eventWeight );
+    if( jet2_selected.Pt()>100. && jet2_selected.Pt()<123. ) h1_QGLikelihood_100_123->Fill( jet2_selected.QGLikelihood, eventWeight );
+    if( jet1_selected.Pt()>66. && jet1_selected.Pt()<81. ) h1_QGLikelihood_66_81->Fill( jet1_selected.QGLikelihood, eventWeight );
+    if( jet2_selected.Pt()>66. && jet2_selected.Pt()<81. ) h1_QGLikelihood_66_81->Fill( jet2_selected.QGLikelihood, eventWeight );
+
 
     if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood < 0.1 ) {
       h1_mZZ_kinfit_medMass_loQG->Fill(ZZ_kinfit.M(), eventWeight);
@@ -1330,6 +1360,8 @@ ofstream ofs("run_event.txt");
   outFile_->cd();
 
   h1_run->Write();
+  h1_rhoPF_presel->Write();
+  h1_rhoPF->Write();
 
   h1_ptJet_all_presel->Write();
   h1_etaJet_all_presel->Write();
@@ -1482,6 +1514,8 @@ ofstream ofs("run_event.txt");
   h1_QGLikelihoodJet2->Write();
   h1_QGLikelihoodProd->Write();
 
+  h1_QGLikelihood_100_123->Write();
+  h1_QGLikelihood_66_81->Write();
 //outFile_->mkdir("QGbins");
 //outFile_->cd("QGbins");
 
@@ -2627,6 +2661,34 @@ void Ntp1Finalizer_HZZlljj::setSelectionType( const std::string& selectionType )
     else
       helicityLD_thresh_ = 0.654;
     QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 375.;
+    mZZ_threshHi_ = 456.;
+    requiredBTags_ = 0;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType=="opt400_0btag_optLD_noQG" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    deltaRll_thresh_ = 9999.;
+    deltaRjj_thresh_ = 9999.;
+    ptZll_thresh_ = 0.;
+    ptZjj_thresh_ = 0.;
+    if( useLooseBTags_ )
+      helicityLD_thresh_ = 0.639;
+    else
+      helicityLD_thresh_ = 0.654;
+    QGLikelihoodProd_thresh_ = 0.;
     mZZ_threshLo_ = 375.;
     mZZ_threshHi_ = 456.;
     requiredBTags_ = 0;
