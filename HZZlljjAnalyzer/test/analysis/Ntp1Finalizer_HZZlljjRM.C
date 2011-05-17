@@ -1093,18 +1093,6 @@ ofstream ofs("run_event.txt");
     TLorentzVector ZZ_nokinfit = Zjj_nokinfit + diLepton;
     TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
 
-    if( ZZ_kinfit.M() > 180. && ZZ_kinfit.M() < 220. ) {
-      if( maxBTag_found==0 ) {
-        nEventsPassed_fb_0btag_200  += eventWeight;
-        nEventsPassed_0btag_200++;
-      } else if( maxBTag_found==1 ) {
-        nEventsPassed_fb_1btag_200 += eventWeight;
-        nEventsPassed_1btag_200++;
-      } else if( maxBTag_found==2 ) {
-        nEventsPassed_fb_2btag_200 += eventWeight;
-        nEventsPassed_2btag_200++;
-      }
-    } 
     if( ZZ_kinfit.M() > 225. && ZZ_kinfit.M() < 275. ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_250  += eventWeight;
@@ -1413,32 +1401,32 @@ ofstream ofs("run_event.txt");
   std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_250 << " ev/fb-1  (" << nEventsPassed_0btag_250 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_250/nCounterW_ << "%" << std::endl;
   std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_250 << " ev/fb-1  (" << nEventsPassed_1btag_250 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_250/nCounterW_ << "%" << std::endl;
   std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_250 << " ev/fb-1  (" << nEventsPassed_2btag_250 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_250/nCounterW_ << "%" << std::endl;
-  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << "----> 300 GeV (270-330): " << std::endl;
   std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_300 << " ev/fb-1  (" << nEventsPassed_0btag_300 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_300/nCounterW_ << "%" << std::endl;
   std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_300 << " ev/fb-1  (" << nEventsPassed_1btag_300 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_300/nCounterW_ << "%" << std::endl;
   std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_300 << " ev/fb-1  (" << nEventsPassed_2btag_300 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_300/nCounterW_ << "%" << std::endl;
-  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << "----> 350 GeV (315-385): " << std::endl;
   std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_350 << " ev/fb-1  (" << nEventsPassed_0btag_350 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_350/nCounterW_ << "%" << std::endl;
   std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_350 << " ev/fb-1  (" << nEventsPassed_1btag_350 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_350/nCounterW_ << "%" << std::endl;
   std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_350 << " ev/fb-1  (" << nEventsPassed_2btag_350 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_350/nCounterW_ << "%" << std::endl;
-  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << "----> 400 GeV (360-440): " << std::endl;
   std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_400 << " ev/fb-1  (" << nEventsPassed_0btag_400 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_400/nCounterW_ << "%" << std::endl;
   std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_400 << " ev/fb-1  (" << nEventsPassed_1btag_400 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_400/nCounterW_ << "%" << std::endl;
   std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_400 << " ev/fb-1  (" << nEventsPassed_2btag_400 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_400/nCounterW_ << "%" << std::endl;
-  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << "----> 450 GeV (405-495): " << std::endl;
   std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_450 << " ev/fb-1  (" << nEventsPassed_0btag_450 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_450/nCounterW_ << "%" << std::endl;
   std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_450 << " ev/fb-1  (" << nEventsPassed_1btag_450 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_450/nCounterW_ << "%" << std::endl;
   std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_450 << " ev/fb-1  (" << nEventsPassed_2btag_450 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_450/nCounterW_ << "%" << std::endl;
-  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << "----> 500 GeV (450-550): " << std::endl;
   std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_500 << " ev/fb-1  (" << nEventsPassed_0btag_500 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_500/nCounterW_ << "%" << std::endl;
   std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_500 << " ev/fb-1  (" << nEventsPassed_1btag_500 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_500/nCounterW_ << "%" << std::endl;
   std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_500 << " ev/fb-1  (" << nEventsPassed_2btag_500 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_500/nCounterW_ << "%" << std::endl;
-  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << std::endl;
 
 
@@ -1711,7 +1699,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     QGLikelihoodProd_thresh_ = 0.1;
     mZZ_threshLo_ = 375.;
     mZZ_threshHi_ = 456.;
-    pfMetThresh_ = 0.;
+    pfMetThresh_ = 99999.;
 
   } else if( selectionType_=="optLD_looseBTags_metCut" ) {
 
