@@ -1022,14 +1022,23 @@ ofstream ofs("run_event.txt");
         foundJets += 1;
         maxBTag_found = nBTags;
 
-      } else if( nBTags >= maxBTag_found && ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) )  ) {
+      } else { 
 
-        bestMass = invMass;
-        jet1_selected = jet1;
-        jet2_selected = jet2;
-        helicityLD_selected = helicityLD;
         foundJets += 1;
-        maxBTag_found = nBTags;
+
+        if( nBTags == maxBTag_found && ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) )  ) {
+          bestMass = invMass;
+          jet1_selected = jet1;
+          jet2_selected = jet2;
+          helicityLD_selected = helicityLD;
+          maxBTag_found = nBTags;
+        } else if( nBTags > maxBTag_found ) {
+          bestMass = invMass;
+          jet1_selected = jet1;
+          jet2_selected = jet2;
+          helicityLD_selected = helicityLD;
+          maxBTag_found = nBTags;
+        }
 
       }
 
@@ -1226,7 +1235,7 @@ ofstream ofs("run_event.txt");
       }
     }
 
-    bool eventIsMatched = bestDeltaRZ<0.5;
+    bool eventIsMatched = bestDeltaRZ<0.2;
 
     float ptZreso_before = (isMC) ? (Zjj_nokinfit.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
     float ptZreso_after  = (isMC) ? (Zjj_kinfit.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
