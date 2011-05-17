@@ -62,6 +62,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   TH1F* h1_run = new TH1F("run", "", 15149, 132440, 147589);
 
+  TH1D* h1_pfMet = new TH1D("pfMet", "", 60, 0., 120.);
+  h1_pfMet->Sumw2();
+  TH1D* h1_pfMet_2btag = new TH1D("pfMet_2btag", "", 60, 0., 120.);
+  h1_pfMet_2btag->Sumw2();
+
+  TH1D* h1_pfMetOverMZZ= new TH1D("pfMetOverMZZ", "", 100, 0., 0.6);
+  h1_pfMetOverMZZ->Sumw2();
+  TH1D* h1_pfMetOverMZZ_2btag = new TH1D("pfMetOverMZZ_2btag", "", 100, 0., 0.6);
+  h1_pfMetOverMZZ_2btag->Sumw2();
+
 
   TH1D* h1_rhoPF_presel = new TH1D("rhoPF_presel", "", 50, 0., 20.);
   h1_rhoPF_presel->Sumw2();
@@ -317,6 +327,9 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_helicityLD_kinfit = new TH1D("helicityLD_kinfit", "", 60, 0., 1.);
   h1_helicityLD_kinfit->Sumw2();
 
+  TH2D* h2_helicityLD_vs_mZZ = new TH2D("helicityLD_vs_mZZ", "", 50, 100., 600., 50, 0., 1.);
+  h2_helicityLD_vs_mZZ->Sumw2();
+
   TH1D* h1_deltaRZZ= new TH1D("deltaRZZ", "", 60, 0., 6.);
   h1_deltaRZZ->Sumw2();
 
@@ -332,25 +345,25 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_UL->Sumw2();
   TH1D* h1_mZZ_UL_kinfit = new TH1D("mZZ_UL_kinfit", "", 900, 100., 1000.);
   h1_mZZ_UL_kinfit->Sumw2();
-  TH1D* h1_mZZ_hiMass= new TH1D("mZZ_hiMass", "", 90, 250., 700.);
+  TH1D* h1_mZZ_hiMass= new TH1D("mZZ_hiMass", "", 110, 150., 700.);
   h1_mZZ_hiMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass= new TH1D("mZZ_kinfit_hiMass", "", 90, 250., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass= new TH1D("mZZ_kinfit_hiMass", "", 110, 150., 700.);
   h1_mZZ_kinfit_hiMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 90, 250., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 110, 150., 700.);
   h1_mZZ_kinfit_hiMass_0btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 90, 250., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 110, 150., 700.);
   h1_mZZ_kinfit_hiMass_1btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 90, 250., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 110, 150., 700.);
   h1_mZZ_kinfit_hiMass_2btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 90, 250., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 110, 150., 700.);
   h1_mZZ_kinfit_hiMass_hiQG->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 90, 250., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 110, 150., 700.);
   h1_mZZ_kinfit_hiMass_loQG->Sumw2();
 //TH1D* h1_mZZ_highestMass= new TH1D("mZZ_highestMass", "", 70, 350., 700.);
 //h1_mZZ_highestMass->Sumw2();
 //TH1D* h1_mZZ_kinfit_highestMass= new TH1D("mZZ_kinfit_highestMass", "", 70, 350., 700.);
 //h1_mZZ_kinfit_highestMass->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 70, 250., 600.);
+  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 70, 200., 600.);
   h1_mZZ_ZjjMassConstr_hiMass->Sumw2();
   TH1D* h1_mZZ_300Mass= new TH1D("mZZ_300Mass", "", 50, 250., 450.);
   h1_mZZ_300Mass->Sumw2();
@@ -371,8 +384,12 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_mZZ_kinfit_medMass_hiQG= new TH1D("mZZ_kinfit_medMass_hiQG", "", 70, 150., 350.);
   h1_mZZ_kinfit_medMass_hiQG->Sumw2();
   TH1D* h1_mZZ_kinfit_medMass_loQG= new TH1D("mZZ_kinfit_medMass_loQG", "", 70, 150., 350.);
-
   h1_mZZ_kinfit_medMass_loQG->Sumw2();
+
+  TH1D* h1_deltaRZmatching = new TH1D("deltaRZmatching", "", 50, 0., 1.0);
+  h1_deltaRZmatching->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_0btag_matched = new TH1D("mZZ_kinfit_hiMass_0btag_matched", "", 110, 150., 700. );
+  h1_mZZ_kinfit_hiMass_0btag_matched->Write();
 
   TH1D* h1_ptZZ  = new TH1D("ptZZ", "", 100, 0., 300.);
   h1_ptZZ->Sumw2();
@@ -608,12 +625,48 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_kinfit=0.;
   int nEventsPassed_kinfit=0;
 
-  float nEventsPassed_fb_0btag_kinfit=0.;
-  int nEventsPassed_0btag_kinfit=0;
-  float nEventsPassed_fb_1btag_kinfit=0.;
-  int nEventsPassed_1btag_kinfit=0;
-  float nEventsPassed_fb_2btag_kinfit=0.;
-  int nEventsPassed_2btag_kinfit=0;
+  float nEventsPassed_fb_0btag_250=0.;
+  int nEventsPassed_0btag_250=0;
+  float nEventsPassed_fb_1btag_250=0.;
+  int nEventsPassed_1btag_250=0;
+  float nEventsPassed_fb_2btag_250=0.;
+  int nEventsPassed_2btag_250=0;
+
+  float nEventsPassed_fb_0btag_300=0.;
+  int nEventsPassed_0btag_300=0;
+  float nEventsPassed_fb_1btag_300=0.;
+  int nEventsPassed_1btag_300=0;
+  float nEventsPassed_fb_2btag_300=0.;
+  int nEventsPassed_2btag_300=0;
+
+  float nEventsPassed_fb_0btag_350=0.;
+  int nEventsPassed_0btag_350=0;
+  float nEventsPassed_fb_1btag_350=0.;
+  int nEventsPassed_1btag_350=0;
+  float nEventsPassed_fb_2btag_350=0.;
+  int nEventsPassed_2btag_350=0;
+
+  float nEventsPassed_fb_0btag_400=0.;
+  int nEventsPassed_0btag_400=0;
+  float nEventsPassed_fb_1btag_400=0.;
+  int nEventsPassed_1btag_400=0;
+  float nEventsPassed_fb_2btag_400=0.;
+  int nEventsPassed_2btag_400=0;
+
+  float nEventsPassed_fb_0btag_450=0.;
+  int nEventsPassed_0btag_450=0;
+  float nEventsPassed_fb_1btag_450=0.;
+  int nEventsPassed_1btag_450=0;
+  float nEventsPassed_fb_2btag_450=0.;
+  int nEventsPassed_2btag_450=0;
+
+  float nEventsPassed_fb_0btag_500=0.;
+  int nEventsPassed_0btag_500=0;
+  float nEventsPassed_fb_1btag_500=0.;
+  int nEventsPassed_1btag_500=0;
+  float nEventsPassed_fb_2btag_500=0.;
+  int nEventsPassed_2btag_500=0;
+
 
 
   int nEntries = tree_->GetEntries();
@@ -763,12 +816,6 @@ ofstream ofs("run_event.txt");
 
 
 
-    // --------------------
-    // FULL EVENT VARIABLES
-    // --------------------
- 
-    //if( pfMetThresh_ > 0. && pfMet > pfMetThresh_ ) continue;
-
     
 
 
@@ -876,6 +923,9 @@ ofstream ofs("run_event.txt");
 
 
 
+
+
+
       // -------------------
       // Q-G DISCRIMINATION:
       // -------------------
@@ -917,6 +967,15 @@ ofstream ofs("run_event.txt");
 
       TLorentzVector diJet_kinfit = jet1_kinfit + jet2_kinfit;
       TLorentzVector ZZ_kinfit_tmp = diJet_kinfit + diLepton;
+
+
+
+      // --------------------
+      // FULL EVENT VARIABLES
+      // --------------------
+   
+      if( nBTags==2 ) 
+        if( pfMet/ZZ_kinfit_tmp.M() > pfMetThresh_ ) continue;
 
 
 
@@ -1034,18 +1093,88 @@ ofstream ofs("run_event.txt");
     TLorentzVector ZZ_nokinfit = Zjj_nokinfit + diLepton;
     TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
 
-    if( ZZ_kinfit.M() > mZZ_threshLo_ && ZZ_kinfit.M() < mZZ_threshHi_ ) {
-      nEventsPassed_fb_kinfit += eventWeight;
-      nEventsPassed_kinfit++;
+    if( ZZ_kinfit.M() > 180. && ZZ_kinfit.M() < 220. ) {
       if( maxBTag_found==0 ) {
-        nEventsPassed_fb_0btag_kinfit += eventWeight;
-        nEventsPassed_0btag_kinfit++;
+        nEventsPassed_fb_0btag_200  += eventWeight;
+        nEventsPassed_0btag_200++;
       } else if( maxBTag_found==1 ) {
-        nEventsPassed_fb_1btag_kinfit += eventWeight;
-        nEventsPassed_1btag_kinfit++;
+        nEventsPassed_fb_1btag_200 += eventWeight;
+        nEventsPassed_1btag_200++;
       } else if( maxBTag_found==2 ) {
-        nEventsPassed_fb_2btag_kinfit += eventWeight;
-        nEventsPassed_2btag_kinfit++;
+        nEventsPassed_fb_2btag_200 += eventWeight;
+        nEventsPassed_2btag_200++;
+      }
+    } 
+    if( ZZ_kinfit.M() > 225. && ZZ_kinfit.M() < 275. ) {
+      if( maxBTag_found==0 ) {
+        nEventsPassed_fb_0btag_250  += eventWeight;
+        nEventsPassed_0btag_250++;
+      } else if( maxBTag_found==1 ) {
+        nEventsPassed_fb_1btag_250 += eventWeight;
+        nEventsPassed_1btag_250++;
+      } else if( maxBTag_found==2 ) {
+        nEventsPassed_fb_2btag_250 += eventWeight;
+        nEventsPassed_2btag_250++;
+      }
+    } 
+    if( ZZ_kinfit.M() > 270. && ZZ_kinfit.M() < 330. ) {
+      if( maxBTag_found==0 ) {
+        nEventsPassed_fb_0btag_300  += eventWeight;
+        nEventsPassed_0btag_300++;
+      } else if( maxBTag_found==1 ) {
+        nEventsPassed_fb_1btag_300 += eventWeight;
+        nEventsPassed_1btag_300++;
+      } else if( maxBTag_found==2 ) {
+        nEventsPassed_fb_2btag_300 += eventWeight;
+        nEventsPassed_2btag_300++;
+      }
+    } 
+    if( ZZ_kinfit.M() > 315. && ZZ_kinfit.M() < 385. ) {
+      if( maxBTag_found==0 ) {
+        nEventsPassed_fb_0btag_350  += eventWeight;
+        nEventsPassed_0btag_350++;
+      } else if( maxBTag_found==1 ) {
+        nEventsPassed_fb_1btag_350 += eventWeight;
+        nEventsPassed_1btag_350++;
+      } else if( maxBTag_found==2 ) {
+        nEventsPassed_fb_2btag_350 += eventWeight;
+        nEventsPassed_2btag_350++;
+      }
+    } 
+    if( ZZ_kinfit.M() > 360. && ZZ_kinfit.M() < 440. ) {
+      if( maxBTag_found==0 ) {
+        nEventsPassed_fb_0btag_400  += eventWeight;
+        nEventsPassed_0btag_400++;
+      } else if( maxBTag_found==1 ) {
+        nEventsPassed_fb_1btag_400 += eventWeight;
+        nEventsPassed_1btag_400++;
+      } else if( maxBTag_found==2 ) {
+        nEventsPassed_fb_2btag_400 += eventWeight;
+        nEventsPassed_2btag_400++;
+      }
+    } 
+    if( ZZ_kinfit.M() > 405. && ZZ_kinfit.M() < 495. ) {
+      if( maxBTag_found==0 ) {
+        nEventsPassed_fb_0btag_450  += eventWeight;
+        nEventsPassed_0btag_450++;
+      } else if( maxBTag_found==1 ) {
+        nEventsPassed_fb_1btag_450 += eventWeight;
+        nEventsPassed_1btag_450++;
+      } else if( maxBTag_found==2 ) {
+        nEventsPassed_fb_2btag_450 += eventWeight;
+        nEventsPassed_2btag_450++;
+      }
+    } 
+    if( ZZ_kinfit.M() > 450. && ZZ_kinfit.M() < 550. ) {
+      if( maxBTag_found==0 ) {
+        nEventsPassed_fb_0btag_500  += eventWeight;
+        nEventsPassed_0btag_500++;
+      } else if( maxBTag_found==1 ) {
+        nEventsPassed_fb_1btag_500 += eventWeight;
+        nEventsPassed_1btag_500++;
+      } else if( maxBTag_found==2 ) {
+        nEventsPassed_fb_2btag_500 += eventWeight;
+        nEventsPassed_2btag_500++;
       }
     } 
 
@@ -1066,11 +1195,6 @@ ofstream ofs("run_event.txt");
     h1_simpleSecondaryVertexHighPurBJetTagJet2->Fill(jet2_selected.simpleSecondaryVertexHighPurBJetTag, eventWeight);
     h1_jetBProbabilityBJetTagJet2->Fill(jet2_selected.jetBProbabilityBJetTag, eventWeight);
     h1_jetProbabilityBJetTagJet2->Fill(jet2_selected.jetProbabilityBJetTag, eventWeight);
-
-    bool twoTags = (jet1_selected.trackCountingHighEffBJetTag>=4. && jet2_selected.trackCountingHighEffBJetTag>=4.);
-    bool oneTag = (jet1_selected.trackCountingHighEffBJetTag>=4. && jet2_selected.trackCountingHighEffBJetTag<4.)
-                || (jet1_selected.trackCountingHighEffBJetTag<4. && jet2_selected.trackCountingHighEffBJetTag>=4.);
-    bool zeroTags = (jet1_selected.trackCountingHighEffBJetTag<4. && jet2_selected.trackCountingHighEffBJetTag<4.);
 
 
     // match to partons:
@@ -1114,6 +1238,8 @@ ofstream ofs("run_event.txt");
       }
     }
 
+    bool eventIsMatched = bestDeltaRZ<0.5;
+
     float ptZreso_before = (isMC) ? (Zjj_nokinfit.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
     float ptZreso_after  = (isMC) ? (Zjj_kinfit.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
     h1_ptZreso_beforeKin->Fill( ptZreso_before, eventWeight);
@@ -1135,11 +1261,22 @@ ofstream ofs("run_event.txt");
 
 
 
+    // ----------------
+    //
+    // FILL HISTOGRAMS
+    //
+    // ----------------
 
-    // fill histograms:
+    h1_pfMet->Fill( pfMet, eventWeight );
+    h1_pfMetOverMZZ->Fill( pfMet/ZZ_kinfit.M(), eventWeight );
+    if( maxBTag_found==2 ) {
+      h1_pfMet_2btag->Fill( pfMet, eventWeight );
+      h1_pfMetOverMZZ_2btag->Fill( pfMet/ZZ_kinfit.M(), eventWeight );
+    }
 
     h1_rhoPF->Fill( rhoPF, eventWeight );
 
+    h2_helicityLD_vs_mZZ->Fill( ZZ_kinfit.M(), helicityLD_selected, eventWeight );
 
     if( jet1_selected.Pt()>jet2_selected.Pt() ) {
       h1_ptJet1->Fill( jet1_selected.Pt(), eventWeight );
@@ -1209,6 +1346,9 @@ ofstream ofs("run_event.txt");
     h2_mZjj_vs_mZZ->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
     h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
 
+    h1_deltaRZmatching->Fill( bestDeltaRZ, eventWeight );
+    if( nBTags==0 && eventIsMatched ) h1_mZZ_kinfit_hiMass_0btag_matched->Fill( ZZ_kinfit.M(), eventWeight);
+
 
     h1_deltaRZZ->Fill(Zjj_nokinfit.DeltaR(diLepton), eventWeight);
 
@@ -1268,17 +1408,39 @@ ofstream ofs("run_event.txt");
 
 
   std::cout << std::endl << std::endl;
-  std::cout << "----> SELECTION: " << selectionType_ << "    DATASET: " << dataset_ << std::endl;
-  std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1  (" << nEventsPassed_kinfit << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_kinfit/nCounterW_ << "%" << std::endl;
-  std::cout << "----> of which:  " << std::endl;
-  std::cout << "                  0 btag: " << 1000.*nEventsPassed_fb_0btag_kinfit << " ev/fb-1  (" << nEventsPassed_0btag_kinfit << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_kinfit/nCounterW_ << "%" << std::endl;
-  std::cout << "                  1 btag: " << 1000.*nEventsPassed_fb_1btag_kinfit << " ev/fb-1  (" << nEventsPassed_1btag_kinfit << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_kinfit/nCounterW_ << "%" << std::endl;
-  std::cout << "                  2 btag: " << 1000.*nEventsPassed_fb_2btag_kinfit << " ev/fb-1  (" << nEventsPassed_2btag_kinfit << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_kinfit/nCounterW_ << "%" << std::endl;
+  std::cout << "----> SELECTION: " << selectionType_ << "    DATASET: " << dataset_ << std::endl << std::endl;
+  std::cout << "----> 250 GeV (225-275): " << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_250 << " ev/fb-1  (" << nEventsPassed_0btag_250 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_250/nCounterW_ << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_250 << " ev/fb-1  (" << nEventsPassed_1btag_250 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_250/nCounterW_ << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_250 << " ev/fb-1  (" << nEventsPassed_2btag_250 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_250/nCounterW_ << "%" << std::endl;
+  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----> 300 GeV (270-330): " << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_300 << " ev/fb-1  (" << nEventsPassed_0btag_300 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_300/nCounterW_ << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_300 << " ev/fb-1  (" << nEventsPassed_1btag_300 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_300/nCounterW_ << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_300 << " ev/fb-1  (" << nEventsPassed_2btag_300 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_300/nCounterW_ << "%" << std::endl;
+  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----> 350 GeV (315-385): " << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_350 << " ev/fb-1  (" << nEventsPassed_0btag_350 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_350/nCounterW_ << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_350 << " ev/fb-1  (" << nEventsPassed_1btag_350 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_350/nCounterW_ << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_350 << " ev/fb-1  (" << nEventsPassed_2btag_350 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_350/nCounterW_ << "%" << std::endl;
+  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----> 400 GeV (360-440): " << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_400 << " ev/fb-1  (" << nEventsPassed_0btag_400 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_400/nCounterW_ << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_400 << " ev/fb-1  (" << nEventsPassed_1btag_400 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_400/nCounterW_ << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_400 << " ev/fb-1  (" << nEventsPassed_2btag_400 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_400/nCounterW_ << "%" << std::endl;
+  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----> 450 GeV (405-495): " << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_450 << " ev/fb-1  (" << nEventsPassed_0btag_450 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_450/nCounterW_ << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_450 << " ev/fb-1  (" << nEventsPassed_1btag_450 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_450/nCounterW_ << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_450 << " ev/fb-1  (" << nEventsPassed_2btag_450 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_450/nCounterW_ << "%" << std::endl;
+  std::cout << "------------------------------------------------------------" << std::endl;
+  std::cout << "----> 500 GeV (450-550): " << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_500 << " ev/fb-1  (" << nEventsPassed_0btag_500 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_500/nCounterW_ << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_500 << " ev/fb-1  (" << nEventsPassed_1btag_500 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_500/nCounterW_ << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_500 << " ev/fb-1  (" << nEventsPassed_2btag_500 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_500/nCounterW_ << "%" << std::endl;
+  std::cout << "------------------------------------------------------------" << std::endl;
   std::cout << std::endl;
 
-
-//std::cout << "Passed chi square: " << nEvents_hiChiSquareProb << "/" << nEventsTot << " (" << 100.*nEvents_hiChiSquareProb/nEventsTot << "%)" << std::endl;
-//std::cout << "Passed mZjj cut: " << nEvents_mZjj_cut << "/" << nEventsTot << " (" << 100.*nEvents_mZjj_cut/nEventsTot << "%)" << std::endl;
 
 
 
@@ -1287,6 +1449,11 @@ ofstream ofs("run_event.txt");
   h1_run->Write();
   h1_rhoPF_presel->Write();
   h1_rhoPF->Write();
+  
+  h1_pfMet->Write();
+  h1_pfMet_2btag->Write();
+  h1_pfMetOverMZZ->Write();
+  h1_pfMetOverMZZ_2btag->Write();
 
   h1_nCandidates->Write();
 
@@ -1360,6 +1527,8 @@ ofstream ofs("run_event.txt");
   h1_helicityLD_MW500->Write();
   h1_helicityLD_kinfit->Write();
 
+  h2_helicityLD_vs_mZZ->Write();
+
   h1_ptZll_MW->Write();
   h1_ptJet1_MW->Write();
   h1_ptJet2_MW->Write();
@@ -1393,6 +1562,9 @@ ofstream ofs("run_event.txt");
   h1_mZZ_kinfit_hiMass_hiQG->Write();
   h1_mZZ_kinfit_hiMass_loQG->Write();
 //  h1_mZZ_kinfit_highestMass->Write();
+
+  h1_deltaRZmatching->Write();
+  h1_mZZ_kinfit_hiMass_0btag_matched->Write();
 
   h1_ptZZ->Write();
   h1_ptZZ_kinfit->Write();
@@ -1536,6 +1708,56 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_intercept_0btags_ = 0.1433;
     helicityLD_intercept_1btags_ = 0.55;
     helicityLD_intercept_2btags_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 375.;
+    mZZ_threshHi_ = 456.;
+    pfMetThresh_ = 0.;
+
+  } else if( selectionType_=="optLD_looseBTags_metCut" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    helicityLD_slope_0btags_ = 0.00124;
+    helicityLD_slope_1btags_ = 0.;
+    helicityLD_slope_2btags_ = 0.;
+    helicityLD_intercept_0btags_ = 0.1433;
+    helicityLD_intercept_1btags_ = 0.55;
+    helicityLD_intercept_2btags_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 375.;
+    mZZ_threshHi_ = 456.;
+    pfMetThresh_ = 0.2;
+
+  } else if( selectionType_=="noCutLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    helicityLD_slope_0btags_ = 0.;
+    helicityLD_slope_1btags_ = 0.;
+    helicityLD_slope_2btags_ = 0.;
+    helicityLD_intercept_0btags_ = 0.;
+    helicityLD_intercept_1btags_ = 0.;
+    helicityLD_intercept_2btags_ = 0.;
     QGLikelihoodProd_thresh_ = 0.1;
     mZZ_threshLo_ = 375.;
     mZZ_threshHi_ = 456.;
