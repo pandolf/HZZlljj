@@ -882,26 +882,26 @@ if( jet2.Energy()<0. ) std::cout << "jet2_kinfit.E(): " << jet2_kinfit.E() << st
      absEtaZZ_ = fabs(ZZ.Eta());
 
      
-     bool twotags_loose  = (jet1.trackCountingHighEffBJetTag>=4. && jet2.trackCountingHighEffBJetTag>1.85)
-                        || (jet1.trackCountingHighEffBJetTag>1.85 && jet2.trackCountingHighEffBJetTag>1.85);
-     bool onetag_loose  = ( !twotags_loose ) && ( jet1.trackCountingHighEffBJetTag>1.85 || jet2.trackCountingHighEffBJetTag>1.85 );
-     bool zerotags_loose = ( !twotags_loose && !onetag_loose );
+     bool twotags_loose  = (jet1.trackCountingHighEffBJetTag>3.3 && jet2.trackCountingHighEffBJetTag>1.7)
+                        || (jet1.trackCountingHighEffBJetTag>1.7 && jet2.trackCountingHighEffBJetTag>3.3);
+     bool onetag_loose  = ( !twotags_loose ) && ( jet1.trackCountingHighEffBJetTag>1.7 || jet2.trackCountingHighEffBJetTag>1.7 );
+     //bool zerotags_loose = ( !twotags_loose && !onetag_loose );
 
      if( twotags_loose ) nBTagsLoose_ = 2;
      else if( onetag_loose ) nBTagsLoose_ = 1;
-     else if( zerotags_loose ) nBTagsLoose_ = 0;
+     else  nBTagsLoose_ = 0;
 
 
 
-     bool twotags = jet1.trackCountingHighEffBJetTag>=4. && jet2.trackCountingHighEffBJetTag>=4.;
-     bool onetag  = (jet1.trackCountingHighEffBJetTag>=4. && jet2.trackCountingHighEffBJetTag<4.)
-                 || (jet1.trackCountingHighEffBJetTag<4. && jet2.trackCountingHighEffBJetTag>=4.);
-     bool zerotags = jet1.trackCountingHighEffBJetTag<4. && jet2.trackCountingHighEffBJetTag<4.;
+     bool twotags =  jet1.trackCountingHighEffBJetTag>3.3 && jet2.trackCountingHighEffBJetTag>3.3;
+     bool onetag  = (jet1.trackCountingHighEffBJetTag>3.3 && jet2.trackCountingHighEffBJetTag<=3.3)
+                 || (jet1.trackCountingHighEffBJetTag<=3.3 && jet2.trackCountingHighEffBJetTag>3.3);
+     //bool zerotags = jet1.trackCountingHighEffBJetTag<3.3 && jet2.trackCountingHighEffBJetTag<3.3;
      
 
      if( twotags ) nBTags_ = 2;
      else if( onetag ) nBTags_ = 1;
-     else if( zerotags ) nBTags_ = 0;
+     else  nBTags_ = 0;
 
      reducedTree_->Fill(); 
 
