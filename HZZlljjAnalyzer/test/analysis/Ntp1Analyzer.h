@@ -26,6 +26,15 @@
 #include <iostream>
 
 
+
+struct ValueError{
+
+  float value;
+  float error;
+
+};
+
+
 struct GenEventParameters{
 
   Float_t crossSection;
@@ -50,6 +59,7 @@ public :
    Int_t           lumiBlock;
    Int_t           bunchCrossing;
    Int_t           orbitNumber;
+   Float_t         rhoFastjet;
    Int_t           nMc;
    Float_t         pMc[1000];   //[nMc]
    Float_t         thetaMc[1000];   //[nMc]
@@ -457,6 +467,9 @@ public :
    Float_t         vertexXPFMet[1];   //[nPFMet]
    Float_t         vertexYPFMet[1];   //[nPFMet]
    Float_t         vertexZPFMet[1];   //[nPFMet]
+   Float_t         significancePFMet[1];   //[nPFMet]
+   Float_t         mEtSigPFMet[1];   //[nPFMet]
+   Float_t         sumEtPFMet[1];   //[nPFMet]
    Int_t           nGenMet;
    Int_t           chargeGenMet[1];   //[nGenMet]
    Float_t         energyGenMet[1];   //[nGenMet]
@@ -629,6 +642,7 @@ public :
    Int_t cachedRun_;
    Int_t LS_;
    Int_t nvertex_;
+   Float_t rhoPF_;
    Int_t event_;
    Float_t ptHat_;
    Float_t ptHatMin_;
@@ -649,6 +663,7 @@ public :
    TBranch        *b_lumiBlock;   //!
    TBranch        *b_bunchCrossing;   //!
    TBranch        *b_orbitNumber;   //!
+   TBranch        *b_rhoFastjet;   //!
    TBranch        *b_nMc;   //!
    TBranch        *b_pMc;   //!
    TBranch        *b_thetaMc;   //!
@@ -1098,6 +1113,9 @@ public :
    TBranch        *b_vertexXPFMet;   //!
    TBranch        *b_vertexYPFMet;   //!
    TBranch        *b_vertexZPFMet;   //!
+   TBranch        *b_significancePFMet;   //!
+   TBranch        *b_mEtSigPFMet;   //!
+   TBranch        *b_sumEtPFMet;   //!
    TBranch        *b_nGenMet;   //!
    TBranch        *b_chargeGenMet;   //!
    TBranch        *b_energyGenMet;   //!
@@ -1257,6 +1275,8 @@ public :
    virtual void     UpdateCache();
    virtual bool     isGoodEvent();
    virtual GenEventParameters     getGenEventParameters ();
+   ValueError       getSF_TCHE( float jetpt, float jeteta, float jetTCHE, int pdgIdPart );
+   ValueError       getSF( const std::string& fileName, float jetpt, float jeteta );
    double           trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
 
 

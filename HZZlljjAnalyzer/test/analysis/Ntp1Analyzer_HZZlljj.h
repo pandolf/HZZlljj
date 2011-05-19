@@ -109,10 +109,19 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t jetBProbabilityBJetTagJet1_[50];
    Float_t jetProbabilityBJetTagJet1_[50];
 
-   Float_t  ptJet1Gen_[50];
-   Float_t   eJet1Gen_[50];
-   Float_t phiJet1Gen_[50];
-   Float_t etaJet1Gen_[50];
+   Float_t SF_TCHE_Jet1_[50];
+   Float_t SF_err_TCHE_Jet1_[50];
+
+   Float_t  ptGenJet1_[50];
+   Float_t   eGenJet1_[50];
+   Float_t phiGenJet1_[50];
+   Float_t etaGenJet1_[50];
+
+   Float_t  ptPartJet1_[50];
+   Float_t   ePartJet1_[50];
+   Float_t phiPartJet1_[50];
+   Float_t etaPartJet1_[50];
+   Int_t pdgIdPartJet1_[50];
 
    Int_t  nPFCand1_;
    Float_t  ePFCand1_[100];
@@ -157,10 +166,19 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t jetBProbabilityBJetTagJet2_[50];
    Float_t jetProbabilityBJetTagJet2_[50];
 
-   Float_t  ptJet2Gen_[50];
-   Float_t   eJet2Gen_[50];
-   Float_t phiJet2Gen_[50];
-   Float_t etaJet2Gen_[50];
+   Float_t SF_TCHE_Jet2_[50];
+   Float_t SF_err_TCHE_Jet2_[50];
+
+   Float_t  ptGenJet2_[50];
+   Float_t   eGenJet2_[50];
+   Float_t phiGenJet2_[50];
+   Float_t etaGenJet2_[50];
+
+   Float_t  ptPartJet2_[50];
+   Float_t   ePartJet2_[50];
+   Float_t phiPartJet2_[50];
+   Float_t etaPartJet2_[50];
+   Int_t pdgIdPartJet2_[50];
 
 
    Int_t  nPFCand2_;
@@ -180,6 +198,9 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
 
 
    Float_t epfMet_;
+   Float_t sumEtpfMet_;
+   Float_t metSignificance_;
+   Float_t mEtSig_;
    Float_t phipfMet_;
 
    TH1D* h1_nCounter_Zee_;

@@ -61,6 +61,13 @@ class AnalysisJet : public TLorentzVector {
   float phiGen;
   float eGen;
 
+  float ptPart;
+  float etaPart;
+  float phiPart;
+  float ePart;
+  
+  int pdgIdPart;
+
   //btags:
   float trackCountingHighEffBJetTag;
   float trackCountingHighPurBJetTag;
@@ -68,6 +75,10 @@ class AnalysisJet : public TLorentzVector {
   float simpleSecondaryVertexHighPurBJetTag;
   float jetBProbabilityBJetTag;
   float jetProbabilityBJetTag;
+
+  // scale factors (currently only TCHE)
+  float SF_TCHE;
+  float SF_err_TCHE;
 
 };
 
@@ -203,10 +214,19 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("jetBProbabilityBJetTagJet1", jetBProbabilityBJetTagJet1_, "jetBProbabilityBJetTagJet1_[nPairs_]/F");
   reducedTree_->Branch("jetProbabilityBJetTagJet1", jetProbabilityBJetTagJet1_, "jetProbabilityBJetTagJet1_[nPairs_]/F");
 
-  reducedTree_->Branch("eJet1Gen",  eJet1Gen_,  "eJet1Gen_[nPairs_]/F");
-  reducedTree_->Branch( "ptJet1Gen",  ptJet1Gen_,  "ptJet1Gen_[nPairs_]/F");
-  reducedTree_->Branch("etaJet1Gen", etaJet1Gen_, "etaJet1Gen_[nPairs_]/F");
-  reducedTree_->Branch("phiJet1Gen", phiJet1Gen_, "phiJet1Gen_[nPairs_]/F");
+  reducedTree_->Branch("SF_TCHE_Jet1", SF_TCHE_Jet1_, "SF_TCHE_Jet1_[nPairs_]/F");
+  reducedTree_->Branch("SF_err_TCHE_Jet1", SF_err_TCHE_Jet1_, "SF_err_TCHE_Jet1_[nPairs_]/F");
+
+  reducedTree_->Branch("eGenJet1",  eGenJet1_,  "eGenJet1_[nPairs_]/F");
+  reducedTree_->Branch( "ptGenJet1",  ptGenJet1_,  "ptGenJet1_[nPairs_]/F");
+  reducedTree_->Branch("etaGenJet1", etaGenJet1_, "etaGenJet1_[nPairs_]/F");
+  reducedTree_->Branch("phiGenJet1", phiGenJet1_, "phiGenJet1_[nPairs_]/F");
+
+  reducedTree_->Branch("ePartJet1",  ePartJet1_,  "ePartJet1_[nPairs_]/F");
+  reducedTree_->Branch( "ptPartJet1",  ptPartJet1_,  "ptPartJet1_[nPairs_]/F");
+  reducedTree_->Branch("etaPartJet1", etaPartJet1_, "etaPartJet1_[nPairs_]/F");
+  reducedTree_->Branch("phiPartJet1", phiPartJet1_, "phiPartJet1_[nPairs_]/F");
+  reducedTree_->Branch("pdgIdPartJet1", pdgIdPartJet1_, "pdgIdPartJet1_[nPairs_]/I");
 
   reducedTree_->Branch("nPFCand1",  &nPFCand1_,  "nPFCand1_/I");
   reducedTree_->Branch("ePFCand1",  &ePFCand1_,  "ePFCand1_[nPFCand1_]/F");
@@ -251,10 +271,19 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("jetBProbabilityBJetTagJet2", jetBProbabilityBJetTagJet2_, "jetBProbabilityBJetTagJet2_[nPairs_]/F");
   reducedTree_->Branch("jetProbabilityBJetTagJet2", jetProbabilityBJetTagJet2_, "jetProbabilityBJetTagJet2_[nPairs_]/F");
 
-  reducedTree_->Branch("eJet2Gen",  eJet2Gen_,  "eJet2Gen_[nPairs_]/F");
-  reducedTree_->Branch( "ptJet2Gen",  ptJet2Gen_,  "ptJet2Gen_[nPairs_]/F");
-  reducedTree_->Branch("etaJet2Gen", etaJet2Gen_, "etaJet2Gen_[nPairs_]/F");
-  reducedTree_->Branch("phiJet2Gen", phiJet2Gen_, "phiJet2Gen_[nPairs_]/F");
+  reducedTree_->Branch("SF_TCHE_Jet2", SF_TCHE_Jet2_, "SF_TCHE_Jet2_[nPairs_]/F");
+  reducedTree_->Branch("SF_err_TCHE_Jet2", SF_err_TCHE_Jet2_, "SF_err_TCHE_Jet2_[nPairs_]/F");
+
+  reducedTree_->Branch("eGenJet2",  eGenJet2_,  "eGenJet2_[nPairs_]/F");
+  reducedTree_->Branch( "ptGenJet2",  ptGenJet2_,  "ptGenJet2_[nPairs_]/F");
+  reducedTree_->Branch("etaGenJet2", etaGenJet2_, "etaGenJet2_[nPairs_]/F");
+  reducedTree_->Branch("phiGenJet2", phiGenJet2_, "phiGenJet2_[nPairs_]/F");
+
+  reducedTree_->Branch("ePartJet2",  ePartJet2_,  "ePartJet2_[nPairs_]/F");
+  reducedTree_->Branch( "ptPartJet2",  ptPartJet2_,  "ptPartJet2_[nPairs_]/F");
+  reducedTree_->Branch("etaPartJet2", etaPartJet2_, "etaPartJet2_[nPairs_]/F");
+  reducedTree_->Branch("phiPartJet2", phiPartJet2_, "phiPartJet2_[nPairs_]/F");
+  reducedTree_->Branch("pdgIdPartJet2", pdgIdPartJet2_, "pdgIdPartJet2_[nPairs_]/I");
 
 
   reducedTree_->Branch("nPFCand2",  &nPFCand2_,  "nPFCand2_/I");
@@ -274,6 +303,9 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
 
 
   reducedTree_->Branch("epfMet",&epfMet_,"epfMet_/F");
+  reducedTree_->Branch("sumEtpfMet", &sumEtpfMet_,"sumEtpfMet_/F");
+  reducedTree_->Branch("metSignificance", &metSignificance_,"metSignificance_/F");
+  reducedTree_->Branch("mEtSig", &mEtSig_,"mEtSig_/F");
   reducedTree_->Branch("phipfMet",&phipfMet_,"phipfMet_/F");
 
   
@@ -540,6 +572,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 
      epfMet_ = energyPFMet[0];
+     sumEtpfMet_ = sumEtPFMet[0];
+     metSignificance_ = significancePFMet[0];
+     mEtSig_ = mEtSigPFMet[0];
      phipfMet_ = phiPFMet[0];
 
 
@@ -856,13 +891,44 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            matchedGenJet=thisGenJet;
          }
        }
-   
-       
+
        thisJet.ptGen  = (isMC_) ? matchedGenJet.Pt() : 0.;
        thisJet.etaGen = (isMC_) ? matchedGenJet.Eta() : 20.;
        thisJet.phiGen = (isMC_) ? matchedGenJet.Phi() : 0.;
        thisJet.eGen   = (isMC_) ? matchedGenJet.Energy() : 0.;
 
+       // match to parton:
+       float bestDeltaR_part=999.;
+       TLorentzVector matchedPart;
+       int pdgIdPart=0;
+       for( unsigned iPart=0; iPart<nMc; ++iPart ) {
+         if( statusMc[iPart]!=3 ) continue; //partons
+         if( idMc[iPart]!=21 && abs(idMc[iPart])>6 ) continue; //quarks or gluons
+         TLorentzVector thisPart;
+         thisPart.SetPtEtaPhiE(pMc[iPart]*sin(thetaMc[iPart]), etaMc[iPart], phiMc[iPart], energyMc[iPart]);
+         if( thisPart.DeltaR(thisJet) < bestDeltaR_part ) {
+           bestDeltaR_part=thisPart.DeltaR(thisJet);
+           matchedPart=thisPart;
+           pdgIdPart=idMc[iPart];
+         }
+       }
+   
+       thisJet.ptPart  = (isMC_ && matchedPart.Energy()>0.) ? matchedPart.Pt() : 0.;
+       thisJet.etaPart = (isMC_ && matchedPart.Energy()>0.) ? matchedPart.Eta() : 20.;
+       thisJet.phiPart = (isMC_ && matchedPart.Energy()>0.) ? matchedPart.Phi() : 0.;
+       thisJet.ePart   = (isMC_ && matchedPart.Energy()>0.) ? matchedPart.Energy() : 0.;
+       thisJet.pdgIdPart   = pdgIdPart;
+
+       ValueError SF;
+       if( thisJet.Pt()>20. && fabs(thisJet.Eta())<2.4 )
+         SF = getSF_TCHE( thisJet.Pt(), thisJet.Eta(), thisJet.trackCountingHighEffBJetTag, pdgIdPart );
+       else {
+         SF.value = 1.;
+         SF.error = 0.;
+       }
+       thisJet.SF_TCHE = SF.value;
+       thisJet.SF_err_TCHE = SF.error;
+       
        leadJets.push_back(thisJet);
        leadJetsIndex.push_back(iJet);
 
@@ -944,11 +1010,20 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            jetBProbabilityBJetTagJet1_[nPairs_] = leadJets[iJet].jetBProbabilityBJetTag;
            jetProbabilityBJetTagJet1_[nPairs_] = leadJets[iJet].jetProbabilityBJetTag;
 
+           SF_TCHE_Jet1_[nPairs_] = leadJets[iJet].SF_TCHE;
+           SF_err_TCHE_Jet1_[nPairs_] = leadJets[iJet].SF_err_TCHE;
 
-           eJet1Gen_[nPairs_] = leadJets[iJet].eGen;
-           ptJet1Gen_[nPairs_] = leadJets[iJet].ptGen;
-           etaJet1Gen_[nPairs_] = leadJets[iJet].etaGen;
-           phiJet1Gen_[nPairs_] = leadJets[iJet].phiGen;
+
+           eGenJet1_[nPairs_] = leadJets[iJet].eGen;
+           ptGenJet1_[nPairs_] = leadJets[iJet].ptGen;
+           etaGenJet1_[nPairs_] = leadJets[iJet].etaGen;
+           phiGenJet1_[nPairs_] = leadJets[iJet].phiGen;
+            
+           ePartJet1_[nPairs_] = leadJets[iJet].ePart;
+           ptPartJet1_[nPairs_] = leadJets[iJet].ptPart;
+           etaPartJet1_[nPairs_] = leadJets[iJet].etaPart;
+           phiPartJet1_[nPairs_] = leadJets[iJet].phiPart;
+           pdgIdPartJet1_[nPairs_] = leadJets[iJet].pdgIdPart;
             
            eJet2_[nPairs_] = leadJets[jJet].Energy();
            ptJet2_[nPairs_] = leadJets[jJet].Pt();
@@ -979,11 +1054,19 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            jetBProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetBProbabilityBJetTag;
            jetProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetProbabilityBJetTag;
 
-           eJet2Gen_[nPairs_] = leadJets[jJet].eGen;
-           ptJet2Gen_[nPairs_] = leadJets[jJet].ptGen;
-           etaJet2Gen_[nPairs_] = leadJets[jJet].etaGen;
-           phiJet2Gen_[nPairs_] = leadJets[jJet].phiGen;
+           SF_TCHE_Jet2_[nPairs_] = leadJets[jJet].SF_TCHE;
+           SF_err_TCHE_Jet2_[nPairs_] = leadJets[jJet].SF_err_TCHE;
+
+           eGenJet2_[nPairs_] = leadJets[jJet].eGen;
+           ptGenJet2_[nPairs_] = leadJets[jJet].ptGen;
+           etaGenJet2_[nPairs_] = leadJets[jJet].etaGen;
+           phiGenJet2_[nPairs_] = leadJets[jJet].phiGen;
             
+           ePartJet2_[nPairs_] = leadJets[jJet].ePart;
+           ptPartJet2_[nPairs_] = leadJets[jJet].ptPart;
+           etaPartJet2_[nPairs_] = leadJets[jJet].etaPart;
+           phiPartJet2_[nPairs_] = leadJets[jJet].phiPart;
+           pdgIdPartJet2_[nPairs_] = leadJets[jJet].pdgIdPart;
 
            nPairs_++;
           
@@ -1117,47 +1200,3 @@ double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, flo
   return ( - (eleVx-PVx)*elePy + (eleVy-PVy)*elePx ) / elePt;
 }
 
-
-
-/*
-Double_t Ntp1Analyzer_HZZlljj::computeQGLikelihood(const Double_t jtpt, Int_t ncharged, Int_t nneutral, Double_t PtD, Double_t r) {
-
-//std::vector<variable*> vars;
-//  std::vector<variable*> spects;
-  TMVA::Reader *reader=new TMVA::Reader("Reader");
-    Double_t result;
-//AddVariables(vars);
-//  AddSpectators(spects);
-//  AddVariableAndSpectators(reader,vars,spects);
-  
-std::cout << "jtpt: " << jtpt << std::endl;
-  if(15.<jtpt&&jtpt<30.)reader->BookMVA("PDEFoam","Bins/15-30/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(30.<jtpt&&jtpt<50.)reader->BookMVA("PDEFoam","Bins/30-50/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(50.<jtpt&&jtpt<80.)reader->BookMVA("PDEFoam","Bins/50-80/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(80.<jtpt&&jtpt<120.){
-    std::cout << "in here" << std::endl;
-    reader->BookMVA("PDEFoam","Bins/80-120/weights/TMVA Analysis_PDEFoam.weights.xml"); 
-    std::cout << "done" << std::endl;
-    } else
-  if(120.<jtpt&&jtpt<170.)reader->BookMVA("PDEFoam","Bins/120-170/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(170.<jtpt&&jtpt<300.)reader->BookMVA("PDEFoam","Bins/170-300/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(300.<jtpt&&jtpt<470.)reader->BookMVA("PDEFoam","Bins/300-470/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(470.<jtpt&&jtpt<600.)reader->BookMVA("PDEFoam","Bins/470-6000/weights/TMVA Analysis_PDEFoam.weights.xml");else
-  return -1.0; //dentro l'else
-  
-//std::vector<variable*>::iterator it;
-//  for(it=vars.begin();it!=vars.end();it++)
-//          {
-//          if((*it)->name=="ncharged") (*it)->SetVar(&ncharged); else
-//          if((*it)->name=="nneutral") (*it)->SetVar(&nneutral); else
-//          if((*it)->name=="PtD") (*it)->SetVar(&PtD);else
-//          if((*it)->name== "r") (*it)->SetVar(&r);else
-//          {return -2.0;}
-//          
-//          }
-std::cout << "jaja" << std::endl;
-  result=reader->EvaluateMVA("PDEFoam");
-  return result;
-  
-}
-*/

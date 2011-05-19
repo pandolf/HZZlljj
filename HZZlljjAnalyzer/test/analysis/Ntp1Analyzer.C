@@ -330,6 +330,7 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("lumiBlock", &lumiBlock, &b_lumiBlock);
    fChain->SetBranchAddress("bunchCrossing", &bunchCrossing, &b_bunchCrossing);
    fChain->SetBranchAddress("orbitNumber", &orbitNumber, &b_orbitNumber);
+   fChain->SetBranchAddress("rhoFastjet", &rhoFastjet, &b_rhoFastjet);
    if( isMC_ ) {
      fChain->SetBranchAddress("nMc", &nMc, &b_nMc);
      fChain->SetBranchAddress("pMc", pMc, &b_pMc);
@@ -739,6 +740,9 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("vertexXPFMet", vertexXPFMet, &b_vertexXPFMet);
    fChain->SetBranchAddress("vertexYPFMet", vertexYPFMet, &b_vertexYPFMet);
    fChain->SetBranchAddress("vertexZPFMet", vertexZPFMet, &b_vertexZPFMet);
+   fChain->SetBranchAddress("significancePFMet", significancePFMet, &b_significancePFMet);
+   fChain->SetBranchAddress("mEtSigPFMet", mEtSigPFMet, &b_mEtSigPFMet);
+   fChain->SetBranchAddress("sumEtPFMet", sumEtPFMet, &b_sumEtPFMet);
    if( isMC_ ) {
      fChain->SetBranchAddress("nGenMet", &nGenMet, &b_nGenMet);
      fChain->SetBranchAddress("chargeGenMet", chargeGenMet, &b_chargeGenMet);
@@ -790,29 +794,6 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("trackCountingHighPurBJetTagsAK5Jet", trackCountingHighPurBJetTagsAK5Jet, &b_trackCountingHighPurBJetTagsAK5Jet);
    fChain->SetBranchAddress("trackCountingHighEffBJetTagsAK5Jet", trackCountingHighEffBJetTagsAK5Jet, &b_trackCountingHighEffBJetTagsAK5Jet);
    fChain->SetBranchAddress("uncorrEnergyAK5Jet", uncorrEnergyAK5Jet, &b_uncorrEnergyAK5Jet);
- //fChain->SetBranchAddress("nAK5JPTJet", &nAK5JPTJet, &b_nAK5JPTJet);
- //fChain->SetBranchAddress("chargeAK5JPTJet", chargeAK5JPTJet, &b_chargeAK5JPTJet);
- //fChain->SetBranchAddress("energyAK5JPTJet", energyAK5JPTJet, &b_energyAK5JPTJet);
- //fChain->SetBranchAddress("thetaAK5JPTJet", thetaAK5JPTJet, &b_thetaAK5JPTJet);
- //fChain->SetBranchAddress("etaAK5JPTJet", etaAK5JPTJet, &b_etaAK5JPTJet);
- //fChain->SetBranchAddress("phiAK5JPTJet", phiAK5JPTJet, &b_phiAK5JPTJet);
- //fChain->SetBranchAddress("pxAK5JPTJet", pxAK5JPTJet, &b_pxAK5JPTJet);
- //fChain->SetBranchAddress("pyAK5JPTJet", pyAK5JPTJet, &b_pyAK5JPTJet);
- //fChain->SetBranchAddress("pzAK5JPTJet", pzAK5JPTJet, &b_pzAK5JPTJet);
- //fChain->SetBranchAddress("vertexXAK5JPTJet", vertexXAK5JPTJet, &b_vertexXAK5JPTJet);
- //fChain->SetBranchAddress("vertexYAK5JPTJet", vertexYAK5JPTJet, &b_vertexYAK5JPTJet);
- //fChain->SetBranchAddress("vertexZAK5JPTJet", vertexZAK5JPTJet, &b_vertexZAK5JPTJet);
- //fChain->SetBranchAddress("emFracAK5JPTJet", emFracAK5JPTJet, &b_emFracAK5JPTJet);
- //fChain->SetBranchAddress("hadFracAK5JPTJet", hadFracAK5JPTJet, &b_hadFracAK5JPTJet);
- //fChain->SetBranchAddress("combinedSecondaryVertexBJetTagsAK5JPTJet", combinedSecondaryVertexBJetTagsAK5JPTJet, &b_combinedSecondaryVertexBJetTagsAK5JPTJet);
- //fChain->SetBranchAddress("combinedSecondaryVertexMVABJetTagsAK5JPTJet", combinedSecondaryVertexMVABJetTagsAK5JPTJet, &b_combinedSecondaryVertexMVABJetTagsAK5JPTJet);
- //fChain->SetBranchAddress("jetBProbabilityBJetTagsAK5JPTJet", jetBProbabilityBJetTagsAK5JPTJet, &b_jetBProbabilityBJetTagsAK5JPTJet);
- //fChain->SetBranchAddress("jetProbabilityBJetTagsAK5JPTJet", jetProbabilityBJetTagsAK5JPTJet, &b_jetProbabilityBJetTagsAK5JPTJet);
- //fChain->SetBranchAddress("simpleSecondaryVertexBJetTagsAK5JPTJet", simpleSecondaryVertexBJetTagsAK5JPTJet, &b_simpleSecondaryVertexBJetTagsAK5JPTJet);
- //fChain->SetBranchAddress("softMuonBJetTagsAK5JPTJet", softMuonBJetTagsAK5JPTJet, &b_softMuonBJetTagsAK5JPTJet);
- //fChain->SetBranchAddress("trackCountingHighPurBJetTagsAK5JPTJet", trackCountingHighPurBJetTagsAK5JPTJet, &b_trackCountingHighPurBJetTagsAK5JPTJet);
- //fChain->SetBranchAddress("trackCountingHighEffBJetTagsAK5JPTJet", trackCountingHighEffBJetTagsAK5JPTJet, &b_trackCountingHighEffBJetTagsAK5JPTJet);
- //fChain->SetBranchAddress("uncorrEnergyAK5JPTJet", uncorrEnergyAK5JPTJet, &b_uncorrEnergyAK5JPTJet);
    fChain->SetBranchAddress("nAK5PFPUcorrJet", &nAK5PFPUcorrJet, &b_nAK5PFPUcorrJet);
    fChain->SetBranchAddress("chargeAK5PFPUcorrJet", chargeAK5PFPUcorrJet, &b_chargeAK5PFPUcorrJet);
    fChain->SetBranchAddress("energyAK5PFPUcorrJet", energyAK5PFPUcorrJet, &b_energyAK5PFPUcorrJet);
@@ -1212,6 +1193,78 @@ GenEventParameters Ntp1Analyzer::getGenEventParameters() {
    return returnGenPars;
 
 }
+
+
+
+ValueError Ntp1Analyzer::getSF_TCHE( float jetpt, float jeteta, float jetTCHE, int pdgIdPart ) {
+
+  ValueError ve;
+
+  if( abs( pdgIdPart ) == 5 ) { 
+
+    // SF for b's
+    ve.value = 0.9; 
+    ve.error = 0.;
+
+  } else if( abs( pdgIdPart)>0 ) { //in data it is 0 (save computing time)
+
+    // SF for light quarks:
+    if( jetTCHE>3.3 )
+      ve = getSF("SF_light_TCHEM.txt", jetpt, jeteta);
+    else if( jetTCHE>1.7 )
+      ve = getSF("SF_light_TCHEL.txt", jetpt, jeteta);
+    else {
+      ve.value = 1.;
+      ve.error = 0.;
+    }
+
+  } else {
+
+    ve.value = 1.;
+    ve.error = 0.;
+
+  }
+
+  return ve;
+
+}
+
+
+
+
+ValueError Ntp1Analyzer::getSF( const std::string& fileName, float jetpt, float jeteta ) {
+
+   ValueError ve;
+
+   bool foundSF = false;
+
+   ifstream ifs(fileName.c_str());
+
+   while( ifs.good() && !foundSF ) {
+
+     float etaMin, etaMax, ptMin, ptMax, eff, eff_err, SF, SF_err;
+     ifs >> etaMin >> etaMax >> ptMin >> ptMax >> eff >> eff_err >> SF >> SF_err;
+
+     if( fabs(jeteta)>=etaMin && fabs(jeteta)<etaMax && jetpt>=ptMin && (jetpt<ptMax||ptMax==999.) ) {
+       ve.value = SF;
+       ve.error = SF_err;
+       foundSF = true;
+     }
+
+   } // while
+
+   ifs.close();
+
+   if( !foundSF ) {
+     std::cout << "WARNING! Didn't find SF in file '" << fileName << "'. Setting it to 1." << std::endl;
+     ve.value = 1.;
+     ve.error = 0.;
+   }
+
+   return ve;
+
+}
+
 
 
 
