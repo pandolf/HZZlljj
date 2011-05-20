@@ -60,6 +60,64 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   std::string btagFileName = "btagfile_" + selectionType_ + ".root";
   TFile* btagFile = TFile::Open(btagFileName.c_str(), "RECREATE");
 
+
+  // these histograms will save the final yields and efficiencies:
+
+  TH1D* h1_nEvents_fb_0btag_250 = new TH1D("nEvents_fb_0btag", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_250 = new TH1D("nEvents_fb_1btag", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_250 = new TH1D("nEvents_fb_2btag", "", 1, 0., 1.);
+
+  TH1D* h1_eff_0btag_250 = new TH1D("eff_0btag_250", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_250 = new TH1D("eff_1btag_250", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_250 = new TH1D("eff_2btag_250", "", 1, 0., 1.);
+
+
+  TH1D* h1_nEvents_fb_0btag_300 = new TH1D("nEvents_fb_0btag_300", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_300 = new TH1D("nEvents_fb_1btag_300", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_300 = new TH1D("nEvents_fb_2btag_300", "", 1, 0., 1.);
+
+  TH1D* h1_eff_0btag_300 = new TH1D("eff_0btag_300", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_300 = new TH1D("eff_1btag_300", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_300 = new TH1D("eff_2btag_300", "", 1, 0., 1.);
+
+
+  TH1D* h1_nEvents_fb_0btag_350 = new TH1D("nEvents_fb_0btag_350", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_350 = new TH1D("nEvents_fb_1btag_350", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_350 = new TH1D("nEvents_fb_2btag_350", "", 1, 0., 1.);
+
+  TH1D* h1_eff_0btag_350 = new TH1D("eff_0btag_350", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_350 = new TH1D("eff_1btag_350", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_350 = new TH1D("eff_2btag_350", "", 1, 0., 1.);
+
+
+  TH1D* h1_nEvents_fb_0btag_400 = new TH1D("nEvents_fb_0btag_400", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_400 = new TH1D("nEvents_fb_1btag_400", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_400 = new TH1D("nEvents_fb_2btag_400", "", 1, 0., 1.);
+
+  TH1D* h1_eff_0btag_400 = new TH1D("eff_0btag_400", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_400 = new TH1D("eff_1btag_400", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_400 = new TH1D("eff_2btag_400", "", 1, 0., 1.);
+
+
+  TH1D* h1_nEvents_fb_0btag_450 = new TH1D("nEvents_fb_0btag_450", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_450 = new TH1D("nEvents_fb_1btag_450", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_450 = new TH1D("nEvents_fb_2btag_450", "", 1, 0., 1.);
+
+  TH1D* h1_eff_0btag_450 = new TH1D("eff_0btag_450", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_450 = new TH1D("eff_1btag_450", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_450 = new TH1D("eff_2btag_450", "", 1, 0., 1.);
+
+
+  TH1D* h1_nEvents_fb_0btag_500 = new TH1D("nEvents_fb_0btag_500", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_500 = new TH1D("nEvents_fb_1btag_500", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_500 = new TH1D("nEvents_fb_2btag_500", "", 1, 0., 1.);
+
+  TH1D* h1_eff_0btag_500 = new TH1D("eff_0btag_500", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_500 = new TH1D("eff_1btag_500", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_500 = new TH1D("eff_2btag_500", "", 1, 0., 1.);
+
+
+
   TH1F* h1_run = new TH1F("run", "", 15149, 132440, 147589);
 
   TH1D* h1_pfMet = new TH1D("pfMet", "", 60, 0., 120.);
@@ -71,6 +129,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_pfMetOverMZZ->Sumw2();
   TH1D* h1_pfMetOverMZZ_2btag = new TH1D("pfMetOverMZZ_2btag", "", 100, 0., 0.6);
   h1_pfMetOverMZZ_2btag->Sumw2();
+
+  TH1D* h1_metSignificance= new TH1D("metSignificance", "", 80, 0., 40.);
+  h1_metSignificance->Sumw2();
+  TH1D* h1_metSignificance_2btag = new TH1D("metSignificance_2btag", "", 80, 0., 40.);
+  h1_metSignificance_2btag->Sumw2();
+
+  TH1D* h1_mEtSig= new TH1D("mEtSig", "", 60, 0., 15.);
+  h1_mEtSig->Sumw2();
+  TH1D* h1_mEtSig_2btag = new TH1D("mEtSig_2btag", "", 60, 0., 15.);
+  h1_mEtSig_2btag->Sumw2();
 
 
   TH1D* h1_rhoPF_presel = new TH1D("rhoPF_presel", "", 50, 0., 20.);
@@ -345,19 +413,19 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_UL->Sumw2();
   TH1D* h1_mZZ_UL_kinfit = new TH1D("mZZ_UL_kinfit", "", 900, 100., 1000.);
   h1_mZZ_UL_kinfit->Sumw2();
-  TH1D* h1_mZZ_hiMass= new TH1D("mZZ_hiMass", "", 110, 150., 700.);
+  TH1D* h1_mZZ_hiMass= new TH1D("mZZ_hiMass", "", 120, 200., 800.);
   h1_mZZ_hiMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass= new TH1D("mZZ_kinfit_hiMass", "", 110, 150., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass= new TH1D("mZZ_kinfit_hiMass", "", 120, 200., 800.);
   h1_mZZ_kinfit_hiMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 110, 150., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 120, 200., 800.);
   h1_mZZ_kinfit_hiMass_0btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 110, 150., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 120, 200., 800.);
   h1_mZZ_kinfit_hiMass_1btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 110, 150., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 120, 200., 800.);
   h1_mZZ_kinfit_hiMass_2btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 110, 150., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 120, 200., 800.);
   h1_mZZ_kinfit_hiMass_hiQG->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 110, 150., 700.);
+  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 120, 200., 800.);
   h1_mZZ_kinfit_hiMass_loQG->Sumw2();
 //TH1D* h1_mZZ_highestMass= new TH1D("mZZ_highestMass", "", 70, 350., 700.);
 //h1_mZZ_highestMass->Sumw2();
@@ -456,6 +524,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   Float_t pfMet;
   tree_->SetBranchAddress("epfMet", &pfMet);
+  Float_t metSignificance;
+  tree_->SetBranchAddress("metSignificance", &metSignificance);
+  Float_t mEtSig;
+  tree_->SetBranchAddress("mEtSig", &mEtSig);
   Float_t phiMet;
   tree_->SetBranchAddress("phipfMet", &phiMet);
 
@@ -974,8 +1046,12 @@ ofstream ofs("run_event.txt");
       // FULL EVENT VARIABLES
       // --------------------
    
-      if( nBTags==2 ) 
-        if( pfMet/ZZ_kinfit_tmp.M() > pfMetThresh_ ) continue;
+      if( nBTags==2 )  {
+        if( selectionType_=="optLD_looseBTags_metSigCut" )
+          if( metSignificance > 10. ) continue;
+        else
+          if( pfMet/ZZ_kinfit_tmp.M() > pfMetThresh_ ) continue;
+      }
 
 
 
@@ -1266,9 +1342,13 @@ ofstream ofs("run_event.txt");
 
     h1_pfMet->Fill( pfMet, eventWeight );
     h1_pfMetOverMZZ->Fill( pfMet/ZZ_kinfit.M(), eventWeight );
+    h1_metSignificance->Fill( metSignificance, eventWeight );
+    h1_mEtSig->Fill( mEtSig, eventWeight );
     if( maxBTag_found==2 ) {
       h1_pfMet_2btag->Fill( pfMet, eventWeight );
       h1_pfMetOverMZZ_2btag->Fill( pfMet/ZZ_kinfit.M(), eventWeight );
+      h1_metSignificance_2btag->Fill( metSignificance, eventWeight );
+      h1_mEtSig_2btag->Fill( mEtSig, eventWeight );
     }
 
     h1_rhoPF->Fill( rhoPF, eventWeight );
@@ -1403,38 +1483,126 @@ ofstream ofs("run_event.txt");
 
   } //for entries
 
+  float eff_0btag_250 = nEventsPassed_fb_0btag_250/nCounterW_;
+  float eff_1btag_250 = nEventsPassed_fb_1btag_250/nCounterW_;
+  float eff_2btag_250 = nEventsPassed_fb_2btag_250/nCounterW_;
+
+  float eff_0btag_300 = nEventsPassed_fb_0btag_300/nCounterW_;
+  float eff_1btag_300 = nEventsPassed_fb_1btag_300/nCounterW_;
+  float eff_2btag_300 = nEventsPassed_fb_2btag_300/nCounterW_;
+
+  float eff_0btag_350 = nEventsPassed_fb_0btag_350/nCounterW_;
+  float eff_1btag_350 = nEventsPassed_fb_1btag_350/nCounterW_;
+  float eff_2btag_350 = nEventsPassed_fb_2btag_350/nCounterW_;
+
+  float eff_0btag_400 = nEventsPassed_fb_0btag_400/nCounterW_;
+  float eff_1btag_400 = nEventsPassed_fb_1btag_400/nCounterW_;
+  float eff_2btag_400 = nEventsPassed_fb_2btag_400/nCounterW_;
+
+  float eff_0btag_450 = nEventsPassed_fb_0btag_450/nCounterW_;
+  float eff_1btag_450 = nEventsPassed_fb_1btag_450/nCounterW_;
+  float eff_2btag_450 = nEventsPassed_fb_2btag_450/nCounterW_;
+
+  float eff_0btag_500 = nEventsPassed_fb_0btag_500/nCounterW_;
+  float eff_1btag_500 = nEventsPassed_fb_1btag_500/nCounterW_;
+  float eff_2btag_500 = nEventsPassed_fb_2btag_500/nCounterW_;
+
+
+  h1_nEvents_fb_0btag_250->SetBinContent(1,nEventsPassed_fb_0btag_250);
+  h1_nEvents_fb_1btag_250->SetBinContent(1,nEventsPassed_fb_1btag_250);
+  h1_nEvents_fb_2btag_250->SetBinContent(1,nEventsPassed_fb_2btag_250);
+
+  h1_eff_0btag_250->SetBinContent(1,eff_0btag_250);
+  h1_eff_1btag_250->SetBinContent(1,eff_1btag_250);
+  h1_eff_2btag_250->SetBinContent(1,eff_2btag_250);
+
+
+  h1_nEvents_fb_0btag_300->SetBinContent(1,nEventsPassed_fb_0btag_300);
+  h1_nEvents_fb_1btag_300->SetBinContent(1,nEventsPassed_fb_1btag_300);
+  h1_nEvents_fb_2btag_300->SetBinContent(1,nEventsPassed_fb_2btag_300);
+
+  h1_eff_0btag_300->SetBinContent(1,eff_0btag_300);
+  h1_eff_1btag_300->SetBinContent(1,eff_1btag_300);
+  h1_eff_2btag_300->SetBinContent(1,eff_2btag_300);
+
+
+  h1_nEvents_fb_0btag_300->SetBinContent(1,nEventsPassed_fb_0btag_300);
+  h1_nEvents_fb_1btag_300->SetBinContent(1,nEventsPassed_fb_1btag_300);
+  h1_nEvents_fb_2btag_300->SetBinContent(1,nEventsPassed_fb_2btag_300);
+
+  h1_eff_0btag_300->SetBinContent(1,eff_0btag_300);
+  h1_eff_1btag_300->SetBinContent(1,eff_1btag_300);
+  h1_eff_2btag_300->SetBinContent(1,eff_2btag_300);
+
+
+  h1_nEvents_fb_0btag_350->SetBinContent(1,nEventsPassed_fb_0btag_350);
+  h1_nEvents_fb_1btag_350->SetBinContent(1,nEventsPassed_fb_1btag_350);
+  h1_nEvents_fb_2btag_350->SetBinContent(1,nEventsPassed_fb_2btag_350);
+
+  h1_eff_0btag_350->SetBinContent(1,eff_0btag_350);
+  h1_eff_1btag_350->SetBinContent(1,eff_1btag_350);
+  h1_eff_2btag_350->SetBinContent(1,eff_2btag_350);
+
+
+  h1_nEvents_fb_0btag_400->SetBinContent(1,nEventsPassed_fb_0btag_400);
+  h1_nEvents_fb_1btag_400->SetBinContent(1,nEventsPassed_fb_1btag_400);
+  h1_nEvents_fb_2btag_400->SetBinContent(1,nEventsPassed_fb_2btag_400);
+
+  h1_eff_0btag_400->SetBinContent(1,eff_0btag_400);
+  h1_eff_1btag_400->SetBinContent(1,eff_1btag_400);
+  h1_eff_2btag_400->SetBinContent(1,eff_2btag_400);
+
+
+  h1_nEvents_fb_0btag_450->SetBinContent(1,nEventsPassed_fb_0btag_450);
+  h1_nEvents_fb_1btag_450->SetBinContent(1,nEventsPassed_fb_1btag_450);
+  h1_nEvents_fb_2btag_450->SetBinContent(1,nEventsPassed_fb_2btag_450);
+
+  h1_eff_0btag_450->SetBinContent(1,eff_0btag_450);
+  h1_eff_1btag_450->SetBinContent(1,eff_1btag_450);
+  h1_eff_2btag_450->SetBinContent(1,eff_2btag_450);
+
+
+  h1_nEvents_fb_0btag_500->SetBinContent(1,nEventsPassed_fb_0btag_500);
+  h1_nEvents_fb_1btag_500->SetBinContent(1,nEventsPassed_fb_1btag_500);
+  h1_nEvents_fb_2btag_500->SetBinContent(1,nEventsPassed_fb_2btag_500);
+
+  h1_eff_0btag_500->SetBinContent(1,eff_0btag_500);
+  h1_eff_1btag_500->SetBinContent(1,eff_1btag_500);
+  h1_eff_2btag_500->SetBinContent(1,eff_2btag_500);
+
+
 
   std::cout << std::endl << std::endl;
   std::cout << "----> SELECTION: " << selectionType_ << "    DATASET: " << dataset_ << std::endl << std::endl;
   std::cout << "----> 250 GeV (225-275): " << std::endl;
-  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_250 << " ev/fb-1  (" << nEventsPassed_0btag_250 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_250/nCounterW_ << "%" << std::endl;
-  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_250 << " ev/fb-1  (" << nEventsPassed_1btag_250 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_250/nCounterW_ << "%" << std::endl;
-  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_250 << " ev/fb-1  (" << nEventsPassed_2btag_250 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_250/nCounterW_ << "%" << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_250 << " ev/fb-1  (" << nEventsPassed_0btag_250 << " events)" << " Efficiency: " << 100.*eff_0btag_250 << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_250 << " ev/fb-1  (" << nEventsPassed_1btag_250 << " events)" << " Efficiency: " << 100.*eff_1btag_250 << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_250 << " ev/fb-1  (" << nEventsPassed_2btag_250 << " events)" << " Efficiency: " << 100.*eff_2btag_250 << "%" << std::endl;
   std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << "----> 300 GeV (270-330): " << std::endl;
-  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_300 << " ev/fb-1  (" << nEventsPassed_0btag_300 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_300/nCounterW_ << "%" << std::endl;
-  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_300 << " ev/fb-1  (" << nEventsPassed_1btag_300 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_300/nCounterW_ << "%" << std::endl;
-  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_300 << " ev/fb-1  (" << nEventsPassed_2btag_300 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_300/nCounterW_ << "%" << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_300 << " ev/fb-1  (" << nEventsPassed_0btag_300 << " events)" << " Efficiency: " << 100.*eff_0btag_300 << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_300 << " ev/fb-1  (" << nEventsPassed_1btag_300 << " events)" << " Efficiency: " << 100.*eff_1btag_300 << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_300 << " ev/fb-1  (" << nEventsPassed_2btag_300 << " events)" << " Efficiency: " << 100.*eff_2btag_300 << "%" << std::endl;
   std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << "----> 350 GeV (315-385): " << std::endl;
-  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_350 << " ev/fb-1  (" << nEventsPassed_0btag_350 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_350/nCounterW_ << "%" << std::endl;
-  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_350 << " ev/fb-1  (" << nEventsPassed_1btag_350 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_350/nCounterW_ << "%" << std::endl;
-  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_350 << " ev/fb-1  (" << nEventsPassed_2btag_350 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_350/nCounterW_ << "%" << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_350 << " ev/fb-1  (" << nEventsPassed_0btag_350 << " events)" << " Efficiency: " << 100.*eff_0btag_350 << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_350 << " ev/fb-1  (" << nEventsPassed_1btag_350 << " events)" << " Efficiency: " << 100.*eff_1btag_350 << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_350 << " ev/fb-1  (" << nEventsPassed_2btag_350 << " events)" << " Efficiency: " << 100.*eff_2btag_350 << "%" << std::endl;
   std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << "----> 400 GeV (360-440): " << std::endl;
-  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_400 << " ev/fb-1  (" << nEventsPassed_0btag_400 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_400/nCounterW_ << "%" << std::endl;
-  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_400 << " ev/fb-1  (" << nEventsPassed_1btag_400 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_400/nCounterW_ << "%" << std::endl;
-  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_400 << " ev/fb-1  (" << nEventsPassed_2btag_400 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_400/nCounterW_ << "%" << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_400 << " ev/fb-1  (" << nEventsPassed_0btag_400 << " events)" << " Efficiency: " << 100.*eff_0btag_400 << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_400 << " ev/fb-1  (" << nEventsPassed_1btag_400 << " events)" << " Efficiency: " << 100.*eff_1btag_400 << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_400 << " ev/fb-1  (" << nEventsPassed_2btag_400 << " events)" << " Efficiency: " << 100.*eff_2btag_400 << "%" << std::endl;
   std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << "----> 450 GeV (405-495): " << std::endl;
-  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_450 << " ev/fb-1  (" << nEventsPassed_0btag_450 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_450/nCounterW_ << "%" << std::endl;
-  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_450 << " ev/fb-1  (" << nEventsPassed_1btag_450 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_450/nCounterW_ << "%" << std::endl;
-  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_450 << " ev/fb-1  (" << nEventsPassed_2btag_450 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_450/nCounterW_ << "%" << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_450 << " ev/fb-1  (" << nEventsPassed_0btag_450 << " events)" << " Efficiency: " << 100.*eff_0btag_450 << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_450 << " ev/fb-1  (" << nEventsPassed_1btag_450 << " events)" << " Efficiency: " << 100.*eff_1btag_450 << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_450 << " ev/fb-1  (" << nEventsPassed_2btag_450 << " events)" << " Efficiency: " << 100.*eff_2btag_450 << "%" << std::endl;
   std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << "----> 500 GeV (450-550): " << std::endl;
-  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_500 << " ev/fb-1  (" << nEventsPassed_0btag_500 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_0btag_500/nCounterW_ << "%" << std::endl;
-  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_500 << " ev/fb-1  (" << nEventsPassed_1btag_500 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_1btag_500/nCounterW_ << "%" << std::endl;
-  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_500 << " ev/fb-1  (" << nEventsPassed_2btag_500 << " events)" << " Efficiency: " << 100.*nEventsPassed_fb_2btag_500/nCounterW_ << "%" << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_500 << " ev/fb-1  (" << nEventsPassed_0btag_500 << " events)" << " Efficiency: " << 100.*eff_0btag_500 << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_500 << " ev/fb-1  (" << nEventsPassed_1btag_500 << " events)" << " Efficiency: " << 100.*eff_1btag_500 << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_500 << " ev/fb-1  (" << nEventsPassed_2btag_500 << " events)" << " Efficiency: " << 100.*eff_2btag_500 << "%" << std::endl;
   std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << std::endl;
 
@@ -1443,11 +1611,72 @@ ofstream ofs("run_event.txt");
 
   outFile_->cd();
 
+  h1_nEvents_fb_0btag_250->Write();
+  h1_nEvents_fb_1btag_250->Write();
+  h1_nEvents_fb_2btag_250->Write();
+
+  h1_eff_0btag_250->Write();
+  h1_eff_1btag_250->Write();
+  h1_eff_2btag_250->Write();
+
+  h1_nEvents_fb_0btag_300->Write();
+  h1_nEvents_fb_1btag_300->Write();
+  h1_nEvents_fb_2btag_300->Write();
+
+  h1_eff_0btag_300->Write();
+  h1_eff_1btag_300->Write();
+  h1_eff_2btag_300->Write();
+
+  h1_nEvents_fb_0btag_300->Write();
+  h1_nEvents_fb_1btag_300->Write();
+  h1_nEvents_fb_2btag_300->Write();
+
+  h1_eff_0btag_300->Write();
+  h1_eff_1btag_300->Write();
+  h1_eff_2btag_300->Write();
+
+  h1_nEvents_fb_0btag_350->Write();
+  h1_nEvents_fb_1btag_350->Write();
+  h1_nEvents_fb_2btag_350->Write();
+
+  h1_eff_0btag_350->Write();
+  h1_eff_1btag_350->Write();
+  h1_eff_2btag_350->Write();
+
+  h1_nEvents_fb_0btag_400->Write();
+  h1_nEvents_fb_1btag_400->Write();
+  h1_nEvents_fb_2btag_400->Write();
+
+  h1_eff_0btag_400->Write();
+  h1_eff_1btag_400->Write();
+  h1_eff_2btag_400->Write();
+
+  h1_nEvents_fb_0btag_450->Write();
+  h1_nEvents_fb_1btag_450->Write();
+  h1_nEvents_fb_2btag_450->Write();
+
+  h1_eff_0btag_450->Write();
+  h1_eff_1btag_450->Write();
+  h1_eff_2btag_450->Write();
+
+  h1_nEvents_fb_0btag_500->Write();
+  h1_nEvents_fb_1btag_500->Write();
+  h1_nEvents_fb_2btag_500->Write();
+
+  h1_eff_0btag_500->Write();
+  h1_eff_1btag_500->Write();
+  h1_eff_2btag_500->Write();
+
+
   h1_run->Write();
   h1_rhoPF_presel->Write();
   h1_rhoPF->Write();
   
   h1_pfMet->Write();
+  h1_metSignificance->Write();
+  h1_metSignificance_2btag->Write();
+  h1_mEtSig->Write();
+  h1_mEtSig_2btag->Write();
   h1_pfMet_2btag->Write();
   h1_pfMetOverMZZ->Write();
   h1_pfMetOverMZZ_2btag->Write();
@@ -1711,6 +1940,31 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     pfMetThresh_ = 99999.;
 
   } else if( selectionType_=="optLD_looseBTags_metCut" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    helicityLD_slope_0btags_ = 0.00124;
+    helicityLD_slope_1btags_ = 0.;
+    helicityLD_slope_2btags_ = 0.;
+    helicityLD_intercept_0btags_ = 0.1433;
+    helicityLD_intercept_1btags_ = 0.55;
+    helicityLD_intercept_2btags_ = 0.5;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mZZ_threshLo_ = 375.;
+    mZZ_threshHi_ = 456.;
+    pfMetThresh_ = 0.2;
+
+  } else if( selectionType_=="optLD_looseBTags_metSigCut" ) {
 
     ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
