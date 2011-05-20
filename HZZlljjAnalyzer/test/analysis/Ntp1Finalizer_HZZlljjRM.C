@@ -63,9 +63,9 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   // these histograms will save the final yields and efficiencies:
 
-  TH1D* h1_nEvents_fb_0btag_250 = new TH1D("nEvents_fb_0btag", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_1btag_250 = new TH1D("nEvents_fb_1btag", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_2btag_250 = new TH1D("nEvents_fb_2btag", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_250 = new TH1D("nEvents_fb_0btag_250", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_250 = new TH1D("nEvents_fb_1btag_250", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_250 = new TH1D("nEvents_fb_2btag_250", "", 1, 0., 1.);
 
   TH1D* h1_eff_0btag_250 = new TH1D("eff_0btag_250", "", 1, 0., 1.);
   TH1D* h1_eff_1btag_250 = new TH1D("eff_1btag_250", "", 1, 0., 1.);
@@ -1508,63 +1508,63 @@ ofstream ofs("run_event.txt");
   float eff_2btag_500 = nEventsPassed_fb_2btag_500/nCounterW_;
 
 
-  h1_nEvents_fb_0btag_250->SetBinContent(1,nEventsPassed_fb_0btag_250);
-  h1_nEvents_fb_1btag_250->SetBinContent(1,nEventsPassed_fb_1btag_250);
-  h1_nEvents_fb_2btag_250->SetBinContent(1,nEventsPassed_fb_2btag_250);
+  h1_nEvents_fb_0btag_250->SetBinContent(1,1000.*nEventsPassed_fb_0btag_250);
+  h1_nEvents_fb_1btag_250->SetBinContent(1,1000.*nEventsPassed_fb_1btag_250);
+  h1_nEvents_fb_2btag_250->SetBinContent(1,1000.*nEventsPassed_fb_2btag_250);
 
   h1_eff_0btag_250->SetBinContent(1,eff_0btag_250);
   h1_eff_1btag_250->SetBinContent(1,eff_1btag_250);
   h1_eff_2btag_250->SetBinContent(1,eff_2btag_250);
 
 
-  h1_nEvents_fb_0btag_300->SetBinContent(1,nEventsPassed_fb_0btag_300);
-  h1_nEvents_fb_1btag_300->SetBinContent(1,nEventsPassed_fb_1btag_300);
-  h1_nEvents_fb_2btag_300->SetBinContent(1,nEventsPassed_fb_2btag_300);
+  h1_nEvents_fb_0btag_300->SetBinContent(1,1000.*nEventsPassed_fb_0btag_300);
+  h1_nEvents_fb_1btag_300->SetBinContent(1,1000.*nEventsPassed_fb_1btag_300);
+  h1_nEvents_fb_2btag_300->SetBinContent(1,1000.*nEventsPassed_fb_2btag_300);
 
   h1_eff_0btag_300->SetBinContent(1,eff_0btag_300);
   h1_eff_1btag_300->SetBinContent(1,eff_1btag_300);
   h1_eff_2btag_300->SetBinContent(1,eff_2btag_300);
 
 
-  h1_nEvents_fb_0btag_300->SetBinContent(1,nEventsPassed_fb_0btag_300);
-  h1_nEvents_fb_1btag_300->SetBinContent(1,nEventsPassed_fb_1btag_300);
-  h1_nEvents_fb_2btag_300->SetBinContent(1,nEventsPassed_fb_2btag_300);
+  h1_nEvents_fb_0btag_300->SetBinContent(1,1000.*nEventsPassed_fb_0btag_300);
+  h1_nEvents_fb_1btag_300->SetBinContent(1,1000.*nEventsPassed_fb_1btag_300);
+  h1_nEvents_fb_2btag_300->SetBinContent(1,1000.*nEventsPassed_fb_2btag_300);
 
   h1_eff_0btag_300->SetBinContent(1,eff_0btag_300);
   h1_eff_1btag_300->SetBinContent(1,eff_1btag_300);
   h1_eff_2btag_300->SetBinContent(1,eff_2btag_300);
 
 
-  h1_nEvents_fb_0btag_350->SetBinContent(1,nEventsPassed_fb_0btag_350);
-  h1_nEvents_fb_1btag_350->SetBinContent(1,nEventsPassed_fb_1btag_350);
-  h1_nEvents_fb_2btag_350->SetBinContent(1,nEventsPassed_fb_2btag_350);
+  h1_nEvents_fb_0btag_350->SetBinContent(1,1000.*nEventsPassed_fb_0btag_350);
+  h1_nEvents_fb_1btag_350->SetBinContent(1,1000.*nEventsPassed_fb_1btag_350);
+  h1_nEvents_fb_2btag_350->SetBinContent(1,1000.*nEventsPassed_fb_2btag_350);
 
   h1_eff_0btag_350->SetBinContent(1,eff_0btag_350);
   h1_eff_1btag_350->SetBinContent(1,eff_1btag_350);
   h1_eff_2btag_350->SetBinContent(1,eff_2btag_350);
 
 
-  h1_nEvents_fb_0btag_400->SetBinContent(1,nEventsPassed_fb_0btag_400);
-  h1_nEvents_fb_1btag_400->SetBinContent(1,nEventsPassed_fb_1btag_400);
-  h1_nEvents_fb_2btag_400->SetBinContent(1,nEventsPassed_fb_2btag_400);
+  h1_nEvents_fb_0btag_400->SetBinContent(1,1000.*nEventsPassed_fb_0btag_400);
+  h1_nEvents_fb_1btag_400->SetBinContent(1,1000.*nEventsPassed_fb_1btag_400);
+  h1_nEvents_fb_2btag_400->SetBinContent(1,1000.*nEventsPassed_fb_2btag_400);
 
   h1_eff_0btag_400->SetBinContent(1,eff_0btag_400);
   h1_eff_1btag_400->SetBinContent(1,eff_1btag_400);
   h1_eff_2btag_400->SetBinContent(1,eff_2btag_400);
 
 
-  h1_nEvents_fb_0btag_450->SetBinContent(1,nEventsPassed_fb_0btag_450);
-  h1_nEvents_fb_1btag_450->SetBinContent(1,nEventsPassed_fb_1btag_450);
-  h1_nEvents_fb_2btag_450->SetBinContent(1,nEventsPassed_fb_2btag_450);
+  h1_nEvents_fb_0btag_450->SetBinContent(1,1000.*nEventsPassed_fb_0btag_450);
+  h1_nEvents_fb_1btag_450->SetBinContent(1,1000.*nEventsPassed_fb_1btag_450);
+  h1_nEvents_fb_2btag_450->SetBinContent(1,1000.*nEventsPassed_fb_2btag_450);
 
   h1_eff_0btag_450->SetBinContent(1,eff_0btag_450);
   h1_eff_1btag_450->SetBinContent(1,eff_1btag_450);
   h1_eff_2btag_450->SetBinContent(1,eff_2btag_450);
 
 
-  h1_nEvents_fb_0btag_500->SetBinContent(1,nEventsPassed_fb_0btag_500);
-  h1_nEvents_fb_1btag_500->SetBinContent(1,nEventsPassed_fb_1btag_500);
-  h1_nEvents_fb_2btag_500->SetBinContent(1,nEventsPassed_fb_2btag_500);
+  h1_nEvents_fb_0btag_500->SetBinContent(1,1000.*nEventsPassed_fb_0btag_500);
+  h1_nEvents_fb_1btag_500->SetBinContent(1,1000.*nEventsPassed_fb_1btag_500);
+  h1_nEvents_fb_2btag_500->SetBinContent(1,1000.*nEventsPassed_fb_2btag_500);
 
   h1_eff_0btag_500->SetBinContent(1,eff_0btag_500);
   h1_eff_1btag_500->SetBinContent(1,eff_1btag_500);
