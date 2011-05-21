@@ -18,8 +18,14 @@ do2ndLevel_WZ: Ntp1Analyzer.o Ntp1Analyzer_WZ.o do2ndLevel_WZ.cpp
 do2ndLevel_WZ_DATA: Ntp1Analyzer.o Ntp1Analyzer_WZ.o do2ndLevel_WZ_DATA.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_WZ_DATA do2ndLevel_WZ_DATA.cpp Ntp1Analyzer.o Ntp1Analyzer_WZ.o $(ROOTFLAG) 
 
-do2ndLevel_HZZlljj_DATA: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o do2ndLevel_HZZlljj_DATA.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj_DATA do2ndLevel_HZZlljj_DATA.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o $(ROOTFLAG)
+do2ndLevel_HZZlljj_DATA: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o do2ndLevel_HZZlljj_DATA.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj_DATA do2ndLevel_HZZlljj_DATA.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o $(ROOTFLAG)
+
+do2ndLevel_LeptIsoStudies: Ntp1Analyzer.o Ntp1Analyzer_LeptIsoStudies.o AnalysisElectron.o AnalysisMuon.o do2ndLevel_LeptIsoStudies.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_LeptIsoStudies do2ndLevel_LeptIsoStudies.cpp Ntp1Analyzer.o Ntp1Analyzer_LeptIsoStudies.o AnalysisElectron.o AnalysisMuon.o $(ROOTFLAG) 
+
+
+
 
 
 
@@ -67,8 +73,8 @@ do2ndLevel_Zbb: Ntp1Analyzer.o Ntp1Analyzer_Zbb.o do2ndLevel_Zbb.cpp
 do2ndLevel_ZGamma: Ntp1Analyzer.o Ntp1Analyzer_ZGamma.o 
 	$(CC) -Wall -o do2ndLevel_ZGamma do2ndLevel_ZGamma.cpp Ntp1Analyzer.o Ntp1Analyzer_ZGamma.o $(ROOTFLAG)
 
-do2ndLevel_TMVA: Ntp1Analyzer.o Ntp1Analyzer_TMVA.o do2ndLevel_TMVA.cpp QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o
-	$(CC) -Wall -o do2ndLevel_TMVA do2ndLevel_TMVA.cpp Ntp1Analyzer.o Ntp1Analyzer_TMVA.o QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o $(ROOTFLAG) 
+do2ndLevel_TMVA: Ntp1Analyzer.o Ntp1Analyzer_TMVA.o do2ndLevel_TMVA.cpp QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o AnalysisElectron.o AnalysisMuon.o BTagSFUtil.o
+	$(CC) -Wall -o do2ndLevel_TMVA do2ndLevel_TMVA.cpp Ntp1Analyzer.o Ntp1Analyzer_TMVA.o QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o AnalysisElectron.o AnalysisMuon.o BTagSFUtil.o $(ROOTFLAG) 
 
 do2ndLevel_Marini: Ntp1Analyzer.o Ntp1Analyzer_Marini.o do2ndLevel_Marini.cpp QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o
 	$(CC) -Wall -o do2ndLevel_Marini do2ndLevel_Marini.cpp Ntp1Analyzer.o Ntp1Analyzer_Marini.o QGLikelihoodCalculator.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o $(ROOTFLAG) 
@@ -146,6 +152,9 @@ Ntp1Analyzer.o: Ntp1Analyzer.C
 
 Ntp1Analyzer_HZZlljj.o: Ntp1Analyzer_HZZlljj.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_HZZlljj.C $(ROOTFLAG)
+
+Ntp1Analyzer_LeptIsoStudies.o: Ntp1Analyzer_LeptIsoStudies.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_LeptIsoStudies.C $(ROOTFLAG)
 
 Ntp1Analyzer_WZ.o: Ntp1Analyzer_WZ.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_WZ.C $(ROOTFLAG)
@@ -277,6 +286,10 @@ RooSpinZero5DV2.o: $(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscrimi
 
 RooBkgd2L2JV2.o: $(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscriminant/PDFs/RooBkgd2L2JV2.cc 
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscriminant/PDFs $(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscriminant/PDFs/RooBkgd2L2JV2.cc $(ROOTFLAG)
+
+BTagSFUtil.o: $(CMSSW_BASE)/src/UserCode/pandolf/BTagSFUtil/BTagSFUtil.cc
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/BTagSFUtil/ $(CMSSW_BASE)/src/UserCode/pandolf/BTagSFUtil/BTagSFUtil.cc $(ROOTFLAG)
+
 
 
 AnalysisJet.o: AnalysisJet.cc 
