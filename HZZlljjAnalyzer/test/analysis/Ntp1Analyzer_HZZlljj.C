@@ -682,7 +682,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        bool passed_VBTF95 = thisEle.passedVBTF95();
        bool passed_VBTF80 = thisEle.passedVBTF80();
 
-       if( !passed_VBTF95 ) continue;
+       //if( !passed_VBTF95 ) continue;
+       if( !passed_VBTF80 ) continue;
 
        // check that not matched to muon (clean electrons faked by muon MIP):
        bool matchedtomuon=false;

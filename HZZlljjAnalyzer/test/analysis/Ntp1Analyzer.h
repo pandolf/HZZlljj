@@ -424,6 +424,7 @@ public :
    Float_t         hadS9Muon[150];   //[nMuon]
    Float_t         hoS9Muon[150];   //[nMuon]
    Float_t         CaloCompMuon[150];   //[nMuon]
+   Int_t           numberOfMatchesMuon[150];   //[nMuon]
    Int_t           nMet;
    Int_t           chargeMet[1];   //[nMet]
    Float_t         energyMet[1];   //[nMet]
@@ -1072,6 +1073,7 @@ public :
    TBranch        *b_hadS9Muon;   //!
    TBranch        *b_hoS9Muon;   //!
    TBranch        *b_CaloCompMuon;   //!
+   TBranch        *b_numberOfMatchesMuon;   //!
    TBranch        *b_nMet;   //!
    TBranch        *b_chargeMet;   //!
    TBranch        *b_energyMet;   //!
