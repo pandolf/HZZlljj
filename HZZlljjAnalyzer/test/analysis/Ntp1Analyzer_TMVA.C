@@ -13,9 +13,11 @@
 #include "KinematicFit/DiJetKinFitter.h"
 #include "QGLikelihood/QGLikelihoodCalculator.h"
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
+#include "BTagSFUtil/BTagSFUtil.h"
 
 
-bool use_BTAG_SF_=false;
+
+bool use_BTAG_SF_=true;
 
 
 class AnalysisJet : public TLorentzVector {
@@ -238,6 +240,8 @@ void Ntp1Analyzer_TMVA::Loop()
    int nIncorrectPairs_closestPair = 0;
 
    QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator();
+
+   BTagSFUtil* btsfutil = new BTagSFUtil();
 
 
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -931,9 +935,9 @@ if( jet2.Energy()<0. ) std::cout << "jet2_kinfit.E(): " << jet2_kinfit.E() << st
 
        // take into account Scale Factors:
        if( jet1.Pt()>20. && fabs(jet1.Eta())<2.4 )
-         modifyBTagsWithSF( jet1_tagged_loose, jet1_tagged_medium, jet1.Pt(), jet1.Eta(), jet1.pdgIdPart );
+         btsfutil->modifyBTagsWithSF( jet1_tagged_loose, jet1_tagged_medium, jet1.Pt(), jet1.Eta(), jet1.pdgIdPart );
        if( jet2.Pt()>20. && fabs(jet2.Eta())<2.4 )
-         modifyBTagsWithSF( jet2_tagged_loose, jet2_tagged_medium, jet2.Pt(), jet2.Eta(), jet2.pdgIdPart );
+         btsfutil->modifyBTagsWithSF( jet2_tagged_loose, jet2_tagged_medium, jet2.Pt(), jet2.Eta(), jet2.pdgIdPart );
       
      }
 

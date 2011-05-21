@@ -51,6 +51,8 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Int_t nNeutralJet1_;
    Float_t ptDJet1_;
    Float_t rmsCandJet1_;
+   Float_t SFTCHEJet1_;
+   Float_t SFerrTCHEJet1_;
 
    Float_t  ptJet2_;
    Float_t  ptJet2_preKin_;
@@ -59,6 +61,8 @@ class Ntp1Analyzer_TMVA : public Ntp1Analyzer {
    Int_t nNeutralJet2_;
    Float_t ptDJet2_;
    Float_t rmsCandJet2_;
+   Float_t SFTCHEJet2_;
+   Float_t SFerrTCHEJet2_;
 
    Float_t ptJetRecoil_;
    Float_t absEtaJetRecoil_;
