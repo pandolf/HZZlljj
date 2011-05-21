@@ -26,6 +26,7 @@ class AnalysisMuon : public AnalysisLepton {
   bool isIsolated();
   bool passedVBTF();
 
+  virtual float combinedIsoRel();
 
   // public data members:
 
@@ -34,6 +35,8 @@ class AnalysisMuon : public AnalysisLepton {
 
   int pixelHits;
   int trackerHits;
+
+  int nMatchedStations;
 
   double dxy;
   double dz;
