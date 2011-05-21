@@ -15,6 +15,8 @@
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
 
 
+bool use_BTAG_SF_=false;
+
 
 class AnalysisJet : public TLorentzVector {
 
@@ -56,6 +58,11 @@ class AnalysisJet : public TLorentzVector {
 
   //btags:
   float trackCountingHighEffBJetTag;
+
+  int pdgIdPart;
+
+//float SFTCHE;
+//float SFerrTCHE;
 
 };
 
@@ -120,6 +127,9 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("rmsCandJet1", &rmsCandJet1_, "rmsCandJet1_/F");
   reducedTree_->Branch("ptDJet1", &ptDJet1_, "ptDJet1_/F");
 
+  reducedTree_->Branch("SFTCHEJet1", &SFTCHEJet1_, "SFTCHEJet1_/F");
+  reducedTree_->Branch("SFerrTCHEJet1", &SFerrTCHEJet1_, "SFerrTCHEJet1_/F");
+
   reducedTree_->Branch( "ptJet2",  &ptJet2_,  "ptJet2_/F");
   reducedTree_->Branch( "ptJet2_preKin",  &ptJet2_preKin_,  "ptJet2_preKin_/F");
   reducedTree_->Branch("absEtaJet2", &absEtaJet2_, "absEtaJet2_/F");
@@ -127,6 +137,9 @@ void Ntp1Analyzer_TMVA::CreateOutputFile() {
   reducedTree_->Branch("nNeutralJet2", &nNeutralJet2_, "nNeutralJet2_/I");
   reducedTree_->Branch("rmsCandJet2", &rmsCandJet2_, "rmsCandJet2_/F");
   reducedTree_->Branch("ptDJet2", &ptDJet2_, "ptDJet2_/F");
+
+  reducedTree_->Branch("SFTCHEJet2", &SFTCHEJet2_, "SFTCHEJet2_/F");
+  reducedTree_->Branch("SFerrTCHEJet2", &SFerrTCHEJet2_, "SFerrTCHEJet2_/F");
 
   reducedTree_->Branch( "ptJetRecoil",  &ptJetRecoil_,  "ptJetRecoil_/F");
   reducedTree_->Branch("absEtaJetRecoil", &absEtaJetRecoil_, "absEtaJetRecoil_/F");
@@ -580,6 +593,32 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( thisJet.eNeutralHadrons >= 0.99*thisJet.Energy() ) continue;
        if( thisJet.ePhotons >= 0.99*thisJet.Energy() ) continue;
                           
+       // match to parton:
+       float bestDeltaR_part=999.;
+       int pdgIdPart=0;
+       for( unsigned iPart=0; iPart<nMc; ++iPart ) {
+         if( statusMc[iPart]!=3 ) continue; //partons
+         if( idMc[iPart]!=21 && abs(idMc[iPart])>6 ) continue; //quarks or gluons
+         TLorentzVector thisPart;
+         thisPart.SetPtEtaPhiE(pMc[iPart]*sin(thetaMc[iPart]), etaMc[iPart], phiMc[iPart], energyMc[iPart]);
+         if( thisPart.DeltaR(thisJet) < bestDeltaR_part ) {
+           bestDeltaR_part=thisPart.DeltaR(thisJet);
+           pdgIdPart=idMc[iPart];
+         }
+       }
+   
+
+       thisJet.pdgIdPart = pdgIdPart;
+
+     //ValueError SF;
+     //if( thisJet.Pt()>20. && fabs(thisJet.Eta())<2.4 )
+     //  SF = getSF_TCHE( thisJet.Pt(), thisJet.Eta(), thisJet.trackCountingHighEffBJetTag, pdgIdPart );
+     //else {
+     //  SF.value = 1.;
+     //  SF.error = 0.;
+     //}
+     //thisJet.SFTCHE = SF.value;
+     //thisJet.SFerrTCHE = SF.error;
 
        leadJets.push_back(thisJet);
        leadJetsIndex.push_back(iJet);
@@ -881,11 +920,29 @@ if( jet2.Energy()<0. ) std::cout << "jet2_kinfit.E(): " << jet2_kinfit.E() << st
      mZZ_ = ZZ.M();
      absEtaZZ_ = fabs(ZZ.Eta());
 
+
+     bool jet1_tagged_medium = jet1.trackCountingHighEffBJetTag>3.3;
+     bool jet1_tagged_loose  = jet1.trackCountingHighEffBJetTag>1.7;
+
+     bool jet2_tagged_medium = jet2.trackCountingHighEffBJetTag>3.3;
+     bool jet2_tagged_loose  = jet2.trackCountingHighEffBJetTag>1.7;
+
+     if( use_BTAG_SF_ ) {
+
+       // take into account Scale Factors:
+       if( jet1.Pt()>20. && fabs(jet1.Eta())<2.4 )
+         modifyBTagsWithSF( jet1_tagged_loose, jet1_tagged_medium, jet1.Pt(), jet1.Eta(), jet1.pdgIdPart );
+       if( jet2.Pt()>20. && fabs(jet2.Eta())<2.4 )
+         modifyBTagsWithSF( jet2_tagged_loose, jet2_tagged_medium, jet2.Pt(), jet2.Eta(), jet2.pdgIdPart );
+      
+     }
+
+
      
-     bool twotags_loose  = (jet1.trackCountingHighEffBJetTag>3.3 && jet2.trackCountingHighEffBJetTag>1.7)
-                        || (jet1.trackCountingHighEffBJetTag>1.7 && jet2.trackCountingHighEffBJetTag>3.3);
-     bool onetag_loose  = ( !twotags_loose ) && ( jet1.trackCountingHighEffBJetTag>1.7 || jet2.trackCountingHighEffBJetTag>1.7 );
-     //bool zerotags_loose = ( !twotags_loose && !onetag_loose );
+     // "method 3": 
+     bool twotags_loose  = (jet1_tagged_medium && jet2_tagged_loose  )
+                        || (jet1_tagged_loose  && jet2_tagged_medium );
+     bool onetag_loose  = ( !twotags_loose ) && ( jet1_tagged_loose || jet2_tagged_loose );
 
      if( twotags_loose ) nBTagsLoose_ = 2;
      else if( onetag_loose ) nBTagsLoose_ = 1;
@@ -893,11 +950,9 @@ if( jet2.Energy()<0. ) std::cout << "jet2_kinfit.E(): " << jet2_kinfit.E() << st
 
 
 
-     bool twotags =  jet1.trackCountingHighEffBJetTag>3.3 && jet2.trackCountingHighEffBJetTag>3.3;
-     bool onetag  = (jet1.trackCountingHighEffBJetTag>3.3 && jet2.trackCountingHighEffBJetTag<=3.3)
-                 || (jet1.trackCountingHighEffBJetTag<=3.3 && jet2.trackCountingHighEffBJetTag>3.3);
-     //bool zerotags = jet1.trackCountingHighEffBJetTag<3.3 && jet2.trackCountingHighEffBJetTag<3.3;
-     
+     // "method 6": 
+     bool twotags =  jet1_tagged_medium && jet2_tagged_medium;
+     bool onetag  = !twotags && (jet1_tagged_medium || jet2_tagged_medium);
 
      if( twotags ) nBTags_ = 2;
      else if( onetag ) nBTags_ = 1;

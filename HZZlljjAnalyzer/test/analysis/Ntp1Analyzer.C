@@ -1,5 +1,6 @@
 #include "Ntp1Analyzer.h"
 #include "TH1F.h"
+#include "TRandom.h"
 #include <cstdlib>
 #include <fstream>
 #include <cmath>
@@ -24,6 +25,8 @@ Ntp1Analyzer::Ntp1Analyzer(const std::string& analyzerType, const std::string& d
 
    cachedLS_ = 0;
    cachedRun_ = 0;
+
+   rand_ = new TRandom();
 
 }
 
@@ -1196,45 +1199,72 @@ GenEventParameters Ntp1Analyzer::getGenEventParameters() {
 
 
 
-ValueError Ntp1Analyzer::getSF_TCHE( float jetpt, float jeteta, float jetTCHE, int pdgIdPart ) {
+void Ntp1Analyzer::modifyBTagsWithSF( bool& isBTagged_loose, bool& isBTagged_medium, float jetpt, float jeteta, int pdgIdPart, const std::string& tagger ) {
 
-  ValueError ve;
 
+  // b quarks:
   if( abs( pdgIdPart ) == 5 ) { 
 
+    // no need to downgrade if is a b and not tagged
+    if( !isBTagged_loose ) return;
+
     // SF for b's
-    ve.value = 0.9; 
-    ve.error = 0.;
+    float b_SF = 0.9;
 
-  } else if( abs( pdgIdPart)>0 ) { //in data it is 0 (save computing time)
+    float coin = rand_->Uniform(1.);
 
-    // SF for light quarks:
-    if( jetTCHE>3.3 )
-      ve = getSF("SF_light_TCHEM.txt", jetpt, jeteta);
-    else if( jetTCHE>1.7 )
-      ve = getSF("SF_light_TCHEL.txt", jetpt, jeteta);
-    else {
-      ve.value = 1.;
-      ve.error = 0.;
+    if( coin > b_SF ) {
+
+      // scale it down one btag category:
+      if( isBTagged_medium ) isBTagged_medium=false;
+      else if( isBTagged_loose ) isBTagged_loose=false;
+ 
     }
 
-  } else {
 
-    ve.value = 1.;
-    ve.error = 0.;
+  // light quarks:
+  } else if( abs( pdgIdPart)>0 ) { //in data it is 0 (save computing time)
 
-  }
+    // no need to upgrade if is light and medium tagged
+    if( isBTagged_medium ) return;
 
-  return ve;
+    BTagScaleFactor btsf;
 
-}
+    // SF for light quarks:
+    // remember: use medium efficiencies if it is loose tagged,
+    // use loose efficiencies if it not tagged
+    // (don't do anything if it is medium tagged)
+    // this is because the jet has a probability of being upgraded
+    if( isBTagged_loose ) {
+      std::string fileName = "SF_light_"+tagger+"M.txt";
+      btsf = getSF(fileName, jetpt, jeteta);
+    } else  {
+      std::string fileName = "SF_light_"+tagger+"L.txt";
+      btsf = getSF(fileName, jetpt, jeteta);
+    }
+
+    float mistagPercent = ( btsf.SF*btsf.eff - btsf.eff ) / ( 1. - btsf.eff );
+
+    float coin = rand_->Uniform(1.);
+
+    // for light quarks, the jet has to be upgraded:
+    if( coin < mistagPercent ) {
+
+      if( !isBTagged_loose ) isBTagged_loose = true;
+      else if( !isBTagged_medium ) isBTagged_medium = true;
+
+    }
+
+  } //if b-light quark
+
+} //modifyBTagsWithSF
 
 
 
 
-ValueError Ntp1Analyzer::getSF( const std::string& fileName, float jetpt, float jeteta ) {
+BTagScaleFactor Ntp1Analyzer::getSF( const std::string& fileName, float jetpt, float jeteta ) {
 
-   ValueError ve;
+   BTagScaleFactor btsf;
 
    bool foundSF = false;
 
@@ -1246,8 +1276,10 @@ ValueError Ntp1Analyzer::getSF( const std::string& fileName, float jetpt, float 
      ifs >> etaMin >> etaMax >> ptMin >> ptMax >> eff >> eff_err >> SF >> SF_err;
 
      if( fabs(jeteta)>=etaMin && fabs(jeteta)<etaMax && jetpt>=ptMin && (jetpt<ptMax||ptMax==999.) ) {
-       ve.value = SF;
-       ve.error = SF_err;
+       btsf.SF = SF;
+       btsf.SF_err = SF_err;
+       btsf.eff = eff;
+       btsf.eff_err = eff_err;
        foundSF = true;
      }
 
@@ -1257,11 +1289,13 @@ ValueError Ntp1Analyzer::getSF( const std::string& fileName, float jetpt, float 
 
    if( !foundSF ) {
      std::cout << "WARNING! Didn't find SF in file '" << fileName << "'. Setting it to 1." << std::endl;
-     ve.value = 1.;
-     ve.error = 0.;
+     btsf.SF = 1.;
+     btsf.SF_err = 0.;
+     btsf.eff = 1.;
+     btsf.eff_err = 0.;
    }
 
-   return ve;
+   return btsf;
 
 }
 

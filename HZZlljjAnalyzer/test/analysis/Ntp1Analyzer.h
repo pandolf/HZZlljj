@@ -19,18 +19,20 @@
 #ifndef Ntp1Analyzer_h
 #define Ntp1Analyzer_h
 
-//#include <TROOT.h>
-#include <TChain.h>
-#include <TFile.h>
-#include <TH1F.h>
+#include "TChain.h"
+#include "TFile.h"
+#include "TH1F.h"
+#include "TRandom.h"
 #include <iostream>
 
 
 
-struct ValueError{
+struct BTagScaleFactor{
 
-  float value;
-  float error;
+  float SF;
+  float SF_err;
+  float eff;
+  float eff_err;
 
 };
 
@@ -608,6 +610,8 @@ public :
 
    std::string dataset_;
    bool isMC_;
+
+   TRandom* rand_;
 
    std::string recoType_;
    std::string jetAlgo_;
@@ -1275,8 +1279,8 @@ public :
    virtual void     UpdateCache();
    virtual bool     isGoodEvent();
    virtual GenEventParameters     getGenEventParameters ();
-   ValueError       getSF_TCHE( float jetpt, float jeteta, float jetTCHE, int pdgIdPart );
-   ValueError       getSF( const std::string& fileName, float jetpt, float jeteta );
+   void             modifyBTagsWithSF( bool& isBTagged_loose, bool& isBTagged_medium, float jetpt, float jeteta, int pdgIdPart, const std::string& tagger="TCHE" );
+   BTagScaleFactor  getSF( const std::string& fileName, float jetpt, float jeteta );
    double           trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
 
 
