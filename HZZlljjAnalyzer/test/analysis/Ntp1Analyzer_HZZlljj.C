@@ -76,9 +76,6 @@ class AnalysisJet : public TLorentzVector {
   float jetBProbabilityBJetTag;
   float jetProbabilityBJetTag;
 
-  // scale factors (currently only TCHE)
-  float SF_TCHE;
-  float SF_err_TCHE;
 
 };
 
@@ -214,9 +211,6 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("jetBProbabilityBJetTagJet1", jetBProbabilityBJetTagJet1_, "jetBProbabilityBJetTagJet1_[nPairs_]/F");
   reducedTree_->Branch("jetProbabilityBJetTagJet1", jetProbabilityBJetTagJet1_, "jetProbabilityBJetTagJet1_[nPairs_]/F");
 
-  reducedTree_->Branch("SF_TCHE_Jet1", SF_TCHE_Jet1_, "SF_TCHE_Jet1_[nPairs_]/F");
-  reducedTree_->Branch("SF_err_TCHE_Jet1", SF_err_TCHE_Jet1_, "SF_err_TCHE_Jet1_[nPairs_]/F");
-
   reducedTree_->Branch("eGenJet1",  eGenJet1_,  "eGenJet1_[nPairs_]/F");
   reducedTree_->Branch( "ptGenJet1",  ptGenJet1_,  "ptGenJet1_[nPairs_]/F");
   reducedTree_->Branch("etaGenJet1", etaGenJet1_, "etaGenJet1_[nPairs_]/F");
@@ -270,9 +264,6 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("simpleSecondaryVertexHighPurBJetTagJet2", simpleSecondaryVertexHighPurBJetTagJet2_, "simpleSecondaryVertexHighPurBJetTagJet2_[nPairs_]/F");
   reducedTree_->Branch("jetBProbabilityBJetTagJet2", jetBProbabilityBJetTagJet2_, "jetBProbabilityBJetTagJet2_[nPairs_]/F");
   reducedTree_->Branch("jetProbabilityBJetTagJet2", jetProbabilityBJetTagJet2_, "jetProbabilityBJetTagJet2_[nPairs_]/F");
-
-  reducedTree_->Branch("SF_TCHE_Jet2", SF_TCHE_Jet2_, "SF_TCHE_Jet2_[nPairs_]/F");
-  reducedTree_->Branch("SF_err_TCHE_Jet2", SF_err_TCHE_Jet2_, "SF_err_TCHE_Jet2_[nPairs_]/F");
 
   reducedTree_->Branch("eGenJet2",  eGenJet2_,  "eGenJet2_[nPairs_]/F");
   reducedTree_->Branch( "ptGenJet2",  ptGenJet2_,  "ptGenJet2_[nPairs_]/F");
@@ -602,6 +593,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisMuon.pixelHits = numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]+numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]];
        thisMuon.trackerHits = trackValidHitsTrack[trackIndexMuon[iMuon]];
 
+       thisMuon.nMatchedStations = numberOfMatchesMuon[iMuon];
+
 
        // to compute dxy, look for primary vertex:
        int hardestPV = -1;
@@ -675,7 +668,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisEle.dr03HcalTowerSumEt = dr03HcalTowerSumEtEle[iEle];
 
        // electron ID
-       thisEle.sigmaIetaIeta = (superClusterIndexEle[iEle]>=0) ? covIEtaIEtaSC[superClusterIndexEle[iEle]] : covIEtaIEtaSC[PFsuperClusterIndexEle[iEle]];
+       thisEle.sigmaIetaIeta = (superClusterIndexEle[iEle]>=0) ? sqrt(covIEtaIEtaSC[superClusterIndexEle[iEle]]) : sqrt(covIEtaIEtaSC[PFsuperClusterIndexEle[iEle]]);
        thisEle.deltaPhiAtVtx = deltaPhiAtVtxEle[iEle];
        thisEle.deltaEtaAtVtx = deltaEtaAtVtxEle[iEle];
        thisEle.hOverE = hOverEEle[iEle];
@@ -919,15 +912,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisJet.ePart   = (isMC_ && matchedPart.Energy()>0.) ? matchedPart.Energy() : 0.;
        thisJet.pdgIdPart   = pdgIdPart;
 
-       ValueError SF;
-       if( thisJet.Pt()>20. && fabs(thisJet.Eta())<2.4 )
-         SF = getSF_TCHE( thisJet.Pt(), thisJet.Eta(), thisJet.trackCountingHighEffBJetTag, pdgIdPart );
-       else {
-         SF.value = 1.;
-         SF.error = 0.;
-       }
-       thisJet.SF_TCHE = SF.value;
-       thisJet.SF_err_TCHE = SF.error;
        
        leadJets.push_back(thisJet);
        leadJetsIndex.push_back(iJet);
@@ -1010,9 +994,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            jetBProbabilityBJetTagJet1_[nPairs_] = leadJets[iJet].jetBProbabilityBJetTag;
            jetProbabilityBJetTagJet1_[nPairs_] = leadJets[iJet].jetProbabilityBJetTag;
 
-           SF_TCHE_Jet1_[nPairs_] = leadJets[iJet].SF_TCHE;
-           SF_err_TCHE_Jet1_[nPairs_] = leadJets[iJet].SF_err_TCHE;
-
 
            eGenJet1_[nPairs_] = leadJets[iJet].eGen;
            ptGenJet1_[nPairs_] = leadJets[iJet].ptGen;
@@ -1053,9 +1034,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            simpleSecondaryVertexHighPurBJetTagJet2_[nPairs_] = leadJets[jJet].simpleSecondaryVertexHighPurBJetTag;
            jetBProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetBProbabilityBJetTag;
            jetProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetProbabilityBJetTag;
-
-           SF_TCHE_Jet2_[nPairs_] = leadJets[jJet].SF_TCHE;
-           SF_err_TCHE_Jet2_[nPairs_] = leadJets[jJet].SF_err_TCHE;
 
            eGenJet2_[nPairs_] = leadJets[jJet].eGen;
            ptGenJet2_[nPairs_] = leadJets[jJet].ptGen;
