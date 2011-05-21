@@ -51,7 +51,7 @@ bool AnalysisElectron::electronIDVBTF80() {
     sigmaIetaIeta_thresh80 = 0.03;
     deltaPhiAtVtx_thresh80 = 0.7;
     deltaEtaAtVtx_thresh80 = 0.007;
-    hOverE_thresh80 = 0.025;
+    hOverE_thresh80 = 0.15;
   }
 
 
