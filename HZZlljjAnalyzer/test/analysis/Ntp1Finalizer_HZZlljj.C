@@ -668,8 +668,8 @@ void Ntp1Finalizer_HZZlljj::finalize() {
   std::map< int, std::map<int, std::vector<int> > > run_lumi_ev_map;
 
 
-  //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_3_8_7/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root", nPtBins);
-  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
+  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_3_8_7/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root", nPtBins);
+  //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
   float Zmass = 91.1876;
   DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", Zmass );
   HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
@@ -920,10 +920,10 @@ ofstream ofs("run_event.txt");
       // Q-G DISCRIMINATION:
       // -------------------
 
-      float QGLikelihoodJet1 = qglikeli->computeQGLikelihoodPU( jet1.Pt(), rhoPF, jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
-      float QGLikelihoodJet2 = qglikeli->computeQGLikelihoodPU( jet2.Pt(), rhoPF, jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
-//    float QGLikelihoodJet1 = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
-//    float QGLikelihoodJet2 = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
+//    float QGLikelihoodJet1 = qglikeli->computeQGLikelihoodPU( jet1.Pt(), rhoPF, jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
+//    float QGLikelihoodJet2 = qglikeli->computeQGLikelihoodPU( jet2.Pt(), rhoPF, jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
+      float QGLikelihoodJet1 = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
+      float QGLikelihoodJet2 = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
       float QGLikelihoodProd = QGLikelihoodJet1*QGLikelihoodJet2;
       if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
 
@@ -960,7 +960,7 @@ ofstream ofs("run_event.txt");
 
       }
 
-    //  if( requiredBTags_ != -1 ) if( nBTags != requiredBTags_ ) continue;
+      if( requiredBTags_ != -1 ) if( nBTags != requiredBTags_ ) continue;
 
 
 
@@ -1253,6 +1253,7 @@ ofstream ofs("run_event.txt");
     h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
 
     
+
     h1_QGLikelihoodJet1->Fill( jet1_selected.QGLikelihood, eventWeight );
     h1_QGLikelihoodJet2->Fill( jet2_selected.QGLikelihood, eventWeight );
     h1_QGLikelihoodProd->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
@@ -1272,6 +1273,7 @@ ofstream ofs("run_event.txt");
       h1_mZZ_kinfit_300Mass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
       h1_mZZ_kinfit_hiMass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
     }
+
 
     h1_mZZ_UL->Fill(ZZ_nokinfit.M(), eventWeight);
     h1_mZZ_hiMass->Fill(ZZ_nokinfit.M(), eventWeight);
