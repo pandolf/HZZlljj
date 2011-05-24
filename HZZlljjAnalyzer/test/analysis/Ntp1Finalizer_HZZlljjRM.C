@@ -1255,7 +1255,12 @@ ofs << run << " " << event << std::endl;
     TLorentzVector ZZ_nokinfit = Zjj_nokinfit + diLepton;
     TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
 
-    if( ZZ_kinfit.M() > 225. && ZZ_kinfit.M() < 275. ) {
+
+    // percentages which define the cut and count windows:
+    float mZZ_minPerc = 0.94;  //settled on -6/+10%
+    float mZZ_maxPerc = 1.1;
+
+    if( ZZ_kinfit.M() > 250.*mZZ_minPerc && ZZ_kinfit.M() < 250.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_250  += eventWeight;
         nEventsPassed_0btag_250++;
@@ -1267,7 +1272,7 @@ ofs << run << " " << event << std::endl;
         nEventsPassed_2btag_250++;
       }
     } 
-    if( ZZ_kinfit.M() > 270. && ZZ_kinfit.M() < 330. ) {
+    if( ZZ_kinfit.M() > 300.*mZZ_minPerc && ZZ_kinfit.M() < 300.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_300  += eventWeight;
         nEventsPassed_0btag_300++;
@@ -1279,7 +1284,7 @@ ofs << run << " " << event << std::endl;
         nEventsPassed_2btag_300++;
       }
     } 
-    if( ZZ_kinfit.M() > 315. && ZZ_kinfit.M() < 385. ) {
+    if( ZZ_kinfit.M() > 350.*mZZ_minPerc && ZZ_kinfit.M() < 350.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_350  += eventWeight;
         nEventsPassed_0btag_350++;
@@ -1291,7 +1296,7 @@ ofs << run << " " << event << std::endl;
         nEventsPassed_2btag_350++;
       }
     } 
-    if( ZZ_kinfit.M() > 360. && ZZ_kinfit.M() < 440. ) {
+    if( ZZ_kinfit.M() > 400.*mZZ_minPerc && ZZ_kinfit.M() < 400.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_400  += eventWeight;
         nEventsPassed_0btag_400++;
@@ -1303,7 +1308,7 @@ ofs << run << " " << event << std::endl;
         nEventsPassed_2btag_400++;
       }
     } 
-    if( ZZ_kinfit.M() > 405. && ZZ_kinfit.M() < 495. ) {
+    if( ZZ_kinfit.M() > 450.*mZZ_minPerc && ZZ_kinfit.M() < 450.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_450  += eventWeight;
         nEventsPassed_0btag_450++;
@@ -1315,7 +1320,7 @@ ofs << run << " " << event << std::endl;
         nEventsPassed_2btag_450++;
       }
     } 
-    if( ZZ_kinfit.M() > 450. && ZZ_kinfit.M() < 550. ) {
+    if( ZZ_kinfit.M() > 500.*mZZ_minPerc && ZZ_kinfit.M() < 500.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_500  += eventWeight;
         nEventsPassed_0btag_500++;
@@ -1327,7 +1332,7 @@ ofs << run << " " << event << std::endl;
         nEventsPassed_2btag_500++;
       }
     } 
-    if( ZZ_kinfit.M() > 540. && ZZ_kinfit.M() < 660. ) {
+    if( ZZ_kinfit.M() > 600.*mZZ_minPerc && ZZ_kinfit.M() < 600.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_600  += eventWeight;
         nEventsPassed_0btag_600++;
