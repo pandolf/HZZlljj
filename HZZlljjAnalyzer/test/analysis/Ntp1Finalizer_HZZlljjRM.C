@@ -117,6 +117,15 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_eff_2btag_500 = new TH1D("eff_2btag_500", "", 1, 0., 1.);
 
 
+  TH1D* h1_nEvents_fb_0btag_600 = new TH1D("nEvents_fb_0btag_600", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_600 = new TH1D("nEvents_fb_1btag_600", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_600 = new TH1D("nEvents_fb_2btag_600", "", 1, 0., 1.);
+
+  TH1D* h1_eff_0btag_600 = new TH1D("eff_0btag_600", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_600 = new TH1D("eff_1btag_600", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_600 = new TH1D("eff_2btag_600", "", 1, 0., 1.);
+
+
 
   TH1F* h1_run = new TH1F("run", "", 15149, 132440, 147589);
 
@@ -415,17 +424,17 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_UL_kinfit->Sumw2();
   TH1D* h1_mZZ_hiMass= new TH1D("mZZ_hiMass", "", 120, 200., 800.);
   h1_mZZ_hiMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass= new TH1D("mZZ_kinfit_hiMass", "", 120, 200., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass= new TH1D("mZZ_kinfit_hiMass", "", 600, 200., 800.);
   h1_mZZ_kinfit_hiMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 120, 200., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 600, 200., 800.);
   h1_mZZ_kinfit_hiMass_0btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 120, 200., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 600, 200., 800.);
   h1_mZZ_kinfit_hiMass_1btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 120, 200., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 600, 200., 800.);
   h1_mZZ_kinfit_hiMass_2btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 120, 200., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 600, 200., 800.);
   h1_mZZ_kinfit_hiMass_hiQG->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 120, 200., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 600, 200., 800.);
   h1_mZZ_kinfit_hiMass_loQG->Sumw2();
 //TH1D* h1_mZZ_highestMass= new TH1D("mZZ_highestMass", "", 70, 350., 700.);
 //h1_mZZ_highestMass->Sumw2();
@@ -739,6 +748,13 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_500=0.;
   int nEventsPassed_2btag_500=0;
 
+  float nEventsPassed_fb_0btag_600=0.;
+  int nEventsPassed_0btag_600=0;
+  float nEventsPassed_fb_1btag_600=0.;
+  int nEventsPassed_1btag_600=0;
+  float nEventsPassed_fb_2btag_600=0.;
+  int nEventsPassed_2btag_600=0;
+
 
 
   int nEntries = tree_->GetEntries();
@@ -770,6 +786,7 @@ ofstream ofs("run_event.txt");
     if( (iEntry % 50000)==0 ) std::cout << "Entry: " << iEntry << " /" << nEntries << std::endl;
 
     tree_->GetEntry(iEntry);
+
 
 
     if( eventWeight <= 0. ) eventWeight = 1.;
@@ -890,7 +907,12 @@ ofstream ofs("run_event.txt");
 
 
 
-    
+if( event==84169 ) {
+  std::cout << "leptType: " << leptType << std::endl; 
+  std::cout << "lept1.Pt(): " << lept1.Pt() << std::endl;
+  std::cout << "lept2.Pt(): " << lept2.Pt() << std::endl;
+  std::cout << "diLepton.M(): " << diLepton.M() << std::endl;
+}
 
 
     // ----------------------------
@@ -903,6 +925,7 @@ ofstream ofs("run_event.txt");
     if( fabs(lept2.Eta()) > etaLept2_thresh_ ) continue;
     if( diLepton.M() < mZll_threshLo_ || diLepton.M() > mZll_threshHi_ ) continue;
 
+if( event==84170 ) std::cout << "passed leptons" << std::endl;
 
 
 
@@ -961,6 +984,13 @@ ofstream ofs("run_event.txt");
 
       TLorentzVector diJet = jet1 + jet2;
 
+if( event==84169 ) {
+  std::cout << std::endl << "jet pair N.: " << iJetPair << std::endl; 
+  std::cout << "jet1.Pt(): " << jet1.Pt() << std::endl;
+  std::cout << "jet2.Pt(): " << jet2.Pt() << std::endl;
+  std::cout << "diJet.M(): " << diJet.M() << std::endl;
+}
+
 
       // fill histos before selection
       h1_mZjj_all_presel->Fill( diJet.M(), eventWeight );
@@ -1009,10 +1039,15 @@ ofstream ofs("run_event.txt");
       // -------------------------
 
       if( jet1.Pt() < ptJet1_thresh_ ) continue;
+if( event==84169 ) std::cout << "a" << std::endl;
       if( jet2.Pt() < ptJet2_thresh_ ) continue;
+if( event==84169 ) std::cout << "b" << std::endl;
       if( fabs(jet1.Eta()) > etaJet1_thresh_ ) continue;
+if( event==84169 ) std::cout << "c" << std::endl;
       if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
+if( event==84169 ) std::cout << "d" << std::endl;
       if( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) continue;
+if( event==84169 ) std::cout << "e" << std::endl;
 
 
 
@@ -1022,8 +1057,9 @@ ofstream ofs("run_event.txt");
       // ----------
 
 
-      int nBTags = this->get_nBTags( jet1, jet2, btsfutil );
+      int nBTags = this->get_nBTags( jet1, jet2, btsfutil, use_looseBTags_ );
 
+if( event==84169 ) std::cout << "nbtags: " << nBTags << std::endl;
 
 
 
@@ -1038,6 +1074,7 @@ ofstream ofs("run_event.txt");
 //    jet1.QGLikelihood = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
 //    jet2.QGLikelihood = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
       float QGLikelihoodProd = jet1.QGLikelihood*jet2.QGLikelihood;
+if( event==84169 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
       if( nBTags==0 ) {
         if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
       }
@@ -1118,6 +1155,7 @@ ofstream ofs("run_event.txt");
       float helicityLD_thresh = this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), nBTags);
 
 //std::cout << std::endl << "mass: " << ZZ_kinfit_tmp.M() << " btags: " << nBTags << " helicityLD: " << helicityLD << " helicityLD_thresh: " << helicityLD_thresh;
+if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
       if( helicityLD < helicityLD_thresh ) continue;
 
 
@@ -1197,6 +1235,7 @@ ofstream ofs("run_event.txt");
 
     if( foundJets==0 ) continue;
 
+ofs << run << " " << event << std::endl;
 
     if( helicityLD_selected < 0. ) 
       std::cout << "helicityLD_selected is less than 0!!! THIS IS NOT POSSIBLE!!" << std::endl;
@@ -1286,6 +1325,18 @@ ofstream ofs("run_event.txt");
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_500 += eventWeight;
         nEventsPassed_2btag_500++;
+      }
+    } 
+    if( ZZ_kinfit.M() > 540. && ZZ_kinfit.M() < 660. ) {
+      if( maxBTag_found==0 ) {
+        nEventsPassed_fb_0btag_600  += eventWeight;
+        nEventsPassed_0btag_600++;
+      } else if( maxBTag_found==1 ) {
+        nEventsPassed_fb_1btag_600 += eventWeight;
+        nEventsPassed_1btag_600++;
+      } else if( maxBTag_found==2 ) {
+        nEventsPassed_fb_2btag_600 += eventWeight;
+        nEventsPassed_2btag_600++;
       }
     } 
 
@@ -1563,6 +1614,10 @@ ofstream ofs("run_event.txt");
   float eff_1btag_500 = nEventsPassed_fb_1btag_500/nCounterW_;
   float eff_2btag_500 = nEventsPassed_fb_2btag_500/nCounterW_;
 
+  float eff_0btag_600 = nEventsPassed_fb_0btag_600/nCounterW_;
+  float eff_1btag_600 = nEventsPassed_fb_1btag_600/nCounterW_;
+  float eff_2btag_600 = nEventsPassed_fb_2btag_600/nCounterW_;
+
 
   h1_nEvents_fb_0btag_250->SetBinContent(1,1000.*nEventsPassed_fb_0btag_250);
   h1_nEvents_fb_1btag_250->SetBinContent(1,1000.*nEventsPassed_fb_1btag_250);
@@ -1627,6 +1682,15 @@ ofstream ofs("run_event.txt");
   h1_eff_2btag_500->SetBinContent(1,eff_2btag_500);
 
 
+  h1_nEvents_fb_0btag_600->SetBinContent(1,1000.*nEventsPassed_fb_0btag_600);
+  h1_nEvents_fb_1btag_600->SetBinContent(1,1000.*nEventsPassed_fb_1btag_600);
+  h1_nEvents_fb_2btag_600->SetBinContent(1,1000.*nEventsPassed_fb_2btag_600);
+
+  h1_eff_0btag_600->SetBinContent(1,eff_0btag_600);
+  h1_eff_1btag_600->SetBinContent(1,eff_1btag_600);
+  h1_eff_2btag_600->SetBinContent(1,eff_2btag_600);
+
+
 
   std::cout << std::endl << std::endl;
   std::cout << "----> SELECTION: " << selectionType_ << "    DATASET: " << dataset_ << std::endl << std::endl;
@@ -1659,6 +1723,11 @@ ofstream ofs("run_event.txt");
   std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_500 << " ev/fb-1  (" << nEventsPassed_0btag_500 << " events)" << " Efficiency: " << 100.*eff_0btag_500 << "%" << std::endl;
   std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_500 << " ev/fb-1  (" << nEventsPassed_1btag_500 << " events)" << " Efficiency: " << 100.*eff_1btag_500 << "%" << std::endl;
   std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_500 << " ev/fb-1  (" << nEventsPassed_2btag_500 << " events)" << " Efficiency: " << 100.*eff_2btag_500 << "%" << std::endl;
+  std::cout << "----------------------------------------------------------------" << std::endl;
+  std::cout << "----> 600 GeV (540-660): " << std::endl;
+  std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_600 << " ev/fb-1  (" << nEventsPassed_0btag_600 << " events)" << " Efficiency: " << 100.*eff_0btag_600 << "%" << std::endl;
+  std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_600 << " ev/fb-1  (" << nEventsPassed_1btag_600 << " events)" << " Efficiency: " << 100.*eff_1btag_600 << "%" << std::endl;
+  std::cout << "            2 btag: " << 1000.*nEventsPassed_fb_2btag_600 << " ev/fb-1  (" << nEventsPassed_2btag_600 << " events)" << " Efficiency: " << 100.*eff_2btag_600 << "%" << std::endl;
   std::cout << "----------------------------------------------------------------" << std::endl;
   std::cout << std::endl;
 
@@ -1722,6 +1791,15 @@ ofstream ofs("run_event.txt");
   h1_eff_0btag_500->Write();
   h1_eff_1btag_500->Write();
   h1_eff_2btag_500->Write();
+
+
+  h1_nEvents_fb_0btag_600->Write();
+  h1_nEvents_fb_1btag_600->Write();
+  h1_nEvents_fb_2btag_600->Write();
+
+  h1_eff_0btag_600->Write();
+  h1_eff_1btag_600->Write();
+  h1_eff_2btag_600->Write();
 
 
   h1_run->Write();
@@ -1968,9 +2046,14 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_intercept_0btags_ = 0.;
     helicityLD_intercept_1btags_ = 0.;
     helicityLD_intercept_2btags_ = 0.;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.;
-    mZZ_threshLo_ = 0.;
-    mZZ_threshHi_ = 10000.;
+    use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_v1" ) {
 
@@ -1992,10 +2075,15 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_intercept_0btags_ = 0.1433;
     helicityLD_intercept_1btags_ = 0.55;
     helicityLD_intercept_2btags_ = 0.5;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    mZZ_threshLo_ = 375.;
-    mZZ_threshHi_ = 456.;
     pfMetThresh_ = 99999.;
+    use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_v2" ) {
 
@@ -2017,10 +2105,45 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_intercept_0btags_ = 0.55;
     helicityLD_intercept_1btags_ = 0.302;
     helicityLD_intercept_2btags_ = 0.5;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    mZZ_threshLo_ = 375.;
-    mZZ_threshHi_ = 456.;
     pfMetThresh_ = 10.;
+    use_looseBTags_ = true;
+
+  } else if( selectionType_=="optLD_mediumBTags_v1" ) { //"option 6"
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    helicityLD_slope_0btags_ = 0.00054;
+    helicityLD_slope_1btags_ = 0.00098;
+    helicityLD_slope_2btags_ = 0.;
+    helicityLD_intercept_0btags_ = 0.428;
+    helicityLD_intercept_1btags_ = 0.156;
+    helicityLD_intercept_2btags_ = 0.5;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.5;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
+    QGLikelihoodProd_thresh_ = 0.1;
+    pfMetThresh_ = 10.;
+    use_looseBTags_ = false;
 
   } else if( selectionType_=="optLD_looseBTags_metCut" ) {
 
@@ -2042,10 +2165,15 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_intercept_0btags_ = 0.1433;
     helicityLD_intercept_1btags_ = 0.55;
     helicityLD_intercept_2btags_ = 0.5;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    mZZ_threshLo_ = 375.;
-    mZZ_threshHi_ = 456.;
     pfMetThresh_ = 0.2;
+    use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_metSumetCut" ) {
 
@@ -2067,10 +2195,15 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_intercept_0btags_ = 0.1433;
     helicityLD_intercept_1btags_ = 0.55;
     helicityLD_intercept_2btags_ = 0.5;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    mZZ_threshLo_ = 375.;
-    mZZ_threshHi_ = 456.;
     pfMetThresh_ = 0.2;
+    use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_metSigCut" ) {
 
@@ -2092,10 +2225,15 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_intercept_0btags_ = 0.1433;
     helicityLD_intercept_1btags_ = 0.55;
     helicityLD_intercept_2btags_ = 0.5;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    mZZ_threshLo_ = 375.;
-    mZZ_threshHi_ = 456.;
     pfMetThresh_ = 0.2;
+    use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_noQG" ) {
 
@@ -2117,10 +2255,76 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_intercept_0btags_ = 0.1433;
     helicityLD_intercept_1btags_ = 0.55;
     helicityLD_intercept_2btags_ = 0.5;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.;
-    mZZ_threshLo_ = 375.;
-    mZZ_threshHi_ = 456.;
     pfMetThresh_ = 0.;
+    use_looseBTags_ = true;
+
+  } else if( selectionType_=="optLD_looseBTags_v2_noQG" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    helicityLD_slope_0btags_ = 0.00025;
+    helicityLD_slope_1btags_ = 0.000656;
+    helicityLD_slope_2btags_ = 0.;
+    helicityLD_intercept_0btags_ = 0.55;
+    helicityLD_intercept_1btags_ = 0.302;
+    helicityLD_intercept_2btags_ = 0.5;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
+    QGLikelihoodProd_thresh_ = 0.;
+    pfMetThresh_ = 10.;
+    use_looseBTags_ = true;
+
+  } else if( selectionType_=="optLD_looseBTags_fix400OLD" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    helicityLD_slope_0btags_ = 0.;
+    helicityLD_slope_1btags_ = 0.;
+    helicityLD_slope_2btags_ = 0.;
+    //helicityLD_intercept_0btags_ = 0.639;
+    helicityLD_intercept_0btags_ = 0.65;
+    helicityLD_intercept_1btags_ = 0.55;
+    helicityLD_intercept_2btags_ = 0.5;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
+    QGLikelihoodProd_thresh_ = 0.1;
+    pfMetThresh_ = 10.;
+    use_looseBTags_ = true;
 
   } else if( selectionType_=="noCutLD" ) {
 
@@ -2142,10 +2346,15 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_intercept_0btags_ = 0.;
     helicityLD_intercept_1btags_ = 0.;
     helicityLD_intercept_2btags_ = 0.;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    mZZ_threshLo_ = 375.;
-    mZZ_threshHi_ = 456.;
     pfMetThresh_ = 0.;
+    use_looseBTags_ = true;
 
   } else {
 
@@ -2201,7 +2410,8 @@ std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string his
 
 
 
-int Ntp1Finalizer_HZZlljjRM::get_nBTags( const AnalysisJet& jet1, const AnalysisJet& jet2, BTagSFUtil* btsfutil ) {
+/*
+int Ntp1Finalizer_HZZlljjRM::get_nBTags( const AnalysisJet& jet1, const AnalysisJet& jet2, BTagSFUtil* btsfutil, bool loosebtags ) {
 
   int nBTags;
 
@@ -2213,17 +2423,31 @@ int Ntp1Finalizer_HZZlljjRM::get_nBTags( const AnalysisJet& jet1, const Analysis
   btsfutil->modifyBTagsWithSF( jet1_tagged_loose, jet1_tagged_medium, jet1.Pt(), jet1.Eta(), jet1.pdgIdPart );
   btsfutil->modifyBTagsWithSF( jet2_tagged_loose, jet2_tagged_medium, jet2.Pt(), jet2.Eta(), jet2.pdgIdPart );
 
-  bool twoBTags  = ( jet1_tagged_medium && jet2_tagged_loose  )
-                || ( jet1_tagged_loose  && jet2_tagged_medium );
-  bool oneBTag   = (!twoBTags) && ( jet1_tagged_loose || jet2_tagged_loose );
+  if( loosebtags ) {
 
-  if( twoBTags ) nBTags=2;
-  else if( oneBTag ) nBTags=1;
-  else nBTags=0;
+    bool twoBTags  = ( jet1_tagged_medium && jet2_tagged_loose  )
+                  || ( jet1_tagged_loose  && jet2_tagged_medium );
+    bool oneBTag   = (!twoBTags) && ( jet1_tagged_loose || jet2_tagged_loose );
+
+    if( twoBTags ) nBTags=2;
+    else if( oneBTag ) nBTags=1;
+    else nBTags=0;
+
+  } else {
+
+    bool twoBTags  = ( jet1_tagged_medium && jet2_tagged_medium );
+    bool oneBTag   = (!twoBTags) && ( jet1_tagged_medium || jet2_tagged_medium );
+
+    if( twoBTags ) nBTags=2;
+    else if( oneBTag ) nBTags=1;
+    else nBTags=0;
+
+  }
 
   return nBTags;
 
 }
+*/
 
 
 float Ntp1Finalizer_HZZlljjRM::get_helicityLD_thresh(float mass, int nBTags) {
@@ -2233,14 +2457,20 @@ float Ntp1Finalizer_HZZlljjRM::get_helicityLD_thresh(float mass, int nBTags) {
   if( nBTags==0 ) {
 
     helicityLD_thresh = helicityLD_slope_0btags_*mass + helicityLD_intercept_0btags_;
+    if( helicityLD_thresh<helicityLD_minThresh_0btags_ ) helicityLD_thresh=helicityLD_minThresh_0btags_;
+    if( helicityLD_thresh>helicityLD_maxThresh_0btags_ ) helicityLD_thresh=helicityLD_maxThresh_0btags_;
 
   } else if( nBTags==1 ) {
 
     helicityLD_thresh = helicityLD_slope_1btags_*mass + helicityLD_intercept_1btags_;
+    if( helicityLD_thresh<helicityLD_minThresh_2btags_ ) helicityLD_thresh=helicityLD_minThresh_2btags_;
+    if( helicityLD_thresh>helicityLD_maxThresh_2btags_ ) helicityLD_thresh=helicityLD_maxThresh_2btags_;
 
   } else if( nBTags==2 ) {
 
     helicityLD_thresh = helicityLD_slope_2btags_*mass + helicityLD_intercept_2btags_;
+    if( helicityLD_thresh<helicityLD_minThresh_2btags_ ) helicityLD_thresh=helicityLD_minThresh_2btags_;
+    if( helicityLD_thresh>helicityLD_maxThresh_2btags_ ) helicityLD_thresh=helicityLD_maxThresh_2btags_;
 
   } else {
 
