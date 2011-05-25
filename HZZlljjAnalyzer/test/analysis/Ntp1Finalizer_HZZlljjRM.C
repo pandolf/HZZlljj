@@ -60,67 +60,81 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   // these histograms will save the final yields and efficiencies:
 
+  TH1D* h1_nEvents_fb_gluetag_250 = new TH1D("nEvents_fb_gluetag_250", "", 1, 0., 1.);
   TH1D* h1_nEvents_fb_0btag_250 = new TH1D("nEvents_fb_0btag_250", "", 1, 0., 1.);
   TH1D* h1_nEvents_fb_1btag_250 = new TH1D("nEvents_fb_1btag_250", "", 1, 0., 1.);
   TH1D* h1_nEvents_fb_2btag_250 = new TH1D("nEvents_fb_2btag_250", "", 1, 0., 1.);
 
+  TH1D* h1_eff_gluetag_250 = new TH1D("eff_gluetag_250", "", 1, 0., 1.);
   TH1D* h1_eff_0btag_250 = new TH1D("eff_0btag_250", "", 1, 0., 1.);
   TH1D* h1_eff_1btag_250 = new TH1D("eff_1btag_250", "", 1, 0., 1.);
   TH1D* h1_eff_2btag_250 = new TH1D("eff_2btag_250", "", 1, 0., 1.);
 
 
+  TH1D* h1_nEvents_fb_gluetag_300 = new TH1D("nEvents_fb_gluetag_300", "", 1, 0., 1.);
   TH1D* h1_nEvents_fb_0btag_300 = new TH1D("nEvents_fb_0btag_300", "", 1, 0., 1.);
   TH1D* h1_nEvents_fb_1btag_300 = new TH1D("nEvents_fb_1btag_300", "", 1, 0., 1.);
   TH1D* h1_nEvents_fb_2btag_300 = new TH1D("nEvents_fb_2btag_300", "", 1, 0., 1.);
 
+  TH1D* h1_eff_gluetag_300 = new TH1D("eff_gluetag_300", "", 1, 0., 1.);
   TH1D* h1_eff_0btag_300 = new TH1D("eff_0btag_300", "", 1, 0., 1.);
   TH1D* h1_eff_1btag_300 = new TH1D("eff_1btag_300", "", 1, 0., 1.);
   TH1D* h1_eff_2btag_300 = new TH1D("eff_2btag_300", "", 1, 0., 1.);
 
 
-  TH1D* h1_nEvents_fb_0btag_350 = new TH1D("nEvents_fb_0btag_350", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_1btag_350 = new TH1D("nEvents_fb_1btag_350", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_2btag_350 = new TH1D("nEvents_fb_2btag_350", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_gluetag_350 = new TH1D("nEvents_fb_gluetag_350", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_0btag_350 = new TH1D("nEvents_fb_0btag_350", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_1btag_350 = new TH1D("nEvents_fb_1btag_350", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_2btag_350 = new TH1D("nEvents_fb_2btag_350", "", 1, 0., 1.0001);
 
-  TH1D* h1_eff_0btag_350 = new TH1D("eff_0btag_350", "", 1, 0., 1.);
-  TH1D* h1_eff_1btag_350 = new TH1D("eff_1btag_350", "", 1, 0., 1.);
-  TH1D* h1_eff_2btag_350 = new TH1D("eff_2btag_350", "", 1, 0., 1.);
-
-
-  TH1D* h1_nEvents_fb_0btag_400 = new TH1D("nEvents_fb_0btag_400", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_1btag_400 = new TH1D("nEvents_fb_1btag_400", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_2btag_400 = new TH1D("nEvents_fb_2btag_400", "", 1, 0., 1.);
-
-  TH1D* h1_eff_0btag_400 = new TH1D("eff_0btag_400", "", 1, 0., 1.);
-  TH1D* h1_eff_1btag_400 = new TH1D("eff_1btag_400", "", 1, 0., 1.);
-  TH1D* h1_eff_2btag_400 = new TH1D("eff_2btag_400", "", 1, 0., 1.);
+  TH1D* h1_eff_gluetag_350 = new TH1D("eff_gluetag_350", "", 1, 0., 1.0001);
+  TH1D* h1_eff_0btag_350 = new TH1D("eff_0btag_350", "", 1, 0., 1.0001);
+  TH1D* h1_eff_1btag_350 = new TH1D("eff_1btag_350", "", 1, 0., 1.0001);
+  TH1D* h1_eff_2btag_350 = new TH1D("eff_2btag_350", "", 1, 0., 1.0001);
 
 
-  TH1D* h1_nEvents_fb_0btag_450 = new TH1D("nEvents_fb_0btag_450", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_1btag_450 = new TH1D("nEvents_fb_1btag_450", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_2btag_450 = new TH1D("nEvents_fb_2btag_450", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_gluetag_400 = new TH1D("nEvents_fb_gluetag_400", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_0btag_400 = new TH1D("nEvents_fb_0btag_400", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_1btag_400 = new TH1D("nEvents_fb_1btag_400", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_2btag_400 = new TH1D("nEvents_fb_2btag_400", "", 1, 0., 1.0001);
 
-  TH1D* h1_eff_0btag_450 = new TH1D("eff_0btag_450", "", 1, 0., 1.);
-  TH1D* h1_eff_1btag_450 = new TH1D("eff_1btag_450", "", 1, 0., 1.);
-  TH1D* h1_eff_2btag_450 = new TH1D("eff_2btag_450", "", 1, 0., 1.);
-
-
-  TH1D* h1_nEvents_fb_0btag_500 = new TH1D("nEvents_fb_0btag_500", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_1btag_500 = new TH1D("nEvents_fb_1btag_500", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_2btag_500 = new TH1D("nEvents_fb_2btag_500", "", 1, 0., 1.);
-
-  TH1D* h1_eff_0btag_500 = new TH1D("eff_0btag_500", "", 1, 0., 1.);
-  TH1D* h1_eff_1btag_500 = new TH1D("eff_1btag_500", "", 1, 0., 1.);
-  TH1D* h1_eff_2btag_500 = new TH1D("eff_2btag_500", "", 1, 0., 1.);
+  TH1D* h1_eff_gluetag_400 = new TH1D("eff_gluetag_400", "", 1, 0., 1.0001);
+  TH1D* h1_eff_0btag_400 = new TH1D("eff_0btag_400", "", 1, 0., 1.0001);
+  TH1D* h1_eff_1btag_400 = new TH1D("eff_1btag_400", "", 1, 0., 1.0001);
+  TH1D* h1_eff_2btag_400 = new TH1D("eff_2btag_400", "", 1, 0., 1.0001);
 
 
-  TH1D* h1_nEvents_fb_0btag_600 = new TH1D("nEvents_fb_0btag_600", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_1btag_600 = new TH1D("nEvents_fb_1btag_600", "", 1, 0., 1.);
-  TH1D* h1_nEvents_fb_2btag_600 = new TH1D("nEvents_fb_2btag_600", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_gluetag_450 = new TH1D("nEvents_fb_gluetag_450", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_0btag_450 = new TH1D("nEvents_fb_0btag_450", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_1btag_450 = new TH1D("nEvents_fb_1btag_450", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_2btag_450 = new TH1D("nEvents_fb_2btag_450", "", 1, 0., 1.0001);
 
-  TH1D* h1_eff_0btag_600 = new TH1D("eff_0btag_600", "", 1, 0., 1.);
-  TH1D* h1_eff_1btag_600 = new TH1D("eff_1btag_600", "", 1, 0., 1.);
-  TH1D* h1_eff_2btag_600 = new TH1D("eff_2btag_600", "", 1, 0., 1.);
+  TH1D* h1_eff_gluetag_450 = new TH1D("eff_gluetag_450", "", 1, 0., 1.0001);
+  TH1D* h1_eff_0btag_450 = new TH1D("eff_0btag_450", "", 1, 0., 1.0001);
+  TH1D* h1_eff_1btag_450 = new TH1D("eff_1btag_450", "", 1, 0., 1.0001);
+  TH1D* h1_eff_2btag_450 = new TH1D("eff_2btag_450", "", 1, 0., 1.0001);
+
+
+  TH1D* h1_nEvents_fb_gluetag_500 = new TH1D("nEvents_fb_gluetag_500", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_0btag_500 = new TH1D("nEvents_fb_0btag_500", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_1btag_500 = new TH1D("nEvents_fb_1btag_500", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_2btag_500 = new TH1D("nEvents_fb_2btag_500", "", 1, 0., 1.0001);
+
+  TH1D* h1_eff_gluetag_500 = new TH1D("eff_gluetag_500", "", 1, 0., 1.0001);
+  TH1D* h1_eff_0btag_500 = new TH1D("eff_0btag_500", "", 1, 0., 1.0001);
+  TH1D* h1_eff_1btag_500 = new TH1D("eff_1btag_500", "", 1, 0., 1.0001);
+  TH1D* h1_eff_2btag_500 = new TH1D("eff_2btag_500", "", 1, 0., 1.0001);
+
+
+  TH1D* h1_nEvents_fb_gluetag_600 = new TH1D("nEvents_fb_gluetag_600", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_0btag_600 = new TH1D("nEvents_fb_0btag_600", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_1btag_600 = new TH1D("nEvents_fb_1btag_600", "", 1, 0., 1.0001);
+  TH1D* h1_nEvents_fb_2btag_600 = new TH1D("nEvents_fb_2btag_600", "", 1, 0., 1.0001);
+
+  TH1D* h1_eff_gluetag_600 = new TH1D("eff_gluetag_600", "", 1, 0., 1.0001);
+  TH1D* h1_eff_0btag_600 = new TH1D("eff_0btag_600", "", 1, 0., 1.0001);
+  TH1D* h1_eff_1btag_600 = new TH1D("eff_1btag_600", "", 1, 0., 1.0001);
+  TH1D* h1_eff_2btag_600 = new TH1D("eff_2btag_600", "", 1, 0., 1.0001);
 
 
 
@@ -398,6 +412,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_mZjj_cut->Sumw2();
   TH1D* h1_mZZ_mZjj_notcut = new TH1D("mZZ_mZjj_notcut", "", 200, 100., 700.);
   h1_mZZ_mZjj_notcut->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_gluetag= new TH1D("mZZ_kinfit_hiMass_gluetag", "", 650, 150., 800.);
+  h1_mZZ_kinfit_hiMass_gluetag->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 650, 150., 800.);
   h1_mZZ_kinfit_hiMass_0btag->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 650, 150., 800.);
@@ -654,6 +670,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_kinfit=0.;
   int nEventsPassed_kinfit=0;
 
+  float nEventsPassed_fb_gluetag_250=0.;
+  int nEventsPassed_gluetag_250=0;
   float nEventsPassed_fb_0btag_250=0.;
   int nEventsPassed_0btag_250=0;
   float nEventsPassed_fb_1btag_250=0.;
@@ -661,6 +679,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_250=0.;
   int nEventsPassed_2btag_250=0;
 
+  float nEventsPassed_fb_gluetag_300=0.;
+  int nEventsPassed_gluetag_300=0;
   float nEventsPassed_fb_0btag_300=0.;
   int nEventsPassed_0btag_300=0;
   float nEventsPassed_fb_1btag_300=0.;
@@ -668,6 +688,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_300=0.;
   int nEventsPassed_2btag_300=0;
 
+  float nEventsPassed_fb_gluetag_350=0.;
+  int nEventsPassed_gluetag_350=0;
   float nEventsPassed_fb_0btag_350=0.;
   int nEventsPassed_0btag_350=0;
   float nEventsPassed_fb_1btag_350=0.;
@@ -675,6 +697,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_350=0.;
   int nEventsPassed_2btag_350=0;
 
+  float nEventsPassed_fb_gluetag_400=0.;
+  int nEventsPassed_gluetag_400=0;
   float nEventsPassed_fb_0btag_400=0.;
   int nEventsPassed_0btag_400=0;
   float nEventsPassed_fb_1btag_400=0.;
@@ -682,6 +706,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_400=0.;
   int nEventsPassed_2btag_400=0;
 
+  float nEventsPassed_fb_gluetag_450=0.;
+  int nEventsPassed_gluetag_450=0;
   float nEventsPassed_fb_0btag_450=0.;
   int nEventsPassed_0btag_450=0;
   float nEventsPassed_fb_1btag_450=0.;
@@ -689,6 +715,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_450=0.;
   int nEventsPassed_2btag_450=0;
 
+  float nEventsPassed_fb_gluetag_500=0.;
+  int nEventsPassed_gluetag_500=0;
   float nEventsPassed_fb_0btag_500=0.;
   int nEventsPassed_0btag_500=0;
   float nEventsPassed_fb_1btag_500=0.;
@@ -696,6 +724,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_500=0.;
   int nEventsPassed_2btag_500=0;
 
+  float nEventsPassed_fb_gluetag_600=0.;
+  int nEventsPassed_gluetag_600=0;
   float nEventsPassed_fb_0btag_600=0.;
   int nEventsPassed_0btag_600=0;
   float nEventsPassed_fb_1btag_600=0.;
@@ -717,7 +747,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float helicityLD_selected = -1.;
   float helicityLD_kinfit_selected = -1.;
 
-  BTagSFUtil* btsfutil = new BTagSFUtil();
+  BTagSFUtil* btsfutil = new BTagSFUtil(13);
 
 
 float nEventsTot = 0.;
@@ -882,7 +912,7 @@ if( event==84170 ) std::cout << "passed leptons" << std::endl;
     float bestMass = 0.;
     int  foundJets = 0;
     bool foundJets_ZZmass = false;
-    int maxBTag_found = 0;
+    int maxBTag_found = -1;
 
     for( unsigned iJetPair=0; iJetPair<nPairs; ++iJetPair ) {
 
@@ -1024,7 +1054,8 @@ if( event==84169 ) std::cout << "nbtags: " << nBTags << std::endl;
       float QGLikelihoodProd = jet1.QGLikelihood*jet2.QGLikelihood;
 if( event==84169 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
       if( nBTags==0 ) {
-        if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
+        //if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
+        if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) nBTags=-1; //glue-tag category
       }
 
 
@@ -1100,7 +1131,7 @@ if( event==84169 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std:
       double bProb_kinfit=LD->getBkgdProbability();
       double helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
      
-      float helicityLD_thresh = this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), nBTags);
+      float helicityLD_thresh = (nBTags>=0) ? this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), nBTags) : this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), 0);
 
 //std::cout << std::endl << "mass: " << ZZ_kinfit_tmp.M() << " btags: " << nBTags << " helicityLD: " << helicityLD << " helicityLD_thresh: " << helicityLD_thresh;
 if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
@@ -1142,39 +1173,6 @@ if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
 
       }
 
-
-//    if( ZZ_kinfit_tmp.M() > mZZ_threshLo_ && ZZ_kinfit_tmp.M() < mZZ_threshHi_ && !foundJets_ZZmass ) {
-//      nEventsPassed_fb_kinfit += eventWeight;
-//      nEventsPassed_kinfit++;
-//      jet1_selected = jet1;
-//      jet2_selected = jet2;
-//      helicityLD_selected = helicityLD;
-//      helicityLD_kinfit_selected = helicityLD_kinfit;
-//      foundJets += 1;
-//      foundJets_ZZmass = true;
-//      maxBTag_found = nBTags;
-
-//      // fill MW (mass window) histograms:
-//      h1_ptZll_MW->Fill( diLepton.Pt(), eventWeight );
-//      h1_ptJet1_MW->Fill( jet1_selected.Pt(), eventWeight );
-//      h1_ptJet2_MW->Fill( jet2_selected.Pt(), eventWeight );
-//      h1_deltaRjj_MW->Fill( jet1_selected.DeltaR(jet2_selected), eventWeight );
-//      h1_QGLikelihoodProd_MW->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-//      h1_mZjj_MW->Fill( diJet.M(), eventWeight );
-
-//    }
-
-//    float invMass = diJet.M();
-//    if( !foundJets_ZZmass ) {
-//      if( foundJets!=0 || ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) ) ) {
-//        bestMass = invMass;
-//        jet1_selected = jet1;
-//        jet2_selected = jet2;
-//        helicityLD_selected = helicityLD;
-//        foundJets += 1;
-//      }
-//    }
-//std::cout << "  <--- PASSED!" << std::endl;
 
     } //for on jet pairs
 
@@ -1218,6 +1216,9 @@ ofs << run << " " << event << std::endl;
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_250 += eventWeight;
         nEventsPassed_2btag_250++;
+      } else if( maxBTag_found==-1 ) {
+        nEventsPassed_fb_gluetag_250 += eventWeight;
+        nEventsPassed_gluetag_250++;
       }
     } 
     if( ZZ_kinfit.M() > 300.*mZZ_minPerc && ZZ_kinfit.M() < 300.*mZZ_maxPerc ) {
@@ -1230,6 +1231,9 @@ ofs << run << " " << event << std::endl;
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_300 += eventWeight;
         nEventsPassed_2btag_300++;
+      } else if( maxBTag_found==-1 ) {
+        nEventsPassed_fb_gluetag_300 += eventWeight;
+        nEventsPassed_gluetag_300++;
       }
     } 
     if( ZZ_kinfit.M() > 350.*mZZ_minPerc && ZZ_kinfit.M() < 350.*mZZ_maxPerc ) {
@@ -1242,6 +1246,9 @@ ofs << run << " " << event << std::endl;
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_350 += eventWeight;
         nEventsPassed_2btag_350++;
+      } else if( maxBTag_found==-1 ) {
+        nEventsPassed_fb_gluetag_350 += eventWeight;
+        nEventsPassed_gluetag_350++;
       }
     } 
     if( ZZ_kinfit.M() > 400.*mZZ_minPerc && ZZ_kinfit.M() < 400.*mZZ_maxPerc ) {
@@ -1254,6 +1261,9 @@ ofs << run << " " << event << std::endl;
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_400 += eventWeight;
         nEventsPassed_2btag_400++;
+      } else if( maxBTag_found==-1 ) {
+        nEventsPassed_fb_gluetag_400 += eventWeight;
+        nEventsPassed_gluetag_400++;
       }
     } 
     if( ZZ_kinfit.M() > 450.*mZZ_minPerc && ZZ_kinfit.M() < 450.*mZZ_maxPerc ) {
@@ -1266,6 +1276,9 @@ ofs << run << " " << event << std::endl;
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_450 += eventWeight;
         nEventsPassed_2btag_450++;
+      } else if( maxBTag_found==-1 ) {
+        nEventsPassed_fb_gluetag_450 += eventWeight;
+        nEventsPassed_gluetag_450++;
       }
     } 
     if( ZZ_kinfit.M() > 500.*mZZ_minPerc && ZZ_kinfit.M() < 500.*mZZ_maxPerc ) {
@@ -1278,6 +1291,9 @@ ofs << run << " " << event << std::endl;
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_500 += eventWeight;
         nEventsPassed_2btag_500++;
+      } else if( maxBTag_found==-1 ) {
+        nEventsPassed_fb_gluetag_500 += eventWeight;
+        nEventsPassed_gluetag_500++;
       }
     } 
     if( ZZ_kinfit.M() > 600.*mZZ_minPerc && ZZ_kinfit.M() < 600.*mZZ_maxPerc ) {
@@ -1290,6 +1306,9 @@ ofs << run << " " << event << std::endl;
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_600 += eventWeight;
         nEventsPassed_2btag_600++;
+      } else if( maxBTag_found==-1 ) {
+        nEventsPassed_fb_gluetag_600 += eventWeight;
+        nEventsPassed_gluetag_600++;
       }
     } 
 
@@ -1447,6 +1466,7 @@ ofs << run << " " << event << std::endl;
     if( maxBTag_found==0 ) h1_mZZ_kinfit_hiMass_0btag->Fill( ZZ_kinfit.M(), eventWeight);
     else if( maxBTag_found==1 ) h1_mZZ_kinfit_hiMass_1btag->Fill( ZZ_kinfit.M(), eventWeight);
     else if( maxBTag_found==2 ) h1_mZZ_kinfit_hiMass_2btag->Fill( ZZ_kinfit.M(), eventWeight);
+    else if( maxBTag_found==-1 ) h1_mZZ_kinfit_hiMass_gluetag->Fill( ZZ_kinfit.M(), eventWeight);
     h2_mZjj_vs_mZZ->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
     h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
 
@@ -1512,102 +1532,114 @@ ofs << run << " " << event << std::endl;
 
   } //for entries
 
+  float eff_gluetag_250 = nEventsPassed_fb_gluetag_250/nCounterW_;
   float eff_0btag_250 = nEventsPassed_fb_0btag_250/nCounterW_;
   float eff_1btag_250 = nEventsPassed_fb_1btag_250/nCounterW_;
   float eff_2btag_250 = nEventsPassed_fb_2btag_250/nCounterW_;
 
+  float eff_gluetag_300 = nEventsPassed_fb_gluetag_300/nCounterW_;
   float eff_0btag_300 = nEventsPassed_fb_0btag_300/nCounterW_;
   float eff_1btag_300 = nEventsPassed_fb_1btag_300/nCounterW_;
   float eff_2btag_300 = nEventsPassed_fb_2btag_300/nCounterW_;
 
+  float eff_gluetag_350 = nEventsPassed_fb_gluetag_350/nCounterW_;
   float eff_0btag_350 = nEventsPassed_fb_0btag_350/nCounterW_;
   float eff_1btag_350 = nEventsPassed_fb_1btag_350/nCounterW_;
   float eff_2btag_350 = nEventsPassed_fb_2btag_350/nCounterW_;
 
+  float eff_gluetag_400 = nEventsPassed_fb_gluetag_400/nCounterW_;
   float eff_0btag_400 = nEventsPassed_fb_0btag_400/nCounterW_;
   float eff_1btag_400 = nEventsPassed_fb_1btag_400/nCounterW_;
   float eff_2btag_400 = nEventsPassed_fb_2btag_400/nCounterW_;
 
+  float eff_gluetag_450 = nEventsPassed_fb_gluetag_450/nCounterW_;
   float eff_0btag_450 = nEventsPassed_fb_0btag_450/nCounterW_;
   float eff_1btag_450 = nEventsPassed_fb_1btag_450/nCounterW_;
   float eff_2btag_450 = nEventsPassed_fb_2btag_450/nCounterW_;
 
+  float eff_gluetag_500 = nEventsPassed_fb_gluetag_500/nCounterW_;
   float eff_0btag_500 = nEventsPassed_fb_0btag_500/nCounterW_;
   float eff_1btag_500 = nEventsPassed_fb_1btag_500/nCounterW_;
   float eff_2btag_500 = nEventsPassed_fb_2btag_500/nCounterW_;
 
+  float eff_gluetag_600 = nEventsPassed_fb_gluetag_600/nCounterW_;
   float eff_0btag_600 = nEventsPassed_fb_0btag_600/nCounterW_;
   float eff_1btag_600 = nEventsPassed_fb_1btag_600/nCounterW_;
   float eff_2btag_600 = nEventsPassed_fb_2btag_600/nCounterW_;
 
 
+  h1_nEvents_fb_gluetag_250->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_250);
   h1_nEvents_fb_0btag_250->SetBinContent(1,1000.*nEventsPassed_fb_0btag_250);
   h1_nEvents_fb_1btag_250->SetBinContent(1,1000.*nEventsPassed_fb_1btag_250);
   h1_nEvents_fb_2btag_250->SetBinContent(1,1000.*nEventsPassed_fb_2btag_250);
 
+  h1_eff_gluetag_250->SetBinContent(1,eff_gluetag_250);
   h1_eff_0btag_250->SetBinContent(1,eff_0btag_250);
   h1_eff_1btag_250->SetBinContent(1,eff_1btag_250);
   h1_eff_2btag_250->SetBinContent(1,eff_2btag_250);
 
 
+  h1_nEvents_fb_gluetag_300->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_300);
   h1_nEvents_fb_0btag_300->SetBinContent(1,1000.*nEventsPassed_fb_0btag_300);
   h1_nEvents_fb_1btag_300->SetBinContent(1,1000.*nEventsPassed_fb_1btag_300);
   h1_nEvents_fb_2btag_300->SetBinContent(1,1000.*nEventsPassed_fb_2btag_300);
 
+  h1_eff_gluetag_300->SetBinContent(1,eff_gluetag_300);
   h1_eff_0btag_300->SetBinContent(1,eff_0btag_300);
   h1_eff_1btag_300->SetBinContent(1,eff_1btag_300);
   h1_eff_2btag_300->SetBinContent(1,eff_2btag_300);
 
 
-  h1_nEvents_fb_0btag_300->SetBinContent(1,1000.*nEventsPassed_fb_0btag_300);
-  h1_nEvents_fb_1btag_300->SetBinContent(1,1000.*nEventsPassed_fb_1btag_300);
-  h1_nEvents_fb_2btag_300->SetBinContent(1,1000.*nEventsPassed_fb_2btag_300);
-
-  h1_eff_0btag_300->SetBinContent(1,eff_0btag_300);
-  h1_eff_1btag_300->SetBinContent(1,eff_1btag_300);
-  h1_eff_2btag_300->SetBinContent(1,eff_2btag_300);
-
-
+  h1_nEvents_fb_gluetag_350->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_350);
   h1_nEvents_fb_0btag_350->SetBinContent(1,1000.*nEventsPassed_fb_0btag_350);
   h1_nEvents_fb_1btag_350->SetBinContent(1,1000.*nEventsPassed_fb_1btag_350);
   h1_nEvents_fb_2btag_350->SetBinContent(1,1000.*nEventsPassed_fb_2btag_350);
 
+  h1_eff_gluetag_350->SetBinContent(1,eff_gluetag_350);
   h1_eff_0btag_350->SetBinContent(1,eff_0btag_350);
   h1_eff_1btag_350->SetBinContent(1,eff_1btag_350);
   h1_eff_2btag_350->SetBinContent(1,eff_2btag_350);
 
 
+  h1_nEvents_fb_gluetag_400->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_400);
   h1_nEvents_fb_0btag_400->SetBinContent(1,1000.*nEventsPassed_fb_0btag_400);
   h1_nEvents_fb_1btag_400->SetBinContent(1,1000.*nEventsPassed_fb_1btag_400);
   h1_nEvents_fb_2btag_400->SetBinContent(1,1000.*nEventsPassed_fb_2btag_400);
 
+  h1_eff_gluetag_400->SetBinContent(1,eff_gluetag_400);
   h1_eff_0btag_400->SetBinContent(1,eff_0btag_400);
   h1_eff_1btag_400->SetBinContent(1,eff_1btag_400);
   h1_eff_2btag_400->SetBinContent(1,eff_2btag_400);
 
 
+  h1_nEvents_fb_gluetag_450->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_450);
   h1_nEvents_fb_0btag_450->SetBinContent(1,1000.*nEventsPassed_fb_0btag_450);
   h1_nEvents_fb_1btag_450->SetBinContent(1,1000.*nEventsPassed_fb_1btag_450);
   h1_nEvents_fb_2btag_450->SetBinContent(1,1000.*nEventsPassed_fb_2btag_450);
 
+  h1_eff_gluetag_450->SetBinContent(1,eff_gluetag_450);
   h1_eff_0btag_450->SetBinContent(1,eff_0btag_450);
   h1_eff_1btag_450->SetBinContent(1,eff_1btag_450);
   h1_eff_2btag_450->SetBinContent(1,eff_2btag_450);
 
 
+  h1_nEvents_fb_gluetag_500->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_500);
   h1_nEvents_fb_0btag_500->SetBinContent(1,1000.*nEventsPassed_fb_0btag_500);
   h1_nEvents_fb_1btag_500->SetBinContent(1,1000.*nEventsPassed_fb_1btag_500);
   h1_nEvents_fb_2btag_500->SetBinContent(1,1000.*nEventsPassed_fb_2btag_500);
 
+  h1_eff_gluetag_500->SetBinContent(1,eff_gluetag_500);
   h1_eff_0btag_500->SetBinContent(1,eff_0btag_500);
   h1_eff_1btag_500->SetBinContent(1,eff_1btag_500);
   h1_eff_2btag_500->SetBinContent(1,eff_2btag_500);
 
 
+  h1_nEvents_fb_gluetag_600->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_600);
   h1_nEvents_fb_0btag_600->SetBinContent(1,1000.*nEventsPassed_fb_0btag_600);
   h1_nEvents_fb_1btag_600->SetBinContent(1,1000.*nEventsPassed_fb_1btag_600);
   h1_nEvents_fb_2btag_600->SetBinContent(1,1000.*nEventsPassed_fb_2btag_600);
 
+  h1_eff_gluetag_600->SetBinContent(1,eff_gluetag_600);
   h1_eff_0btag_600->SetBinContent(1,eff_0btag_600);
   h1_eff_1btag_600->SetBinContent(1,eff_1btag_600);
   h1_eff_2btag_600->SetBinContent(1,eff_2btag_600);
@@ -1658,67 +1690,72 @@ ofs << run << " " << event << std::endl;
 
   outFile_->cd();
 
+  h1_nEvents_fb_gluetag_250->Write();
   h1_nEvents_fb_0btag_250->Write();
   h1_nEvents_fb_1btag_250->Write();
   h1_nEvents_fb_2btag_250->Write();
 
+  h1_eff_gluetag_250->Write();
   h1_eff_0btag_250->Write();
   h1_eff_1btag_250->Write();
   h1_eff_2btag_250->Write();
 
+  h1_nEvents_fb_gluetag_300->Write();
   h1_nEvents_fb_0btag_300->Write();
   h1_nEvents_fb_1btag_300->Write();
   h1_nEvents_fb_2btag_300->Write();
 
+  h1_eff_gluetag_300->Write();
   h1_eff_0btag_300->Write();
   h1_eff_1btag_300->Write();
   h1_eff_2btag_300->Write();
 
-  h1_nEvents_fb_0btag_300->Write();
-  h1_nEvents_fb_1btag_300->Write();
-  h1_nEvents_fb_2btag_300->Write();
-
-  h1_eff_0btag_300->Write();
-  h1_eff_1btag_300->Write();
-  h1_eff_2btag_300->Write();
-
+  h1_nEvents_fb_gluetag_350->Write();
   h1_nEvents_fb_0btag_350->Write();
   h1_nEvents_fb_1btag_350->Write();
   h1_nEvents_fb_2btag_350->Write();
 
+  h1_eff_gluetag_350->Write();
   h1_eff_0btag_350->Write();
   h1_eff_1btag_350->Write();
   h1_eff_2btag_350->Write();
 
+  h1_nEvents_fb_gluetag_400->Write();
   h1_nEvents_fb_0btag_400->Write();
   h1_nEvents_fb_1btag_400->Write();
   h1_nEvents_fb_2btag_400->Write();
 
+  h1_eff_gluetag_400->Write();
   h1_eff_0btag_400->Write();
   h1_eff_1btag_400->Write();
   h1_eff_2btag_400->Write();
 
+  h1_nEvents_fb_gluetag_450->Write();
   h1_nEvents_fb_0btag_450->Write();
   h1_nEvents_fb_1btag_450->Write();
   h1_nEvents_fb_2btag_450->Write();
 
+  h1_eff_gluetag_450->Write();
   h1_eff_0btag_450->Write();
   h1_eff_1btag_450->Write();
   h1_eff_2btag_450->Write();
 
+  h1_nEvents_fb_gluetag_500->Write();
   h1_nEvents_fb_0btag_500->Write();
   h1_nEvents_fb_1btag_500->Write();
   h1_nEvents_fb_2btag_500->Write();
 
+  h1_eff_gluetag_500->Write();
   h1_eff_0btag_500->Write();
   h1_eff_1btag_500->Write();
   h1_eff_2btag_500->Write();
 
-
+  h1_nEvents_fb_gluetag_600->Write();
   h1_nEvents_fb_0btag_600->Write();
   h1_nEvents_fb_1btag_600->Write();
   h1_nEvents_fb_2btag_600->Write();
 
+  h1_eff_gluetag_600->Write();
   h1_eff_0btag_600->Write();
   h1_eff_1btag_600->Write();
   h1_eff_2btag_600->Write();
@@ -1816,6 +1853,7 @@ ofs << run << " " << event << std::endl;
   h1_mZZ_mZjj_cut->Write();
   h1_mZZ_mZjj_notcut->Write();
   h1_mZZ_ZjjMassConstr_hiMass->Write();
+  h1_mZZ_kinfit_hiMass_gluetag->Write();
   h1_mZZ_kinfit_hiMass_0btag->Write();
   h1_mZZ_kinfit_hiMass_1btag->Write();
   h1_mZZ_kinfit_hiMass_2btag->Write();
