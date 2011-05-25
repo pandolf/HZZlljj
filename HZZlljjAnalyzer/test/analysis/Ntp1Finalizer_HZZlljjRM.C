@@ -1948,7 +1948,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_v1" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -1978,7 +1978,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_v2" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2008,7 +2008,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_mediumBTags_v1" ) { //"option 6"
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2038,7 +2038,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_metCut" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2068,7 +2068,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_metSumetCut" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2098,7 +2098,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_metSigCut" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2128,7 +2128,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_noQG" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2158,7 +2158,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_v2_noQG" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2188,7 +2188,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_fix400OLD" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2219,7 +2219,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="noCutLD" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
