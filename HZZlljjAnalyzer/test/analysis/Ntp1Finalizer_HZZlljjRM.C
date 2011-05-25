@@ -57,9 +57,6 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   if( outFile_==0 ) this->createOutputFile();
 
 
-  std::string btagFileName = "btagfile_" + selectionType_ + ".root";
-  TFile* btagFile = TFile::Open(btagFileName.c_str(), "RECREATE");
-
 
   // these histograms will save the final yields and efficiencies:
 
@@ -294,15 +291,6 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_QGLikelihood_66_81 = new TH1D("QGLikelihood_66_81", "", 50, 0., 1.0001);
   h1_QGLikelihood_66_81->Sumw2();
 
-  TH1D* h1_simpleSecondaryVertexHighEffBJetTagJet1 = new TH1D("simpleSecondaryVertexHighEffBJetTagJet1", "", 50, -1.5, 4.);
-  h1_simpleSecondaryVertexHighEffBJetTagJet1->Sumw2();
-  TH1D* h1_simpleSecondaryVertexHighPurBJetTagJet1 = new TH1D("simpleSecondaryVertexHighPurBJetTagJet1", "", 50, -1.5, 4.);
-  h1_simpleSecondaryVertexHighPurBJetTagJet1->Sumw2();
-  TH1D* h1_jetBProbabilityBJetTagJet1 = new TH1D("jetBProbabilityBJetTagJet1", "", 50, 0., 8.);
-  h1_jetBProbabilityBJetTagJet1->Sumw2();
-  TH1D* h1_jetProbabilityBJetTagJet1 = new TH1D("jetProbabilityBJetTagJet1", "", 50, 0., 2.5);
-  h1_jetProbabilityBJetTagJet1->Sumw2();
-
 
   TH1D* h1_deltaR_part2 = new TH1D("deltaR_part2", "", 60, 0., 0.8);
   h1_deltaR_part2->Sumw2();
@@ -322,14 +310,6 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_QGLikelihoodJet2_MW400 = new TH1D("QGLikelihoodJet2_MW400", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet2_MW400->Sumw2();
 
-  TH1D* h1_simpleSecondaryVertexHighEffBJetTagJet2 = new TH1D("simpleSecondaryVertexHighEffBJetTagJet2", "", 50, -1.5, 4.);
-  h1_simpleSecondaryVertexHighEffBJetTagJet2->Sumw2();
-  TH1D* h1_simpleSecondaryVertexHighPurBJetTagJet2 = new TH1D("simpleSecondaryVertexHighPurBJetTagJet2", "", 50, -1.5, 4.);
-  h1_simpleSecondaryVertexHighPurBJetTagJet2->Sumw2();
-  TH1D* h1_jetBProbabilityBJetTagJet2 = new TH1D("jetBProbabilityBJetTagJet2", "", 50, 0., 8.);
-  h1_jetBProbabilityBJetTagJet2->Sumw2();
-  TH1D* h1_jetProbabilityBJetTagJet2 = new TH1D("jetProbabilityBJetTagJet2", "", 50, 0., 2.5);
-  h1_jetProbabilityBJetTagJet2->Sumw2();
 
   TH1D* h1_QGLikelihoodProd = new TH1D("QGLikelihoodProd", "", 60, 0., 1.0001);
   h1_QGLikelihoodProd->Sumw2();
@@ -418,14 +398,6 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_mZjj_cut->Sumw2();
   TH1D* h1_mZZ_mZjj_notcut = new TH1D("mZZ_mZjj_notcut", "", 200, 100., 700.);
   h1_mZZ_mZjj_notcut->Sumw2();
-  TH1D* h1_mZZ_UL = new TH1D("mZZ_UL", "", 900, 100., 1000.);
-  h1_mZZ_UL->Sumw2();
-  TH1D* h1_mZZ_UL_kinfit = new TH1D("mZZ_UL_kinfit", "", 900, 100., 1000.);
-  h1_mZZ_UL_kinfit->Sumw2();
-  TH1D* h1_mZZ_hiMass= new TH1D("mZZ_hiMass", "", 120, 200., 800.);
-  h1_mZZ_hiMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass= new TH1D("mZZ_kinfit_hiMass", "", 650, 150., 800.);
-  h1_mZZ_kinfit_hiMass->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 650, 150., 800.);
   h1_mZZ_kinfit_hiMass_0btag->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 650, 150., 800.);
@@ -436,32 +408,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_kinfit_hiMass_hiQG->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 650, 150., 800.);
   h1_mZZ_kinfit_hiMass_loQG->Sumw2();
-//TH1D* h1_mZZ_highestMass= new TH1D("mZZ_highestMass", "", 70, 350., 700.);
-//h1_mZZ_highestMass->Sumw2();
-//TH1D* h1_mZZ_kinfit_highestMass= new TH1D("mZZ_kinfit_highestMass", "", 70, 350., 700.);
-//h1_mZZ_kinfit_highestMass->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 70, 200., 600.);
+  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 650, 150., 800.);
   h1_mZZ_ZjjMassConstr_hiMass->Sumw2();
-  TH1D* h1_mZZ_300Mass= new TH1D("mZZ_300Mass", "", 50, 250., 450.);
-  h1_mZZ_300Mass->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_300Mass  = new TH1D("mZZ_ZjjMassConstr_300Mass", "", 50, 250., 450.);
-  h1_mZZ_ZjjMassConstr_300Mass->Sumw2();
-  TH1D* h1_mZZ_kinfit_300Mass= new TH1D("mZZ_kinfit_300Mass", "", 50, 250., 450.);
-  h1_mZZ_kinfit_300Mass->Sumw2();
-  TH1D* h1_mZZ_kinfit_300Mass_loQG= new TH1D("mZZ_kinfit_300Mass_loQG", "", 50, 250., 450.);
-  h1_mZZ_kinfit_300Mass_loQG->Sumw2();
-  TH1D* h1_mZZ_kinfit_300Mass_hiQG= new TH1D("mZZ_kinfit_300Mass_hiQG", "", 50, 250., 450.);
-  h1_mZZ_kinfit_300Mass_hiQG->Sumw2();
-  TH1D* h1_mZZ_medMass= new TH1D("mZZ_medMass", "", 70, 150., 350.);
-  h1_mZZ_medMass->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_medMass  = new TH1D("mZZ_ZjjMassConstr_medMass", "", 70, 150., 350.);
-  h1_mZZ_ZjjMassConstr_medMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_medMass= new TH1D("mZZ_kinfit_medMass", "", 70, 150., 350.);
-  h1_mZZ_kinfit_medMass->Sumw2();
-  TH1D* h1_mZZ_kinfit_medMass_hiQG= new TH1D("mZZ_kinfit_medMass_hiQG", "", 70, 150., 350.);
-  h1_mZZ_kinfit_medMass_hiQG->Sumw2();
-  TH1D* h1_mZZ_kinfit_medMass_loQG= new TH1D("mZZ_kinfit_medMass_loQG", "", 70, 150., 350.);
-  h1_mZZ_kinfit_medMass_loQG->Sumw2();
 
   TH1D* h1_deltaRZmatching = new TH1D("deltaRZmatching", "", 50, 0., 1.0);
   h1_deltaRZmatching->Sumw2();
@@ -1346,23 +1294,6 @@ ofs << run << " " << event << std::endl;
     } 
 
 
-    bool btag_TChighPur =  ( jet1_selected.trackCountingHighPurBJetTag>5.         || jet2_selected.trackCountingHighPurBJetTag>5. );
-    bool btag_TChighEff =  ( jet1_selected.trackCountingHighEffBJetTag>5.         || jet2_selected.trackCountingHighEffBJetTag>5. );
-    bool btag_SSVhighPur = ( jet1_selected.simpleSecondaryVertexHighPurBJetTag>2. || jet2_selected.simpleSecondaryVertexHighPurBJetTag>2. );
-    bool btag_SSVhighEff = ( jet1_selected.simpleSecondaryVertexHighEffBJetTag>2. || jet2_selected.simpleSecondaryVertexHighEffBJetTag>2. );
-    bool btag_SSVhighPurhighEff = ( ( jet1_selected.simpleSecondaryVertexHighPurBJetTag>2. && jet2_selected.simpleSecondaryVertexHighEffBJetTag>2. ) ||
-                                    ( jet1_selected.simpleSecondaryVertexHighEffBJetTag>2. && jet2_selected.simpleSecondaryVertexHighPurBJetTag>2. ) );
-
-    h1_simpleSecondaryVertexHighEffBJetTagJet1->Fill(jet1_selected.simpleSecondaryVertexHighEffBJetTag, eventWeight);
-    h1_simpleSecondaryVertexHighPurBJetTagJet1->Fill(jet1_selected.simpleSecondaryVertexHighPurBJetTag, eventWeight);
-    h1_jetBProbabilityBJetTagJet1->Fill(jet1_selected.jetBProbabilityBJetTag, eventWeight);
-    h1_jetProbabilityBJetTagJet1->Fill(jet1_selected.jetProbabilityBJetTag, eventWeight);
-
-    h1_simpleSecondaryVertexHighEffBJetTagJet2->Fill(jet2_selected.simpleSecondaryVertexHighEffBJetTag, eventWeight);
-    h1_simpleSecondaryVertexHighPurBJetTagJet2->Fill(jet2_selected.simpleSecondaryVertexHighPurBJetTag, eventWeight);
-    h1_jetBProbabilityBJetTagJet2->Fill(jet2_selected.jetBProbabilityBJetTag, eventWeight);
-    h1_jetProbabilityBJetTagJet2->Fill(jet2_selected.jetProbabilityBJetTag, eventWeight);
-
 
     // match to partons:
     TLorentzVector matchedPart1, matchedPart2;
@@ -1505,31 +1436,17 @@ ofs << run << " " << event << std::endl;
 
 
       if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood < 0.1 ) {
-        h1_mZZ_kinfit_medMass_loQG->Fill(ZZ_kinfit.M(), eventWeight);
-        h1_mZZ_kinfit_300Mass_loQG->Fill(ZZ_kinfit.M(), eventWeight);
         h1_mZZ_kinfit_hiMass_loQG->Fill(ZZ_kinfit.M(), eventWeight);
       } else {
-        h1_mZZ_kinfit_medMass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
-        h1_mZZ_kinfit_300Mass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
         h1_mZZ_kinfit_hiMass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
       }
 
     } // if 0 btags
 
-    h1_mZZ_UL->Fill(ZZ_nokinfit.M(), eventWeight);
-    h1_mZZ_hiMass->Fill(ZZ_nokinfit.M(), eventWeight);
-    h1_mZZ_medMass->Fill(ZZ_nokinfit.M(), eventWeight);
-    h1_mZZ_300Mass->Fill(ZZ_nokinfit.M(), eventWeight);
     h1_mZZ_ZjjMassConstr_hiMass->Fill(ZZ_constr.M(), eventWeight);
-    h1_mZZ_ZjjMassConstr_medMass->Fill(ZZ_constr.M(), eventWeight);
-    h1_mZZ_ZjjMassConstr_300Mass->Fill(ZZ_constr.M(), eventWeight);
-    h1_mZZ_UL_kinfit->Fill(ZZ_kinfit.M(), eventWeight);
     if( maxBTag_found==0 ) h1_mZZ_kinfit_hiMass_0btag->Fill( ZZ_kinfit.M(), eventWeight);
     else if( maxBTag_found==1 ) h1_mZZ_kinfit_hiMass_1btag->Fill( ZZ_kinfit.M(), eventWeight);
     else if( maxBTag_found==2 ) h1_mZZ_kinfit_hiMass_2btag->Fill( ZZ_kinfit.M(), eventWeight);
-    h1_mZZ_kinfit_hiMass->Fill(ZZ_kinfit.M(), eventWeight);
-    h1_mZZ_kinfit_medMass->Fill(ZZ_kinfit.M(), eventWeight);
-    h1_mZZ_kinfit_300Mass->Fill(ZZ_kinfit.M(), eventWeight);
     h2_mZjj_vs_mZZ->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
     h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
 
@@ -1898,28 +1815,12 @@ ofs << run << " " << event << std::endl;
   h1_mZZ_loChiSquareProb->Write();
   h1_mZZ_mZjj_cut->Write();
   h1_mZZ_mZjj_notcut->Write();
-  h1_mZZ_UL->Write();
-  h1_mZZ_UL_kinfit->Write();
-  h1_mZZ_300Mass->Write();
-  h1_mZZ_medMass->Write();
-  h1_mZZ_hiMass->Write();
-//  h1_mZZ_highestMass->Write();
-  h1_mZZ_ZjjMassConstr_300Mass->Write();
-  h1_mZZ_ZjjMassConstr_medMass->Write();
   h1_mZZ_ZjjMassConstr_hiMass->Write();
-  h1_mZZ_kinfit_300Mass->Write();
-  h1_mZZ_kinfit_300Mass_loQG->Write();
-  h1_mZZ_kinfit_300Mass_hiQG->Write();
-  h1_mZZ_kinfit_medMass->Write();
-  h1_mZZ_kinfit_medMass_hiQG->Write();
-  h1_mZZ_kinfit_medMass_loQG->Write();
-  h1_mZZ_kinfit_hiMass->Write();
   h1_mZZ_kinfit_hiMass_0btag->Write();
   h1_mZZ_kinfit_hiMass_1btag->Write();
   h1_mZZ_kinfit_hiMass_2btag->Write();
   h1_mZZ_kinfit_hiMass_hiQG->Write();
   h1_mZZ_kinfit_hiMass_loQG->Write();
-//  h1_mZZ_kinfit_highestMass->Write();
 
   h1_deltaRZmatching->Write();
   h1_mZZ_kinfit_hiMass_0btag_matched->Write();
@@ -2008,21 +1909,6 @@ ofs << run << " " << event << std::endl;
   outFile_->Close();
 
 
-  btagFile->cd();
-
-  h1_simpleSecondaryVertexHighEffBJetTagJet1->Write();
-  h1_simpleSecondaryVertexHighPurBJetTagJet1->Write();
-  h1_jetBProbabilityBJetTagJet1->Write();
-  h1_jetProbabilityBJetTagJet1->Write();
-
-  h1_simpleSecondaryVertexHighEffBJetTagJet2->Write();
-  h1_simpleSecondaryVertexHighPurBJetTagJet2->Write();
-  h1_jetBProbabilityBJetTagJet2->Write();
-  h1_jetProbabilityBJetTagJet2->Write();
-
-  btagFile->Close();
-
-
 } // finalize()
 
 
@@ -2062,7 +1948,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_v1" ) {
 
-    ptLept1_thresh_ = 40.;
+    ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2092,7 +1978,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_v2" ) {
 
-    ptLept1_thresh_ = 40.;
+    ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2122,7 +2008,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_mediumBTags_v1" ) { //"option 6"
 
-    ptLept1_thresh_ = 40.;
+    ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2152,7 +2038,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_metCut" ) {
 
-    ptLept1_thresh_ = 40.;
+    ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2182,7 +2068,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_metSumetCut" ) {
 
-    ptLept1_thresh_ = 40.;
+    ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2212,7 +2098,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_metSigCut" ) {
 
-    ptLept1_thresh_ = 40.;
+    ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2242,7 +2128,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_noQG" ) {
 
-    ptLept1_thresh_ = 40.;
+    ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2272,7 +2158,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_v2_noQG" ) {
 
-    ptLept1_thresh_ = 40.;
+    ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2302,7 +2188,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="optLD_looseBTags_fix400OLD" ) {
 
-    ptLept1_thresh_ = 40.;
+    ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
@@ -2333,7 +2219,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
   } else if( selectionType_=="noCutLD" ) {
 
-    ptLept1_thresh_ = 40.;
+    ptLept1_thresh_ = 20.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
