@@ -26,6 +26,8 @@ Ntp1Finalizer::Ntp1Finalizer( const std::string& analyzerType, const std::string
 
 Ntp1Finalizer::~Ntp1Finalizer() {
 
+  std::cout << std::endl << "-> Histograms saved in: " << outFile_->GetName() << std::endl;
+
   if( tree_!=0 ) {
     delete tree_;
     tree_=0;
@@ -144,3 +146,43 @@ void Ntp1Finalizer::writeResponseHistos( TFile* file, std::vector<TH1F*> h1_resp
   file->cd();
 
 }
+
+
+
+int Ntp1Finalizer::get_nBTags( const AnalysisJet& jet1, const AnalysisJet& jet2, BTagSFUtil* btsfutil, bool loosebtags ) {
+
+  int nBTags;
+
+  bool jet1_tagged_medium = jet1.btag_medium();
+  bool jet1_tagged_loose  = jet1.btag_loose();
+  bool jet2_tagged_medium = jet2.btag_medium();
+  bool jet2_tagged_loose  = jet2.btag_loose();
+
+  btsfutil->modifyBTagsWithSF( jet1_tagged_loose, jet1_tagged_medium, jet1.Pt(), jet1.Eta(), jet1.pdgIdPart );
+  btsfutil->modifyBTagsWithSF( jet2_tagged_loose, jet2_tagged_medium, jet2.Pt(), jet2.Eta(), jet2.pdgIdPart );
+
+  if( loosebtags ) {
+
+    bool twoBTags  = ( jet1_tagged_medium && jet2_tagged_loose  )
+                  || ( jet1_tagged_loose  && jet2_tagged_medium );
+    bool oneBTag   = (!twoBTags) && ( jet1_tagged_loose || jet2_tagged_loose );
+
+    if( twoBTags ) nBTags=2;
+    else if( oneBTag ) nBTags=1;
+    else nBTags=0;
+
+  } else {
+
+    bool twoBTags  = ( jet1_tagged_medium && jet2_tagged_medium );
+    bool oneBTag   = (!twoBTags) && ( jet1_tagged_medium || jet2_tagged_medium );
+
+    if( twoBTags ) nBTags=2;
+    else if( oneBTag ) nBTags=1;
+    else nBTags=0;
+
+  }
+
+  return nBTags;
+
+}
+
