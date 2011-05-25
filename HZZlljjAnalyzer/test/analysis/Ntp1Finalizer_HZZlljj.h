@@ -20,6 +20,7 @@ class Ntp1Finalizer_HZZlljj : public Ntp1Finalizer {
 
   virtual void finalize();
   void setSelectionType( const std::string& selectionType );
+  void set_useLooseBTags( bool useLooseBTags );
 
 
 
@@ -27,6 +28,7 @@ class Ntp1Finalizer_HZZlljj : public Ntp1Finalizer {
 
    std::string leptType_;
    std::string selectionType_;
+   bool useLooseBTags_;
 
    float ptLept1_thresh_;
    float ptLept2_thresh_;

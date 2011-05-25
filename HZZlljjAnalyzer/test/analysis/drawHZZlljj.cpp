@@ -4,6 +4,7 @@
 #include "CommonTools/DrawBase.h"
 #include "CommonTools/fitTools.h"
 
+bool looseBTags_ = true;
 
 
 void draw_vs_pt_plots( DrawBase* db, int nPtBins, Double_t* ptBins, const std::string& histoName, const std::string& axisName, const std::string& units="", const std::string& instanceName="Entries", bool log=false );
@@ -35,6 +36,8 @@ int main(int argc, char* argv[]) {
     std::string leptType_str(argv[2]);
     leptType = leptType_str;
   }
+
+  if( looseBTags_ ) leptType += "_looseBTag";
 
   std::string mass_str = "400";
   if( argc==4 ) {
@@ -81,6 +84,7 @@ int main(int argc, char* argv[]) {
 
   char mcSignalFileName[500];
   sprintf( mcSignalFileName, "HZZlljj_SMHiggsToZZTo2L2Q_M-%d_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1", mass );
+  //sprintf( mcSignalFileName, "HZZlljj_SMHiggsToZZTo2L2Q_M-%d_7TeV-jhu-pythia6", mass );
   std::string mcSignalFileName_str(mcSignalFileName);
 
   if( mass==400 || mass==450 ) mcSignalFileName_str += "_2";
@@ -374,25 +378,37 @@ int main(int argc, char* argv[]) {
 //draw_vs_pt_plots( db, nPtBins, ptBins, "QGLikelihoodJet2", "Subleading Jet Q-G Likelihood");
 
 
-  //std::string mcVVFileName = "HZZlljj_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10";
+  std::string mcZBBFileName = "HZZlljj_ZBB_alpgen_TuneZ2_Spring11";
+  mcZBBFileName += "_" + selType;
+  mcZBBFileName += "_" + leptType;
+  mcZBBFileName += ".root";
+  TFile* mcZBBFile = TFile::Open(mcZBBFileName.c_str());
+  db->add_mcFile( mcZBBFile, "ZBB_alpgen_TuneZ2_Spring11", "Z + bb", 39, 3003);
+
+  std::string mcZCCFileName = "HZZlljj_ZCC_alpgen_TuneZ2_Spring11";
+  mcZCCFileName += "_" + selType;
+  mcZCCFileName += "_" + leptType;
+  mcZCCFileName += ".root";
+  TFile* mcZCCFile = TFile::Open(mcZCCFileName.c_str());
+  db->add_mcFile( mcZCCFile, "ZCC_alpgen_TuneZ2_Spring11", "Z + cc", 40, 3003);
+
   std::string mcVVFileName = "HZZlljj_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11";
   //if( leptType!="ALL" ) mcZme += "_" + selType;
   mcVVFileName += "_" + selType;
   mcVVFileName += "_" + leptType;
   mcVVFileName += ".root";
   TFile* mcVVFile = TFile::Open(mcVVFileName.c_str());
-  std::cout << "Opened mc file '" << mcVVFileName << "'." << std::endl;
-  db->add_mcFile( mcVVFile, "VVtoAnything_TuneZ2", "ZZ/WZ/WW", kCyan+1, 3003);
+  db->add_mcFile( mcVVFile, "VVtoAnything_TuneZ2", "ZZ/WZ/WW", 32, 3003);
 
   //std::string mcTTbarFileName = "HZZlljj_TTJets_TuneZ2_7TeV-madgraph-tauola_Fall10";
-  std::string mcTTbarFileName = "HZZlljj_TT_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3";
+  //std::string mcTTbarFileName = "HZZlljj_TT_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3";
+  std::string mcTTbarFileName = "HZZlljj_TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11";
   //if( leptType!="ALL" ) mcZZFileName += "_" + leptType;
   mcTTbarFileName += "_" + selType;
   mcTTbarFileName += "_" + leptType;
   mcTTbarFileName += ".root";
   TFile* mcTTbarFile = TFile::Open(mcTTbarFileName.c_str());
-  std::cout << "Opened mc file '" << mcTTbarFileName << "'." << std::endl;
-  db->add_mcFile( mcTTbarFile, "TTJets_TuneD6T", "t#bar{t}", 30, 3002);
+  db->add_mcFile( mcTTbarFile, "TTJets", "tt/tW", 30, 3002);
 
 
   db->set_legendTitle("");
@@ -400,8 +416,11 @@ int main(int argc, char* argv[]) {
   db->set_lumiNormalization(1000.);
   db->set_noStack((bool)false);
   db->drawHisto("mZjj", "DiJet Invariant Mass", "GeV/c^{2}", "Events", log);
+  db->set_yAxisMaxScale( 1.1 );
   db->drawHisto("mZZ_hiMass", "ZZ Invariant Mass", "GeV/c^{2}", "Events");
-  db->drawHisto("mZZ_kinfit_hiMass", "ZZ Invariant Mass", "GeV/c^{2}", "Events");
+  db->set_yAxisMax( 20. );
+  db->drawHisto("mZZ_kinfit_hiMass", "ZZ Invariant Mass", "GeV/c^{2}", "Events", log);
+  db->set_yAxisMax(  );
 
   db->drawHisto("mZZ_medMass", "ZZ Invariant Mass", "GeV/c^{2}", "Events");
   db->drawHisto("mZZ_kinfit_medMass", "ZZ Invariant Mass", "GeV/c^{2}", "Events");

@@ -154,6 +154,43 @@ int main( int argc, char* argv[] ) {
     nf->addFile( "Z5Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_2" );
     nf->addFile( "Z5Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_2" );
 
+  } else if( dataset=="ZJets_alpgen_TuneZ2_Spring11_v2" ) {
+
+    nf->addFile( "Z0Jets_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z1Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z1Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z1Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z2Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z2Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z2Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z2Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z3Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z3Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z3Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z3Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z4Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z4Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z4Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z4Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z5Jets_ptZ-0to100_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z5Jets_ptZ-100to300_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z5Jets_ptZ-300to800_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "Z5Jets_ptZ-800to1600_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+
+  } else if( dataset=="ZBB_alpgen_TuneZ2_Spring11_v2" ) {
+
+    nf->addFile( "ZBB0JetsToLNu_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "ZBB1JetsToLNu_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "ZBB2JetsToLNu_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "ZBB3JetsToLNu_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+
+  } else if( dataset=="ZCC_alpgen_TuneZ2_Spring11_v2" ) {
+
+    nf->addFile( "ZCC0JetsToLNu_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "ZCC1JetsToLNu_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "ZCC2JetsToLNu_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "ZCC3JetsToLNu_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+
   } else if( dataset=="ZBB_alpgen_TuneZ2_Spring11" ) {
 
     nf->addFile( "ZBB0JetsToLNu_TuneZ2_7TeV-alpgen-tauola_Spring11-PU_S1_START311_V1G1-v1_3" );
@@ -174,11 +211,22 @@ int main( int argc, char* argv[] ) {
     nf->addFile( "WZtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" );
     nf->addFile( "WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Fall10" );
 
+  } else if( dataset=="VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2" ) {
+
+    nf->addFile( "ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "WZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+
   } else if( dataset=="VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11" ) {
 
     nf->addFile( "ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3" );
     nf->addFile( "WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_6" );
     nf->addFile( "WZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3" );
+
+  } else if( dataset=="TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11_v2" ) {
+
+    nf->addFile( "TTTo2L2Nu2B_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2" );
+    nf->addFile( "TToBLNu_TuneZ2_tW-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2_Spring11_v2" );
 
   } else if( dataset=="TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11" ) {
 
