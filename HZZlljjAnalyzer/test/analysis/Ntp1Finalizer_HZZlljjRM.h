@@ -9,6 +9,7 @@
 
 #include "Ntp1Finalizer.h"
 #include "AnalysisJet.h"
+#include "BTagSFUtil/BTagSFUtil.h"
 
 
 
@@ -22,7 +23,6 @@ class Ntp1Finalizer_HZZlljjRM : public Ntp1Finalizer {
   virtual void finalize();
   void setSelectionType( const std::string& selectionType );
 
-  int get_nBTags( const AnalysisJet& jet1, const AnalysisJet& jet2 );
   float get_helicityLD_thresh(float mass, int nBTags);
 
 
@@ -49,10 +49,15 @@ class Ntp1Finalizer_HZZlljjRM : public Ntp1Finalizer {
    float  helicityLD_intercept_0btags_;
    float  helicityLD_intercept_1btags_;
    float  helicityLD_intercept_2btags_;
+   float  helicityLD_minThresh_0btags_;
+   float  helicityLD_minThresh_1btags_;
+   float  helicityLD_minThresh_2btags_;
+   float  helicityLD_maxThresh_0btags_;
+   float  helicityLD_maxThresh_1btags_;
+   float  helicityLD_maxThresh_2btags_;
    float  QGLikelihoodProd_thresh_;
-   float  mZZ_threshLo_;
-   float  mZZ_threshHi_;
    float  pfMetThresh_;
+   bool use_looseBTags_;
 
 };
 
