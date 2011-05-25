@@ -40,6 +40,8 @@ class AnalysisJet : public TLorentzVector {
   float phiGen;
   float eGen;
 
+  int pdgIdPart;
+
   bool btag_loose() const;
   bool btag_medium() const;
 
