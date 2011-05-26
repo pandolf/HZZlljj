@@ -412,19 +412,19 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_mZjj_cut->Sumw2();
   TH1D* h1_mZZ_mZjj_notcut = new TH1D("mZZ_mZjj_notcut", "", 200, 100., 700.);
   h1_mZZ_mZjj_notcut->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_gluetag= new TH1D("mZZ_kinfit_hiMass_gluetag", "", 650, 150., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_gluetag= new TH1D("mZZ_kinfit_hiMass_gluetag", "", 650, 150., 750.);
   h1_mZZ_kinfit_hiMass_gluetag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 650, 150., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 650, 150., 750.);
   h1_mZZ_kinfit_hiMass_0btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 650, 150., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 650, 150., 750.);
   h1_mZZ_kinfit_hiMass_1btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 650, 150., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 650, 150., 750.);
   h1_mZZ_kinfit_hiMass_2btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 650, 150., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 650, 150., 750.);
   h1_mZZ_kinfit_hiMass_hiQG->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 650, 150., 800.);
+  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 650, 150., 750.);
   h1_mZZ_kinfit_hiMass_loQG->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 650, 150., 800.);
+  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 650, 150., 750.);
   h1_mZZ_ZjjMassConstr_hiMass->Sumw2();
 
   TH1D* h1_deltaRZmatching = new TH1D("deltaRZmatching", "", 50, 0., 1.0);
@@ -1429,8 +1429,8 @@ ofs << run << " " << event << std::endl;
     h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
 
 
-    // fill QG plots only for the 0-tag category:
-    if( maxBTag_found==0 ) {
+    // fill QG plots only for the 0- and glue-tag category:
+    if( maxBTag_found<=0 ) {
     
       h1_QGLikelihoodJet1->Fill( jet1_selected.QGLikelihood, eventWeight );
       h1_QGLikelihoodJet2->Fill( jet2_selected.QGLikelihood, eventWeight );
@@ -1460,7 +1460,7 @@ ofs << run << " " << event << std::endl;
         h1_mZZ_kinfit_hiMass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
       }
 
-    } // if 0 btags
+    } // if 0/glue tags
 
     h1_mZZ_ZjjMassConstr_hiMass->Fill(ZZ_constr.M(), eventWeight);
     if( maxBTag_found==0 ) h1_mZZ_kinfit_hiMass_0btag->Fill( ZZ_kinfit.M(), eventWeight);
