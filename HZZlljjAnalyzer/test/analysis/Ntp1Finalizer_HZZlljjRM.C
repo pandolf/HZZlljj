@@ -418,19 +418,19 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_mZjj_cut->Sumw2();
   TH1D* h1_mZZ_mZjj_notcut = new TH1D("mZZ_mZjj_notcut", "", 200, 100., 700.);
   h1_mZZ_mZjj_notcut->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_gluetag= new TH1D("mZZ_kinfit_hiMass_gluetag", "", 650, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_gluetag= new TH1D("mZZ_kinfit_hiMass_gluetag", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_gluetag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 650, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_0btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 650, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_1btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 650, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_2btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 650, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_hiQG->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 650, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_loQG->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 650, 150., 750.);
+  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 600, 150., 750.);
   h1_mZZ_ZjjMassConstr_hiMass->Sumw2();
 
   TH1D* h1_deltaRZmatching = new TH1D("deltaRZmatching", "", 50, 0., 1.0);
