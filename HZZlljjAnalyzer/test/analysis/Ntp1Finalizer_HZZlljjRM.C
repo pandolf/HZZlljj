@@ -14,6 +14,7 @@
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
 #include "KinematicFit/DiJetKinFitter.h"
 
+#include "/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/emanuele/CommonTools/include/PUWeight.h"
 
 
 
@@ -139,6 +140,11 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
 
   TH1F* h1_run = new TH1F("run", "", 15149, 132440, 147589);
+
+  TH1D* h1_nvertex = new TH1D("nvertex", "", 15, 0.5, 15.5);
+  h1_nvertex->Sumw2();
+  TH1D* h1_nvertex_PUW = new TH1D("nvertex_PUW", "", 15, 0.5, 15.5);
+  h1_nvertex_PUW->Sumw2();
 
   TH1D* h1_pfMet = new TH1D("pfMet", "", 60, 0., 120.);
   h1_pfMet->Sumw2();
@@ -481,6 +487,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   Int_t run;
   tree_->SetBranchAddress("run", &run);
+  Int_t nPU;
+  tree_->SetBranchAddress("nPU", &nPU);
   Int_t nvertex;
   tree_->SetBranchAddress("nvertex", &nvertex);
   Float_t rhoPF;
@@ -748,6 +756,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float helicityLD_kinfit_selected = -1.;
 
   BTagSFUtil* btsfutil = new BTagSFUtil(13);
+  PUWeight* fPUWeight = new PUWeight();
 
 
 float nEventsTot = 0.;
@@ -775,8 +784,16 @@ ofstream ofs("run_event.txt");
     }
 
 
-
     bool isMC = (run<5);
+
+    h1_nvertex->Fill(nvertex, eventWeight);
+
+    if( isMC ) {
+      // PU reweighting:
+      eventWeight *= fPUWeight->GetWeight(nPU);
+    }
+
+    h1_nvertex_PUW->Fill(nvertex, eventWeight);
 
 
     if( !isMC ) { 
@@ -1762,6 +1779,10 @@ ofs << run << " " << event << std::endl;
 
 
   h1_run->Write();
+
+  h1_nvertex->Write();
+  h1_nvertex_PUW->Write();
+
   h1_rhoPF_presel->Write();
   h1_rhoPF->Write();
   
