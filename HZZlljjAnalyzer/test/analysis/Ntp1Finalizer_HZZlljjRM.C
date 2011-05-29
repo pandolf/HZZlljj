@@ -251,12 +251,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 //TH1D* h1_nNeutralJetRecoil = new TH1D("nNeutralJetRecoil", "", 41, -0.5, 40.5);
 //h1_nNeutralJetRecoil->Sumw2();
 
-  int nBins_invMass = 80;
-  float invMassMin = 30.;
-  float invMassMax = 120.;
-  float invMassMin_ll = 60.;
 
-  TH1D* h1_mZjj_all_presel = new TH1D("mZjj_all_presel", "", 20, invMassMin, 400.);
+  TH1D* h1_mZjj_all_presel = new TH1D("mZjj_all_presel", "", 100, 30., 430.);
   h1_mZjj_all_presel->Sumw2();
 
   TH1D* h1_deltaRjj_all_presel = new TH1D("deltaRjj_all_presel", "", 18, 0.5, 5.);
@@ -264,30 +260,26 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_deltaRll_presel = new TH1D("deltaRll_presel", "", 20, 0., 5.);
   h1_deltaRll_presel->Sumw2();
 
-  TH1D* h1_mZll = new TH1D("mZll", "", nBins_invMass, invMassMin_ll, invMassMax);
+  TH1D* h1_mZll = new TH1D("mZll", "", 60, 60., 120.);
   h1_mZll->Sumw2();
-  TH1D* h1_mZll_presel = new TH1D("mZll_presel", "", nBins_invMass, invMassMin_ll, invMassMax);
+  TH1D* h1_mZll_presel = new TH1D("mZll_presel", "", 60, 60., 120.);
   h1_mZll_presel->Sumw2();
-  TH1D* h1_mZll_presel_0jets = new TH1D("mZll_presel_0jets", "", nBins_invMass, invMassMin_ll, invMassMax);
+  TH1D* h1_mZll_presel_0jets = new TH1D("mZll_presel_0jets", "", 60, 60., 120.);
   h1_mZll_presel_0jets->Sumw2();
 
-  TH1D* h1_mZmumu = new TH1D("mZmumu", "", nBins_invMass, invMassMin_ll, invMassMax);
+  TH1D* h1_mZmumu = new TH1D("mZmumu", "", 60, 60., 120.);
   h1_mZmumu->Sumw2();
-  TH1D* h1_mZmumu_presel = new TH1D("mZmumu_presel", "", nBins_invMass, invMassMin_ll, invMassMax);
+  TH1D* h1_mZmumu_presel = new TH1D("mZmumu_presel", "", 60, 60., 120.);
   h1_mZmumu_presel->Sumw2();
-  TH1D* h1_mZmumu_presel_0jets = new TH1D("mZmumu_presel_0jets", "", nBins_invMass, invMassMin_ll, invMassMax);
+  TH1D* h1_mZmumu_presel_0jets = new TH1D("mZmumu_presel_0jets", "", 60, 60., 120.);
   h1_mZmumu_presel_0jets->Sumw2();
-  TH1D* h1_mZee = new TH1D("mZee", "", nBins_invMass, invMassMin_ll, invMassMax);
+  TH1D* h1_mZee = new TH1D("mZee", "", 60, 60., 120.);
   h1_mZee->Sumw2();
-  TH1D* h1_mZee_presel = new TH1D("mZee_presel", "", nBins_invMass, invMassMin_ll, invMassMax);
+  TH1D* h1_mZee_presel = new TH1D("mZee_presel", "", 60, 60., 120.);
   h1_mZee_presel->Sumw2();
-  TH1D* h1_mZee_presel_0jets = new TH1D("mZee_presel_0jets", "", nBins_invMass, invMassMin_ll, invMassMax);
+  TH1D* h1_mZee_presel_0jets = new TH1D("mZee_presel_0jets", "", 60, 60., 120.);
   h1_mZee_presel_0jets->Sumw2();
 
-  TH1D* h1_ptDJet1 = new TH1D("ptDJet1", "", 60, 0., 1.0001);
-  h1_ptDJet1->Sumw2();
-  TH1D* h1_ptDJet2 = new TH1D("ptDJet2", "", 60, 0., 1.0001);
-  h1_ptDJet2->Sumw2();
 
   TH1D* h1_deltaR_part1 = new TH1D("deltaR_part1", "", 50, 0., 0.8);
   h1_deltaR_part1->Sumw2();
@@ -299,6 +291,14 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 //std::vector<TH1D*> vh1_nChargedJet1 = getHistoVector(nPtBins, ptBins, "nChargedJet1", 51, -0.5, 50.5);
 //std::vector<TH1D*> vh1_nNeutralJet1 = getHistoVector(nPtBins, ptBins, "nNeutralJet1", 51, -0.5, 50.5);
 //std::vector<TH1D*> vh1_QGLikelihoodJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet1", 60, 0., 1.);
+  TH1D* h1_nChargedJet1 = new TH1D("nChargedJet1", "", 31, -0.5, 30.5);
+  h1_nChargedJet1->Sumw2();
+  TH1D* h1_nNeutralJet1 = new TH1D("nNeutralJet1", "", 31, -0.5, 30.5);
+  h1_nNeutralJet1->Sumw2();
+  TH1D* h1_ptDJet1 = new TH1D("ptDJet1", "", 50, 0., 1.0001);
+  h1_ptDJet1->Sumw2();
+  TH1D* h1_QGLikelihoodNoPUJet1 = new TH1D("QGLikelihoodJet1NoPU", "", 60, 0., 1.0001);
+  h1_QGLikelihoodNoPUJet1->Sumw2();
   TH1D* h1_QGLikelihoodJet1 = new TH1D("QGLikelihoodJet1", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet1->Sumw2();
   TH1D* h1_QGLikelihoodJet1_MW300 = new TH1D("QGLikelihoodJet1_MW300", "", 60, 0., 1.0001);
@@ -318,11 +318,19 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 38, -15.5, 22.5);
   h1_partFlavorJet2->Sumw2();
 
-  std::vector<TH1D*> vh1_ptDJet2 = getHistoVector(nPtBins, ptBins, "ptDJet2", 60, 0., 1.);
-  std::vector<TH1D*> vh1_rmsCandJet2 = getHistoVector(nPtBins, ptBins, "rmsCandJet2", 60, 0., 0.1);
-  std::vector<TH1D*> vh1_nChargedJet2 = getHistoVector(nPtBins, ptBins, "nChargedJet2", 51, -0.5, 50.5);
-  std::vector<TH1D*> vh1_nNeutralJet2 = getHistoVector(nPtBins, ptBins, "nNeutralJet2", 51, -0.5, 50.5);
-  std::vector<TH1D*> vh1_QGLikelihoodJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet2", 60, 0., 1.);
+  //std::vector<TH1D*> vh1_ptDJet2 = getHistoVector(nPtBins, ptBins, "ptDJet2", 60, 0., 1.);
+  //std::vector<TH1D*> vh1_rmsCandJet2 = getHistoVector(nPtBins, ptBins, "rmsCandJet2", 60, 0., 0.1);
+  //std::vector<TH1D*> vh1_nChargedJet2 = getHistoVector(nPtBins, ptBins, "nChargedJet2", 51, -0.5, 50.5);
+  //std::vector<TH1D*> vh1_nNeutralJet2 = getHistoVector(nPtBins, ptBins, "nNeutralJet2", 51, -0.5, 50.5);
+  //std::vector<TH1D*> vh1_QGLikelihoodJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet2", 60, 0., 1.);
+  TH1D* h1_nChargedJet2 = new TH1D("nChargedJet2", "", 31, -0.5, 30.5);
+  h1_nChargedJet2->Sumw2();
+  TH1D* h1_nNeutralJet2 = new TH1D("nNeutralJet2", "", 31, -0.5, 30.5);
+  h1_nNeutralJet2->Sumw2();
+  TH1D* h1_ptDJet2 = new TH1D("ptDJet2", "", 50, 0., 1.0001);
+  h1_ptDJet2->Sumw2();
+  TH1D* h1_QGLikelihoodNoPUJet2 = new TH1D("QGLikelihoodJet2NoPU", "", 60, 0., 1.0001);
+  h1_QGLikelihoodNoPUJet2->Sumw2();
   TH1D* h1_QGLikelihoodJet2 = new TH1D("QGLikelihoodJet2", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet2->Sumw2();
   TH1D* h1_QGLikelihoodJet2_MW300 = new TH1D("QGLikelihoodJet2_MW300", "", 60, 0., 1.0001);
@@ -331,6 +339,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodJet2_MW400->Sumw2();
 
 
+  TH1D* h1_QGLikelihoodNoPUProd = new TH1D("QGLikelihoodNoPUProd", "", 60, 0., 1.0001);
+  h1_QGLikelihoodNoPUProd->Sumw2();
   TH1D* h1_QGLikelihoodProd = new TH1D("QGLikelihoodProd", "", 60, 0., 1.0001);
   h1_QGLikelihoodProd->Sumw2();
   TH1D* h1_QGLikelihoodProd_MW300 = new TH1D("QGLikelihoodProd_MW300", "", 60, 0., 1.0001);
@@ -339,7 +349,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodProd_MW400->Sumw2();
 
 
-  TH1D* h1_mZjj= new TH1D("mZjj", "", nBins_invMass, 70., 120.);
+  TH1D* h1_mZjj= new TH1D("mZjj", "", 50, 30., 230.);
   h1_mZjj->Sumw2();
   TH1D* h1_mZjj_loChiSquareProb= new TH1D("mZjj_loChiSquareProb", "", 100, 30., 200.);
   h1_mZjj_loChiSquareProb->Sumw2();
@@ -418,6 +428,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_mZjj_cut->Sumw2();
   TH1D* h1_mZZ_mZjj_notcut = new TH1D("mZZ_mZjj_notcut", "", 200, 100., 700.);
   h1_mZZ_mZjj_notcut->Sumw2();
+
   TH1D* h1_mZZ_kinfit_hiMass_gluetag= new TH1D("mZZ_kinfit_hiMass_gluetag", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_gluetag->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 600, 150., 750.);
@@ -426,6 +437,25 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_kinfit_hiMass_1btag->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_2btag->Sumw2();
+
+  TH1D* h1_mZZ_kinfit_hiMass_gluetag_ELE = new TH1D("mZZ_kinfit_hiMass_gluetag_ELE ", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_gluetag_ELE ->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_0btag_ELE = new TH1D("mZZ_kinfit_hiMass_0btag_ELE ", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_0btag_ELE ->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_1btag_ELE = new TH1D("mZZ_kinfit_hiMass_1btag_ELE ", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_1btag_ELE ->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_2btag_ELE = new TH1D("mZZ_kinfit_hiMass_2btag_ELE ", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_2btag_ELE ->Sumw2();
+
+  TH1D* h1_mZZ_kinfit_hiMass_gluetag_MU = new TH1D("mZZ_kinfit_hiMass_gluetag_MU ", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_gluetag_MU ->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_0btag_MU = new TH1D("mZZ_kinfit_hiMass_0btag_MU ", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_0btag_MU ->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_1btag_MU = new TH1D("mZZ_kinfit_hiMass_1btag_MU ", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_1btag_MU ->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_2btag_MU = new TH1D("mZZ_kinfit_hiMass_2btag_MU ", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_2btag_MU ->Sumw2();
+
   TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_hiQG->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 600, 150., 750.);
@@ -754,6 +784,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
   float helicityLD_selected = -1.;
   float helicityLD_kinfit_selected = -1.;
+  HelicityLikelihoodDiscriminant::HelicityAngles hangles_selected;
 
   BTagSFUtil* btsfutil = new BTagSFUtil(13);
   PUWeight* fPUWeight = new PUWeight();
@@ -1066,6 +1097,8 @@ if( event==84169 ) std::cout << "nbtags: " << nBTags << std::endl;
 
       jet1.QGLikelihood = qglikeli->computeQGLikelihoodPU( jet1.Pt(), rhoPF, jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
       jet2.QGLikelihood = qglikeli->computeQGLikelihoodPU( jet2.Pt(), rhoPF, jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
+      jet1.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
+      jet2.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
 //    jet1.QGLikelihood = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
 //    jet2.QGLikelihood = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
       float QGLikelihoodProd = jet1.QGLikelihood*jet2.QGLikelihood;
@@ -1166,6 +1199,7 @@ if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
         bestMass = invMass;
         jet1_selected = jet1;
         jet2_selected = jet2;
+        hangles_selected = hangles;
         helicityLD_selected = helicityLD;
         foundJets += 1;
         maxBTag_found = nBTags;
@@ -1178,12 +1212,14 @@ if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
           bestMass = invMass;
           jet1_selected = jet1;
           jet2_selected = jet2;
+          hangles_selected = hangles;
           helicityLD_selected = helicityLD;
           maxBTag_found = nBTags;
         } else if( nBTags > maxBTag_found ) {
           bestMass = invMass;
           jet1_selected = jet1;
           jet2_selected = jet2;
+          hangles_selected = hangles;
           helicityLD_selected = helicityLD;
           maxBTag_found = nBTags;
         }
@@ -1448,10 +1484,22 @@ ofs << run << " " << event << std::endl;
 
     // fill QG plots only for the 0- and glue-tag category:
     if( maxBTag_found<=0 ) {
+
+      h1_nChargedJet1->Fill(jet1_selected.nCharged, eventWeight);
+      h1_nNeutralJet1->Fill(jet1_selected.nNeutral, eventWeight);
+      h1_ptDJet1->Fill(jet1_selected.ptD, eventWeight);
+    
+      h1_nChargedJet2->Fill(jet2_selected.nCharged, eventWeight);
+      h1_nNeutralJet2->Fill(jet2_selected.nNeutral, eventWeight);
+      h1_ptDJet2->Fill(jet2_selected.ptD, eventWeight);
     
       h1_QGLikelihoodJet1->Fill( jet1_selected.QGLikelihood, eventWeight );
       h1_QGLikelihoodJet2->Fill( jet2_selected.QGLikelihood, eventWeight );
       h1_QGLikelihoodProd->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+
+      h1_QGLikelihoodNoPUJet1->Fill( jet1_selected.QGLikelihoodNoPU, eventWeight );
+      h1_QGLikelihoodNoPUJet2->Fill( jet2_selected.QGLikelihoodNoPU, eventWeight );
+      h1_QGLikelihoodNoPUProd->Fill( jet1_selected.QGLikelihoodNoPU*jet2_selected.QGLikelihoodNoPU, eventWeight );
 
       if( jet1_selected.Pt()>100. && jet1_selected.Pt()<123. ) h1_QGLikelihood_100_123->Fill( jet1_selected.QGLikelihood, eventWeight );
       if( jet2_selected.Pt()>100. && jet2_selected.Pt()<123. ) h1_QGLikelihood_100_123->Fill( jet2_selected.QGLikelihood, eventWeight );
@@ -1480,10 +1528,23 @@ ofs << run << " " << event << std::endl;
     } // if 0/glue tags
 
     h1_mZZ_ZjjMassConstr_hiMass->Fill(ZZ_constr.M(), eventWeight);
-    if( maxBTag_found==0 ) h1_mZZ_kinfit_hiMass_0btag->Fill( ZZ_kinfit.M(), eventWeight);
-    else if( maxBTag_found==1 ) h1_mZZ_kinfit_hiMass_1btag->Fill( ZZ_kinfit.M(), eventWeight);
-    else if( maxBTag_found==2 ) h1_mZZ_kinfit_hiMass_2btag->Fill( ZZ_kinfit.M(), eventWeight);
-    else if( maxBTag_found==-1 ) h1_mZZ_kinfit_hiMass_gluetag->Fill( ZZ_kinfit.M(), eventWeight);
+    if( maxBTag_found==0 ) {
+      h1_mZZ_kinfit_hiMass_0btag->Fill( ZZ_kinfit.M(), eventWeight);
+      if( leptType==0 )  h1_mZZ_kinfit_hiMass_0btag_MU->Fill( ZZ_kinfit.M(), eventWeight);
+      if( leptType==1 )  h1_mZZ_kinfit_hiMass_0btag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
+    } else if( maxBTag_found==1 ) {
+      h1_mZZ_kinfit_hiMass_1btag->Fill( ZZ_kinfit.M(), eventWeight);
+      if( leptType==0 )  h1_mZZ_kinfit_hiMass_1btag_MU->Fill( ZZ_kinfit.M(), eventWeight);
+      if( leptType==1 )  h1_mZZ_kinfit_hiMass_1btag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
+    } else if( maxBTag_found==2 ) {
+      h1_mZZ_kinfit_hiMass_2btag->Fill( ZZ_kinfit.M(), eventWeight);
+      if( leptType==0 )  h1_mZZ_kinfit_hiMass_2btag_MU->Fill( ZZ_kinfit.M(), eventWeight);
+      if( leptType==1 )  h1_mZZ_kinfit_hiMass_2btag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
+    } else if( maxBTag_found==-1 ) {
+      h1_mZZ_kinfit_hiMass_gluetag->Fill( ZZ_kinfit.M(), eventWeight);
+      if( leptType==0 )  h1_mZZ_kinfit_hiMass_gluetag_MU->Fill( ZZ_kinfit.M(), eventWeight);
+      if( leptType==1 )  h1_mZZ_kinfit_hiMass_gluetag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
+    }
     h2_mZjj_vs_mZZ->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
     h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
 
@@ -1500,11 +1561,11 @@ ofs << run << " " << event << std::endl;
 
     h1_helicityLD->Fill( helicityLD_selected, eventWeight );
 
-  //h1_cosThetaStar->Fill(hangles.helCosThetaStar, eventWeight);
-  //h1_cosTheta1->Fill(hangles.helCosTheta1, eventWeight);
-  //h1_cosTheta2->Fill(hangles.helCosTheta2, eventWeight);
-  //h1_phi->Fill(hangles.helPhi, eventWeight);
-  //h1_phi1->Fill(hangles.helPhi1, eventWeight);
+    h1_cosThetaStar->Fill(hangles_selected.helCosThetaStar, eventWeight);
+    h1_cosTheta1->Fill(hangles_selected.helCosTheta1, eventWeight);
+    h1_cosTheta2->Fill(hangles_selected.helCosTheta2, eventWeight);
+    h1_phi->Fill(hangles_selected.helPhi, eventWeight);
+    h1_phi1->Fill(hangles_selected.helPhi1, eventWeight);
 
   //h1_cosThetaStar_kinfit->Fill(hangles_kinfit.helCosThetaStar, eventWeight);
   //h1_cosTheta1_kinfit->Fill(hangles_kinfit.helCosTheta1, eventWeight);
@@ -1875,9 +1936,17 @@ ofs << run << " " << event << std::endl;
   h1_mZZ_mZjj_notcut->Write();
   h1_mZZ_ZjjMassConstr_hiMass->Write();
   h1_mZZ_kinfit_hiMass_gluetag->Write();
+  h1_mZZ_kinfit_hiMass_gluetag_ELE->Write();
+  h1_mZZ_kinfit_hiMass_gluetag_MU->Write();
   h1_mZZ_kinfit_hiMass_0btag->Write();
+  h1_mZZ_kinfit_hiMass_0btag_ELE->Write();
+  h1_mZZ_kinfit_hiMass_0btag_MU->Write();
   h1_mZZ_kinfit_hiMass_1btag->Write();
+  h1_mZZ_kinfit_hiMass_1btag_ELE->Write();
+  h1_mZZ_kinfit_hiMass_1btag_MU->Write();
   h1_mZZ_kinfit_hiMass_2btag->Write();
+  h1_mZZ_kinfit_hiMass_2btag_ELE->Write();
+  h1_mZZ_kinfit_hiMass_2btag_MU->Write();
   h1_mZZ_kinfit_hiMass_hiQG->Write();
   h1_mZZ_kinfit_hiMass_loQG->Write();
 
@@ -1930,9 +1999,21 @@ ofs << run << " " << event << std::endl;
   h1_ptDJet1->Write();
   h1_ptDJet2->Write();
 
+  h1_nChargedJet1->Write();
+  h1_nNeutralJet1->Write();
+  h1_ptDJet1->Write();
+
+  h1_nChargedJet2->Write();
+  h1_nNeutralJet2->Write();
+  h1_ptDJet2->Write();
+
   h1_QGLikelihoodJet1->Write();
   h1_QGLikelihoodJet2->Write();
   h1_QGLikelihoodProd->Write();
+
+  h1_QGLikelihoodNoPUJet1->Write();
+  h1_QGLikelihoodNoPUJet2->Write();
+  h1_QGLikelihoodNoPUProd->Write();
 
   h1_QGLikelihoodJet1_MW300->Write();
   h1_QGLikelihoodJet2_MW300->Write();
@@ -2055,6 +2136,36 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_intercept_0btags_ = 0.55;
     helicityLD_intercept_1btags_ = 0.302;
     helicityLD_intercept_2btags_ = 0.5;
+    helicityLD_minThresh_0btags_ = 0.;
+    helicityLD_minThresh_1btags_ = 0.;
+    helicityLD_minThresh_2btags_ = 0.;
+    helicityLD_maxThresh_0btags_ = 1.;
+    helicityLD_maxThresh_1btags_ = 1.;
+    helicityLD_maxThresh_2btags_ = 1.;
+    QGLikelihoodProd_thresh_ = 0.1;
+    pfMetThresh_ = 10.;
+    use_looseBTags_ = true;
+
+  } else if( selectionType_=="optLD_noBTagCat" ) {
+
+    ptLept1_thresh_ = 40.;
+    ptLept2_thresh_ = 20.;
+    etaLept1_thresh_ = 3.;
+    etaLept2_thresh_ = 3.;
+    ptJet1_thresh_ = 30.;
+    ptJet2_thresh_ = 30.;
+    etaJet1_thresh_ = 2.4;
+    etaJet2_thresh_ = 2.4;
+    mZll_threshLo_ = 70.;
+    mZll_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
+    helicityLD_slope_0btags_ = 0.00025;
+    helicityLD_slope_1btags_ = 0.00025;;
+    helicityLD_slope_2btags_ = 0.00025;
+    helicityLD_intercept_0btags_ = 0.55;
+    helicityLD_intercept_1btags_ = 0.55;
+    helicityLD_intercept_2btags_ = 0.55;
     helicityLD_minThresh_0btags_ = 0.;
     helicityLD_minThresh_1btags_ = 0.;
     helicityLD_minThresh_2btags_ = 0.;
