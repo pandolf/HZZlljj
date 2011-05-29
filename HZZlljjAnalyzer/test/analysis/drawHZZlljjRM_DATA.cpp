@@ -118,11 +118,13 @@ int main(int argc, char* argv[]) {
   db->drawHisto("ptLept1", "Lead Lepton Transverse Momentum", "GeV/c", "Events", log);
   db->drawHisto("ptLept2", "Sublead Lepton Transverse Momentum", "GeV/c", "Events", log);
 
+  db->set_rebin(10);
   db->drawHisto("ptJet1", "Lead Jet Transverse Momentum", "GeV/c", "Events", log);
   db->drawHisto("ptJet2", "Sublead Jet Transverse Momentum", "GeV/c", "Events", log);
   db->drawHisto("ptJet1_prekin", "Lead Jet Transverse Momentum", "GeV/c", "Events", log);
   db->drawHisto("ptJet2_prekin", "Sublead Jet Transverse Momentum", "GeV/c", "Events", log);
 
+  db->set_rebin(2);
   db->drawHisto("mZll_presel", "Dilepton Invariant Mass", "GeV/c^{2}", "Events", log);
   if( leptType=="ALL" || leptType=="MU" )
     db->drawHisto("mZmumu_presel", "DiMuon Invariant Mass", "GeV/c^{2}", "Events", log);
