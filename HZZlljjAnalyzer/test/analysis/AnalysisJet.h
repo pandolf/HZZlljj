@@ -26,6 +26,7 @@ class AnalysisJet : public TLorentzVector {
   int nCharged;
   int nNeutral;
   float QGLikelihood;
+  float QGLikelihoodNoPU;
 
   float muonEnergyFraction;
   float electronEnergyFraction;
