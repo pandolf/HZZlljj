@@ -141,9 +141,9 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   TH1F* h1_run = new TH1F("run", "", 15149, 132440, 147589);
 
-  TH1D* h1_nvertex = new TH1D("nvertex", "", 15, 0.5, 15.5);
+  TH1D* h1_nvertex = new TH1D("nvertex", "", 25, -0.5, 24.5);
   h1_nvertex->Sumw2();
-  TH1D* h1_nvertex_PUW = new TH1D("nvertex_PUW", "", 15, 0.5, 15.5);
+  TH1D* h1_nvertex_PUW = new TH1D("nvertex_PUW", "", 25, -0.5, 24.5);
   h1_nvertex_PUW->Sumw2();
 
   TH1D* h1_pfMet = new TH1D("pfMet", "", 60, 0., 120.);
@@ -175,16 +175,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_nCandidates = new TH1D("nCandidates", "", 6, -0.5, 5.5 );
   h1_nCandidates->Sumw2();
 
-  TH1D* h1_ptLept1_presel = new TH1D("ptLept1_presel", "", 25, 20., 300.);
+  TH1D* h1_ptLept1_presel = new TH1D("ptLept1_presel", "", 400, 40., 440.);
   h1_ptLept1_presel->Sumw2();
-  TH1D* h1_ptLept2_presel = new TH1D("ptLept2_presel", "", 25, 20., 150.);
+  TH1D* h1_ptLept2_presel = new TH1D("ptLept2_presel", "", 200, 20., 220.);
   h1_ptLept2_presel->Sumw2();
   TH1D* h1_etaLept1_presel = new TH1D("etaLept1_presel", "", 25, -2.5, 2.5);
   h1_etaLept1_presel->Sumw2();
   TH1D* h1_etaLept2_presel = new TH1D("etaLept2_presel", "", 25, -2.5, 2.5);
   h1_etaLept2_presel->Sumw2();
 
-  TH1D* h1_ptJet_all_presel = new TH1D("ptJet_all_presel", "", 27, 30., 400.);
+  TH1D* h1_ptJet_all_presel = new TH1D("ptJet_all_presel", "", 200, 30., 430.);
   h1_ptJet_all_presel->Sumw2();
   TH1D* h1_etaJet_all_presel = new TH1D("etaJet_all_presel", "", 25, -5., 5.);
   h1_etaJet_all_presel->Sumw2();
@@ -203,17 +203,17 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_nPairs_presel = new TH1D("nPairs_presel", "", 21, 0.5, 21.5);
   h1_nPairs_presel->Sumw2();
 
-  TH1D* h1_ptLept1= new TH1D("ptLept1", "", 56, 20., 300.);
+  TH1D* h1_ptLept1= new TH1D("ptLept1", "", 400, 40., 440.);
   h1_ptLept1->Sumw2();
-  TH1D* h1_ptLept2= new TH1D("ptLept2", "", 52, 20., 150.);
+  TH1D* h1_ptLept2= new TH1D("ptLept2", "", 200, 20., 220.);
   h1_ptLept2->Sumw2();
-  TH1D* h1_ptJet1 = new TH1D("ptJet1", "", 80, 0., 400.);
+  TH1D* h1_ptJet1 = new TH1D("ptJet1", "", 200, 30., 430.);
   h1_ptJet1->Sumw2();
-  TH1D* h1_ptJet2 = new TH1D("ptJet2", "", 60, 0., 150.);
+  TH1D* h1_ptJet2 = new TH1D("ptJet2", "", 100, 30., 230.);
   h1_ptJet2->Sumw2();
-  TH1D* h1_ptJet1_prekin = new TH1D("ptJet1_prekin", "", 54, 30., 400.);
+  TH1D* h1_ptJet1_prekin = new TH1D("ptJet1_prekin", "", 200, 30., 430.);
   h1_ptJet1_prekin->Sumw2();
-  TH1D* h1_ptJet2_prekin = new TH1D("ptJet2_prekin", "", 48, 30., 150.);
+  TH1D* h1_ptJet2_prekin = new TH1D("ptJet2_prekin", "", 100, 30., 230.);
   h1_ptJet2_prekin->Sumw2();
   TH1D* h1_eElectronsJet1 = new TH1D("eElectronsJet1", "", 60, 0., 1.0001);
   h1_eElectronsJet1->Sumw2();
@@ -286,6 +286,14 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   //TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 30, -7.5, 22.5);
   TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 38, -15.5, 22.5);
   h1_partFlavorJet1->Sumw2();
+  TH1D* h1_partFlavorJet1_0btag= new TH1D("partFlavorJet1_0btag", "", 38, -15.5, 22.5);
+  h1_partFlavorJet1_0btag->Sumw2();
+  TH1D* h1_partFlavorJet1_1btag= new TH1D("partFlavorJet1_1btag", "", 38, -15.5, 22.5);
+  h1_partFlavorJet1_1btag->Sumw2();
+  TH1D* h1_partFlavorJet1_2btag= new TH1D("partFlavorJet1_2btag", "", 38, -15.5, 22.5);
+  h1_partFlavorJet1_2btag->Sumw2();
+  TH1D* h1_partFlavorJet1_gluetag= new TH1D("partFlavorJet1_gluetag", "", 38, -15.5, 22.5);
+  h1_partFlavorJet1_gluetag->Sumw2();
 //std::vector<TH1D*> vh1_ptDJet1 = getHistoVector(nPtBins, ptBins, "ptDJet1", 60, 0., 1.);
 //std::vector<TH1D*> vh1_rmsCandJet1 = getHistoVector(nPtBins, ptBins, "rmsCandJet1", 60, 0., 0.1);
 //std::vector<TH1D*> vh1_nChargedJet1 = getHistoVector(nPtBins, ptBins, "nChargedJet1", 51, -0.5, 50.5);
@@ -297,7 +305,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_nNeutralJet1->Sumw2();
   TH1D* h1_ptDJet1 = new TH1D("ptDJet1", "", 50, 0., 1.0001);
   h1_ptDJet1->Sumw2();
-  TH1D* h1_QGLikelihoodNoPUJet1 = new TH1D("QGLikelihoodJet1NoPU", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodNoPUJet1 = new TH1D("QGLikelihoodNoPUJet1", "", 60, 0., 1.0001);
   h1_QGLikelihoodNoPUJet1->Sumw2();
   TH1D* h1_QGLikelihoodJet1 = new TH1D("QGLikelihoodJet1", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet1->Sumw2();
@@ -305,6 +313,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodJet1_MW300->Sumw2();
   TH1D* h1_QGLikelihoodJet1_MW400 = new TH1D("QGLikelihoodJet1_MW400", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet1_MW400->Sumw2();
+  TH1D* h1_QGLikelihoodJet1_MW500 = new TH1D("QGLikelihoodJet1_MW500", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJet1_MW500->Sumw2();
 
   TH1D* h1_QGLikelihood_100_123 = new TH1D("QGLikelihood_100_123", "", 50, 0., 1.0001);
   h1_QGLikelihood_100_123->Sumw2();
@@ -317,6 +327,14 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   //TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 30, -7.5, 22.5);
   TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 38, -15.5, 22.5);
   h1_partFlavorJet2->Sumw2();
+  TH1D* h1_partFlavorJet2_0btag= new TH1D("partFlavorJet2_0btag", "", 38, -15.5, 22.5);
+  h1_partFlavorJet2_0btag->Sumw2();
+  TH1D* h1_partFlavorJet2_1btag= new TH1D("partFlavorJet2_1btag", "", 38, -15.5, 22.5);
+  h1_partFlavorJet2_1btag->Sumw2();
+  TH1D* h1_partFlavorJet2_2btag= new TH1D("partFlavorJet2_2btag", "", 38, -15.5, 22.5);
+  h1_partFlavorJet2_2btag->Sumw2();
+  TH1D* h1_partFlavorJet2_gluetag= new TH1D("partFlavorJet2_gluetag", "", 38, -15.5, 22.5);
+  h1_partFlavorJet2_gluetag->Sumw2();
 
   //std::vector<TH1D*> vh1_ptDJet2 = getHistoVector(nPtBins, ptBins, "ptDJet2", 60, 0., 1.);
   //std::vector<TH1D*> vh1_rmsCandJet2 = getHistoVector(nPtBins, ptBins, "rmsCandJet2", 60, 0., 0.1);
@@ -329,7 +347,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_nNeutralJet2->Sumw2();
   TH1D* h1_ptDJet2 = new TH1D("ptDJet2", "", 50, 0., 1.0001);
   h1_ptDJet2->Sumw2();
-  TH1D* h1_QGLikelihoodNoPUJet2 = new TH1D("QGLikelihoodJet2NoPU", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodNoPUJet2 = new TH1D("QGLikelihoodNoPUJet2", "", 60, 0., 1.0001);
   h1_QGLikelihoodNoPUJet2->Sumw2();
   TH1D* h1_QGLikelihoodJet2 = new TH1D("QGLikelihoodJet2", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet2->Sumw2();
@@ -337,6 +355,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodJet2_MW300->Sumw2();
   TH1D* h1_QGLikelihoodJet2_MW400 = new TH1D("QGLikelihoodJet2_MW400", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet2_MW400->Sumw2();
+  TH1D* h1_QGLikelihoodJet2_MW500 = new TH1D("QGLikelihoodJet2_MW500", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJet2_MW500->Sumw2();
 
 
   TH1D* h1_QGLikelihoodNoPUProd = new TH1D("QGLikelihoodNoPUProd", "", 60, 0., 1.0001);
@@ -347,6 +367,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodProd_MW300->Sumw2();
   TH1D* h1_QGLikelihoodProd_MW400 = new TH1D("QGLikelihoodProd_MW400", "", 60, 0., 1.0001);
   h1_QGLikelihoodProd_MW400->Sumw2();
+  TH1D* h1_QGLikelihoodProd_MW500 = new TH1D("QGLikelihoodProd_MW500", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProd_MW500->Sumw2();
 
 
   TH1D* h1_mZjj= new TH1D("mZjj", "", 50, 30., 230.);
@@ -356,14 +378,14 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_mZjj_hiChiSquareProb= new TH1D("mZjj_hiChiSquareProb", "", 100, 30., 200.);
   h1_mZjj_hiChiSquareProb->Sumw2();
 
-  TH1D* h1_ptZll_presel = new TH1D("ptZll_presel", "", 40, 0., 160.);
+  TH1D* h1_ptZll_presel = new TH1D("ptZll_presel", "", 400, 0., 400.);
   h1_ptZll_presel->Sumw2();
-  TH1D* h1_ptZjj_all_presel = new TH1D("ptZjj_all_presel", "", 40, 0., 160.);
+  TH1D* h1_ptZjj_all_presel = new TH1D("ptZjj_all_presel", "", 400, 0., 400.);
   h1_ptZjj_all_presel->Sumw2();
 
-  TH1D* h1_ptZll = new TH1D("ptZll", "", 50, 0., 300.);
+  TH1D* h1_ptZll = new TH1D("ptZll", "", 400, 0., 400.);
   h1_ptZll->Sumw2();
-  TH1D* h1_ptZjj = new TH1D("ptZjj", "", 50, 0., 300.);
+  TH1D* h1_ptZjj = new TH1D("ptZjj", "", 400, 0., 400.);
   h1_ptZjj->Sumw2();
 
   TH1D* h1_deltaRjj= new TH1D("deltaRjj", "", 50, 0.5, 5.);
@@ -789,6 +811,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   BTagSFUtil* btsfutil = new BTagSFUtil(13);
   PUWeight* fPUWeight = new PUWeight();
 
+  bool passed_mZjj=false;
+
 
 float nEventsTot = 0.;
 float nEvents_hiChiSquareProb = 0.;
@@ -1073,6 +1097,7 @@ if( event==84169 ) std::cout << "c" << std::endl;
       if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
 if( event==84169 ) std::cout << "d" << std::endl;
       if( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) continue;
+      //if( diJet.M() > mZjj_threshLo_ || diJet.M() < mZjj_threshHi_ ) passed_mZjj = true;
 if( event==84169 ) std::cout << "e" << std::endl;
 
 
@@ -1172,14 +1197,14 @@ if( event==84169 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std:
       double bProb=LD->getBkgdProbability();
       double helicityLD=sProb/(sProb+bProb);
     
-      HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinfit;
-      if( chargeLept1<0 ) hangles_kinfit = LD->computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
-      else                hangles_kinfit = LD->computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
+    //HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinfit;
+    //if( chargeLept1<0 ) hangles_kinfit = LD->computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
+    //else                hangles_kinfit = LD->computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
     
-      LD->setMeasurables(hangles_kinfit);
-      double sProb_kinfit=LD->getSignalProbability();
-      double bProb_kinfit=LD->getBkgdProbability();
-      double helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
+    //LD->setMeasurables(hangles_kinfit);
+    //double sProb_kinfit=LD->getSignalProbability();
+    //double bProb_kinfit=LD->getBkgdProbability();
+    //double helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
      
       float helicityLD_thresh = (nBTags>=0) ? this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), nBTags) : this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), 0);
 
@@ -1190,7 +1215,8 @@ if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
 
 
       // logic: choose jet pair with highest number of btags which passes selection
-      // if more than one pair found, choose the one with the invariant mass closest to Z mass
+      // if more than one pair found, choose the one with the invariant mass closest to Z mass.
+      // keep also best-Zmass dijet pair which passes all cuts except mZjj for sideband study
 
       float invMass = diJet.M();
 
@@ -1198,7 +1224,7 @@ if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
 
         bestMass = invMass;
         jet1_selected = jet1;
-        jet2_selected = jet2;
+        jet2_selected = jet2; //keep these for sidebands
         hangles_selected = hangles;
         helicityLD_selected = helicityLD;
         foundJets += 1;
@@ -1208,14 +1234,8 @@ if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
 
         foundJets += 1;
 
-        if( nBTags == maxBTag_found && ( fabs(invMass-Zmass) < fabs(bestMass-Zmass) )  ) {
-          bestMass = invMass;
-          jet1_selected = jet1;
-          jet2_selected = jet2;
-          hangles_selected = hangles;
-          helicityLD_selected = helicityLD;
-          maxBTag_found = nBTags;
-        } else if( nBTags > maxBTag_found ) {
+        if( ( nBTags == maxBTag_found && (fabs(invMass-Zmass) < fabs(bestMass-Zmass)))
+         || (nBTags > maxBTag_found)  ) {
           bestMass = invMass;
           jet1_selected = jet1;
           jet2_selected = jet2;
@@ -1507,15 +1527,20 @@ ofs << run << " " << event << std::endl;
       if( jet2_selected.Pt()>66. && jet2_selected.Pt()<81. ) h1_QGLikelihood_66_81->Fill( jet2_selected.QGLikelihood, eventWeight );
 
 
-      if( ZZ_kinfit.M()>270. && ZZ_kinfit.M()<330. ) {
+      if( ZZ_kinfit.M()>0.94*300. && ZZ_kinfit.M()<1.1*300. ) {
         h1_QGLikelihoodJet1_MW300->Fill( jet1_selected.QGLikelihood, eventWeight );
         h1_QGLikelihoodJet2_MW300->Fill( jet2_selected.QGLikelihood, eventWeight );
         h1_QGLikelihoodProd_MW300->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
       }
-      if( ZZ_kinfit.M()>360. && ZZ_kinfit.M()<440. ) {
+      if( ZZ_kinfit.M()>0.94*400. && ZZ_kinfit.M()<1.1*400. ) {
         h1_QGLikelihoodJet1_MW400->Fill( jet1_selected.QGLikelihood, eventWeight );
         h1_QGLikelihoodJet2_MW400->Fill( jet2_selected.QGLikelihood, eventWeight );
         h1_QGLikelihoodProd_MW400->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+      }
+      if( ZZ_kinfit.M()>0.94*500. && ZZ_kinfit.M()<1.1*500. ) {
+        h1_QGLikelihoodJet1_MW500->Fill( jet1_selected.QGLikelihood, eventWeight );
+        h1_QGLikelihoodJet2_MW500->Fill( jet2_selected.QGLikelihood, eventWeight );
+        h1_QGLikelihoodProd_MW500->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
       }
 
 
@@ -1575,10 +1600,10 @@ ofs << run << " " << event << std::endl;
 
 
 
-    //match to partons (any flavor):
     int partFlavor1=0;
     float deltaRmin1=999.;
     for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+      if( abs(pdgIdPart[iPart])>6 && pdgIdPart[iPart]!=21 ) continue;
       TLorentzVector thisPart;
       thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
       float thisDeltaR = jet1_selected.DeltaR(thisPart);
@@ -1589,11 +1614,16 @@ ofs << run << " " << event << std::endl;
     }
     h1_deltaR_part1->Fill(deltaRmin1, eventWeight);
     h1_partFlavorJet1->Fill( partFlavor1, eventWeight );
+    if( maxBTag_found==0 ) h1_partFlavorJet1_0btag->Fill( partFlavor1, eventWeight );
+    else if( maxBTag_found==1 ) h1_partFlavorJet1_1btag->Fill( partFlavor1, eventWeight );
+    else if( maxBTag_found==2 ) h1_partFlavorJet1_2btag->Fill( partFlavor1, eventWeight );
+    else if( maxBTag_found==-1 ) h1_partFlavorJet1_gluetag->Fill( partFlavor1, eventWeight );
     jet1_selected.pdgIdPart = partFlavor1;
 
     float deltaRmin2=999.;
     int partFlavor2=0;
     for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+      if( abs(pdgIdPart[iPart])>6 && pdgIdPart[iPart]!=21 ) continue;
       TLorentzVector thisPart;
       thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
       float thisDeltaR = jet2_selected.DeltaR(thisPart);
@@ -1604,6 +1634,10 @@ ofs << run << " " << event << std::endl;
     }
     h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
     h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
+    if( maxBTag_found==0 ) h1_partFlavorJet2_0btag->Fill( partFlavor1, eventWeight );
+    else if( maxBTag_found==1 ) h1_partFlavorJet2_1btag->Fill( partFlavor1, eventWeight );
+    else if( maxBTag_found==2 ) h1_partFlavorJet2_2btag->Fill( partFlavor1, eventWeight );
+    else if( maxBTag_found==-1 ) h1_partFlavorJet2_gluetag->Fill( partFlavor1, eventWeight );
     jet2_selected.pdgIdPart = partFlavor2;
 
 
@@ -1964,6 +1998,10 @@ ofs << run << " " << event << std::endl;
   h1_eElectronsJet1->Write();
   h1_eMuonsJet1->Write();
   h1_partFlavorJet1->Write();
+  h1_partFlavorJet1_0btag->Write();
+  h1_partFlavorJet1_1btag->Write();
+  h1_partFlavorJet1_2btag->Write();
+  h1_partFlavorJet1_gluetag->Write();
 
   h1_deltaR_part2->Write();
   h1_ptJet2->Write();
@@ -1971,6 +2009,10 @@ ofs << run << " " << event << std::endl;
   h1_eElectronsJet2->Write();
   h1_eMuonsJet2->Write();
   h1_partFlavorJet2->Write();
+  h1_partFlavorJet2_0btag->Write();
+  h1_partFlavorJet2_1btag->Write();
+  h1_partFlavorJet2_2btag->Write();
+  h1_partFlavorJet2_gluetag->Write();
 
   h1_deltaRZZ->Write();
 
@@ -2022,6 +2064,10 @@ ofs << run << " " << event << std::endl;
   h1_QGLikelihoodJet1_MW400->Write();
   h1_QGLikelihoodJet2_MW400->Write();
   h1_QGLikelihoodProd_MW400->Write();
+
+  h1_QGLikelihoodJet1_MW500->Write();
+  h1_QGLikelihoodJet2_MW500->Write();
+  h1_QGLikelihoodProd_MW500->Write();
 
 
   h1_QGLikelihood_100_123->Write();
