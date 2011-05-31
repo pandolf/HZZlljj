@@ -1634,10 +1634,10 @@ ofs << run << " " << event << std::endl;
     }
     h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
     h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
-    if( maxBTag_found==0 ) h1_partFlavorJet2_0btag->Fill( partFlavor1, eventWeight );
-    else if( maxBTag_found==1 ) h1_partFlavorJet2_1btag->Fill( partFlavor1, eventWeight );
-    else if( maxBTag_found==2 ) h1_partFlavorJet2_2btag->Fill( partFlavor1, eventWeight );
-    else if( maxBTag_found==-1 ) h1_partFlavorJet2_gluetag->Fill( partFlavor1, eventWeight );
+    if( maxBTag_found==0 ) h1_partFlavorJet2_0btag->Fill( partFlavor2, eventWeight );
+    else if( maxBTag_found==1 ) h1_partFlavorJet2_1btag->Fill( partFlavor2, eventWeight );
+    else if( maxBTag_found==2 ) h1_partFlavorJet2_2btag->Fill( partFlavor2, eventWeight );
+    else if( maxBTag_found==-1 ) h1_partFlavorJet2_gluetag->Fill( partFlavor2, eventWeight );
     jet2_selected.pdgIdPart = partFlavor2;
 
 
