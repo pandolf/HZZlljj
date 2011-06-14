@@ -58,8 +58,14 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   if( outFile_==0 ) this->createOutputFile();
 
+  TTree* tree_passedEvents = new TTree("tree_passedEvents", "Unbinned data for statistical treatment");
 
   TH1D* h1_nEventsCategories_presel = new TH1D("nEventsCategories_presel", "", 4, -1.5, 2.5);
+  h1_nEventsCategories_presel->Sumw2();
+  h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(1, "Glue-tag"); 
+  h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(2, "0 b-tag"); 
+  h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(3, "1 b-tag"); 
+  h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(4, "2 b-tag"); 
 
   // these histograms will save the final yields and efficiencies:
 
@@ -841,6 +847,13 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   BTagSFUtil* btsfutil = new BTagSFUtil(13);
   PUWeight* fPUWeight = new PUWeight();
 
+  int maxBTag_found = -1;
+  float mZZ;
+
+  tree_passedEvents->Branch( "mZZ", &mZZ, "mZZ/F" );
+  tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
+  tree_passedEvents->Branch( "nBTags", &maxBTag_found, "maxBTag_found/I" );
+
 
 
 float nEventsTot = 0.;
@@ -987,12 +1000,12 @@ ofstream ofs("run_event.txt");
 
 
 
-if( event==84169 ) {
-  std::cout << "leptType: " << leptType << std::endl; 
-  std::cout << "lept1.Pt(): " << lept1.Pt() << std::endl;
-  std::cout << "lept2.Pt(): " << lept2.Pt() << std::endl;
-  std::cout << "diLepton.M(): " << diLepton.M() << std::endl;
-}
+//if( event==84169 ) {
+//  std::cout << "leptType: " << leptType << std::endl; 
+//  std::cout << "lept1.Pt(): " << lept1.Pt() << std::endl;
+//  std::cout << "lept2.Pt(): " << lept2.Pt() << std::endl;
+//  std::cout << "diLepton.M(): " << diLepton.M() << std::endl;
+//}
 
 
     // ----------------------------
@@ -1005,7 +1018,7 @@ if( event==84169 ) {
     if( fabs(lept2.Eta()) > etaLept2_thresh_ ) continue;
     if( diLepton.M() < mZll_threshLo_ || diLepton.M() > mZll_threshHi_ ) continue;
 
-if( event==84170 ) std::cout << "passed leptons" << std::endl;
+//if( event==84170 ) std::cout << "passed leptons" << std::endl;
 
 
 
@@ -1014,7 +1027,7 @@ if( event==84170 ) std::cout << "passed leptons" << std::endl;
     float bestMass = 0.;
     int  foundJets = 0;
     bool foundJets_ZZmass = false;
-    int maxBTag_found = -1;
+    maxBTag_found = -1;
 
     for( unsigned iJetPair=0; iJetPair<nPairs; ++iJetPair ) {
 
@@ -1064,12 +1077,12 @@ if( event==84170 ) std::cout << "passed leptons" << std::endl;
 
       TLorentzVector diJet = jet1 + jet2;
 
-if( event==84169 ) {
-  std::cout << std::endl << "jet pair N.: " << iJetPair << std::endl; 
-  std::cout << "jet1.Pt(): " << jet1.Pt() << std::endl;
-  std::cout << "jet2.Pt(): " << jet2.Pt() << std::endl;
-  std::cout << "diJet.M(): " << diJet.M() << std::endl;
-}
+//if( event==84169 ) {
+//  std::cout << std::endl << "jet pair N.: " << iJetPair << std::endl; 
+//  std::cout << "jet1.Pt(): " << jet1.Pt() << std::endl;
+//  std::cout << "jet2.Pt(): " << jet2.Pt() << std::endl;
+//  std::cout << "diJet.M(): " << diJet.M() << std::endl;
+//}
 
 
       // fill histos before selection
@@ -1119,15 +1132,15 @@ if( event==84169 ) {
       // -------------------------
 
       if( jet1.Pt() < ptJet1_thresh_ ) continue;
-if( event==84169 ) std::cout << "a" << std::endl;
+//if( event==84169 ) std::cout << "a" << std::endl;
       if( jet2.Pt() < ptJet2_thresh_ ) continue;
-if( event==84169 ) std::cout << "b" << std::endl;
+//if( event==84169 ) std::cout << "b" << std::endl;
       if( fabs(jet1.Eta()) > etaJet1_thresh_ ) continue;
-if( event==84169 ) std::cout << "c" << std::endl;
+//if( event==84169 ) std::cout << "c" << std::endl;
       if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
-if( event==84169 ) std::cout << "d" << std::endl;
+//if( event==84169 ) std::cout << "d" << std::endl;
       if( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) continue;
-if( event==84169 ) std::cout << "e" << std::endl;
+//if( event==84169 ) std::cout << "e" << std::endl;
 
 
 
@@ -1139,7 +1152,7 @@ if( event==84169 ) std::cout << "e" << std::endl;
 
       int nBTags = this->get_nBTags( jet1, jet2, btsfutil, use_looseBTags_ );
 
-if( event==84169 ) std::cout << "nbtags: " << nBTags << std::endl;
+//if( event==84169 ) std::cout << "nbtags: " << nBTags << std::endl;
 
 
 
@@ -1154,7 +1167,7 @@ if( event==84169 ) std::cout << "nbtags: " << nBTags << std::endl;
       jet1.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
       jet2.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
       float QGLikelihoodProd = jet1.QGLikelihood*jet2.QGLikelihood;
-if( event==84169 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
+//if( event==84169 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
       if( nBTags==0 ) {
         //if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
         if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) nBTags=-1; //glue-tag category
@@ -1239,8 +1252,7 @@ if( event==84169 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std:
      
       float helicityLD_thresh = (nBTags>=0) ? this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), nBTags) : this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), 0);
 
-//std::cout << std::endl << "mass: " << ZZ_kinfit_tmp.M() << " btags: " << nBTags << " helicityLD: " << helicityLD << " helicityLD_thresh: " << helicityLD_thresh;
-if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
+//if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
       if( helicityLD < helicityLD_thresh ) continue;
 
 
@@ -1485,26 +1497,25 @@ if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
         TLorentzVector ZZ_nokinfit = Zjj_nokinfit + diLepton;
         TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
        
-       
         h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
        
-        h2_mZjj_vs_mZZ->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M(), eventWeight );
+        h2_mZjj_vs_mZZ->Fill( mZZ, Zjj_nokinfit.M(), eventWeight );
         h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M(), eventWeight );
 
         if( maxBTag_found==0 ) {
-          h2_mZjj_vs_mZZ_0btag->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
+          h2_mZjj_vs_mZZ_0btag->Fill( mZZ, Zjj_nokinfit.M() );
           h2_mZjj_vs_mZZ_kinfit_0btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
           h1_mZZ_kinfit_hiMass_sidebands_0btag->Fill( ZZ_kinfit.M(), eventWeight );
         } else if( maxBTag_found==1 ) {
-          h2_mZjj_vs_mZZ_1btag->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
+          h2_mZjj_vs_mZZ_1btag->Fill( mZZ, Zjj_nokinfit.M() );
           h2_mZjj_vs_mZZ_kinfit_1btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
           h1_mZZ_kinfit_hiMass_sidebands_1btag->Fill( ZZ_kinfit.M(), eventWeight );
         } else if( maxBTag_found==2 ) {
-          h2_mZjj_vs_mZZ_2btag->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
+          h2_mZjj_vs_mZZ_2btag->Fill( mZZ, Zjj_nokinfit.M() );
           h2_mZjj_vs_mZZ_kinfit_2btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
           h1_mZZ_kinfit_hiMass_sidebands_2btag->Fill( ZZ_kinfit.M(), eventWeight );
         } else if( maxBTag_found==-1 ) {
-          h2_mZjj_vs_mZZ_gluetag->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
+          h2_mZjj_vs_mZZ_gluetag->Fill( mZZ, Zjj_nokinfit.M() );
           h2_mZjj_vs_mZZ_kinfit_gluetag->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
           h1_mZZ_kinfit_hiMass_sidebands_gluetag->Fill( ZZ_kinfit.M(), eventWeight );
         }
@@ -1539,6 +1550,7 @@ ofs << run << " " << event << std::endl;
     TLorentzVector ZZ_nokinfit = Zjj_nokinfit + diLepton;
     TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
 
+    mZZ = ZZ_kinfit.M();
 
     h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
 
@@ -1739,6 +1751,8 @@ ofs << run << " " << event << std::endl;
     // FILL HISTOGRAMS
     //
     // ----------------
+
+    tree_passedEvents->Fill();
 
     h1_pfMet->Fill( pfMet, eventWeight );
     h1_pfMetOverMZZ->Fill( pfMet/ZZ_kinfit.M(), eventWeight );
@@ -2081,6 +2095,8 @@ ofs << run << " " << event << std::endl;
 
 
   outFile_->cd();
+
+  tree_passedEvents->Write();
 
   h1_nEventsCategories_presel->Write();
 
@@ -2425,7 +2441,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_0btags_ = 1.;
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
-    QGLikelihoodProd_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.1;
     use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_v1" ) {
