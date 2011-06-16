@@ -379,7 +379,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodProd_MW500->Sumw2();
 
 
-  TH1D* h1_mZjj= new TH1D("mZjj", "", 50, 30., 230.);
+  TH1D* h1_mZjj= new TH1D("mZjj", "", 100, 30., 430.);
   h1_mZjj->Sumw2();
   TH1D* h1_mZjj_loChiSquareProb= new TH1D("mZjj_loChiSquareProb", "", 100, 30., 200.);
   h1_mZjj_loChiSquareProb->Sumw2();
@@ -587,6 +587,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_->SetBranchAddress("event", &event);
   Float_t eventWeight;
   tree_->SetBranchAddress("eventWeight", &eventWeight);
+  Float_t eventWeight_Zee;
+  tree_->SetBranchAddress("eventWeight_Zee", &eventWeight_Zee);
+  Float_t eventWeight_Zmm;
+  tree_->SetBranchAddress("eventWeight_Zmm", &eventWeight_Zmm);
 
   Float_t ptHat;
   tree_->SetBranchAddress("ptHat", &ptHat);
@@ -849,10 +853,12 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   int maxBTag_found = -1;
   float mZZ;
+  bool isSidebands=false;
 
   tree_passedEvents->Branch( "mZZ", &mZZ, "mZZ/F" );
   tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
   tree_passedEvents->Branch( "nBTags", &maxBTag_found, "maxBTag_found/I" );
+  tree_passedEvents->Branch( "isSidebands", &isSidebands, "isSidebands/O" );
 
 
 
@@ -880,6 +886,14 @@ ofstream ofs("run_event.txt");
       if( leptType_=="ELE" && leptType==0 ) continue;
       if( leptType_=="MU" && leptType==1 ) continue;
     }
+
+
+    // BUG FIX in Z->ll BR in Spring11 Alpgen Z+jets:
+    if( dataset_=="ZJets_alpgen_TuneZ2_Spring11_v2" ) {
+      if( leptType==0 )      eventWeight = eventWeight_Zmm;
+      else if( leptType==1 ) eventWeight = eventWeight_Zee;
+    }
+
 
 
     bool isMC = (run<5);
@@ -1496,6 +1510,9 @@ ofstream ofs("run_event.txt");
        
         TLorentzVector ZZ_nokinfit = Zjj_nokinfit + diLepton;
         TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
+
+        mZZ = ZZ_kinfit.M();
+        isSidebands = true;
        
         h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
        
@@ -1520,6 +1537,7 @@ ofstream ofs("run_event.txt");
           h1_mZZ_kinfit_hiMass_sidebands_gluetag->Fill( ZZ_kinfit.M(), eventWeight );
         }
        
+        tree_passedEvents->Fill();
      
         continue; //this was sidebands
 
@@ -1551,6 +1569,7 @@ ofs << run << " " << event << std::endl;
     TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
 
     mZZ = ZZ_kinfit.M();
+    isSidebands = false;
 
     h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
 
