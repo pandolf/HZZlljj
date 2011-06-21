@@ -83,6 +83,11 @@ int main( int argc, char* argv[] ) {
     nf->addFile("DoubleMu_Run2011A"); //first muons! important!
     nf->addFile("DoubleElectron_Run2011A");
 
+  } else if( dataset=="DATA_Run2011A_v2_Sub2" ) {
+
+    nf->addFile("DoubleMu_Run2011A_v2_Sub2"); //first muons! important!
+    nf->addFile("DoubleElectron_Run2011A_v2_Sub2");
+
   } else if( dataset=="ZJets_alpgen_TuneZ2_Fall10" ) {
 
     nf->addFile( "Z0Jets_TuneZ2_7TeV-alpgen-tauola_3" );
