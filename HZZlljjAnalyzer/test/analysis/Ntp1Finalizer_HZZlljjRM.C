@@ -852,9 +852,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   PUWeight* fPUWeight = new PUWeight();
 
   int maxBTag_found = -1;
-  float mZZ;
+  float mZZ, mZjj;
   bool isSidebands=false;
 
+  tree_passedEvents->Branch( "mZjj", &mZjj, "mZjj/F" );
   tree_passedEvents->Branch( "mZZ", &mZZ, "mZZ/F" );
   tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
   tree_passedEvents->Branch( "nBTags", &maxBTag_found, "maxBTag_found/I" );
@@ -1166,6 +1167,8 @@ ofstream ofs("run_event.txt");
 
       int nBTags = this->get_nBTags( jet1, jet2, btsfutil, use_looseBTags_ );
 
+      if( nBTags<maxBTag_found ) continue; //speed it up
+
 //if( event==84169 ) std::cout << "nbtags: " << nBTags << std::endl;
 
 
@@ -1393,6 +1396,7 @@ ofstream ofs("run_event.txt");
      
           int nBTags = this->get_nBTags( jet1, jet2, btsfutil, use_looseBTags_ );
      
+          if( nBTags<maxBTag_found ) continue; //speed it up
      
      
           // -------------------
@@ -1537,6 +1541,8 @@ ofstream ofs("run_event.txt");
           h1_mZZ_kinfit_hiMass_sidebands_gluetag->Fill( ZZ_kinfit.M(), eventWeight );
         }
        
+        mZjj = Zjj_nokinfit.M();
+
         tree_passedEvents->Fill();
      
         continue; //this was sidebands
@@ -1568,6 +1574,7 @@ ofs << run << " " << event << std::endl;
     TLorentzVector ZZ_nokinfit = Zjj_nokinfit + diLepton;
     TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
 
+    mZjj = Zjj_nokinfit.M();
     mZZ = ZZ_kinfit.M();
     isSidebands = false;
 
