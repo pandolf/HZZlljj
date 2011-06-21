@@ -239,7 +239,7 @@ void Ntp1Analyzer_TMVA::Loop()
    int nCorrectPairs_closestPair = 0;
    int nIncorrectPairs_closestPair = 0;
 
-   QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator();
+   QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
 
    BTagSFUtil* btsfutil = new BTagSFUtil();
 
@@ -364,6 +364,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisMuon.pixelHits = numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]+numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]];
        thisMuon.trackerHits = trackValidHitsTrack[trackIndexMuon[iMuon]];
 
+       // simple fix for now, until i use new ntuples
+       thisMuon.nMatchedStations = 2;
+
 
        // to compute dxy, look for primary vertex:
        int hardestPV = -1;
@@ -452,6 +455,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        bool passed_VBTF80 = thisEle.passedVBTF80();
 
        if( !passed_VBTF95 ) continue;
+       //if( !passed_VBTF80 ) continue;
 
        // check that not matched to muon (clean electrons faked by muon MIP):
        bool matchedtomuon=false;
@@ -812,13 +816,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 
      // compute QG likelihood before kinfit:
-     QGLikelihoodJet1_ = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
-     QGLikelihoodJet2_ = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
-   //float QGLikeli_recoil = -1.;
-   //if( jetRecoil.Energy()>0. jetRecoil.ptD>=0. && jetRecoil.nCharged>) {
-   //  if( fabs(jetRecoil.Eta())<2. ) {
-   //    QGLikeli_recoil = qglikeli->computeQGLikelihood( jetRecoil.Pt(), jetRecoil.nCharged, jetRecoil.nNeutral, jetRecoil.ptD, -1. );
-     QGLikelihoodJetRecoil_ = (jetRecoil.Pt()>15.) ? qglikeli->computeQGLikelihood( jetRecoil.Pt(), jetRecoil.nCharged, jetRecoil.nNeutral, jetRecoil.ptD, -1. ) : -1.;
+   //QGLikelihoodJet1_ = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
+   //QGLikelihoodJet2_ = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
+     QGLikelihoodJet1_ = qglikeli->computeQGLikelihoodPU( jet1.Pt(), rhoFastjet, jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
+     QGLikelihoodJet2_ = qglikeli->computeQGLikelihoodPU( jet2.Pt(), rhoFastjet, jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
+     //QGLikelihoodJetRecoil_ = (jetRecoil.Pt()>15.) ? qglikeli->computeQGLikelihood( jetRecoil.Pt(), jetRecoil.nCharged, jetRecoil.nNeutral, jetRecoil.ptD, -1. ) : -1.;
+     QGLikelihoodJetRecoil_ = (jetRecoil.Pt()>15.) ? qglikeli->computeQGLikelihoodPU( jetRecoil.Pt(), rhoFastjet, jetRecoil.nCharged, jetRecoil.nNeutral, jetRecoil.ptD, -1. ) : -1.;
 
      QGLikelihoodJet1Jet2_ = QGLikelihoodJet1_*QGLikelihoodJet2_;
      QGLikelihoodJet1Jet2Recoil_ = (QGLikelihoodJetRecoil_>=0.) ? QGLikelihoodJet1_*QGLikelihoodJet2_*QGLikelihoodJetRecoil_ : QGLikelihoodJet1_*QGLikelihoodJet2_;

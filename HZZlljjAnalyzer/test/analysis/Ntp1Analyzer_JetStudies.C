@@ -28,11 +28,13 @@ class AnalysisJet : public TLorentzVector {
 
  public:
 
-  AnalysisJet( float x=0., float y=0., float z=0., float t=0.) : TLorentzVector( x, y, z, t ) {
-    eChargedHadrons=0.;
-  }
+  AnalysisJet( float x=0., float y=0., float z=0., float t=0.) : TLorentzVector( x, y, z, t ) {};
 
-  float eChargedHadrons;
+  float ptD;
+  float rmsCand;
+  int nCharged;
+  int nNeutral;
+
 //float ePhotons;
 //float eNeutralHadrons;
 //float eMuons;
@@ -70,12 +72,20 @@ void Ntp1Analyzer_JetStudies::CreateOutputFile() {
   
   reducedTree_->Branch("eventWeight",  &eventWeight_,  "eventWeight_/F");
 
+  reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
+  reducedTree_->Branch("rhoPF",&rhoPF_,"rhoPF_/F");
+
   reducedTree_->Branch("nJet",  &nJet_,  "nJet_/I");
 
   reducedTree_->Branch("eJet",  &eJet_,  "eJet_[nJet_]/F");
   reducedTree_->Branch("ptJet",  &ptJet_,  "ptJet_[nJet_]/F");
   reducedTree_->Branch("etaJet",  &etaJet_,  "etaJet_[nJet_]/F");
   reducedTree_->Branch("phiJet",  &phiJet_,  "phiJet_[nJet_]/F");
+
+  reducedTree_->Branch("ptDJet", ptDJet_, "ptDJet_[nJet_]/F");
+  reducedTree_->Branch("rmsCandJet", rmsCandJet_, "rmsCandJet_[nJet_]/F");
+  reducedTree_->Branch("nChargedJet", nChargedJet_, "nChargedJet_[nJet_]/I");
+  reducedTree_->Branch("nNeutralJet", nNeutralJet_, "nNeutralJet_[nJet_]/I");
 
 
 } 
@@ -132,6 +142,11 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      if( isMC ) 
        if( (ptHat_ > ptHatMax_) || (ptHat_ < ptHatMin_) ) continue;
+
+
+     nvertex_ = nPV; 
+     rhoPF_ = rhoFastjet;
+ 
 
 
      nJet_=0;
@@ -333,9 +348,14 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      std::vector<AnalysisJet> jets;
 
-     for( unsigned int iJet=0; iJet<nAK5PFJet && iJet<5; ++iJet ) {
+     for( unsigned int iJet=0; iJet<nAK5PFPUcorrJet && iJet<5; ++iJet ) {
 
-       AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
+       AnalysisJet thisJet( pxAK5PFPUcorrJet[iJet], pyAK5PFPUcorrJet[iJet], pzAK5PFPUcorrJet[iJet], energyAK5PFPUcorrJet[iJet] );
+
+       thisJet.nCharged = chargedHadronMultiplicityAK5PFPUcorrJet[iJet]+electronMultiplicityAK5PFPUcorrJet[iJet]+muonMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nNeutral = neutralHadronMultiplicityAK5PFPUcorrJet[iJet]+photonMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.rmsCand =  rmsCandAK5PFPUcorrJet[iJet];
+       thisJet.ptD =  ptDAK5PFPUcorrJet[iJet];
 
        // --------------
        // kinematics:
@@ -346,19 +366,24 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        Float_t deltaEta1 = thisJet.Eta() - etaLept1_;
        Float_t deltaPhi1 = delta_phi((Float_t)thisJet.Phi(), phiLept1_);
        Float_t deltaR1 = sqrt( deltaEta1*deltaEta1 + deltaPhi1*deltaPhi1 );
-       if( deltaR1 <= 0.25 ) continue;
+       if( deltaR1 <= 0.5 ) continue;
 
        Float_t deltaEta2 = thisJet.Eta() - etaLept2_;
        Float_t deltaPhi2 = delta_phi((Float_t)thisJet.Phi(), phiLept2_);
        Float_t deltaR2 = sqrt( deltaEta2*deltaEta2 + deltaPhi2*deltaPhi2 );
-       if( deltaR2 <= 0.25 ) continue;
+       if( deltaR2 <= 0.5 ) continue;
 
-       thisJet.eChargedHadrons = chargedHadronEnergyAK5PFJet[iJet];
 
        ptJet_[nJet_] = thisJet.Pt();
        etaJet_[nJet_] = thisJet.Eta();
        phiJet_[nJet_] = thisJet.Phi();
        eJet_[nJet_] = thisJet.Energy();
+
+       ptDJet_[nJet_] = thisJet.ptD;
+       nChargedJet_[nJet_] = thisJet.nCharged;
+       nNeutralJet_[nJet_] = thisJet.nNeutral;
+       rmsCandJet_[nJet_] = thisJet.rmsCand;
+
        nJet_++;
 
      } //for jets

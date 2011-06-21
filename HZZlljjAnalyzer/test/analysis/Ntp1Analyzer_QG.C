@@ -52,6 +52,7 @@ void Ntp1Analyzer_QG::CreateOutputFile() {
   reducedTree_->Branch("LS",&LS_,"LS_/I");
   reducedTree_->Branch("event",&event_,"event_/I");
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
+  reducedTree_->Branch("rhoPF",&rhoPF_,"rhoPF_/F");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
 
 
@@ -128,6 +129,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      LS_ = lumiBlock;
      event_ = eventNumber;
      eventWeight_ = -1.; //default
+     nvertex_ = nPV;
+     rhoPF_ = rhoFastjet;
 
      if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
 
@@ -472,9 +475,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      std::vector<AnalysisJet> leadJets;
      std::vector<int> leadJetsIndex; //index in the event collection (needed afterwards for PFCandidates)
 
-     for( unsigned int iJet=0; iJet<nAK5PFJet; ++iJet ) {
+     for( unsigned int iJet=0; iJet<nAK5PFPUcorrJet; ++iJet ) {
 
-       AnalysisJet thisJet( pxAK5PFJet[iJet], pyAK5PFJet[iJet], pzAK5PFJet[iJet], energyAK5PFJet[iJet] );
+       AnalysisJet thisJet( pxAK5PFPUcorrJet[iJet], pyAK5PFPUcorrJet[iJet], pzAK5PFPUcorrJet[iJet], energyAK5PFPUcorrJet[iJet] );
 
        // save at least 3 lead jets (if event has them) and all jets with pt>thresh:
        if( leadJets.size()>=3 && thisJet.Pt()<jetPt_thresh ) break;
@@ -485,15 +488,15 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( leptons.size()>1 )
          if( thisJet.DeltaR( leptons[1] ) <= 0.5 ) continue;
 
-       thisJet.nCharged = chargedHadronMultiplicityAK5PFJet[iJet] +
-                          electronMultiplicityAK5PFJet[iJet] + 
-                          muonMultiplicityAK5PFJet[iJet];
-       thisJet.nNeutral = neutralHadronMultiplicityAK5PFJet[iJet] +
-                          photonMultiplicityAK5PFJet[iJet] + 
-                          HFHadronMultiplicityAK5PFJet[iJet] +
-                          HFEMMultiplicityAK5PFJet[iJet];
-       thisJet.ptD = ptDAK5PFJet[iJet];
-       thisJet.rmsCand = rmsCandAK5PFJet[iJet];
+       thisJet.nCharged = chargedHadronMultiplicityAK5PFPUcorrJet[iJet] +
+                          electronMultiplicityAK5PFPUcorrJet[iJet] + 
+                          muonMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.nNeutral = neutralHadronMultiplicityAK5PFPUcorrJet[iJet] +
+                          photonMultiplicityAK5PFPUcorrJet[iJet] + 
+                          HFHadronMultiplicityAK5PFPUcorrJet[iJet] +
+                          HFEMMultiplicityAK5PFPUcorrJet[iJet];
+       thisJet.ptD = ptDAK5PFPUcorrJet[iJet];
+       thisJet.rmsCand = rmsCandAK5PFPUcorrJet[iJet];
 
        leadJets.push_back(thisJet);
        leadJetsIndex.push_back(iJet);
@@ -514,7 +517,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // kinematics:
        // --------------
-       if( thisJet.Pt() < jetPt_thresh ) continue;
+       //if( thisJet.Pt() < jetPt_thresh ) continue;
        if( fabs(thisJet.Eta()) > 2.4 ) continue;
 
 

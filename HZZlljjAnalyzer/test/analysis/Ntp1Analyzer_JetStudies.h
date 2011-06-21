@@ -28,11 +28,19 @@ class Ntp1Analyzer_JetStudies : public Ntp1Analyzer {
 
  private:
 
+   Int_t nvertex;
+   Float_t rhoPF;
+
    Int_t nJet_;
    Float_t eJet_[5];
    Float_t ptJet_[5];
    Float_t etaJet_[5];
    Float_t phiJet_[5];
+
+   Float_t ptDJet_[5];
+   Float_t rmsCandJet_[5];
+   Int_t nChargedJet_[5];
+   Int_t nNeutralJet_[5];
 
    bool DEBUG_VERBOSE_;
 
