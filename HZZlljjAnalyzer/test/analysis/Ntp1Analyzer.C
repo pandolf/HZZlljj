@@ -138,7 +138,7 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
 
 
 
-void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
+void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
 
   
   TTree* treeCond = (condFile==0) ? 0 : (TTree*)(condFile->Get("Conditions"));
@@ -147,9 +147,10 @@ void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
   //new version: trigger loaded directly from ntp1 tree:
   if( treeCond==0 ) { 
 
-    fChain->GetEntry(0);
+    fChain->GetEntry(iEntry);
 
-    std::vector<int> triggerMask;
+    // required triggers:
+    std::vector<int> triggerMask_required;
     for (std::vector< std::string >::const_iterator fIter=requiredTriggers_.begin();fIter!=requiredTriggers_.end();++fIter)
       {
         bool foundThisTrigger = false;
@@ -160,13 +161,33 @@ void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
               {
 //std::cout << " <----- HERE IT IS!" << std::endl;
                 foundThisTrigger = true;
-                triggerMask.push_back( indexHLT[i] ) ;
+                triggerMask_required.push_back( indexHLT[i] ) ;
                 break;
               }
           }
           if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
       }
-    index_requiredTriggers_ = triggerMask;
+    index_requiredTriggers_ = triggerMask_required;
+
+    // NOT triggers
+    std::vector<int> triggerMask_NOT;
+    for (std::vector< std::string >::const_iterator fIter=notTriggers_.begin();fIter!=notTriggers_.end();++fIter)
+      {
+        bool foundThisTrigger = false;
+        for(unsigned int i=0; i<nameHLT->size(); i++) 
+          {
+//std::cout << std::endl << nameHLT->at(i);
+            if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) ) 
+              {
+//std::cout << " <----- HERE IT IS!" << std::endl;
+                foundThisTrigger = true;
+                triggerMask_NOT.push_back( indexHLT[i] ) ;
+                break;
+              }
+          }
+          if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+      }
+    index_notTriggers_ = triggerMask_NOT;
 
   } else { //old version: Conditions
 
@@ -203,11 +224,14 @@ void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
   }
 
 
-  if( requiredTriggers_.size()==0 )
+  if( requiredTriggers_.size()==0 && notTriggers_.size()==0 )
     std::cout << "-> No trigger selection required." << std::endl;
 
   for (int i=0;i<index_requiredTriggers_.size();++i)
     std::cout << "[ReloadTriggerMask]::Requiring bit " << index_requiredTriggers_[i] << " " << requiredTriggers_[i] << std::endl;
+
+  for (int i=0;i<index_notTriggers_.size();++i)
+    std::cout << "[ReloadTriggerMask]::Vetoing bit " << index_notTriggers_[i] << " " << notTriggers_[i] << std::endl;
 
 
 } // LoadTrigger
@@ -215,24 +239,41 @@ void Ntp1Analyzer::LoadTrigger( TFile* condFile ) {
 
 
 
-bool Ntp1Analyzer::PassedHLT( const std::string& HLTName ) { //default is OR of all required triggers
+bool Ntp1Analyzer::PassedHLT( const std::string& HLTName ) { //default is OR of all required triggers (HLTName=="")
 
-  if ( index_requiredTriggers_.size() == 0 ) return true;
+
+  if ( index_requiredTriggers_.size()==0 && index_notTriggers_.size()==0 ) return true;
+
+
+  // first NOT triggers:
+  for( int i=0; i<index_notTriggers_.size(); i++ ) {
+
+    int block_veto =  index_notTriggers_[i]/30;
+    int pos_veto = index_notTriggers_[i]%30;
+    int word_veto = firedTrg[block_veto];
+    
+    if( (word_veto >> pos_veto)%2 ) return false;
+
+  } // for not triggers
   
-  // unpack the trigger words
+
+  // now required triggers:
   for( int i=0; i<index_requiredTriggers_.size(); i++ ) {
 
     if( HLTName=="" || requiredTriggers_[i]==HLTName ) {
 
-      int block =  index_requiredTriggers_[i]/30;
-      int pos = index_requiredTriggers_[i]%30;
-      int word = firedTrg[block];
+//std::cout << std::endl << "+++ " << requiredTriggers_[i];
+      int block_required =  index_requiredTriggers_[i]/30;
+      int pos_required = index_requiredTriggers_[i]%30;
+      int word_required = firedTrg[block_required];
       
-      if ( (word >> pos)%2 ) return true;
+//if( (word_required >> pos_required)%2 ) std::cout << "PASSED = true!";
+      if ( (word_required >> pos_required)%2 ) return true;
 
-    }
+    } // if required
 
-  }
+  } // required trigger loop
+
 
   return false;
 
@@ -335,6 +376,7 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("orbitNumber", &orbitNumber, &b_orbitNumber);
    fChain->SetBranchAddress("rhoFastjet", &rhoFastjet, &b_rhoFastjet);
    if( isMC_ ) {
+     fChain->SetBranchAddress("nPU", &nPU, &b_nPU);
      fChain->SetBranchAddress("nMc", &nMc, &b_nMc);
      fChain->SetBranchAddress("pMc", pMc, &b_pMc);
      fChain->SetBranchAddress("thetaMc", thetaMc, &b_thetaMc);
@@ -894,11 +936,11 @@ Int_t Ntp1Analyzer::Cut(Long64_t entry)
 
 
 void Ntp1Analyzer::UpdateCache() {
-     // cache current run for lumi measurement:
-     if( oldrun_ != runNumber ) {
-       oldrun_ = runNumber;
-       goodLSCache_ = goodLS_.find( runNumber );
-     }
+   // cache current run for lumi measurement:
+   if( oldrun_ != runNumber ) {
+     oldrun_ = runNumber;
+     goodLSCache_ = goodLS_.find( runNumber );
+   }
 }
 
 
@@ -930,7 +972,6 @@ void Ntp1Analyzer::ReadCSVFile(const std::string& csv) {
 
 void Ntp1Analyzer::ReadJSONFile(const std::string& json) {
 
-
   std::cout << "Reading JSON file of good runs " << json << std::endl;
   FILE* iff = fopen(json.c_str(),"r");
 
@@ -955,7 +996,7 @@ void Ntp1Analyzer::ReadJSONFile(const std::string& json) {
 }
 
 
-bool Ntp1Analyzer::isGoodEvent() {
+bool Ntp1Analyzer::isGoodEvent( int iEntry ) {
 
      bool okForJSON = false;
      bool okForHLT = false;
@@ -990,7 +1031,7 @@ bool Ntp1Analyzer::isGoodEvent() {
        else 
          std::cout << "-> Passing from run " << cachedRun_ << " to run " << runNumber << ". Reloading Trigger Mask." << std::endl;
        cachedRun_ = runNumber;
-       this->LoadTrigger();
+       this->LoadTrigger( iEntry );
      }
 
      okForHLT = this->PassedHLT();

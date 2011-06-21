@@ -53,6 +53,7 @@ public :
    Int_t           bunchCrossing;
    Int_t           orbitNumber;
    Float_t         rhoFastjet;
+   Int_t           nPU;
    Int_t           nMc;
    Float_t         pMc[1000];   //[nMc]
    Float_t         thetaMc[1000];   //[nMc]
@@ -620,6 +621,8 @@ public :
 
    std::vector<std::string> requiredTriggers_;
    std::vector<int> index_requiredTriggers_;
+   std::vector<std::string> notTriggers_;
+   std::vector<int> index_notTriggers_;
 
    typedef std::pair< int, int > RunLumiPair;
    typedef std::map< RunLumiPair, double > LSLumi;
@@ -637,6 +640,7 @@ public :
    Int_t cachedLS_;
    Int_t cachedRun_;
    Int_t LS_;
+   Int_t nPU_;
    Int_t nvertex_;
    Float_t rhoPF_;
    Int_t event_;
@@ -660,6 +664,7 @@ public :
    TBranch        *b_bunchCrossing;   //!
    TBranch        *b_orbitNumber;   //!
    TBranch        *b_rhoFastjet;   //!
+   TBranch        *b_nPU;   //!
    TBranch        *b_nMc;   //!
    TBranch        *b_pMc;   //!
    TBranch        *b_thetaMc;   //!
@@ -1254,6 +1259,7 @@ public :
    virtual void SetFlags( const std::string& flags ) { flags_ = flags; };
    virtual void SetRequiredTriggers( const std::vector<std::string>& reqTrigz ) { requiredTriggers_ = reqTrigz; };
    virtual void AddRequiredTrigger( const std::string& trigger ) { requiredTriggers_.push_back(trigger); };
+   virtual void AddNOTTrigger( const std::string& trigger ) { notTriggers_.push_back(trigger); };
    virtual bool PassedHLT( const std::string& HLTName="" );
 
    virtual Int_t    Cut(Long64_t entry);
@@ -1261,7 +1267,7 @@ public :
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     LoadInput();
    virtual void     LoadInputFromFile( const std::string& fileName );
-   virtual void     LoadTrigger( TFile* condFile=0 );
+   virtual void     LoadTrigger( int iEntry, TFile* condFile=0 );
    virtual void     CreateOutputFile();
    virtual void     Init(TTree *tree);
    virtual void     Loop()=0;
@@ -1270,7 +1276,7 @@ public :
    virtual void     ReadJSONFile(const std::string& json);
    virtual void     ReadCSVFile(const std::string& csv);
    virtual void     UpdateCache();
-   virtual bool     isGoodEvent();
+   virtual bool     isGoodEvent( int iEntry );
    virtual GenEventParameters     getGenEventParameters ();
    double           trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
 
