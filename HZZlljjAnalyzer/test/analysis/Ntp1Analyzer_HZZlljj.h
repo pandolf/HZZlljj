@@ -23,7 +23,6 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
 
    virtual void CreateOutputFile();
    virtual void Loop();
-   //Double_t computeQGLikelihood(const Double_t jtpt, Int_t ncharged, Int_t nneutral, Double_t PtD, Double_t r);
 
 
 
@@ -109,8 +108,8 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t jetBProbabilityBJetTagJet1_[50];
    Float_t jetProbabilityBJetTagJet1_[50];
 
-   Float_t SF_TCHE_Jet1_[50];
-   Float_t SF_err_TCHE_Jet1_[50];
+   Float_t SFTCHEJet1_[50];
+   Float_t SFerrTCHEJet1_[50];
 
    Float_t  ptGenJet1_[50];
    Float_t   eGenJet1_[50];
@@ -166,8 +165,8 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Float_t jetBProbabilityBJetTagJet2_[50];
    Float_t jetProbabilityBJetTagJet2_[50];
 
-   Float_t SF_TCHE_Jet2_[50];
-   Float_t SF_err_TCHE_Jet2_[50];
+   Float_t SFTCHEJet2_[50];
+   Float_t SFerrTCHEJet2_[50];
 
    Float_t  ptGenJet2_[50];
    Float_t   eGenJet2_[50];

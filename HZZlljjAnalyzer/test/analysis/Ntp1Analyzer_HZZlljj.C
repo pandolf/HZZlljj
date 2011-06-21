@@ -121,6 +121,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("run",&run_,"run_/I");
   reducedTree_->Branch("LS",&LS_,"LS_/I");
   reducedTree_->Branch("event",&event_,"event_/I");
+  reducedTree_->Branch("nPU",&nPU_,"nPU_/I");
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
   reducedTree_->Branch("rhoPF",&rhoPF_,"rhoPF_/F");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
@@ -401,12 +402,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      leptTypeMC_ = -1;
 
 
-     if( !isGoodEvent() ) continue; //this takes care also of trigger
+     if( !isGoodEvent(jentry) ) continue; //this takes care also of trigger
 
      if( nPV==0 ) continue;
      bool goodVertex = (ndofPV[0] >= 4.0 && sqrt(PVxPV[0]*PVxPV[0]+PVyPV[0]*PVyPV[0]) < 2. && fabs(PVzPV[0]) < 24. );
      if( !goodVertex ) continue;
   
+     nPU_ = nPU;
      nvertex_ = nPV;
      rhoPF_ = rhoFastjet;
 
@@ -682,8 +684,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        bool passed_VBTF95 = thisEle.passedVBTF95();
        bool passed_VBTF80 = thisEle.passedVBTF80();
 
-       //if( !passed_VBTF95 ) continue;
-       if( !passed_VBTF80 ) continue;
+       if( !passed_VBTF95 ) continue;
+       //if( !passed_VBTF80 ) continue;
 
        // check that not matched to muon (clean electrons faked by muon MIP):
        bool matchedtomuon=false;
