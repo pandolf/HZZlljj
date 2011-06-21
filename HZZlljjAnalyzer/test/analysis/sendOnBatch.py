@@ -32,14 +32,20 @@ if flags=="500":
     application = "do2ndLevel_TMVA_500"
 # to write on the cmst3 cluster disks
 ################################################
-#castordir = "/castor/cern.ch/user/m/mpierini/CMST3/Vecbos/output/"
+castordir = "/castor/cern.ch/user/p/pandolf/NTUPLES/" + dataset
+pnfsdir = "/pnfs/roma1.infn.it/data/cms/store/user/pandolf/NTUPLES/" + dataset
+afsdir = "/afs/cern.ch/user/p/pandolf/scratch0/NTUPLES/"+dataset
 #outputmain = castordir+output
 # to write on local disks
 ################################################
 #diskoutputdir = "/cmsrm/pc21_2/pandolf/MC/"+dataset
-diskoutputdir = "/cmsrm/pc23_2/pandolf/MC/Spring11/"+dataset
-#outputmain = castordir
+#diskoutputdir = "/cmsrm/pc23_2/pandolf/MC/Spring11_v2/"+dataset
+diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Spring11_v2/"+dataset
+#diskoutputmain2 = castordir
+#diskoutputmain2 = pnfsdir
+diskoutputmain2 = afsdir
 diskoutputmain = diskoutputdir
+os.system("mkdir -p "+diskoutputmain2)
 # prepare job to write on the cmst3 cluster disks
 ################################################
 dir = analyzerType + "_" + dataset
@@ -56,7 +62,7 @@ os.system("mkdir -p "+dir+"/src/")
 #else: os.system("mkdir -p "+outputroot)
 
 if diskoutputdir != "none": 
-    os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm23 mkdir -p "+diskoutputmain)
+    os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm22 mkdir -p "+diskoutputmain)
 
 #look for the current directory
 #######################################
@@ -86,18 +92,22 @@ while (len(inputfiles) > 0):
     outputfile.write('#!/bin/bash\n')
     outputfile.write('export STAGE_HOST=castorcms\n')
     outputfile.write('export STAGE_SVCCLASS=cmst3\n')
+    outputfile.write('export SCRAM_ARCH=slc5_amd64_gcc434\n')
+    outputfile.write('cd /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_4_1_3_patch2/ ; eval `scramv1 runtime -sh` ; cd -\n')
     #outputfile.write('export ROOTSYS=/afs/cern.ch/sw/lcg/app/releases/ROOT/5.26.00/x86_64-slc5-gcc34-opt/root\n')
     #outputfile.write('export LD_LIBRARY_PATH=$ROOTSYS/lib\n')
     #    outputfile.write('cd '+pwd)
     #outputfile.write('cp '+pwd+'/Cert_132440-140399_7TeV_StreamExpress_Collisions10_CMSSWConfig.txt $WORKDIR\n')
     #outputfile.write('cp '+pwd+'/lumi_by_LS_132440_140401.csv $WORKDIR\n')
     #outputfile.write('cp -r  /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_3_8_7/src/HZZlljj/HZZlljjAnalyzer/test/analysis/Bins $WORKDIR\n')
-    outputfile.write('cp '+pwd+'/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root $WORKDIR\n')
+    outputfile.write('cp '+pwd+'/QG_QCD_Pt_15to3000_TuneZ2_Flat*.root $WORKDIR\n')
+    outputfile.write('cp '+pwd+'/SF_*.txt $WORKDIR\n')
     outputfile.write('cd $WORKDIR\n')
     #outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" _"+str(ijob)+"\n")
     outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" "+str(ijob)+"\n")
-    outputfile.write('rm QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root\n')
-    outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm23:'+diskoutputmain+'/{}\n') 
+    outputfile.write('rm QG_QCD_Pt_15to3000_TuneZ2_Flat*.root\n')
+    outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm22:'+diskoutputmain+'/{}\n') 
+    #outputfile.write('cp *.root '+diskoutputmain2+'\n') 
     outputfile.close
     os.system("echo bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
     os.system("bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname+" -copyInput="+dataset+"_"+str(ijob))
