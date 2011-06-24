@@ -59,7 +59,9 @@ int main( int argc, char* argv[] ) {
   std::cout << std::endl << "-> Finished adding. Total entries: " << tree->GetEntries() << std::endl;
 
   float weight = getWeight( dataset, nTotalEvents );
+  std::cout << std::endl << "++ Z->ee only:" << std::endl;
   float weight_Zee = (nTotalEvents_Zee>0.) ? getWeight( dataset, nTotalEvents_Zee ) : 0.;
+  std::cout << std::endl << "++ Z->mm only:" << std::endl;
   float weight_Zmm = (nTotalEvents_Zmm>0.) ? getWeight( dataset, nTotalEvents_Zmm ) : 0.;
   weight_Zee/=3.;
   weight_Zmm/=3.;
@@ -371,7 +373,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = (3.312+0.4304+0.04308+0.02540+0.008593)*0.2951*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="JHUgen_HiggsSM300_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6") ) {
     xSection = (2.418+0.3010+0.02018+0.01169+0.004719)*0.3053*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM325_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-325_7TeV-jhu-pythia6") ) {
+  } else if( dataset=="JHUgen_HiggsSM325_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-325_7TeV-jhu-pythia6") || dataset_tstr.Contains("GluGluToHToZZTo2L2Q_M-325") ) {
     xSection = (2.221+0.2809)*3.10E-01*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="JHUgen_HiggsSM350_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-350_7TeV-jhu-pythia6") ) {
     xSection = (2.299599+0.21635+0.0021911+0.0055876+0.010794)*0.3023*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
