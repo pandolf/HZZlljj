@@ -14,9 +14,16 @@ std::string analysisType_;
 std::string flags_;
 
 
+struct TotalEvents {
+
+  float nTotalEvents;
+  float nTotalEvents_Zee;
+  float nTotalEvents_Zmm;
+
+};
 
 
-float addInput( const std::string& dataset );
+TotalEvents addInput( const std::string& dataset );
 float getWeight( const std::string& dataset, int nEvents );
 
 
@@ -44,11 +51,18 @@ int main( int argc, char* argv[] ) {
 
   tree = new TChain("reducedTree");
 
-  float nTotalEvents = addInput( dataset );
+  TotalEvents totalEvents = addInput( dataset );
+  float nTotalEvents = totalEvents.nTotalEvents;
+  float nTotalEvents_Zee = totalEvents.nTotalEvents_Zee;
+  float nTotalEvents_Zmm = totalEvents.nTotalEvents_Zmm;
 
   std::cout << std::endl << "-> Finished adding. Total entries: " << tree->GetEntries() << std::endl;
 
   float weight = getWeight( dataset, nTotalEvents );
+  float weight_Zee = (nTotalEvents_Zee>0.) ? getWeight( dataset, nTotalEvents_Zee ) : 0.;
+  float weight_Zmm = (nTotalEvents_Zmm>0.) ? getWeight( dataset, nTotalEvents_Zmm ) : 0.;
+  weight_Zee/=3.;
+  weight_Zmm/=3.;
 
   float nTotalEventsW = (float)nTotalEvents*weight;
 
@@ -69,6 +83,10 @@ int main( int argc, char* argv[] ) {
   TTree* newTree = tree->CloneTree(0);
   Float_t newWeight;
   newTree->Branch( "eventWeight", &newWeight, "newWeight/F" );
+  Float_t newWeight_Zee;
+  newTree->Branch( "eventWeight_Zee", &newWeight_Zee, "newWeight_Zee/F" );
+  Float_t newWeight_Zmm;
+  newTree->Branch( "eventWeight_Zmm", &newWeight_Zmm, "newWeight_Zmm/F" );
 
   int nentries = tree->GetEntries();
   for( unsigned ientry = 0; ientry<nentries; ++ientry ) {
@@ -78,8 +96,8 @@ int main( int argc, char* argv[] ) {
     if( (ientry % 100000) ==0 ) std::cout << "Entry: " << ientry << " /" << nentries << std::endl;
 
     newWeight = weight;
-
-    if( dataset=="MU_Run2010B_PromptReco_v2_runs146240_146733" ) newWeight = 0.5;
+    newWeight_Zee = weight_Zee;
+    newWeight_Zmm = weight_Zmm;
 
     newTree->Fill();
 
@@ -96,7 +114,7 @@ int main( int argc, char* argv[] ) {
 }
 
 
-float addInput( const std::string& dataset ) {
+TotalEvents addInput( const std::string& dataset ) {
 
   std::string infileName = "files_"+analysisType_+"_2ndLevel_" + dataset;
   if( flags_!="" ) infileName += "_" + flags_;
@@ -174,12 +192,12 @@ float addInput( const std::string& dataset ) {
 
   //correct bug in Zee BR (Spring11 alpgen ZJets) only:
   TString dataset_tstr(dataset);
-  if( dataset_tstr.Contains("Spring11") && ( dataset_tstr.BeginsWith("Z0Jet") 
-                                          || dataset_tstr.BeginsWith("Z1Jet") 
-                                          || dataset_tstr.BeginsWith("Z2Jet")
-                                          || dataset_tstr.BeginsWith("Z3Jet")
-                                          || dataset_tstr.BeginsWith("Z4Jet")
-                                          || dataset_tstr.BeginsWith("Z5Jet") ) ) {
+  if( dataset_tstr.Contains("Spring11") && dataset_tstr.Contains("alpgen") && ( dataset_tstr.BeginsWith("Z0Jet") 
+                                                                             || dataset_tstr.BeginsWith("Z1Jet") 
+                                                                             || dataset_tstr.BeginsWith("Z2Jet")
+                                                                             || dataset_tstr.BeginsWith("Z3Jet")
+                                                                             || dataset_tstr.BeginsWith("Z4Jet")
+                                                                             || dataset_tstr.BeginsWith("Z5Jet") ) ) {
 
     std::cout << std::endl << "!!! Correcting bug in Z->ee BR (Spring11 Alpgen Z+Jets samples) " << std::endl;
     // reduces to = totalEvents when totalEvents_Zmumu+totalEvents_Zee = 2/3 totalEvents:
@@ -188,7 +206,12 @@ float addInput( const std::string& dataset ) {
 
   }
 
-  return totalEvents;
+  TotalEvents return_totalEvents;
+  return_totalEvents.nTotalEvents = totalEvents;
+  return_totalEvents.nTotalEvents_Zee = totalEvents_Zee;
+  return_totalEvents.nTotalEvents_Zmm = totalEvents_Zmumu;
+ 
+  return return_totalEvents;
 
 } //addinput
 
@@ -336,21 +359,20 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 25.560*0.03913*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="HZZ_qqll_gluonfusion_M150" ) {
     xSection = 19.568*0.08234*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="HZZ_qqll_gluonfusion_M200" ) {
-    //xSection = 10.361*0.2537*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-    xSection = 10.361*0.2537*0.10097*0.7*2.*40.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2 ENHANCE SIGMA BY 40!!!!!
-  } else if( dataset=="HZZ_qqll_gluonfusion_M300" ) {
-    xSection = 5.2728*0.3053*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="HZZ_qqll_gluonfusion_M400" ) {
-    xSection = 4.8236*0.2664*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="HZZ_qqll_gluonfusion_M500" ) {
-    xSection = 2.1914*0.2602*0.10097*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
-  } else if( dataset=="JHUgen_HiggsSM200_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-200_7TeV-jhu-pythia6") ) {
+  } else if( dataset=="JHUgen_HiggsSM190_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-190_7TeV-jhu-pythia6") || dataset_tstr.Contains("GluGluToHToZZTo2L2Q_M-190") ) {
+    xSection = (5.896+0.6925+0.1253+0.07366+0.02206)*2.09E-01*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM200_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-200_7TeV-jhu-pythia6") || dataset_tstr.Contains("GluGluToHToZZTo2L2Q_M-200") ) {
     xSection = (5.249+0.6371+0.1032+0.06096+0.01849)*0.2537*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM210_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-210_7TeV-jhu-pythia6") || dataset_tstr.Contains("GluGluToHToZZTo2L2Q_M-210") ) {
+    xSection = (4.723+0.5869+0.08557+0.05068+0.01562 )*2.74E-01*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM230_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-230_7TeV-jhu-pythia6") || dataset_tstr.Contains("GluGluToHToZZTo2L2Q_M-230") ) {
+    xSection = (3.908+0.5869+0.08557+0.03560+0.01143 )*2.89E-01*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="JHUgen_HiggsSM250_2l2j_FASTSIM"  || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-250_7TeV-jhu-pythia6")) {
     xSection = (3.312+0.4304+0.04308+0.02540+0.008593)*0.2951*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="JHUgen_HiggsSM300_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-300_7TeV-jhu-pythia6") ) {
     xSection = (2.418+0.3010+0.02018+0.01169+0.004719)*0.3053*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
+  } else if( dataset=="JHUgen_HiggsSM325_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-325_7TeV-jhu-pythia6") ) {
+    xSection = (2.221+0.2809)*3.10E-01*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="JHUgen_HiggsSM350_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-350_7TeV-jhu-pythia6") ) {
     xSection = (2.299599+0.21635+0.0021911+0.0055876+0.010794)*0.3023*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
   } else if( dataset=="JHUgen_HiggsSM400_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-400_7TeV-jhu-pythia6") ) {
