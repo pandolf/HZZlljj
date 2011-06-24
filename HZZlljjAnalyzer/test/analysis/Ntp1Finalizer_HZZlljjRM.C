@@ -74,6 +74,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_nEvents_fb_1btag_250 = new TH1D("nEvents_fb_1btag_250", "", 1, 0., 1.);
   TH1D* h1_nEvents_fb_2btag_250 = new TH1D("nEvents_fb_2btag_250", "", 1, 0., 1.);
 
+  TH1D* h1_nEvents_fb_gluetag_250_ELE = new TH1D("nEvents_fb_gluetag_250_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_250_ELE = new TH1D("nEvents_fb_0btag_250_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_250_ELE = new TH1D("nEvents_fb_1btag_250_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_250_ELE = new TH1D("nEvents_fb_2btag_250_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_nEvents_fb_gluetag_250_MU = new TH1D("nEvents_fb_gluetag_250_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_250_MU = new TH1D("nEvents_fb_0btag_250_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_250_MU = new TH1D("nEvents_fb_1btag_250_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_250_MU = new TH1D("nEvents_fb_2btag_250_MU", "", 1, 0., 1.);
+
   TH1D* h1_eff_gluetag_250 = new TH1D("eff_gluetag_250", "", 1, 0., 1.);
   TH1D* h1_eff_0btag_250 = new TH1D("eff_0btag_250", "", 1, 0., 1.);
   TH1D* h1_eff_1btag_250 = new TH1D("eff_1btag_250", "", 1, 0., 1.);
@@ -84,6 +94,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_nEvents_fb_0btag_300 = new TH1D("nEvents_fb_0btag_300", "", 1, 0., 1.);
   TH1D* h1_nEvents_fb_1btag_300 = new TH1D("nEvents_fb_1btag_300", "", 1, 0., 1.);
   TH1D* h1_nEvents_fb_2btag_300 = new TH1D("nEvents_fb_2btag_300", "", 1, 0., 1.);
+
+  TH1D* h1_nEvents_fb_gluetag_300_ELE = new TH1D("nEvents_fb_gluetag_300_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_300_ELE = new TH1D("nEvents_fb_0btag_300_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_300_ELE = new TH1D("nEvents_fb_1btag_300_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_300_ELE = new TH1D("nEvents_fb_2btag_300_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_nEvents_fb_gluetag_300_MU = new TH1D("nEvents_fb_gluetag_300_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_300_MU = new TH1D("nEvents_fb_0btag_300_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_300_MU = new TH1D("nEvents_fb_1btag_300_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_300_MU = new TH1D("nEvents_fb_2btag_300_MU", "", 1, 0., 1.);
 
   TH1D* h1_eff_gluetag_300 = new TH1D("eff_gluetag_300", "", 1, 0., 1.);
   TH1D* h1_eff_0btag_300 = new TH1D("eff_0btag_300", "", 1, 0., 1.);
@@ -96,6 +116,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_nEvents_fb_1btag_350 = new TH1D("nEvents_fb_1btag_350", "", 1, 0., 1.0001);
   TH1D* h1_nEvents_fb_2btag_350 = new TH1D("nEvents_fb_2btag_350", "", 1, 0., 1.0001);
 
+  TH1D* h1_nEvents_fb_gluetag_350_ELE = new TH1D("nEvents_fb_gluetag_350_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_350_ELE = new TH1D("nEvents_fb_0btag_350_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_350_ELE = new TH1D("nEvents_fb_1btag_350_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_350_ELE = new TH1D("nEvents_fb_2btag_350_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_nEvents_fb_gluetag_350_MU = new TH1D("nEvents_fb_gluetag_350_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_350_MU = new TH1D("nEvents_fb_0btag_350_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_350_MU = new TH1D("nEvents_fb_1btag_350_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_350_MU = new TH1D("nEvents_fb_2btag_350_MU", "", 1, 0., 1.);
+
   TH1D* h1_eff_gluetag_350 = new TH1D("eff_gluetag_350", "", 1, 0., 1.0001);
   TH1D* h1_eff_0btag_350 = new TH1D("eff_0btag_350", "", 1, 0., 1.0001);
   TH1D* h1_eff_1btag_350 = new TH1D("eff_1btag_350", "", 1, 0., 1.0001);
@@ -106,6 +136,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_nEvents_fb_0btag_400 = new TH1D("nEvents_fb_0btag_400", "", 1, 0., 1.0001);
   TH1D* h1_nEvents_fb_1btag_400 = new TH1D("nEvents_fb_1btag_400", "", 1, 0., 1.0001);
   TH1D* h1_nEvents_fb_2btag_400 = new TH1D("nEvents_fb_2btag_400", "", 1, 0., 1.0001);
+
+  TH1D* h1_nEvents_fb_gluetag_400_ELE = new TH1D("nEvents_fb_gluetag_400_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_400_ELE = new TH1D("nEvents_fb_0btag_400_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_400_ELE = new TH1D("nEvents_fb_1btag_400_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_400_ELE = new TH1D("nEvents_fb_2btag_400_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_nEvents_fb_gluetag_400_MU = new TH1D("nEvents_fb_gluetag_400_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_400_MU = new TH1D("nEvents_fb_0btag_400_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_400_MU = new TH1D("nEvents_fb_1btag_400_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_400_MU = new TH1D("nEvents_fb_2btag_400_MU", "", 1, 0., 1.);
 
   TH1D* h1_eff_gluetag_400 = new TH1D("eff_gluetag_400", "", 1, 0., 1.0001);
   TH1D* h1_eff_0btag_400 = new TH1D("eff_0btag_400", "", 1, 0., 1.0001);
@@ -118,6 +158,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_nEvents_fb_1btag_450 = new TH1D("nEvents_fb_1btag_450", "", 1, 0., 1.0001);
   TH1D* h1_nEvents_fb_2btag_450 = new TH1D("nEvents_fb_2btag_450", "", 1, 0., 1.0001);
 
+  TH1D* h1_nEvents_fb_gluetag_450_ELE = new TH1D("nEvents_fb_gluetag_450_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_450_ELE = new TH1D("nEvents_fb_0btag_450_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_450_ELE = new TH1D("nEvents_fb_1btag_450_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_450_ELE = new TH1D("nEvents_fb_2btag_450_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_nEvents_fb_gluetag_450_MU = new TH1D("nEvents_fb_gluetag_450_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_450_MU = new TH1D("nEvents_fb_0btag_450_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_450_MU = new TH1D("nEvents_fb_1btag_450_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_450_MU = new TH1D("nEvents_fb_2btag_450_MU", "", 1, 0., 1.);
+
   TH1D* h1_eff_gluetag_450 = new TH1D("eff_gluetag_450", "", 1, 0., 1.0001);
   TH1D* h1_eff_0btag_450 = new TH1D("eff_0btag_450", "", 1, 0., 1.0001);
   TH1D* h1_eff_1btag_450 = new TH1D("eff_1btag_450", "", 1, 0., 1.0001);
@@ -129,6 +179,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_nEvents_fb_1btag_500 = new TH1D("nEvents_fb_1btag_500", "", 1, 0., 1.0001);
   TH1D* h1_nEvents_fb_2btag_500 = new TH1D("nEvents_fb_2btag_500", "", 1, 0., 1.0001);
 
+  TH1D* h1_nEvents_fb_gluetag_500_ELE = new TH1D("nEvents_fb_gluetag_500_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_500_ELE = new TH1D("nEvents_fb_0btag_500_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_500_ELE = new TH1D("nEvents_fb_1btag_500_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_500_ELE = new TH1D("nEvents_fb_2btag_500_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_nEvents_fb_gluetag_500_MU = new TH1D("nEvents_fb_gluetag_500_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_500_MU = new TH1D("nEvents_fb_0btag_500_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_500_MU = new TH1D("nEvents_fb_1btag_500_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_500_MU = new TH1D("nEvents_fb_2btag_500_MU", "", 1, 0., 1.);
+
   TH1D* h1_eff_gluetag_500 = new TH1D("eff_gluetag_500", "", 1, 0., 1.0001);
   TH1D* h1_eff_0btag_500 = new TH1D("eff_0btag_500", "", 1, 0., 1.0001);
   TH1D* h1_eff_1btag_500 = new TH1D("eff_1btag_500", "", 1, 0., 1.0001);
@@ -139,6 +199,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_nEvents_fb_0btag_600 = new TH1D("nEvents_fb_0btag_600", "", 1, 0., 1.0001);
   TH1D* h1_nEvents_fb_1btag_600 = new TH1D("nEvents_fb_1btag_600", "", 1, 0., 1.0001);
   TH1D* h1_nEvents_fb_2btag_600 = new TH1D("nEvents_fb_2btag_600", "", 1, 0., 1.0001);
+
+  TH1D* h1_nEvents_fb_gluetag_600_ELE = new TH1D("nEvents_fb_gluetag_600_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_600_ELE = new TH1D("nEvents_fb_0btag_600_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_600_ELE = new TH1D("nEvents_fb_1btag_600_ELE", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_600_ELE = new TH1D("nEvents_fb_2btag_600_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_nEvents_fb_gluetag_600_MU = new TH1D("nEvents_fb_gluetag_600_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_0btag_600_MU = new TH1D("nEvents_fb_0btag_600_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_1btag_600_MU = new TH1D("nEvents_fb_1btag_600_MU", "", 1, 0., 1.);
+  TH1D* h1_nEvents_fb_2btag_600_MU = new TH1D("nEvents_fb_2btag_600_MU", "", 1, 0., 1.);
 
   TH1D* h1_eff_gluetag_600 = new TH1D("eff_gluetag_600", "", 1, 0., 1.0001);
   TH1D* h1_eff_0btag_600 = new TH1D("eff_0btag_600", "", 1, 0., 1.0001);
@@ -400,6 +470,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_deltaRjj->Sumw2();
   TH1D* h1_deltaRjj_prekin= new TH1D("deltaRjj_prekin", "", 50, 0.5, 5.);
   h1_deltaRjj_prekin->Sumw2();
+  TH1D* h1_deltaRjj_sidebands= new TH1D("deltaRjj_sidebands", "", 50, 0.5, 5.);
+  h1_deltaRjj_sidebands->Sumw2();
+  TH1D* h1_deltaRjj_prekin_sidebands= new TH1D("deltaRjj_prekin_sidebands", "", 50, 0.5, 5.);
+  h1_deltaRjj_prekin_sidebands->Sumw2();
 
   TH1D* h1_cosThetaStar = new TH1D("cosThetaStar", "", 45, -1.001, 1.001);
   h1_cosThetaStar->Sumw2();
@@ -431,6 +505,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   TH1D* h1_helicityLD = new TH1D("helicityLD", "", 60, 0., 1.);
   h1_helicityLD->Sumw2();
+  TH1D* h1_helicityLD_sidebands = new TH1D("helicityLD_sidebands", "", 60, 0., 1.);
+  h1_helicityLD_sidebands->Sumw2();
   TH1D* h1_helicityLD_MW200 = new TH1D("helicityLD_MW200", "", 100, 0., 1.);
   h1_helicityLD_MW200->Sumw2();
   TH1D* h1_helicityLD_MW250 = new TH1D("helicityLD_MW250", "", 100, 0., 1.);
@@ -470,15 +546,6 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_2btag->Sumw2();
 
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_gluetag= new TH1D("mZZ_kinfit_hiMass_sidebands_gluetag", "", 600, 150., 750.);
-  h1_mZZ_kinfit_hiMass_sidebands_gluetag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_0btag= new TH1D("mZZ_kinfit_hiMass_sidebands_0btag", "", 600, 150., 750.);
-  h1_mZZ_kinfit_hiMass_sidebands_0btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_1btag= new TH1D("mZZ_kinfit_hiMass_sidebands_1btag", "", 600, 150., 750.);
-  h1_mZZ_kinfit_hiMass_sidebands_1btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_2btag= new TH1D("mZZ_kinfit_hiMass_sidebands_2btag", "", 600, 150., 750.);
-  h1_mZZ_kinfit_hiMass_sidebands_2btag->Sumw2();
-
   TH1D* h1_mZZ_kinfit_hiMass_gluetag_ELE = new TH1D("mZZ_kinfit_hiMass_gluetag_ELE ", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_gluetag_ELE ->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_0btag_ELE = new TH1D("mZZ_kinfit_hiMass_0btag_ELE ", "", 600, 150., 750.);
@@ -496,6 +563,34 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_kinfit_hiMass_1btag_MU ->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_2btag_MU = new TH1D("mZZ_kinfit_hiMass_2btag_MU ", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_2btag_MU ->Sumw2();
+
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_gluetag= new TH1D("mZZ_kinfit_hiMass_sidebands_gluetag", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_gluetag->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_0btag= new TH1D("mZZ_kinfit_hiMass_sidebands_0btag", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_0btag->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_1btag= new TH1D("mZZ_kinfit_hiMass_sidebands_1btag", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_1btag->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_2btag= new TH1D("mZZ_kinfit_hiMass_sidebands_2btag", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_2btag->Sumw2();
+
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_gluetag_ELE", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_0btag_ELE", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_1btag_ELE", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_2btag_ELE", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE->Sumw2();
+
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_gluetag_MU", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_0btag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_0btag_MU", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_0btag_MU->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_1btag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_1btag_MU", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_1btag_MU->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_2btag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_2btag_MU", "", 600, 150., 750.);
+  h1_mZZ_kinfit_hiMass_sidebands_2btag_MU->Sumw2();
+
 
   TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_hiQG->Sumw2();
@@ -779,6 +874,24 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_250=0.;
   int nEventsPassed_2btag_250=0;
 
+  float nEventsPassed_fb_gluetag_250_ELE=0.;
+  int nEventsPassed_gluetag_250_ELE=0;
+  float nEventsPassed_fb_0btag_250_ELE=0.;
+  int nEventsPassed_0btag_250_ELE=0;
+  float nEventsPassed_fb_1btag_250_ELE=0.;
+  int nEventsPassed_1btag_250_ELE=0;
+  float nEventsPassed_fb_2btag_250_ELE=0.;
+  int nEventsPassed_2btag_250_ELE=0;
+
+  float nEventsPassed_fb_gluetag_250_MU=0.;
+  int nEventsPassed_gluetag_250_MU=0;
+  float nEventsPassed_fb_0btag_250_MU=0.;
+  int nEventsPassed_0btag_250_MU=0;
+  float nEventsPassed_fb_1btag_250_MU=0.;
+  int nEventsPassed_1btag_250_MU=0;
+  float nEventsPassed_fb_2btag_250_MU=0.;
+  int nEventsPassed_2btag_250_MU=0;
+
   float nEventsPassed_fb_gluetag_300=0.;
   int nEventsPassed_gluetag_300=0;
   float nEventsPassed_fb_0btag_300=0.;
@@ -787,6 +900,24 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   int nEventsPassed_1btag_300=0;
   float nEventsPassed_fb_2btag_300=0.;
   int nEventsPassed_2btag_300=0;
+
+  float nEventsPassed_fb_gluetag_300_ELE=0.;
+  int nEventsPassed_gluetag_300_ELE=0;
+  float nEventsPassed_fb_0btag_300_ELE=0.;
+  int nEventsPassed_0btag_300_ELE=0;
+  float nEventsPassed_fb_1btag_300_ELE=0.;
+  int nEventsPassed_1btag_300_ELE=0;
+  float nEventsPassed_fb_2btag_300_ELE=0.;
+  int nEventsPassed_2btag_300_ELE=0;
+
+  float nEventsPassed_fb_gluetag_300_MU=0.;
+  int nEventsPassed_gluetag_300_MU=0;
+  float nEventsPassed_fb_0btag_300_MU=0.;
+  int nEventsPassed_0btag_300_MU=0;
+  float nEventsPassed_fb_1btag_300_MU=0.;
+  int nEventsPassed_1btag_300_MU=0;
+  float nEventsPassed_fb_2btag_300_MU=0.;
+  int nEventsPassed_2btag_300_MU=0;
 
   float nEventsPassed_fb_gluetag_350=0.;
   int nEventsPassed_gluetag_350=0;
@@ -797,6 +928,24 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_350=0.;
   int nEventsPassed_2btag_350=0;
 
+  float nEventsPassed_fb_gluetag_350_ELE=0.;
+  int nEventsPassed_gluetag_350_ELE=0;
+  float nEventsPassed_fb_0btag_350_ELE=0.;
+  int nEventsPassed_0btag_350_ELE=0;
+  float nEventsPassed_fb_1btag_350_ELE=0.;
+  int nEventsPassed_1btag_350_ELE=0;
+  float nEventsPassed_fb_2btag_350_ELE=0.;
+  int nEventsPassed_2btag_350_ELE=0;
+
+  float nEventsPassed_fb_gluetag_350_MU=0.;
+  int nEventsPassed_gluetag_350_MU=0;
+  float nEventsPassed_fb_0btag_350_MU=0.;
+  int nEventsPassed_0btag_350_MU=0;
+  float nEventsPassed_fb_1btag_350_MU=0.;
+  int nEventsPassed_1btag_350_MU=0;
+  float nEventsPassed_fb_2btag_350_MU=0.;
+  int nEventsPassed_2btag_350_MU=0;
+
   float nEventsPassed_fb_gluetag_400=0.;
   int nEventsPassed_gluetag_400=0;
   float nEventsPassed_fb_0btag_400=0.;
@@ -805,6 +954,24 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   int nEventsPassed_1btag_400=0;
   float nEventsPassed_fb_2btag_400=0.;
   int nEventsPassed_2btag_400=0;
+
+  float nEventsPassed_fb_gluetag_400_ELE=0.;
+  int nEventsPassed_gluetag_400_ELE=0;
+  float nEventsPassed_fb_0btag_400_ELE=0.;
+  int nEventsPassed_0btag_400_ELE=0;
+  float nEventsPassed_fb_1btag_400_ELE=0.;
+  int nEventsPassed_1btag_400_ELE=0;
+  float nEventsPassed_fb_2btag_400_ELE=0.;
+  int nEventsPassed_2btag_400_ELE=0;
+
+  float nEventsPassed_fb_gluetag_400_MU=0.;
+  int nEventsPassed_gluetag_400_MU=0;
+  float nEventsPassed_fb_0btag_400_MU=0.;
+  int nEventsPassed_0btag_400_MU=0;
+  float nEventsPassed_fb_1btag_400_MU=0.;
+  int nEventsPassed_1btag_400_MU=0;
+  float nEventsPassed_fb_2btag_400_MU=0.;
+  int nEventsPassed_2btag_400_MU=0;
 
   float nEventsPassed_fb_gluetag_450=0.;
   int nEventsPassed_gluetag_450=0;
@@ -815,6 +982,24 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_450=0.;
   int nEventsPassed_2btag_450=0;
 
+  float nEventsPassed_fb_gluetag_450_ELE=0.;
+  int nEventsPassed_gluetag_450_ELE=0;
+  float nEventsPassed_fb_0btag_450_ELE=0.;
+  int nEventsPassed_0btag_450_ELE=0;
+  float nEventsPassed_fb_1btag_450_ELE=0.;
+  int nEventsPassed_1btag_450_ELE=0;
+  float nEventsPassed_fb_2btag_450_ELE=0.;
+  int nEventsPassed_2btag_450_ELE=0;
+
+  float nEventsPassed_fb_gluetag_450_MU=0.;
+  int nEventsPassed_gluetag_450_MU=0;
+  float nEventsPassed_fb_0btag_450_MU=0.;
+  int nEventsPassed_0btag_450_MU=0;
+  float nEventsPassed_fb_1btag_450_MU=0.;
+  int nEventsPassed_1btag_450_MU=0;
+  float nEventsPassed_fb_2btag_450_MU=0.;
+  int nEventsPassed_2btag_450_MU=0;
+
   float nEventsPassed_fb_gluetag_500=0.;
   int nEventsPassed_gluetag_500=0;
   float nEventsPassed_fb_0btag_500=0.;
@@ -824,6 +1009,24 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float nEventsPassed_fb_2btag_500=0.;
   int nEventsPassed_2btag_500=0;
 
+  float nEventsPassed_fb_gluetag_500_ELE=0.;
+  int nEventsPassed_gluetag_500_ELE=0;
+  float nEventsPassed_fb_0btag_500_ELE=0.;
+  int nEventsPassed_0btag_500_ELE=0;
+  float nEventsPassed_fb_1btag_500_ELE=0.;
+  int nEventsPassed_1btag_500_ELE=0;
+  float nEventsPassed_fb_2btag_500_ELE=0.;
+  int nEventsPassed_2btag_500_ELE=0;
+
+  float nEventsPassed_fb_gluetag_500_MU=0.;
+  int nEventsPassed_gluetag_500_MU=0;
+  float nEventsPassed_fb_0btag_500_MU=0.;
+  int nEventsPassed_0btag_500_MU=0;
+  float nEventsPassed_fb_1btag_500_MU=0.;
+  int nEventsPassed_1btag_500_MU=0;
+  float nEventsPassed_fb_2btag_500_MU=0.;
+  int nEventsPassed_2btag_500_MU=0;
+
   float nEventsPassed_fb_gluetag_600=0.;
   int nEventsPassed_gluetag_600=0;
   float nEventsPassed_fb_0btag_600=0.;
@@ -832,6 +1035,24 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   int nEventsPassed_1btag_600=0;
   float nEventsPassed_fb_2btag_600=0.;
   int nEventsPassed_2btag_600=0;
+
+  float nEventsPassed_fb_gluetag_600_ELE=0.;
+  int nEventsPassed_gluetag_600_ELE=0;
+  float nEventsPassed_fb_0btag_600_ELE=0.;
+  int nEventsPassed_0btag_600_ELE=0;
+  float nEventsPassed_fb_1btag_600_ELE=0.;
+  int nEventsPassed_1btag_600_ELE=0;
+  float nEventsPassed_fb_2btag_600_ELE=0.;
+  int nEventsPassed_2btag_600_ELE=0;
+
+  float nEventsPassed_fb_gluetag_600_MU=0.;
+  int nEventsPassed_gluetag_600_MU=0;
+  float nEventsPassed_fb_0btag_600_MU=0.;
+  int nEventsPassed_0btag_600_MU=0;
+  float nEventsPassed_fb_1btag_600_MU=0.;
+  int nEventsPassed_1btag_600_MU=0;
+  float nEventsPassed_fb_2btag_600_MU=0.;
+  int nEventsPassed_2btag_600_MU=0;
 
 
 
@@ -854,7 +1075,9 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   int maxBTag_found = -1;
   float mZZ, mZjj;
   bool isSidebands=false;
+  bool foundSignalRegionMjj=false;
 
+  tree_passedEvents->Branch( "leptType", &leptType, "leptType/I" );
   tree_passedEvents->Branch( "mZjj", &mZjj, "mZjj/F" );
   tree_passedEvents->Branch( "mZZ", &mZZ, "mZZ/F" );
   tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
@@ -889,11 +1112,11 @@ ofstream ofs("run_event.txt");
     }
 
 
-    // BUG FIX in Z->ll BR in Spring11 Alpgen Z+jets:
-    if( dataset_=="ZJets_alpgen_TuneZ2_Spring11_v2" ) {
-      if( leptType==0 )      eventWeight = eventWeight_Zmm;
-      else if( leptType==1 ) eventWeight = eventWeight_Zee;
-    }
+  //// BUG FIX in Z->ll BR in Spring11 Alpgen Z+jets:
+  //if( dataset_=="ZJets_alpgen_TuneZ2_Spring11_v2" ) {
+  //  if( leptType==0 )      eventWeight = eventWeight_Zmm;
+  //  else if( leptType==1 ) eventWeight = eventWeight_Zee;
+  //}
 
 
 
@@ -1015,7 +1238,7 @@ ofstream ofs("run_event.txt");
 
 
 
-//if( event==84169 ) {
+//if( event==13291 ) {
 //  std::cout << "leptType: " << leptType << std::endl; 
 //  std::cout << "lept1.Pt(): " << lept1.Pt() << std::endl;
 //  std::cout << "lept2.Pt(): " << lept2.Pt() << std::endl;
@@ -1033,7 +1256,6 @@ ofstream ofs("run_event.txt");
     if( fabs(lept2.Eta()) > etaLept2_thresh_ ) continue;
     if( diLepton.M() < mZll_threshLo_ || diLepton.M() > mZll_threshHi_ ) continue;
 
-//if( event==84170 ) std::cout << "passed leptons" << std::endl;
 
 
 
@@ -1043,8 +1265,11 @@ ofstream ofs("run_event.txt");
     int  foundJets = 0;
     bool foundJets_ZZmass = false;
     maxBTag_found = -1;
+    foundSignalRegionMjj = false;
 
     for( unsigned iJetPair=0; iJetPair<nPairs; ++iJetPair ) {
+
+      bool isSignalRegionMjj = false;
 
       AnalysisJet jet1, jet2;
       jet1.SetPtEtaPhiE( ptJet1[iJetPair], etaJet1[iJetPair], phiJet1[iJetPair], eJet1[iJetPair]);
@@ -1092,12 +1317,12 @@ ofstream ofs("run_event.txt");
 
       TLorentzVector diJet = jet1 + jet2;
 
-//if( event==84169 ) {
-//  std::cout << std::endl << "jet pair N.: " << iJetPair << std::endl; 
-//  std::cout << "jet1.Pt(): " << jet1.Pt() << std::endl;
-//  std::cout << "jet2.Pt(): " << jet2.Pt() << std::endl;
-//  std::cout << "diJet.M(): " << diJet.M() << std::endl;
-//}
+  //if( event==13291 ) {
+  //  std::cout << std::endl << "jet pair N.: " << iJetPair << std::endl; 
+  //  std::cout << "jet1.Pt(): " << jet1.Pt() << std::endl;
+  //  std::cout << "jet2.Pt(): " << jet2.Pt() << std::endl;
+  //  std::cout << "diJet.M(): " << diJet.M() << std::endl;
+  //}
 
 
       // fill histos before selection
@@ -1147,15 +1372,21 @@ ofstream ofs("run_event.txt");
       // -------------------------
 
       if( jet1.Pt() < ptJet1_thresh_ ) continue;
-//if( event==84169 ) std::cout << "a" << std::endl;
+  //if( event==13291 ) std::cout << "a" << std::endl;
       if( jet2.Pt() < ptJet2_thresh_ ) continue;
-//if( event==84169 ) std::cout << "b" << std::endl;
+  //if( event==13291 ) std::cout << "b" << std::endl;
       if( fabs(jet1.Eta()) > etaJet1_thresh_ ) continue;
-//if( event==84169 ) std::cout << "c" << std::endl;
+  //if( event==13291 ) std::cout << "c" << std::endl;
       if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
-//if( event==84169 ) std::cout << "d" << std::endl;
-      if( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) continue;
-//if( event==84169 ) std::cout << "e" << std::endl;
+  //if( event==13291 ) std::cout << "d" << std::endl;
+
+    //if( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) continue;
+
+      // sideband logic:
+      if( diJet.M() < 60. || diJet.M() > 140. ) continue;
+      else if( foundSignalRegionMjj && ( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) ) continue;
+
+      if( diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ ) isSignalRegionMjj = true;
 
 
 
@@ -1167,9 +1398,12 @@ ofstream ofs("run_event.txt");
 
       int nBTags = this->get_nBTags( jet1, jet2, btsfutil, use_looseBTags_ );
 
-      if( nBTags<maxBTag_found ) continue; //speed it up
+      if( (isSignalRegionMjj && foundSignalRegionMjj) ||
+          (!isSignalRegionMjj && !foundSignalRegionMjj) ) {
+        if( nBTags<maxBTag_found ) continue; //speed it up a little
+      }
+//if( event==13291 ) std::cout << "nBTags: " << nBTags << std::endl;
 
-//if( event==84169 ) std::cout << "nbtags: " << nBTags << std::endl;
 
 
 
@@ -1184,7 +1418,7 @@ ofstream ofs("run_event.txt");
       jet1.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
       jet2.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
       float QGLikelihoodProd = jet1.QGLikelihood*jet2.QGLikelihood;
-//if( event==84169 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
+//if( event==13291 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
       if( nBTags==0 ) {
         //if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
         if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) nBTags=-1; //glue-tag category
@@ -1201,9 +1435,6 @@ ofstream ofs("run_event.txt");
       std::pair<TLorentzVector,TLorentzVector> jets_kinfit = fitter_jets->fit(jet1, jet2);
       TLorentzVector jet1_kinfit(jets_kinfit.first);
       TLorentzVector jet2_kinfit(jets_kinfit.second);
-
- //   TLorentzVector jet1_kinfit(jet1);
- //   TLorentzVector jet2_kinfit(jet2);
 
       jet1.pt_preKinFit  = jet1.Pt();
       jet1.eta_preKinFit = jet1.Eta();
@@ -1222,6 +1453,7 @@ ofstream ofs("run_event.txt");
       TLorentzVector diJet_kinfit = jet1_kinfit + jet2_kinfit;
       TLorentzVector ZZ_kinfit_tmp = diJet_kinfit + diLepton;
 
+//if( event==13291 ) std::cout << "ZZ_kinfit_tmp.M(): " << ZZ_kinfit_tmp.M() << std::endl;
       if( ZZ_kinfit_tmp.M()<150. ) continue; //speed it up a little
 
 
@@ -1229,16 +1461,7 @@ ofstream ofs("run_event.txt");
       // FULL EVENT VARIABLES
       // --------------------
    
-    //if( nBTags==2 )  {
-    //  if( selectionType_=="optLD_looseBTags_metSigCut" ) {
-    //    if( metSignificance > 10. ) continue;
-    //  } else if( selectionType_=="optLD_looseBTags_metSumetCut" ) {
-    //    if( mEtSig > 2. ) continue;
-    //  } else {
-    //    if( pfMetThresh_>0. && pfMet/ZZ_kinfit_tmp.M() > pfMetThresh_ ) continue;
-    //  }
-    //}
-
+//if( event==13291 ) std::cout << "metSignificance: " << metSignificance << std::endl;
       if( nBTags==2 )  {
         if( metSignificance > 10. ) continue;
       }
@@ -1258,19 +1481,20 @@ ofstream ofs("run_event.txt");
       double bProb=LD->getBkgdProbability();
       double helicityLD=sProb/(sProb+bProb);
     
-    //HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinfit;
-    //if( chargeLept1<0 ) hangles_kinfit = LD->computeHelicityAngles(lept1, lept2, jet1_kinfit, jet2_kinfit);
-    //else                hangles_kinfit = LD->computeHelicityAngles(lept2, lept1, jet1_kinfit, jet2_kinfit);
-    
-    //LD->setMeasurables(hangles_kinfit);
-    //double sProb_kinfit=LD->getSignalProbability();
-    //double bProb_kinfit=LD->getBkgdProbability();
-    //double helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
-     
       float helicityLD_thresh = (nBTags>=0) ? this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), nBTags) : this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), 0);
 
-//if( event==84169 ) std::cout << "helicityLD: " << helicityLD << std::endl;
+//if( event==13291 ) std::cout << "helicityLD: " << helicityLD << std::endl;
       if( helicityLD < helicityLD_thresh ) continue;
+
+
+
+      // this pair has passed selections
+      // if it is a signal region pair, dont consider any more sideband events:
+      if( isSignalRegionMjj && !foundSignalRegionMjj) {
+        maxBTag_found = nBTags; //reset maxbtag found
+        foundSignalRegionMjj = true;
+      }
+      if( foundSignalRegionMjj && !isSignalRegionMjj ) continue;
 
 
 
@@ -1284,7 +1508,7 @@ ofstream ofs("run_event.txt");
 
         bestMass = invMass;
         jet1_selected = jet1;
-        jet2_selected = jet2; //keep these for sidebands
+        jet2_selected = jet2; 
         hangles_selected = hangles;
         helicityLD_selected = helicityLD;
         foundJets += 1;
@@ -1310,8 +1534,88 @@ ofstream ofs("run_event.txt");
 
     } //for on jet pairs
 
+
+//if( event==13291 ) std::cout << "xx" << std::endl;
+//if( event==13291 ) std::cout << "foundJets:" << foundJets << std::endl;
+//if( event==13291 ) std::cout << "maxBTag_found:" << maxBTag_found << std::endl;
+//if( event==13291 ) {
+//  if( foundSignalRegionMjj )  std::cout << "foundSignalRegionMjj is TRUE" << std::endl;
+//  else std::cout << "foundSignalRegionMjj is FALSE" << std::endl;
+//}
+
+
+
+
+    if( foundJets==0 ) continue;
+
+    if( !foundSignalRegionMjj ) { //fill sideband plots
+
+      TLorentzVector Zjj_kinfit = jet1_selected + jet2_selected;
+     
+      TLorentzVector jet1_nokinfit, jet2_nokinfit;
+      jet1_nokinfit.SetPtEtaPhiE( jet1_selected.pt_preKinFit, jet1_selected.eta_preKinFit, jet1_selected.phi_preKinFit, jet1_selected.e_preKinFit );
+      jet2_nokinfit.SetPtEtaPhiE( jet2_selected.pt_preKinFit, jet2_selected.eta_preKinFit, jet2_selected.phi_preKinFit, jet2_selected.e_preKinFit );
+     
+      TLorentzVector Zjj_nokinfit = jet1_nokinfit + jet2_nokinfit;
+     
+      TLorentzVector ZZ_nokinfit = Zjj_nokinfit + diLepton;
+      TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
+
+      mZZ = ZZ_kinfit.M();
+
+      h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
+      
+      h2_mZjj_vs_mZZ->Fill( mZZ, Zjj_nokinfit.M(), eventWeight );
+      h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M(), eventWeight );
+
+      h1_helicityLD_sidebands->Fill( helicityLD_selected, eventWeight );
+
+      if( maxBTag_found==0 ) {
+        h2_mZjj_vs_mZZ_0btag->Fill( mZZ, Zjj_nokinfit.M() );
+        h2_mZjj_vs_mZZ_kinfit_0btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
+        h1_mZZ_kinfit_hiMass_sidebands_0btag->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+      } else if( maxBTag_found==1 ) {
+        h2_mZjj_vs_mZZ_1btag->Fill( mZZ, Zjj_nokinfit.M() );
+        h2_mZjj_vs_mZZ_kinfit_1btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
+        h1_mZZ_kinfit_hiMass_sidebands_1btag->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+      } else if( maxBTag_found==2 ) {
+        h2_mZjj_vs_mZZ_2btag->Fill( mZZ, Zjj_nokinfit.M() );
+        h2_mZjj_vs_mZZ_kinfit_2btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
+        h1_mZZ_kinfit_hiMass_sidebands_2btag->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+      } else if( maxBTag_found==-1 ) {
+        h2_mZjj_vs_mZZ_gluetag->Fill( mZZ, Zjj_nokinfit.M() );
+        h2_mZjj_vs_mZZ_kinfit_gluetag->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
+        h1_mZZ_kinfit_hiMass_sidebands_gluetag->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+      }
+      
+      mZjj = Zjj_nokinfit.M();
+
+      tree_passedEvents->Fill();
+
+      continue; //this was sidebands
+
+    } //if sidebands
+
+
+
+
+
     h1_nCandidates->Fill( foundJets, eventWeight );
 
+    if( foundJets==0 ) continue;
+
+
+
+
+/*
     if( !ANALYZE_SIDEBANDS_ ) {
       
        if( foundJets==0 ) continue;
@@ -1385,6 +1689,7 @@ ofstream ofs("run_event.txt");
           if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
           // sidebands! anti-mZjj cut:
           if( diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ ) continue;
+          if( diJet.M() < 60. || diJet.M() > 140. ) continue;
      
      
      
@@ -1503,6 +1808,9 @@ ofstream ofs("run_event.txt");
           }
      
         } //for jet pairs
+
+
+        if( jet1_selected.Pt()==0. || jet2_selected.Pt()==0. ) continue;
      
         TLorentzVector Zjj_kinfit = jet1_selected + jet2_selected;
        
@@ -1518,27 +1826,39 @@ ofstream ofs("run_event.txt");
         mZZ = ZZ_kinfit.M();
         isSidebands = true;
        
+        h1_deltaRjj_sidebands->Fill( jet1_selected.DeltaR(jet2_selected), eventWeight);
+        h1_deltaRjj_prekin_sidebands->Fill( jet1_nokinfit.DeltaR(jet2_nokinfit), eventWeight);
         h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
        
         h2_mZjj_vs_mZZ->Fill( mZZ, Zjj_nokinfit.M(), eventWeight );
         h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M(), eventWeight );
 
+        h1_helicityLD_sidebands->Fill( helicityLD_selected, eventWeight );
+
         if( maxBTag_found==0 ) {
           h2_mZjj_vs_mZZ_0btag->Fill( mZZ, Zjj_nokinfit.M() );
           h2_mZjj_vs_mZZ_kinfit_0btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
           h1_mZZ_kinfit_hiMass_sidebands_0btag->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
         } else if( maxBTag_found==1 ) {
           h2_mZjj_vs_mZZ_1btag->Fill( mZZ, Zjj_nokinfit.M() );
           h2_mZjj_vs_mZZ_kinfit_1btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
           h1_mZZ_kinfit_hiMass_sidebands_1btag->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
         } else if( maxBTag_found==2 ) {
           h2_mZjj_vs_mZZ_2btag->Fill( mZZ, Zjj_nokinfit.M() );
           h2_mZjj_vs_mZZ_kinfit_2btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
           h1_mZZ_kinfit_hiMass_sidebands_2btag->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
         } else if( maxBTag_found==-1 ) {
           h2_mZjj_vs_mZZ_gluetag->Fill( mZZ, Zjj_nokinfit.M() );
           h2_mZjj_vs_mZZ_kinfit_gluetag->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
           h1_mZZ_kinfit_hiMass_sidebands_gluetag->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
         }
        
         mZjj = Zjj_nokinfit.M();
@@ -1550,6 +1870,9 @@ ofstream ofs("run_event.txt");
       } //if sidebands
 
     }
+*/
+
+
 
 
     if( helicityLD_selected < 0. ) 
@@ -1568,6 +1891,15 @@ ofs << run << " " << event << std::endl;
     TLorentzVector jet1_nokinfit, jet2_nokinfit;
     jet1_nokinfit.SetPtEtaPhiE( jet1_selected.pt_preKinFit, jet1_selected.eta_preKinFit, jet1_selected.phi_preKinFit, jet1_selected.e_preKinFit );
     jet2_nokinfit.SetPtEtaPhiE( jet2_selected.pt_preKinFit, jet2_selected.eta_preKinFit, jet2_selected.phi_preKinFit, jet2_selected.e_preKinFit );
+
+//if( event==13291 ) {
+//    std::cout << "chose pair: " << std::endl;
+//    std::cout << "jet1.Pt(): " << jet1_nokinfit.Pt() << std::endl;
+//    std::cout << "jet2.Pt(): " << jet2_nokinfit.Pt() << std::endl;
+//    TLorentzVector dijet_tmp = jet1_nokinfit + jet2_nokinfit;
+//    std::cout << "diJet.M(): " << dijet_tmp.M() << std::endl;
+//}
+
 
     TLorentzVector Zjj_nokinfit = jet1_nokinfit + jet2_nokinfit;
 
@@ -1604,105 +1936,301 @@ ofs << run << " " << event << std::endl;
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_250  += eventWeight;
         nEventsPassed_0btag_250++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_0btag_250_MU  += eventWeight;
+          nEventsPassed_0btag_250_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_0btag_250_ELE  += eventWeight;
+          nEventsPassed_0btag_250_ELE++;
+        }
       } else if( maxBTag_found==1 ) {
         nEventsPassed_fb_1btag_250 += eventWeight;
         nEventsPassed_1btag_250++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_1btag_250_MU  += eventWeight;
+          nEventsPassed_1btag_250_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_1btag_250_ELE  += eventWeight;
+          nEventsPassed_1btag_250_ELE++;
+        }
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_250 += eventWeight;
         nEventsPassed_2btag_250++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_2btag_250_MU  += eventWeight;
+          nEventsPassed_2btag_250_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_2btag_250_ELE  += eventWeight;
+          nEventsPassed_2btag_250_ELE++;
+        }
       } else if( maxBTag_found==-1 ) {
         nEventsPassed_fb_gluetag_250 += eventWeight;
         nEventsPassed_gluetag_250++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_gluetag_250_MU  += eventWeight;
+          nEventsPassed_gluetag_250_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_gluetag_250_ELE  += eventWeight;
+          nEventsPassed_gluetag_250_ELE++;
+        }
       }
     } 
     if( ZZ_kinfit.M() > 300.*mZZ_minPerc && ZZ_kinfit.M() < 300.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_300  += eventWeight;
         nEventsPassed_0btag_300++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_0btag_300_MU  += eventWeight;
+          nEventsPassed_0btag_300_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_0btag_300_ELE  += eventWeight;
+          nEventsPassed_0btag_300_ELE++;
+        }
       } else if( maxBTag_found==1 ) {
         nEventsPassed_fb_1btag_300 += eventWeight;
         nEventsPassed_1btag_300++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_1btag_300_MU  += eventWeight;
+          nEventsPassed_1btag_300_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_1btag_300_ELE  += eventWeight;
+          nEventsPassed_1btag_300_ELE++;
+        }
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_300 += eventWeight;
         nEventsPassed_2btag_300++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_2btag_300_MU  += eventWeight;
+          nEventsPassed_2btag_300_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_2btag_300_ELE  += eventWeight;
+          nEventsPassed_2btag_300_ELE++;
+        }
       } else if( maxBTag_found==-1 ) {
         nEventsPassed_fb_gluetag_300 += eventWeight;
         nEventsPassed_gluetag_300++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_gluetag_300_MU  += eventWeight;
+          nEventsPassed_gluetag_300_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_gluetag_300_ELE  += eventWeight;
+          nEventsPassed_gluetag_300_ELE++;
+        }
       }
     } 
     if( ZZ_kinfit.M() > 350.*mZZ_minPerc && ZZ_kinfit.M() < 350.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_350  += eventWeight;
         nEventsPassed_0btag_350++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_0btag_350_MU  += eventWeight;
+          nEventsPassed_0btag_350_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_0btag_350_ELE  += eventWeight;
+          nEventsPassed_0btag_350_ELE++;
+        }
       } else if( maxBTag_found==1 ) {
         nEventsPassed_fb_1btag_350 += eventWeight;
         nEventsPassed_1btag_350++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_1btag_350_MU  += eventWeight;
+          nEventsPassed_1btag_350_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_1btag_350_ELE  += eventWeight;
+          nEventsPassed_1btag_350_ELE++;
+        }
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_350 += eventWeight;
         nEventsPassed_2btag_350++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_2btag_350_MU  += eventWeight;
+          nEventsPassed_2btag_350_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_2btag_350_ELE  += eventWeight;
+          nEventsPassed_2btag_350_ELE++;
+        }
       } else if( maxBTag_found==-1 ) {
         nEventsPassed_fb_gluetag_350 += eventWeight;
         nEventsPassed_gluetag_350++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_gluetag_350_MU  += eventWeight;
+          nEventsPassed_gluetag_350_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_gluetag_350_ELE  += eventWeight;
+          nEventsPassed_gluetag_350_ELE++;
+        }
       }
     } 
     if( ZZ_kinfit.M() > 400.*mZZ_minPerc && ZZ_kinfit.M() < 400.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_400  += eventWeight;
         nEventsPassed_0btag_400++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_0btag_400_MU  += eventWeight;
+          nEventsPassed_0btag_400_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_0btag_400_ELE  += eventWeight;
+          nEventsPassed_0btag_400_ELE++;
+        }
       } else if( maxBTag_found==1 ) {
         nEventsPassed_fb_1btag_400 += eventWeight;
         nEventsPassed_1btag_400++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_1btag_400_MU  += eventWeight;
+          nEventsPassed_1btag_400_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_1btag_400_ELE  += eventWeight;
+          nEventsPassed_1btag_400_ELE++;
+        }
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_400 += eventWeight;
         nEventsPassed_2btag_400++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_2btag_400_MU  += eventWeight;
+          nEventsPassed_2btag_400_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_2btag_400_ELE  += eventWeight;
+          nEventsPassed_2btag_400_ELE++;
+        }
       } else if( maxBTag_found==-1 ) {
         nEventsPassed_fb_gluetag_400 += eventWeight;
         nEventsPassed_gluetag_400++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_gluetag_400_MU  += eventWeight;
+          nEventsPassed_gluetag_400_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_gluetag_400_ELE  += eventWeight;
+          nEventsPassed_gluetag_400_ELE++;
+        }
       }
     } 
     if( ZZ_kinfit.M() > 450.*mZZ_minPerc && ZZ_kinfit.M() < 450.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_450  += eventWeight;
         nEventsPassed_0btag_450++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_0btag_450_MU  += eventWeight;
+          nEventsPassed_0btag_450_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_0btag_450_ELE  += eventWeight;
+          nEventsPassed_0btag_450_ELE++;
+        }
       } else if( maxBTag_found==1 ) {
         nEventsPassed_fb_1btag_450 += eventWeight;
         nEventsPassed_1btag_450++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_1btag_450_MU  += eventWeight;
+          nEventsPassed_1btag_450_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_1btag_450_ELE  += eventWeight;
+          nEventsPassed_1btag_450_ELE++;
+        }
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_450 += eventWeight;
         nEventsPassed_2btag_450++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_2btag_450_MU  += eventWeight;
+          nEventsPassed_2btag_450_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_2btag_450_ELE  += eventWeight;
+          nEventsPassed_2btag_450_ELE++;
+        }
       } else if( maxBTag_found==-1 ) {
         nEventsPassed_fb_gluetag_450 += eventWeight;
         nEventsPassed_gluetag_450++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_gluetag_450_MU  += eventWeight;
+          nEventsPassed_gluetag_450_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_gluetag_450_ELE  += eventWeight;
+          nEventsPassed_gluetag_450_ELE++;
+        }
       }
     } 
     if( ZZ_kinfit.M() > 500.*mZZ_minPerc && ZZ_kinfit.M() < 500.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_500  += eventWeight;
         nEventsPassed_0btag_500++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_0btag_500_MU  += eventWeight;
+          nEventsPassed_0btag_500_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_0btag_500_ELE  += eventWeight;
+          nEventsPassed_0btag_500_ELE++;
+        }
       } else if( maxBTag_found==1 ) {
         nEventsPassed_fb_1btag_500 += eventWeight;
         nEventsPassed_1btag_500++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_1btag_500_MU  += eventWeight;
+          nEventsPassed_1btag_500_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_1btag_500_ELE  += eventWeight;
+          nEventsPassed_1btag_500_ELE++;
+        }
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_500 += eventWeight;
         nEventsPassed_2btag_500++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_2btag_500_MU  += eventWeight;
+          nEventsPassed_2btag_500_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_2btag_500_ELE  += eventWeight;
+          nEventsPassed_2btag_500_ELE++;
+        }
       } else if( maxBTag_found==-1 ) {
         nEventsPassed_fb_gluetag_500 += eventWeight;
         nEventsPassed_gluetag_500++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_gluetag_500_MU  += eventWeight;
+          nEventsPassed_gluetag_500_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_gluetag_500_ELE  += eventWeight;
+          nEventsPassed_gluetag_500_ELE++;
+        }
       }
     } 
     if( ZZ_kinfit.M() > 600.*mZZ_minPerc && ZZ_kinfit.M() < 600.*mZZ_maxPerc ) {
       if( maxBTag_found==0 ) {
         nEventsPassed_fb_0btag_600  += eventWeight;
         nEventsPassed_0btag_600++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_0btag_600_MU  += eventWeight;
+          nEventsPassed_0btag_600_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_0btag_600_ELE  += eventWeight;
+          nEventsPassed_0btag_600_ELE++;
+        }
       } else if( maxBTag_found==1 ) {
         nEventsPassed_fb_1btag_600 += eventWeight;
         nEventsPassed_1btag_600++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_1btag_600_MU  += eventWeight;
+          nEventsPassed_1btag_600_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_1btag_600_ELE  += eventWeight;
+          nEventsPassed_1btag_600_ELE++;
+        }
       } else if( maxBTag_found==2 ) {
         nEventsPassed_fb_2btag_600 += eventWeight;
         nEventsPassed_2btag_600++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_2btag_600_MU  += eventWeight;
+          nEventsPassed_2btag_600_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_2btag_600_ELE  += eventWeight;
+          nEventsPassed_2btag_600_ELE++;
+        }
       } else if( maxBTag_found==-1 ) {
         nEventsPassed_fb_gluetag_600 += eventWeight;
         nEventsPassed_gluetag_600++;
+        if( leptType==0 ) {
+          nEventsPassed_fb_gluetag_600_MU  += eventWeight;
+          nEventsPassed_gluetag_600_MU++;
+        } else if( leptType==1 ) {
+          nEventsPassed_fb_gluetag_600_ELE  += eventWeight;
+          nEventsPassed_gluetag_600_ELE++;
+        }
       }
     } 
 
@@ -1970,41 +2498,121 @@ ofs << run << " " << event << std::endl;
   float eff_1btag_250 = nEventsPassed_fb_1btag_250/nCounterW_;
   float eff_2btag_250 = nEventsPassed_fb_2btag_250/nCounterW_;
 
+  float eff_gluetag_250_ELE = nEventsPassed_fb_gluetag_250_ELE/nCounterW_;
+  float eff_0btag_250_ELE = nEventsPassed_fb_0btag_250_ELE/nCounterW_;
+  float eff_1btag_250_ELE = nEventsPassed_fb_1btag_250_ELE/nCounterW_;
+  float eff_2btag_250_ELE = nEventsPassed_fb_2btag_250_ELE/nCounterW_;
+
+  float eff_gluetag_250_MU = nEventsPassed_fb_gluetag_250_MU/nCounterW_;
+  float eff_0btag_250_MU = nEventsPassed_fb_0btag_250_MU/nCounterW_;
+  float eff_1btag_250_MU = nEventsPassed_fb_1btag_250_MU/nCounterW_;
+  float eff_2btag_250_MU = nEventsPassed_fb_2btag_250_MU/nCounterW_;
+
   float eff_gluetag_300 = nEventsPassed_fb_gluetag_300/nCounterW_;
   float eff_0btag_300 = nEventsPassed_fb_0btag_300/nCounterW_;
   float eff_1btag_300 = nEventsPassed_fb_1btag_300/nCounterW_;
   float eff_2btag_300 = nEventsPassed_fb_2btag_300/nCounterW_;
+
+  float eff_gluetag_300_ELE = nEventsPassed_fb_gluetag_300_ELE/nCounterW_;
+  float eff_0btag_300_ELE = nEventsPassed_fb_0btag_300_ELE/nCounterW_;
+  float eff_1btag_300_ELE = nEventsPassed_fb_1btag_300_ELE/nCounterW_;
+  float eff_2btag_300_ELE = nEventsPassed_fb_2btag_300_ELE/nCounterW_;
+
+  float eff_gluetag_300_MU = nEventsPassed_fb_gluetag_300_MU/nCounterW_;
+  float eff_0btag_300_MU = nEventsPassed_fb_0btag_300_MU/nCounterW_;
+  float eff_1btag_300_MU = nEventsPassed_fb_1btag_300_MU/nCounterW_;
+  float eff_2btag_300_MU = nEventsPassed_fb_2btag_300_MU/nCounterW_;
 
   float eff_gluetag_350 = nEventsPassed_fb_gluetag_350/nCounterW_;
   float eff_0btag_350 = nEventsPassed_fb_0btag_350/nCounterW_;
   float eff_1btag_350 = nEventsPassed_fb_1btag_350/nCounterW_;
   float eff_2btag_350 = nEventsPassed_fb_2btag_350/nCounterW_;
 
+  float eff_gluetag_350_ELE = nEventsPassed_fb_gluetag_350_ELE/nCounterW_;
+  float eff_0btag_350_ELE = nEventsPassed_fb_0btag_350_ELE/nCounterW_;
+  float eff_1btag_350_ELE = nEventsPassed_fb_1btag_350_ELE/nCounterW_;
+  float eff_2btag_350_ELE = nEventsPassed_fb_2btag_350_ELE/nCounterW_;
+
+  float eff_gluetag_350_MU = nEventsPassed_fb_gluetag_350_MU/nCounterW_;
+  float eff_0btag_350_MU = nEventsPassed_fb_0btag_350_MU/nCounterW_;
+  float eff_1btag_350_MU = nEventsPassed_fb_1btag_350_MU/nCounterW_;
+  float eff_2btag_350_MU = nEventsPassed_fb_2btag_350_MU/nCounterW_;
+
   float eff_gluetag_400 = nEventsPassed_fb_gluetag_400/nCounterW_;
   float eff_0btag_400 = nEventsPassed_fb_0btag_400/nCounterW_;
   float eff_1btag_400 = nEventsPassed_fb_1btag_400/nCounterW_;
   float eff_2btag_400 = nEventsPassed_fb_2btag_400/nCounterW_;
+
+  float eff_gluetag_400_ELE = nEventsPassed_fb_gluetag_400_ELE/nCounterW_;
+  float eff_0btag_400_ELE = nEventsPassed_fb_0btag_400_ELE/nCounterW_;
+  float eff_1btag_400_ELE = nEventsPassed_fb_1btag_400_ELE/nCounterW_;
+  float eff_2btag_400_ELE = nEventsPassed_fb_2btag_400_ELE/nCounterW_;
+
+  float eff_gluetag_400_MU = nEventsPassed_fb_gluetag_400_MU/nCounterW_;
+  float eff_0btag_400_MU = nEventsPassed_fb_0btag_400_MU/nCounterW_;
+  float eff_1btag_400_MU = nEventsPassed_fb_1btag_400_MU/nCounterW_;
+  float eff_2btag_400_MU = nEventsPassed_fb_2btag_400_MU/nCounterW_;
 
   float eff_gluetag_450 = nEventsPassed_fb_gluetag_450/nCounterW_;
   float eff_0btag_450 = nEventsPassed_fb_0btag_450/nCounterW_;
   float eff_1btag_450 = nEventsPassed_fb_1btag_450/nCounterW_;
   float eff_2btag_450 = nEventsPassed_fb_2btag_450/nCounterW_;
 
+  float eff_gluetag_450_ELE = nEventsPassed_fb_gluetag_450_ELE/nCounterW_;
+  float eff_0btag_450_ELE = nEventsPassed_fb_0btag_450_ELE/nCounterW_;
+  float eff_1btag_450_ELE = nEventsPassed_fb_1btag_450_ELE/nCounterW_;
+  float eff_2btag_450_ELE = nEventsPassed_fb_2btag_450_ELE/nCounterW_;
+
+  float eff_gluetag_450_MU = nEventsPassed_fb_gluetag_450_MU/nCounterW_;
+  float eff_0btag_450_MU = nEventsPassed_fb_0btag_450_MU/nCounterW_;
+  float eff_1btag_450_MU = nEventsPassed_fb_1btag_450_MU/nCounterW_;
+  float eff_2btag_450_MU = nEventsPassed_fb_2btag_450_MU/nCounterW_;
+
   float eff_gluetag_500 = nEventsPassed_fb_gluetag_500/nCounterW_;
   float eff_0btag_500 = nEventsPassed_fb_0btag_500/nCounterW_;
   float eff_1btag_500 = nEventsPassed_fb_1btag_500/nCounterW_;
   float eff_2btag_500 = nEventsPassed_fb_2btag_500/nCounterW_;
+
+  float eff_gluetag_500_ELE = nEventsPassed_fb_gluetag_500_ELE/nCounterW_;
+  float eff_0btag_500_ELE = nEventsPassed_fb_0btag_500_ELE/nCounterW_;
+  float eff_1btag_500_ELE = nEventsPassed_fb_1btag_500_ELE/nCounterW_;
+  float eff_2btag_500_ELE = nEventsPassed_fb_2btag_500_ELE/nCounterW_;
+
+  float eff_gluetag_500_MU = nEventsPassed_fb_gluetag_500_MU/nCounterW_;
+  float eff_0btag_500_MU = nEventsPassed_fb_0btag_500_MU/nCounterW_;
+  float eff_1btag_500_MU = nEventsPassed_fb_1btag_500_MU/nCounterW_;
+  float eff_2btag_500_MU = nEventsPassed_fb_2btag_500_MU/nCounterW_;
 
   float eff_gluetag_600 = nEventsPassed_fb_gluetag_600/nCounterW_;
   float eff_0btag_600 = nEventsPassed_fb_0btag_600/nCounterW_;
   float eff_1btag_600 = nEventsPassed_fb_1btag_600/nCounterW_;
   float eff_2btag_600 = nEventsPassed_fb_2btag_600/nCounterW_;
 
+  float eff_gluetag_600_ELE = nEventsPassed_fb_gluetag_600_ELE/nCounterW_;
+  float eff_0btag_600_ELE = nEventsPassed_fb_0btag_600_ELE/nCounterW_;
+  float eff_1btag_600_ELE = nEventsPassed_fb_1btag_600_ELE/nCounterW_;
+  float eff_2btag_600_ELE = nEventsPassed_fb_2btag_600_ELE/nCounterW_;
+
+  float eff_gluetag_600_MU = nEventsPassed_fb_gluetag_600_MU/nCounterW_;
+  float eff_0btag_600_MU = nEventsPassed_fb_0btag_600_MU/nCounterW_;
+  float eff_1btag_600_MU = nEventsPassed_fb_1btag_600_MU/nCounterW_;
+  float eff_2btag_600_MU = nEventsPassed_fb_2btag_600_MU/nCounterW_;
+
 
   h1_nEvents_fb_gluetag_250->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_250);
   h1_nEvents_fb_0btag_250->SetBinContent(1,1000.*nEventsPassed_fb_0btag_250);
   h1_nEvents_fb_1btag_250->SetBinContent(1,1000.*nEventsPassed_fb_1btag_250);
   h1_nEvents_fb_2btag_250->SetBinContent(1,1000.*nEventsPassed_fb_2btag_250);
+
+  h1_nEvents_fb_gluetag_250_ELE->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_250_ELE);
+  h1_nEvents_fb_0btag_250_ELE->SetBinContent(1,1000.*nEventsPassed_fb_0btag_250_ELE);
+  h1_nEvents_fb_1btag_250_ELE->SetBinContent(1,1000.*nEventsPassed_fb_1btag_250_ELE);
+  h1_nEvents_fb_2btag_250_ELE->SetBinContent(1,1000.*nEventsPassed_fb_2btag_250_ELE);
+
+  h1_nEvents_fb_gluetag_250_MU->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_250_MU);
+  h1_nEvents_fb_0btag_250_MU->SetBinContent(1,1000.*nEventsPassed_fb_0btag_250_MU);
+  h1_nEvents_fb_1btag_250_MU->SetBinContent(1,1000.*nEventsPassed_fb_1btag_250_MU);
+  h1_nEvents_fb_2btag_250_MU->SetBinContent(1,1000.*nEventsPassed_fb_2btag_250_MU);
 
   h1_eff_gluetag_250->SetBinContent(1,eff_gluetag_250);
   h1_eff_0btag_250->SetBinContent(1,eff_0btag_250);
@@ -2017,6 +2625,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_1btag_300->SetBinContent(1,1000.*nEventsPassed_fb_1btag_300);
   h1_nEvents_fb_2btag_300->SetBinContent(1,1000.*nEventsPassed_fb_2btag_300);
 
+  h1_nEvents_fb_gluetag_300_ELE->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_300_ELE);
+  h1_nEvents_fb_0btag_300_ELE->SetBinContent(1,1000.*nEventsPassed_fb_0btag_300_ELE);
+  h1_nEvents_fb_1btag_300_ELE->SetBinContent(1,1000.*nEventsPassed_fb_1btag_300_ELE);
+  h1_nEvents_fb_2btag_300_ELE->SetBinContent(1,1000.*nEventsPassed_fb_2btag_300_ELE);
+
+  h1_nEvents_fb_gluetag_300_MU->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_300_MU);
+  h1_nEvents_fb_0btag_300_MU->SetBinContent(1,1000.*nEventsPassed_fb_0btag_300_MU);
+  h1_nEvents_fb_1btag_300_MU->SetBinContent(1,1000.*nEventsPassed_fb_1btag_300_MU);
+  h1_nEvents_fb_2btag_300_MU->SetBinContent(1,1000.*nEventsPassed_fb_2btag_300_MU);
+
   h1_eff_gluetag_300->SetBinContent(1,eff_gluetag_300);
   h1_eff_0btag_300->SetBinContent(1,eff_0btag_300);
   h1_eff_1btag_300->SetBinContent(1,eff_1btag_300);
@@ -2027,6 +2645,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_0btag_350->SetBinContent(1,1000.*nEventsPassed_fb_0btag_350);
   h1_nEvents_fb_1btag_350->SetBinContent(1,1000.*nEventsPassed_fb_1btag_350);
   h1_nEvents_fb_2btag_350->SetBinContent(1,1000.*nEventsPassed_fb_2btag_350);
+
+  h1_nEvents_fb_gluetag_350_ELE->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_350_ELE);
+  h1_nEvents_fb_0btag_350_ELE->SetBinContent(1,1000.*nEventsPassed_fb_0btag_350_ELE);
+  h1_nEvents_fb_1btag_350_ELE->SetBinContent(1,1000.*nEventsPassed_fb_1btag_350_ELE);
+  h1_nEvents_fb_2btag_350_ELE->SetBinContent(1,1000.*nEventsPassed_fb_2btag_350_ELE);
+
+  h1_nEvents_fb_gluetag_350_MU->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_350_MU);
+  h1_nEvents_fb_0btag_350_MU->SetBinContent(1,1000.*nEventsPassed_fb_0btag_350_MU);
+  h1_nEvents_fb_1btag_350_MU->SetBinContent(1,1000.*nEventsPassed_fb_1btag_350_MU);
+  h1_nEvents_fb_2btag_350_MU->SetBinContent(1,1000.*nEventsPassed_fb_2btag_350_MU);
 
   h1_eff_gluetag_350->SetBinContent(1,eff_gluetag_350);
   h1_eff_0btag_350->SetBinContent(1,eff_0btag_350);
@@ -2039,6 +2667,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_1btag_400->SetBinContent(1,1000.*nEventsPassed_fb_1btag_400);
   h1_nEvents_fb_2btag_400->SetBinContent(1,1000.*nEventsPassed_fb_2btag_400);
 
+  h1_nEvents_fb_gluetag_400_ELE->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_400_ELE);
+  h1_nEvents_fb_0btag_400_ELE->SetBinContent(1,1000.*nEventsPassed_fb_0btag_400_ELE);
+  h1_nEvents_fb_1btag_400_ELE->SetBinContent(1,1000.*nEventsPassed_fb_1btag_400_ELE);
+  h1_nEvents_fb_2btag_400_ELE->SetBinContent(1,1000.*nEventsPassed_fb_2btag_400_ELE);
+
+  h1_nEvents_fb_gluetag_400_MU->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_400_MU);
+  h1_nEvents_fb_0btag_400_MU->SetBinContent(1,1000.*nEventsPassed_fb_0btag_400_MU);
+  h1_nEvents_fb_1btag_400_MU->SetBinContent(1,1000.*nEventsPassed_fb_1btag_400_MU);
+  h1_nEvents_fb_2btag_400_MU->SetBinContent(1,1000.*nEventsPassed_fb_2btag_400_MU);
+
   h1_eff_gluetag_400->SetBinContent(1,eff_gluetag_400);
   h1_eff_0btag_400->SetBinContent(1,eff_0btag_400);
   h1_eff_1btag_400->SetBinContent(1,eff_1btag_400);
@@ -2049,6 +2687,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_0btag_450->SetBinContent(1,1000.*nEventsPassed_fb_0btag_450);
   h1_nEvents_fb_1btag_450->SetBinContent(1,1000.*nEventsPassed_fb_1btag_450);
   h1_nEvents_fb_2btag_450->SetBinContent(1,1000.*nEventsPassed_fb_2btag_450);
+
+  h1_nEvents_fb_gluetag_450_ELE->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_450_ELE);
+  h1_nEvents_fb_0btag_450_ELE->SetBinContent(1,1000.*nEventsPassed_fb_0btag_450_ELE);
+  h1_nEvents_fb_1btag_450_ELE->SetBinContent(1,1000.*nEventsPassed_fb_1btag_450_ELE);
+  h1_nEvents_fb_2btag_450_ELE->SetBinContent(1,1000.*nEventsPassed_fb_2btag_450_ELE);
+
+  h1_nEvents_fb_gluetag_450_MU->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_450_MU);
+  h1_nEvents_fb_0btag_450_MU->SetBinContent(1,1000.*nEventsPassed_fb_0btag_450_MU);
+  h1_nEvents_fb_1btag_450_MU->SetBinContent(1,1000.*nEventsPassed_fb_1btag_450_MU);
+  h1_nEvents_fb_2btag_450_MU->SetBinContent(1,1000.*nEventsPassed_fb_2btag_450_MU);
 
   h1_eff_gluetag_450->SetBinContent(1,eff_gluetag_450);
   h1_eff_0btag_450->SetBinContent(1,eff_0btag_450);
@@ -2061,6 +2709,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_1btag_500->SetBinContent(1,1000.*nEventsPassed_fb_1btag_500);
   h1_nEvents_fb_2btag_500->SetBinContent(1,1000.*nEventsPassed_fb_2btag_500);
 
+  h1_nEvents_fb_gluetag_500_ELE->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_500_ELE);
+  h1_nEvents_fb_0btag_500_ELE->SetBinContent(1,1000.*nEventsPassed_fb_0btag_500_ELE);
+  h1_nEvents_fb_1btag_500_ELE->SetBinContent(1,1000.*nEventsPassed_fb_1btag_500_ELE);
+  h1_nEvents_fb_2btag_500_ELE->SetBinContent(1,1000.*nEventsPassed_fb_2btag_500_ELE);
+
+  h1_nEvents_fb_gluetag_500_MU->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_500_MU);
+  h1_nEvents_fb_0btag_500_MU->SetBinContent(1,1000.*nEventsPassed_fb_0btag_500_MU);
+  h1_nEvents_fb_1btag_500_MU->SetBinContent(1,1000.*nEventsPassed_fb_1btag_500_MU);
+  h1_nEvents_fb_2btag_500_MU->SetBinContent(1,1000.*nEventsPassed_fb_2btag_500_MU);
+
   h1_eff_gluetag_500->SetBinContent(1,eff_gluetag_500);
   h1_eff_0btag_500->SetBinContent(1,eff_0btag_500);
   h1_eff_1btag_500->SetBinContent(1,eff_1btag_500);
@@ -2071,6 +2729,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_0btag_600->SetBinContent(1,1000.*nEventsPassed_fb_0btag_600);
   h1_nEvents_fb_1btag_600->SetBinContent(1,1000.*nEventsPassed_fb_1btag_600);
   h1_nEvents_fb_2btag_600->SetBinContent(1,1000.*nEventsPassed_fb_2btag_600);
+
+  h1_nEvents_fb_gluetag_600_ELE->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_600_ELE);
+  h1_nEvents_fb_0btag_600_ELE->SetBinContent(1,1000.*nEventsPassed_fb_0btag_600_ELE);
+  h1_nEvents_fb_1btag_600_ELE->SetBinContent(1,1000.*nEventsPassed_fb_1btag_600_ELE);
+  h1_nEvents_fb_2btag_600_ELE->SetBinContent(1,1000.*nEventsPassed_fb_2btag_600_ELE);
+
+  h1_nEvents_fb_gluetag_600_MU->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_600_MU);
+  h1_nEvents_fb_0btag_600_MU->SetBinContent(1,1000.*nEventsPassed_fb_0btag_600_MU);
+  h1_nEvents_fb_1btag_600_MU->SetBinContent(1,1000.*nEventsPassed_fb_1btag_600_MU);
+  h1_nEvents_fb_2btag_600_MU->SetBinContent(1,1000.*nEventsPassed_fb_2btag_600_MU);
 
   h1_eff_gluetag_600->SetBinContent(1,eff_gluetag_600);
   h1_eff_0btag_600->SetBinContent(1,eff_0btag_600);
@@ -2131,6 +2799,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_1btag_250->Write();
   h1_nEvents_fb_2btag_250->Write();
 
+  h1_nEvents_fb_gluetag_250_ELE->Write();
+  h1_nEvents_fb_0btag_250_ELE->Write();
+  h1_nEvents_fb_1btag_250_ELE->Write();
+  h1_nEvents_fb_2btag_250_ELE->Write();
+
+  h1_nEvents_fb_gluetag_250_MU->Write();
+  h1_nEvents_fb_0btag_250_MU->Write();
+  h1_nEvents_fb_1btag_250_MU->Write();
+  h1_nEvents_fb_2btag_250_MU->Write();
+
   h1_eff_gluetag_250->Write();
   h1_eff_0btag_250->Write();
   h1_eff_1btag_250->Write();
@@ -2140,6 +2818,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_0btag_300->Write();
   h1_nEvents_fb_1btag_300->Write();
   h1_nEvents_fb_2btag_300->Write();
+
+  h1_nEvents_fb_gluetag_300_ELE->Write();
+  h1_nEvents_fb_0btag_300_ELE->Write();
+  h1_nEvents_fb_1btag_300_ELE->Write();
+  h1_nEvents_fb_2btag_300_ELE->Write();
+
+  h1_nEvents_fb_gluetag_300_MU->Write();
+  h1_nEvents_fb_0btag_300_MU->Write();
+  h1_nEvents_fb_1btag_300_MU->Write();
+  h1_nEvents_fb_2btag_300_MU->Write();
 
   h1_eff_gluetag_300->Write();
   h1_eff_0btag_300->Write();
@@ -2151,6 +2839,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_1btag_350->Write();
   h1_nEvents_fb_2btag_350->Write();
 
+  h1_nEvents_fb_gluetag_350_ELE->Write();
+  h1_nEvents_fb_0btag_350_ELE->Write();
+  h1_nEvents_fb_1btag_350_ELE->Write();
+  h1_nEvents_fb_2btag_350_ELE->Write();
+
+  h1_nEvents_fb_gluetag_350_MU->Write();
+  h1_nEvents_fb_0btag_350_MU->Write();
+  h1_nEvents_fb_1btag_350_MU->Write();
+  h1_nEvents_fb_2btag_350_MU->Write();
+
   h1_eff_gluetag_350->Write();
   h1_eff_0btag_350->Write();
   h1_eff_1btag_350->Write();
@@ -2160,6 +2858,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_0btag_400->Write();
   h1_nEvents_fb_1btag_400->Write();
   h1_nEvents_fb_2btag_400->Write();
+
+  h1_nEvents_fb_gluetag_400_ELE->Write();
+  h1_nEvents_fb_0btag_400_ELE->Write();
+  h1_nEvents_fb_1btag_400_ELE->Write();
+  h1_nEvents_fb_2btag_400_ELE->Write();
+
+  h1_nEvents_fb_gluetag_400_MU->Write();
+  h1_nEvents_fb_0btag_400_MU->Write();
+  h1_nEvents_fb_1btag_400_MU->Write();
+  h1_nEvents_fb_2btag_400_MU->Write();
 
   h1_eff_gluetag_400->Write();
   h1_eff_0btag_400->Write();
@@ -2171,6 +2879,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_1btag_450->Write();
   h1_nEvents_fb_2btag_450->Write();
 
+  h1_nEvents_fb_gluetag_450_ELE->Write();
+  h1_nEvents_fb_0btag_450_ELE->Write();
+  h1_nEvents_fb_1btag_450_ELE->Write();
+  h1_nEvents_fb_2btag_450_ELE->Write();
+
+  h1_nEvents_fb_gluetag_450_MU->Write();
+  h1_nEvents_fb_0btag_450_MU->Write();
+  h1_nEvents_fb_1btag_450_MU->Write();
+  h1_nEvents_fb_2btag_450_MU->Write();
+
   h1_eff_gluetag_450->Write();
   h1_eff_0btag_450->Write();
   h1_eff_1btag_450->Write();
@@ -2181,6 +2899,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_1btag_500->Write();
   h1_nEvents_fb_2btag_500->Write();
 
+  h1_nEvents_fb_gluetag_500_ELE->Write();
+  h1_nEvents_fb_0btag_500_ELE->Write();
+  h1_nEvents_fb_1btag_500_ELE->Write();
+  h1_nEvents_fb_2btag_500_ELE->Write();
+
+  h1_nEvents_fb_gluetag_500_MU->Write();
+  h1_nEvents_fb_0btag_500_MU->Write();
+  h1_nEvents_fb_1btag_500_MU->Write();
+  h1_nEvents_fb_2btag_500_MU->Write();
+
   h1_eff_gluetag_500->Write();
   h1_eff_0btag_500->Write();
   h1_eff_1btag_500->Write();
@@ -2190,6 +2918,16 @@ ofs << run << " " << event << std::endl;
   h1_nEvents_fb_0btag_600->Write();
   h1_nEvents_fb_1btag_600->Write();
   h1_nEvents_fb_2btag_600->Write();
+
+  h1_nEvents_fb_gluetag_600_ELE->Write();
+  h1_nEvents_fb_0btag_600_ELE->Write();
+  h1_nEvents_fb_1btag_600_ELE->Write();
+  h1_nEvents_fb_2btag_600_ELE->Write();
+
+  h1_nEvents_fb_gluetag_600_MU->Write();
+  h1_nEvents_fb_0btag_600_MU->Write();
+  h1_nEvents_fb_1btag_600_MU->Write();
+  h1_nEvents_fb_2btag_600_MU->Write();
 
   h1_eff_gluetag_600->Write();
   h1_eff_0btag_600->Write();
@@ -2257,6 +2995,8 @@ ofs << run << " " << event << std::endl;
   h1_ptZll_presel->Write();
   h1_ptZjj_all_presel->Write();
 
+  h1_deltaRjj_sidebands->Write();
+  h1_deltaRjj_prekin_sidebands->Write();
   h1_deltaRjj->Write();
   h1_deltaRjj_prekin->Write();
 
@@ -2279,6 +3019,7 @@ ofs << run << " " << event << std::endl;
   h1_kinfit_chiSquareProb->Write();
   
   h1_helicityLD->Write();
+  h1_helicityLD_sidebands->Write();
   h1_helicityLD_MW200->Write();
   h1_helicityLD_MW250->Write();
   h1_helicityLD_MW300->Write();
@@ -2453,8 +3194,8 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     etaJet2_thresh_ = 2.4;
     mZll_threshLo_ = 70.;
     mZll_threshHi_ = 110.;
-    mZjj_threshLo_ = 70.;
-    mZjj_threshHi_ = 110.;
+    mZjj_threshLo_ = 75.;
+    mZjj_threshHi_ = 105.;
     helicityLD_slope_0btags_ = 0.;
     helicityLD_slope_1btags_ = 0.;
     helicityLD_slope_2btags_ = 0.;
