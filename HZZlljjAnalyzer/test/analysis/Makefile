@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -Wall -c
+CFLAGS = -Wall -c -g
 ROOTFLAG = `${ROOTSYS}/bin/root-config --cflags --libs`
 
 
@@ -90,6 +90,9 @@ drawHZZlljj: DrawBase.o fitTools.o drawHZZlljj.cpp
 
 drawHZZlljjRM: DrawBase.o fitTools.o drawHZZlljjRM.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawHZZlljjRM drawHZZlljjRM.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+
+drawHZZlljjRM_DATA: DrawBase.o fitTools.o drawHZZlljjRM_DATA.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawHZZlljjRM_DATA drawHZZlljjRM_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 drawHZZlljj_kinfit: DrawBase.o fitTools.o drawHZZlljj_kinfit.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawHZZlljj_kinfit drawHZZlljj_kinfit.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
