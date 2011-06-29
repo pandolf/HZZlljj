@@ -62,7 +62,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   TH1D* h1_nEventsCategories_presel = new TH1D("nEventsCategories_presel", "", 4, -1.5, 2.5);
   h1_nEventsCategories_presel->Sumw2();
-  h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(1, "Glue-tag"); 
+  h1_nEventsCategories_presel->GetXaxis()->SetLabelSize(0.1);
+  h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(1, "Gluon-tag"); 
   h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(2, "0 b-tag"); 
   h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(3, "1 b-tag"); 
   h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(4, "2 b-tag"); 
@@ -89,6 +90,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_eff_1btag_250 = new TH1D("eff_1btag_250", "", 1, 0., 1.);
   TH1D* h1_eff_2btag_250 = new TH1D("eff_2btag_250", "", 1, 0., 1.);
 
+  TH1D* h1_eff_gluetag_250_ELE = new TH1D("eff_gluetag_250_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_250_ELE = new TH1D("eff_0btag_250_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_250_ELE = new TH1D("eff_1btag_250_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_250_ELE = new TH1D("eff_2btag_250_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_eff_gluetag_250_MU = new TH1D("eff_gluetag_250_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_250_MU = new TH1D("eff_0btag_250_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_250_MU = new TH1D("eff_1btag_250_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_250_MU = new TH1D("eff_2btag_250_MU", "", 1, 0., 1.);
+
 
   TH1D* h1_nEvents_fb_gluetag_300 = new TH1D("nEvents_fb_gluetag_300", "", 1, 0., 1.);
   TH1D* h1_nEvents_fb_0btag_300 = new TH1D("nEvents_fb_0btag_300", "", 1, 0., 1.);
@@ -109,6 +120,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_eff_0btag_300 = new TH1D("eff_0btag_300", "", 1, 0., 1.);
   TH1D* h1_eff_1btag_300 = new TH1D("eff_1btag_300", "", 1, 0., 1.);
   TH1D* h1_eff_2btag_300 = new TH1D("eff_2btag_300", "", 1, 0., 1.);
+
+  TH1D* h1_eff_gluetag_300_ELE = new TH1D("eff_gluetag_300_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_300_ELE = new TH1D("eff_0btag_300_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_300_ELE = new TH1D("eff_1btag_300_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_300_ELE = new TH1D("eff_2btag_300_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_eff_gluetag_300_MU = new TH1D("eff_gluetag_300_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_300_MU = new TH1D("eff_0btag_300_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_300_MU = new TH1D("eff_1btag_300_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_300_MU = new TH1D("eff_2btag_300_MU", "", 1, 0., 1.);
 
 
   TH1D* h1_nEvents_fb_gluetag_350 = new TH1D("nEvents_fb_gluetag_350", "", 1, 0., 1.0001);
@@ -131,6 +152,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_eff_1btag_350 = new TH1D("eff_1btag_350", "", 1, 0., 1.0001);
   TH1D* h1_eff_2btag_350 = new TH1D("eff_2btag_350", "", 1, 0., 1.0001);
 
+  TH1D* h1_eff_gluetag_350_ELE = new TH1D("eff_gluetag_350_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_350_ELE = new TH1D("eff_0btag_350_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_350_ELE = new TH1D("eff_1btag_350_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_350_ELE = new TH1D("eff_2btag_350_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_eff_gluetag_350_MU = new TH1D("eff_gluetag_350_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_350_MU = new TH1D("eff_0btag_350_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_350_MU = new TH1D("eff_1btag_350_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_350_MU = new TH1D("eff_2btag_350_MU", "", 1, 0., 1.);
+
 
   TH1D* h1_nEvents_fb_gluetag_400 = new TH1D("nEvents_fb_gluetag_400", "", 1, 0., 1.0001);
   TH1D* h1_nEvents_fb_0btag_400 = new TH1D("nEvents_fb_0btag_400", "", 1, 0., 1.0001);
@@ -151,6 +182,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_eff_0btag_400 = new TH1D("eff_0btag_400", "", 1, 0., 1.0001);
   TH1D* h1_eff_1btag_400 = new TH1D("eff_1btag_400", "", 1, 0., 1.0001);
   TH1D* h1_eff_2btag_400 = new TH1D("eff_2btag_400", "", 1, 0., 1.0001);
+
+  TH1D* h1_eff_gluetag_400_ELE = new TH1D("eff_gluetag_400_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_400_ELE = new TH1D("eff_0btag_400_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_400_ELE = new TH1D("eff_1btag_400_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_400_ELE = new TH1D("eff_2btag_400_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_eff_gluetag_400_MU = new TH1D("eff_gluetag_400_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_400_MU = new TH1D("eff_0btag_400_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_400_MU = new TH1D("eff_1btag_400_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_400_MU = new TH1D("eff_2btag_400_MU", "", 1, 0., 1.);
 
 
   TH1D* h1_nEvents_fb_gluetag_450 = new TH1D("nEvents_fb_gluetag_450", "", 1, 0., 1.0001);
@@ -173,6 +214,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_eff_1btag_450 = new TH1D("eff_1btag_450", "", 1, 0., 1.0001);
   TH1D* h1_eff_2btag_450 = new TH1D("eff_2btag_450", "", 1, 0., 1.0001);
 
+  TH1D* h1_eff_gluetag_450_ELE = new TH1D("eff_gluetag_450_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_450_ELE = new TH1D("eff_0btag_450_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_450_ELE = new TH1D("eff_1btag_450_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_450_ELE = new TH1D("eff_2btag_450_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_eff_gluetag_450_MU = new TH1D("eff_gluetag_450_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_450_MU = new TH1D("eff_0btag_450_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_450_MU = new TH1D("eff_1btag_450_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_450_MU = new TH1D("eff_2btag_450_MU", "", 1, 0., 1.);
+
 
   TH1D* h1_nEvents_fb_gluetag_500 = new TH1D("nEvents_fb_gluetag_500", "", 1, 0., 1.0001);
   TH1D* h1_nEvents_fb_0btag_500 = new TH1D("nEvents_fb_0btag_500", "", 1, 0., 1.0001);
@@ -194,6 +245,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_eff_1btag_500 = new TH1D("eff_1btag_500", "", 1, 0., 1.0001);
   TH1D* h1_eff_2btag_500 = new TH1D("eff_2btag_500", "", 1, 0., 1.0001);
 
+  TH1D* h1_eff_gluetag_500_ELE = new TH1D("eff_gluetag_500_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_500_ELE = new TH1D("eff_0btag_500_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_500_ELE = new TH1D("eff_1btag_500_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_500_ELE = new TH1D("eff_2btag_500_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_eff_gluetag_500_MU = new TH1D("eff_gluetag_500_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_500_MU = new TH1D("eff_0btag_500_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_500_MU = new TH1D("eff_1btag_500_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_500_MU = new TH1D("eff_2btag_500_MU", "", 1, 0., 1.);
+
 
   TH1D* h1_nEvents_fb_gluetag_600 = new TH1D("nEvents_fb_gluetag_600", "", 1, 0., 1.0001);
   TH1D* h1_nEvents_fb_0btag_600 = new TH1D("nEvents_fb_0btag_600", "", 1, 0., 1.0001);
@@ -214,6 +275,16 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_eff_0btag_600 = new TH1D("eff_0btag_600", "", 1, 0., 1.0001);
   TH1D* h1_eff_1btag_600 = new TH1D("eff_1btag_600", "", 1, 0., 1.0001);
   TH1D* h1_eff_2btag_600 = new TH1D("eff_2btag_600", "", 1, 0., 1.0001);
+
+  TH1D* h1_eff_gluetag_600_ELE = new TH1D("eff_gluetag_600_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_600_ELE = new TH1D("eff_0btag_600_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_600_ELE = new TH1D("eff_1btag_600_ELE", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_600_ELE = new TH1D("eff_2btag_600_ELE", "", 1, 0., 1.);
+
+  TH1D* h1_eff_gluetag_600_MU = new TH1D("eff_gluetag_600_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_0btag_600_MU = new TH1D("eff_0btag_600_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_1btag_600_MU = new TH1D("eff_1btag_600_MU", "", 1, 0., 1.);
+  TH1D* h1_eff_2btag_600_MU = new TH1D("eff_2btag_600_MU", "", 1, 0., 1.);
 
 
 
@@ -330,7 +401,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 //h1_nNeutralJetRecoil->Sumw2();
 
 
-  TH1D* h1_mZjj_all_presel = new TH1D("mZjj_all_presel", "", 100, 30., 430.);
+  TH1D* h1_mZjj_all_presel = new TH1D("mZjj_all_presel", "", 400, 30., 430.);
   h1_mZjj_all_presel->Sumw2();
 
   TH1D* h1_deltaRjj_all_presel = new TH1D("deltaRjj_all_presel", "", 18, 0.5, 5.);
@@ -449,7 +520,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodProd_MW500->Sumw2();
 
 
-  TH1D* h1_mZjj= new TH1D("mZjj", "", 100, 30., 430.);
+  TH1D* h1_mZjj= new TH1D("mZjj", "", 400, 30., 430.);
   h1_mZjj->Sumw2();
   TH1D* h1_mZjj_loChiSquareProb= new TH1D("mZjj_loChiSquareProb", "", 100, 30., 200.);
   h1_mZjj_loChiSquareProb->Sumw2();
@@ -1102,6 +1173,7 @@ ofstream ofs("run_event.txt");
 
     tree_->GetEntry(iEntry);
 
+    if( dataset_=="DATA_175pb" && run>163869 ) continue;
 
 
     if( eventWeight <= 0. ) eventWeight = 1.;
@@ -1383,8 +1455,8 @@ ofstream ofs("run_event.txt");
     //if( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) continue;
 
       // sideband logic:
-      if( diJet.M() < 60. || diJet.M() > 140. ) continue;
-      else if( foundSignalRegionMjj && ( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) ) continue;
+      if( foundSignalRegionMjj && ( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) ) continue;
+
 
       if( diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ ) isSignalRegionMjj = true;
 
@@ -1564,6 +1636,8 @@ ofstream ofs("run_event.txt");
       mZZ = ZZ_kinfit.M();
 
       h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
+
+      if( Zjj_nokinfit.M()<60. || Zjj_nokinfit.M()>130. ) continue;
       
       h2_mZjj_vs_mZZ->Fill( mZZ, Zjj_nokinfit.M(), eventWeight );
       h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M(), eventWeight );
@@ -2619,6 +2693,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_1btag_250->SetBinContent(1,eff_1btag_250);
   h1_eff_2btag_250->SetBinContent(1,eff_2btag_250);
 
+  h1_eff_gluetag_250_ELE->SetBinContent(1,eff_gluetag_250_ELE);
+  h1_eff_0btag_250_ELE->SetBinContent(1,eff_0btag_250_ELE);
+  h1_eff_1btag_250_ELE->SetBinContent(1,eff_1btag_250_ELE);
+  h1_eff_2btag_250_ELE->SetBinContent(1,eff_2btag_250_ELE);
+
+  h1_eff_gluetag_250_MU->SetBinContent(1,eff_gluetag_250_MU);
+  h1_eff_0btag_250_MU->SetBinContent(1,eff_0btag_250_MU);
+  h1_eff_1btag_250_MU->SetBinContent(1,eff_1btag_250_MU);
+  h1_eff_2btag_250_MU->SetBinContent(1,eff_2btag_250_MU);
+
 
   h1_nEvents_fb_gluetag_300->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_300);
   h1_nEvents_fb_0btag_300->SetBinContent(1,1000.*nEventsPassed_fb_0btag_300);
@@ -2639,6 +2723,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_0btag_300->SetBinContent(1,eff_0btag_300);
   h1_eff_1btag_300->SetBinContent(1,eff_1btag_300);
   h1_eff_2btag_300->SetBinContent(1,eff_2btag_300);
+
+  h1_eff_gluetag_300_ELE->SetBinContent(1,eff_gluetag_300_ELE);
+  h1_eff_0btag_300_ELE->SetBinContent(1,eff_0btag_300_ELE);
+  h1_eff_1btag_300_ELE->SetBinContent(1,eff_1btag_300_ELE);
+  h1_eff_2btag_300_ELE->SetBinContent(1,eff_2btag_300_ELE);
+
+  h1_eff_gluetag_300_MU->SetBinContent(1,eff_gluetag_300_MU);
+  h1_eff_0btag_300_MU->SetBinContent(1,eff_0btag_300_MU);
+  h1_eff_1btag_300_MU->SetBinContent(1,eff_1btag_300_MU);
+  h1_eff_2btag_300_MU->SetBinContent(1,eff_2btag_300_MU);
 
 
   h1_nEvents_fb_gluetag_350->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_350);
@@ -2661,6 +2755,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_1btag_350->SetBinContent(1,eff_1btag_350);
   h1_eff_2btag_350->SetBinContent(1,eff_2btag_350);
 
+  h1_eff_gluetag_350_ELE->SetBinContent(1,eff_gluetag_350_ELE);
+  h1_eff_0btag_350_ELE->SetBinContent(1,eff_0btag_350_ELE);
+  h1_eff_1btag_350_ELE->SetBinContent(1,eff_1btag_350_ELE);
+  h1_eff_2btag_350_ELE->SetBinContent(1,eff_2btag_350_ELE);
+
+  h1_eff_gluetag_350_MU->SetBinContent(1,eff_gluetag_350_MU);
+  h1_eff_0btag_350_MU->SetBinContent(1,eff_0btag_350_MU);
+  h1_eff_1btag_350_MU->SetBinContent(1,eff_1btag_350_MU);
+  h1_eff_2btag_350_MU->SetBinContent(1,eff_2btag_350_MU);
+
 
   h1_nEvents_fb_gluetag_400->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_400);
   h1_nEvents_fb_0btag_400->SetBinContent(1,1000.*nEventsPassed_fb_0btag_400);
@@ -2681,6 +2785,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_0btag_400->SetBinContent(1,eff_0btag_400);
   h1_eff_1btag_400->SetBinContent(1,eff_1btag_400);
   h1_eff_2btag_400->SetBinContent(1,eff_2btag_400);
+
+  h1_eff_gluetag_400_ELE->SetBinContent(1,eff_gluetag_400_ELE);
+  h1_eff_0btag_400_ELE->SetBinContent(1,eff_0btag_400_ELE);
+  h1_eff_1btag_400_ELE->SetBinContent(1,eff_1btag_400_ELE);
+  h1_eff_2btag_400_ELE->SetBinContent(1,eff_2btag_400_ELE);
+
+  h1_eff_gluetag_400_MU->SetBinContent(1,eff_gluetag_400_MU);
+  h1_eff_0btag_400_MU->SetBinContent(1,eff_0btag_400_MU);
+  h1_eff_1btag_400_MU->SetBinContent(1,eff_1btag_400_MU);
+  h1_eff_2btag_400_MU->SetBinContent(1,eff_2btag_400_MU);
 
 
   h1_nEvents_fb_gluetag_450->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_450);
@@ -2703,6 +2817,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_1btag_450->SetBinContent(1,eff_1btag_450);
   h1_eff_2btag_450->SetBinContent(1,eff_2btag_450);
 
+  h1_eff_gluetag_450_ELE->SetBinContent(1,eff_gluetag_450_ELE);
+  h1_eff_0btag_450_ELE->SetBinContent(1,eff_0btag_450_ELE);
+  h1_eff_1btag_450_ELE->SetBinContent(1,eff_1btag_450_ELE);
+  h1_eff_2btag_450_ELE->SetBinContent(1,eff_2btag_450_ELE);
+
+  h1_eff_gluetag_450_MU->SetBinContent(1,eff_gluetag_450_MU);
+  h1_eff_0btag_450_MU->SetBinContent(1,eff_0btag_450_MU);
+  h1_eff_1btag_450_MU->SetBinContent(1,eff_1btag_450_MU);
+  h1_eff_2btag_450_MU->SetBinContent(1,eff_2btag_450_MU);
+
 
   h1_nEvents_fb_gluetag_500->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_500);
   h1_nEvents_fb_0btag_500->SetBinContent(1,1000.*nEventsPassed_fb_0btag_500);
@@ -2724,6 +2848,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_1btag_500->SetBinContent(1,eff_1btag_500);
   h1_eff_2btag_500->SetBinContent(1,eff_2btag_500);
 
+  h1_eff_gluetag_500_ELE->SetBinContent(1,eff_gluetag_500_ELE);
+  h1_eff_0btag_500_ELE->SetBinContent(1,eff_0btag_500_ELE);
+  h1_eff_1btag_500_ELE->SetBinContent(1,eff_1btag_500_ELE);
+  h1_eff_2btag_500_ELE->SetBinContent(1,eff_2btag_500_ELE);
+
+  h1_eff_gluetag_500_MU->SetBinContent(1,eff_gluetag_500_MU);
+  h1_eff_0btag_500_MU->SetBinContent(1,eff_0btag_500_MU);
+  h1_eff_1btag_500_MU->SetBinContent(1,eff_1btag_500_MU);
+  h1_eff_2btag_500_MU->SetBinContent(1,eff_2btag_500_MU);
+
 
   h1_nEvents_fb_gluetag_600->SetBinContent(1,1000.*nEventsPassed_fb_gluetag_600);
   h1_nEvents_fb_0btag_600->SetBinContent(1,1000.*nEventsPassed_fb_0btag_600);
@@ -2744,6 +2878,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_0btag_600->SetBinContent(1,eff_0btag_600);
   h1_eff_1btag_600->SetBinContent(1,eff_1btag_600);
   h1_eff_2btag_600->SetBinContent(1,eff_2btag_600);
+
+  h1_eff_gluetag_600_ELE->SetBinContent(1,eff_gluetag_600_ELE);
+  h1_eff_0btag_600_ELE->SetBinContent(1,eff_0btag_600_ELE);
+  h1_eff_1btag_600_ELE->SetBinContent(1,eff_1btag_600_ELE);
+  h1_eff_2btag_600_ELE->SetBinContent(1,eff_2btag_600_ELE);
+
+  h1_eff_gluetag_600_MU->SetBinContent(1,eff_gluetag_600_MU);
+  h1_eff_0btag_600_MU->SetBinContent(1,eff_0btag_600_MU);
+  h1_eff_1btag_600_MU->SetBinContent(1,eff_1btag_600_MU);
+  h1_eff_2btag_600_MU->SetBinContent(1,eff_2btag_600_MU);
 
 
 
@@ -2814,6 +2958,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_1btag_250->Write();
   h1_eff_2btag_250->Write();
 
+  h1_eff_gluetag_250_ELE->Write();
+  h1_eff_0btag_250_ELE->Write();
+  h1_eff_1btag_250_ELE->Write();
+  h1_eff_2btag_250_ELE->Write();
+
+  h1_eff_gluetag_250_MU->Write();
+  h1_eff_0btag_250_MU->Write();
+  h1_eff_1btag_250_MU->Write();
+  h1_eff_2btag_250_MU->Write();
+
   h1_nEvents_fb_gluetag_300->Write();
   h1_nEvents_fb_0btag_300->Write();
   h1_nEvents_fb_1btag_300->Write();
@@ -2833,6 +2987,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_0btag_300->Write();
   h1_eff_1btag_300->Write();
   h1_eff_2btag_300->Write();
+
+  h1_eff_gluetag_300_ELE->Write();
+  h1_eff_0btag_300_ELE->Write();
+  h1_eff_1btag_300_ELE->Write();
+  h1_eff_2btag_300_ELE->Write();
+
+  h1_eff_gluetag_300_MU->Write();
+  h1_eff_0btag_300_MU->Write();
+  h1_eff_1btag_300_MU->Write();
+  h1_eff_2btag_300_MU->Write();
 
   h1_nEvents_fb_gluetag_350->Write();
   h1_nEvents_fb_0btag_350->Write();
@@ -2854,6 +3018,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_1btag_350->Write();
   h1_eff_2btag_350->Write();
 
+  h1_eff_gluetag_350_ELE->Write();
+  h1_eff_0btag_350_ELE->Write();
+  h1_eff_1btag_350_ELE->Write();
+  h1_eff_2btag_350_ELE->Write();
+
+  h1_eff_gluetag_350_MU->Write();
+  h1_eff_0btag_350_MU->Write();
+  h1_eff_1btag_350_MU->Write();
+  h1_eff_2btag_350_MU->Write();
+
   h1_nEvents_fb_gluetag_400->Write();
   h1_nEvents_fb_0btag_400->Write();
   h1_nEvents_fb_1btag_400->Write();
@@ -2873,6 +3047,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_0btag_400->Write();
   h1_eff_1btag_400->Write();
   h1_eff_2btag_400->Write();
+
+  h1_eff_gluetag_400_ELE->Write();
+  h1_eff_0btag_400_ELE->Write();
+  h1_eff_1btag_400_ELE->Write();
+  h1_eff_2btag_400_ELE->Write();
+
+  h1_eff_gluetag_400_MU->Write();
+  h1_eff_0btag_400_MU->Write();
+  h1_eff_1btag_400_MU->Write();
+  h1_eff_2btag_400_MU->Write();
 
   h1_nEvents_fb_gluetag_450->Write();
   h1_nEvents_fb_0btag_450->Write();
@@ -2894,6 +3078,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_1btag_450->Write();
   h1_eff_2btag_450->Write();
 
+  h1_eff_gluetag_450_ELE->Write();
+  h1_eff_0btag_450_ELE->Write();
+  h1_eff_1btag_450_ELE->Write();
+  h1_eff_2btag_450_ELE->Write();
+
+  h1_eff_gluetag_450_MU->Write();
+  h1_eff_0btag_450_MU->Write();
+  h1_eff_1btag_450_MU->Write();
+  h1_eff_2btag_450_MU->Write();
+
   h1_nEvents_fb_gluetag_500->Write();
   h1_nEvents_fb_0btag_500->Write();
   h1_nEvents_fb_1btag_500->Write();
@@ -2914,6 +3108,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_1btag_500->Write();
   h1_eff_2btag_500->Write();
 
+  h1_eff_gluetag_500_ELE->Write();
+  h1_eff_0btag_500_ELE->Write();
+  h1_eff_1btag_500_ELE->Write();
+  h1_eff_2btag_500_ELE->Write();
+
+  h1_eff_gluetag_500_MU->Write();
+  h1_eff_0btag_500_MU->Write();
+  h1_eff_1btag_500_MU->Write();
+  h1_eff_2btag_500_MU->Write();
+
   h1_nEvents_fb_gluetag_600->Write();
   h1_nEvents_fb_0btag_600->Write();
   h1_nEvents_fb_1btag_600->Write();
@@ -2933,6 +3137,16 @@ ofs << run << " " << event << std::endl;
   h1_eff_0btag_600->Write();
   h1_eff_1btag_600->Write();
   h1_eff_2btag_600->Write();
+
+  h1_eff_gluetag_600_ELE->Write();
+  h1_eff_0btag_600_ELE->Write();
+  h1_eff_1btag_600_ELE->Write();
+  h1_eff_2btag_600_ELE->Write();
+
+  h1_eff_gluetag_600_MU->Write();
+  h1_eff_0btag_600_MU->Write();
+  h1_eff_1btag_600_MU->Write();
+  h1_eff_2btag_600_MU->Write();
 
 
   h1_run->Write();
