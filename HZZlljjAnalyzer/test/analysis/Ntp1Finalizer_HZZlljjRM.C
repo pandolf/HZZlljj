@@ -14,13 +14,13 @@
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
 #include "KinematicFit/DiJetKinFitter.h"
 
-#include "/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/emanuele/CommonTools/include/PUWeight.h"
+#include "/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/emanuele/CommonTools/include/PUWeight.h"
 
 
 
 
 bool ANALYZE_SIDEBANDS_=true;
-
+bool USE_MC_MASS=false;
 
 
 //HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
@@ -47,6 +47,7 @@ Ntp1Finalizer_HZZlljjRM::Ntp1Finalizer_HZZlljjRM( const std::string& dataset, co
   setSelectionType(selectionType);
 
   std::string fullFlags = selectionType_ + "_" + leptType_;
+  if( USE_MC_MASS ) fullFlags += "_MCMASS";
   this->set_flags(fullFlags); //this is for the outfile name
 
 }
@@ -364,6 +365,12 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_ptJet1_prekin->Sumw2();
   TH1D* h1_ptJet2_prekin = new TH1D("ptJet2_prekin", "", 100, 30., 230.);
   h1_ptJet2_prekin->Sumw2();
+
+  TH1D* h1_etaJet1 = new TH1D("etaJet1", "", 100, -2.4, 2.4);
+  h1_etaJet1->Sumw2();
+  TH1D* h1_etaJet2 = new TH1D("etaJet2", "", 100, -2.4, 2.4);
+  h1_etaJet2->Sumw2();
+
   TH1D* h1_eElectronsJet1 = new TH1D("eElectronsJet1", "", 60, 0., 1.0001);
   h1_eElectronsJet1->Sumw2();
   TH1D* h1_eElectronsJet2 = new TH1D("eElectronsJet2", "", 60, 0., 1.0001);
@@ -388,6 +395,11 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_ptZreso_afterKin = new TH1D("ptZreso_afterKin", "", 100, -1., 1.);
   h1_ptZreso_afterKin->Sumw2();
 
+  TH1D* h1_mHreso_beforeKin = new TH1D("mHreso_beforeKin", "", 100, -1., 1.);
+  h1_mHreso_beforeKin->Sumw2();
+  TH1D* h1_mHreso_afterKin = new TH1D("mHreso_afterKin", "", 100, -1., 1.);
+  h1_mHreso_afterKin->Sumw2();
+
 
 //TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 27, 30., 400.);
 //h1_ptJetRecoil->Sumw2();
@@ -400,6 +412,9 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 //TH1D* h1_nNeutralJetRecoil = new TH1D("nNeutralJetRecoil", "", 41, -0.5, 40.5);
 //h1_nNeutralJetRecoil->Sumw2();
 
+
+  TH1D* h1_mZjjMC = new TH1D("mZjjMC", "", 400, 30., 430.);
+  h1_mZjjMC->Sumw2();
 
   TH1D* h1_mZjj_all_presel = new TH1D("mZjj_all_presel", "", 400, 30., 430.);
   h1_mZjj_all_presel->Sumw2();
@@ -522,6 +537,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   TH1D* h1_mZjj= new TH1D("mZjj", "", 400, 30., 430.);
   h1_mZjj->Sumw2();
+  TH1D* h1_mZjj_MU = new TH1D("mZjj_MU", "", 400, 30., 430.);
+  h1_mZjj_MU->Sumw2();
+  TH1D* h1_mZjj_ELE= new TH1D("mZjj_ELE", "", 400, 30., 430.);
+  h1_mZjj_ELE->Sumw2();
   TH1D* h1_mZjj_loChiSquareProb= new TH1D("mZjj_loChiSquareProb", "", 100, 30., 200.);
   h1_mZjj_loChiSquareProb->Sumw2();
   TH1D* h1_mZjj_hiChiSquareProb= new TH1D("mZjj_hiChiSquareProb", "", 100, 30., 200.);
@@ -576,6 +595,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   TH1D* h1_helicityLD = new TH1D("helicityLD", "", 60, 0., 1.);
   h1_helicityLD->Sumw2();
+  TH1D* h1_helicityLD_nokinfit = new TH1D("helicityLD_nokinfit", "", 60, 0., 1.);
+  h1_helicityLD_nokinfit->Sumw2();
   TH1D* h1_helicityLD_sidebands = new TH1D("helicityLD_sidebands", "", 60, 0., 1.);
   h1_helicityLD_sidebands->Sumw2();
   TH1D* h1_helicityLD_MW200 = new TH1D("helicityLD_MW200", "", 100, 0., 1.);
@@ -1137,11 +1158,17 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", Zmass );
   HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
   float helicityLD_selected = -1.;
-  float helicityLD_kinfit_selected = -1.;
+  float helicityLD_nokinfit_selected = -1.;
   HelicityLikelihoodDiscriminant::HelicityAngles hangles_selected;
 
   BTagSFUtil* btsfutil = new BTagSFUtil(13);
   PUWeight* fPUWeight = new PUWeight();
+  TString dataset_tstr(dataset_);
+  if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") ) {
+    TFile* filePUMC = TFile::Open("PUWeight_Summer11-PU_S4_START42_V11.root");
+    TH1F* h1MC = (TH1F*)filePUMC->Get("pileup");
+    fPUWeight->SetMCHistogram(h1MC);
+  }
 
   int maxBTag_found = -1;
   float mZZ, mZjj;
@@ -1184,11 +1211,11 @@ ofstream ofs("run_event.txt");
     }
 
 
-  //// BUG FIX in Z->ll BR in Spring11 Alpgen Z+jets:
-  //if( dataset_=="ZJets_alpgen_TuneZ2_Spring11_v2" ) {
-  //  if( leptType==0 )      eventWeight = eventWeight_Zmm;
-  //  else if( leptType==1 ) eventWeight = eventWeight_Zee;
-  //}
+    // BUG FIX in Z->ll BR in Spring11 Alpgen Z+jets:
+    if( dataset_=="ZJets_alpgen_TuneZ2_Spring11_v2" ) {
+      if( leptType==0 )      eventWeight = eventWeight_Zmm;
+      else if( leptType==1 ) eventWeight = eventWeight_Zee;
+    }
 
 
 
@@ -1504,6 +1531,43 @@ ofstream ofs("run_event.txt");
       // KINEMATIC FIT:
       // --------------
 
+  
+      if( USE_MC_MASS ) {
+        TLorentzVector ZjjMC;
+        TLorentzVector ZllMC;
+        int iZllMC=-1;
+        // first look for ZllMC
+        float bestDeltaRToZll=9999.;
+        for( unsigned iPart=0; iPart<nPart; ++iPart ) {
+          if( pdgIdPart[iPart]!=23 ) continue;
+          TLorentzVector thisZMC;
+          thisZMC.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+          if( thisZMC.DeltaR(diLepton) < bestDeltaRToZll ) {
+            ZllMC=thisZMC;
+            iZllMC = iPart;
+            bestDeltaRToZll=thisZMC.DeltaR(diLepton);
+          }
+        }
+
+        if( iZllMC>=0 ) {
+
+          bool foundZjjMC=false;
+          for( unsigned iPart=0; iPart<nPart && !foundZjjMC; ++iPart ) {
+            if( pdgIdPart[iPart]==23 && iPart!=iZllMC ) {
+              ZjjMC.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+              foundZjjMC=true;
+            }
+          }
+
+          if( foundZjjMC ) {
+            h1_mZjjMC->Fill( ZjjMC.M(), eventWeight );
+            fitter_jets->set_mass(ZjjMC.M());
+          }
+
+        } // if found ZllMC
+
+      } //if use mc z mass
+
       std::pair<TLorentzVector,TLorentzVector> jets_kinfit = fitter_jets->fit(jet1, jet2);
       TLorentzVector jet1_kinfit(jets_kinfit.first);
       TLorentzVector jet2_kinfit(jets_kinfit.second);
@@ -1521,6 +1585,10 @@ ofstream ofs("run_event.txt");
       // update 4-vector to kinfit results:
       jet1.SetPtEtaPhiE( jet1_kinfit.Pt(), jet1_kinfit.Eta(), jet1_kinfit.Phi(), jet1_kinfit.Energy() );
       jet2.SetPtEtaPhiE( jet2_kinfit.Pt(), jet2_kinfit.Eta(), jet2_kinfit.Phi(), jet2_kinfit.Energy() );
+
+      TLorentzVector jet1_nokinfit, jet2_nokinfit;
+      jet1_nokinfit.SetPtEtaPhiE( jet1.pt_preKinFit, jet1.eta_preKinFit, jet1.phi_preKinFit, jet1.e_preKinFit );
+      jet2_nokinfit.SetPtEtaPhiE( jet2.pt_preKinFit, jet2.eta_preKinFit, jet2.phi_preKinFit, jet2.e_preKinFit );
 
       TLorentzVector diJet_kinfit = jet1_kinfit + jet2_kinfit;
       TLorentzVector ZZ_kinfit_tmp = diJet_kinfit + diLepton;
@@ -1553,6 +1621,15 @@ ofstream ofs("run_event.txt");
       double bProb=LD->getBkgdProbability();
       double helicityLD=sProb/(sProb+bProb);
     
+      HelicityLikelihoodDiscriminant::HelicityAngles hangles_nokinfit;
+      if( chargeLept1<0 ) hangles_nokinfit = LD->computeHelicityAngles(lept1, lept2, jet1_nokinfit, jet2_nokinfit);
+      else                hangles_nokinfit = LD->computeHelicityAngles(lept2, lept1, jet1_nokinfit, jet2_nokinfit);
+    
+      LD->setMeasurables(hangles_nokinfit);
+      double sProb_nokinfit=LD->getSignalProbability();
+      double bProb_nokinfit=LD->getBkgdProbability();
+      double helicityLD_nokinfit=sProb_nokinfit/(sProb_nokinfit+bProb_nokinfit);
+    
       float helicityLD_thresh = (nBTags>=0) ? this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), nBTags) : this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), 0);
 
 //if( event==13291 ) std::cout << "helicityLD: " << helicityLD << std::endl;
@@ -1583,6 +1660,7 @@ ofstream ofs("run_event.txt");
         jet2_selected = jet2; 
         hangles_selected = hangles;
         helicityLD_selected = helicityLD;
+        helicityLD_nokinfit_selected = helicityLD_nokinfit;
         foundJets += 1;
         maxBTag_found = nBTags;
 
@@ -1597,6 +1675,7 @@ ofstream ofs("run_event.txt");
           jet2_selected = jet2;
           hangles_selected = hangles;
           helicityLD_selected = helicityLD;
+          helicityLD_nokinfit_selected = helicityLD_nokinfit;
           maxBTag_found = nBTags;
         }
 
@@ -1636,6 +1715,8 @@ ofstream ofs("run_event.txt");
       mZZ = ZZ_kinfit.M();
 
       h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
+      if( leptType==0 ) h1_mZjj_MU->Fill( Zjj_nokinfit.M(), eventWeight);
+      if( leptType==1 ) h1_mZjj_ELE->Fill( Zjj_nokinfit.M(), eventWeight);
 
       if( Zjj_nokinfit.M()<60. || Zjj_nokinfit.M()>130. ) continue;
       
@@ -1985,6 +2066,8 @@ ofs << run << " " << event << std::endl;
     isSidebands = false;
 
     h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
+    if( leptType==0 ) h1_mZjj_MU->Fill( Zjj_nokinfit.M(), eventWeight);
+    if( leptType==1 ) h1_mZjj_ELE->Fill( Zjj_nokinfit.M(), eventWeight);
 
     h2_mZjj_vs_mZZ->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
     if( maxBTag_found==0 ) h2_mZjj_vs_mZZ_0btag->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
@@ -2359,6 +2442,21 @@ ofs << run << " " << event << std::endl;
     h1_ptZreso_afterKin->Fill( ptZreso_after, eventWeight);
 
 
+    TLorentzVector matchedH;
+    bool foundH=false;
+    for( unsigned iPart=0; iPart<nPart && !foundH; ++iPart ) {
+      if( pdgIdPart[iPart]!=25 && pdgIdPart[iPart]!=39 ) continue;
+      matchedH.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+      foundH=true;
+    }
+
+    if( foundH ) {
+      float mHreso_beforeKin = (ZZ_nokinfit.M()-matchedH.M())/matchedH.M();
+      float mHreso_afterKin = (ZZ_kinfit.M()-matchedH.M())/matchedH.M();
+      h1_mHreso_beforeKin->Fill(mHreso_beforeKin, eventWeight);
+      h1_mHreso_afterKin->Fill(mHreso_afterKin, eventWeight);
+    }
+
     //compare kinfit to Zmass constraint
     TLorentzVector Zjj_constr;
     Zjj_constr.SetXYZM( Zjj_nokinfit.Px(), Zjj_nokinfit.Py(), Zjj_nokinfit.Pz(), Zmass);
@@ -2402,11 +2500,15 @@ ofs << run << " " << event << std::endl;
       h1_ptJet2->Fill( jet2_selected.Pt(), eventWeight );
       h1_ptJet1_prekin->Fill( jet1_nokinfit.Pt(), eventWeight );
       h1_ptJet2_prekin->Fill( jet2_nokinfit.Pt(), eventWeight );
+      h1_etaJet1->Fill( jet1_selected.Eta(), eventWeight );
+      h1_etaJet2->Fill( jet2_selected.Eta(), eventWeight );
     } else {
       h1_ptJet1->Fill( jet2_selected.Pt(), eventWeight );
       h1_ptJet2->Fill( jet1_selected.Pt(), eventWeight );
       h1_ptJet1_prekin->Fill( jet2_nokinfit.Pt(), eventWeight );
       h1_ptJet2_prekin->Fill( jet1_nokinfit.Pt(), eventWeight );
+      h1_etaJet1->Fill( jet2_selected.Eta(), eventWeight );
+      h1_etaJet2->Fill( jet1_selected.Eta(), eventWeight );
     }
     h1_eMuonsJet1->Fill( jet1_selected.muonEnergyFraction, eventWeight );
     h1_eMuonsJet2->Fill( jet2_selected.muonEnergyFraction, eventWeight );
@@ -2508,6 +2610,7 @@ ofs << run << " " << event << std::endl;
     h1_etaZZ_kinfit->Fill( ZZ_kinfit.Eta(), eventWeight );
 
     h1_helicityLD->Fill( helicityLD_selected, eventWeight );
+    h1_helicityLD_nokinfit->Fill( helicityLD_nokinfit_selected, eventWeight );
 
     h1_cosThetaStar->Fill(hangles_selected.helCosThetaStar, eventWeight);
     h1_cosTheta1->Fill(hangles_selected.helCosTheta1, eventWeight);
@@ -3181,6 +3284,9 @@ ofs << run << " " << event << std::endl;
   h1_ptZreso_beforeKin->Write();
   h1_ptZreso_afterKin->Write();
 
+  h1_mHreso_beforeKin->Write();
+  h1_mHreso_afterKin->Write();
+
   h1_deltaRll_presel->Write();
   h1_deltaRjj_all_presel->Write();
 
@@ -3201,7 +3307,11 @@ ofs << run << " " << event << std::endl;
   h1_mZee_presel->Write();
   h1_mZee_presel_0jets->Write();
 
+  h1_mZjjMC->Write();
+
   h1_mZjj->Write();
+  h1_mZjj_MU->Write();
+  h1_mZjj_ELE->Write();
   h1_mZjj_loChiSquareProb->Write();
   h1_mZjj_hiChiSquareProb->Write();
   h1_mZjj_all_presel->Write();
@@ -3233,6 +3343,7 @@ ofs << run << " " << event << std::endl;
   h1_kinfit_chiSquareProb->Write();
   
   h1_helicityLD->Write();
+  h1_helicityLD_nokinfit->Write();
   h1_helicityLD_sidebands->Write();
   h1_helicityLD_MW200->Write();
   h1_helicityLD_MW250->Write();
@@ -3250,23 +3361,32 @@ ofs << run << " " << event << std::endl;
   h1_mZZ_ZjjMassConstr_hiMass->Write();
   h1_mZZ_kinfit_hiMass_all->Write();
   h1_mZZ_kinfit_hiMass_gluetag->Write();
-  h1_mZZ_kinfit_hiMass_sidebands_gluetag->Write();
   h1_mZZ_kinfit_hiMass_gluetag_ELE->Write();
   h1_mZZ_kinfit_hiMass_gluetag_MU->Write();
   h1_mZZ_kinfit_hiMass_0btag->Write();
-  h1_mZZ_kinfit_hiMass_sidebands_0btag->Write();
   h1_mZZ_kinfit_hiMass_0btag_ELE->Write();
   h1_mZZ_kinfit_hiMass_0btag_MU->Write();
   h1_mZZ_kinfit_hiMass_1btag->Write();
-  h1_mZZ_kinfit_hiMass_sidebands_1btag->Write();
   h1_mZZ_kinfit_hiMass_1btag_ELE->Write();
   h1_mZZ_kinfit_hiMass_1btag_MU->Write();
   h1_mZZ_kinfit_hiMass_2btag->Write();
-  h1_mZZ_kinfit_hiMass_sidebands_2btag->Write();
   h1_mZZ_kinfit_hiMass_2btag_ELE->Write();
   h1_mZZ_kinfit_hiMass_2btag_MU->Write();
   h1_mZZ_kinfit_hiMass_hiQG->Write();
   h1_mZZ_kinfit_hiMass_loQG->Write();
+
+  h1_mZZ_kinfit_hiMass_sidebands_gluetag->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_0btag->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_0btag_MU->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_1btag->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_1btag_MU->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_2btag->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE->Write();
+  h1_mZZ_kinfit_hiMass_sidebands_2btag_MU->Write();
 
   h1_deltaRZmatching->Write();
   h1_mZZ_kinfit_hiMass_0btag_matched->Write();
@@ -3279,6 +3399,7 @@ ofs << run << " " << event << std::endl;
   h1_deltaR_part1->Write();
   h1_ptJet1->Write();
   h1_ptJet1_prekin->Write();
+  h1_etaJet1->Write();
   h1_eElectronsJet1->Write();
   h1_eMuonsJet1->Write();
   h1_partFlavorJet1->Write();
@@ -3290,6 +3411,7 @@ ofs << run << " " << event << std::endl;
   h1_deltaR_part2->Write();
   h1_ptJet2->Write();
   h1_ptJet2_prekin->Write();
+  h1_etaJet2->Write();
   h1_eElectronsJet2->Write();
   h1_eMuonsJet2->Write();
   h1_partFlavorJet2->Write();
