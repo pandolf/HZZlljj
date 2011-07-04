@@ -56,6 +56,8 @@ class AnalysisJet : public TLorentzVector {
   float phiGen;
   float eGen;
 
+  //btags:
+  float trackCountingHighEffBJetTag;
 };
 
 
@@ -69,12 +71,16 @@ Ntp1Analyzer_HWWlvjj::Ntp1Analyzer_HWWlvjj( const std::string& dataset, const st
 void Ntp1Analyzer_HWWlvjj::CreateOutputFile() {
 
   Ntp1Analyzer::CreateOutputFile();
-  
+
+
+
   reducedTree_->Branch("run",&run_,"run_/I");
   reducedTree_->Branch("LS",&LS_,"LS_/I");
   reducedTree_->Branch("event",&event_,"event_/I");
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
+  reducedTree_->Branch("rhoPF",&rhoPF_,"rhoPF_/F");
+
 
 //// triggers:
 //reducedTree_->Branch("HLT_Mu11", &HLT_Mu11_, "HLT_Mu11_/O");
@@ -101,6 +107,16 @@ void Ntp1Analyzer_HWWlvjj::CreateOutputFile() {
   reducedTree_->Branch("etaHiggsMC",  &etaHiggsMC_,  "etaHiggsMC_/F");
   reducedTree_->Branch("phiHiggsMC",  &phiHiggsMC_,  "phiHiggsMC_/F");
 
+  reducedTree_->Branch("eQuark1",  &eQuark1_,  "eQuark1_/F");
+  reducedTree_->Branch("ptQuark1",  &ptQuark1_,  "ptQuark1_/F");
+  reducedTree_->Branch("etaQuark1",  &etaQuark1_,  "etaQuark1_/F");
+  reducedTree_->Branch("phiQuark1",  &phiQuark1_,  "phiQuark1_/F");
+
+  reducedTree_->Branch("eQuark2",  &eQuark2_,  "eQuark2_/F");
+  reducedTree_->Branch("ptQuark2",  &ptQuark2_,  "ptQuark2_/F");
+  reducedTree_->Branch("etaQuark2",  &etaQuark2_,  "etaQuark2_/F");
+  reducedTree_->Branch("phiQuark2",  &phiQuark2_,  "phiQuark2_/F");
+
   reducedTree_->Branch("eLept",  &eLept_,  "eLept_/F");
   reducedTree_->Branch("ptLept",  &ptLept_,  "ptLept_/F");
   reducedTree_->Branch("etaLept",  &etaLept_,  "etaLept_/F");
@@ -117,6 +133,9 @@ void Ntp1Analyzer_HWWlvjj::CreateOutputFile() {
   reducedTree_->Branch("phiNeuMC",  &phiNeuMC_,  "phiNeuMC_/F");
 
   reducedTree_->Branch("nPairs", &nPairs_, "nPairs_/I");
+
+  reducedTree_->Branch("trackCountingHighEffBJetTagJet1", trackCountingHighEffBJetTagJet1_, "trackCountingHighEffBJetTagJet1_[nPairs_]/F");
+  reducedTree_->Branch("trackCountingHighEffBJetTagJet2", trackCountingHighEffBJetTagJet2_, "trackCountingHighEffBJetTagJet2[nPairs_]/F");
 
   reducedTree_->Branch("iJet1",  iJet1_,  "iJet1_[nPairs_]/I");
   reducedTree_->Branch("eJet1",  eJet1_,  "eJet1_[nPairs_]/F");
@@ -220,6 +239,7 @@ void Ntp1Analyzer_HWWlvjj::CreateOutputFile() {
   int nBins_eff = 20;
   float ptMin_eff = 10.;
   float ptMax_eff = 150.;
+
   h1_nEvents_vs_ptEle = new TH1F("nEvents_vs_ptEle", "", nBins_eff, ptMin_eff, ptMax_eff);
   h1_nEvents_vs_ptMuon = new TH1F("nEvents_vs_ptMuon", "", nBins_eff, ptMin_eff, ptMax_eff);
   h1_passed_vs_ptEle = new TH1F("passed_vs_ptEle", "", nBins_eff, ptMin_eff, ptMax_eff);
@@ -241,11 +261,21 @@ void Ntp1Analyzer_HWWlvjj::CreateOutputFile() {
 //h1_deltaRqq = new TH1F("deltaRqq", "", 50, 0., 3.);
 //h1_deltaRqq = new TH1F("deltaRqq", "", 50, 0., 3.);
 
-} 
+  h1_Cont_inclusive = new TH1F("Cont_inclusive", "", 1, 0., 1.);
+  h1_Cont_PV = new TH1F("Cont_PV", "", 1, 0., 1.);
+  h1_Cont_TightMu = new TH1F("Cont_TightMu", "", 1, 0., 1.);
+  h1_Cont_TightEle = new TH1F("Cont_TightEle", "", 1, 0., 1.);
+  h1_Cont_VetoMU = new TH1F("Cont_VetoMU", "", 1, 0., 1.);
+  h1_Cont_VetoELE = new TH1F("Cont_VetoELE", "", 1, 0., 1.);
+  h1_Cont_JetsELE = new TH1F("Cont_JetsELE", "", 1, 0., 1.);
+  h1_Cont_JetsMU = new TH1F("Cont_JetsMU", "", 1, 0., 1.);
 
+} 
+ 
 Ntp1Analyzer_HWWlvjj::~Ntp1Analyzer_HWWlvjj() {
 
   outfile_->cd();
+
   h1_nEvents_vs_ptEle->Write();
   h1_nEvents_vs_ptMuon->Write();
   h1_passed_vs_ptEle->Write();
@@ -266,8 +296,17 @@ Ntp1Analyzer_HWWlvjj::~Ntp1Analyzer_HWWlvjj() {
 //h1_pdgIdParton2->Write();
 //h1_ptHadronicW->Write();
 //h1_deltaRqq->Write(); 
-}
 
+  h1_Cont_inclusive->Write();
+  h1_Cont_PV->Write();
+  h1_Cont_TightMu->Write();
+  h1_Cont_TightEle->Write();
+  h1_Cont_VetoMU->Write();
+  h1_Cont_VetoELE->Write();
+  h1_Cont_JetsELE->Write();
+  h1_Cont_JetsMU->Write();
+
+}
 
 void Ntp1Analyzer_HWWlvjj::Loop(){
 
@@ -282,7 +321,10 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 
    Long64_t nbytes = 0, nb = 0;
 
+
    TRandom3 rand;
+   float Cont_inclusive=0., Cont_PV=0., Cont_MU=0., Cont_ELE=0., Cont_VetoMU=0., Cont_VetoELE=0., Cont_JetsELE=0., Cont_JetsMU=0.;
+   Long64_t Jentry;
 
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
      Long64_t ientry = LoadTree(jentry);
@@ -290,10 +332,12 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      nb = fChain->GetEntry(jentry);   nbytes += nb;
      // if (Cut(ientry) < 0) continue;
 
+     Jentry=jentry;
+
      if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      
      if( (jentry%100000) == 0 ) std::cout << "Event #" << jentry  << " of " << nentries << std::endl;
-     
+  
    //HLT_Mu11_ = this->PassedHLT("HLT_Mu11");
    //HLT_Ele17_SW_EleId_L1R_ = this->PassedHLT("HLT_Ele17_SW_EleId_L1R");
    //HLT_DoubleMu3_ = this->PassedHLT("HLT_DoubleMu3");
@@ -303,13 +347,17 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      event_ = eventNumber;
      eventWeight_ = -1.; //default
 
+ Cont_inclusive++;//Other;
+
      if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
 
        if( nPV==0 ) continue;
      bool goodVertex = (ndofPV[0] >= 4.0 && sqrt(PVxPV[0]*PVxPV[0]+PVyPV[0]*PVyPV[0]) < 2. && fabs(PVzPV[0]) < 24. );
      if( !goodVertex ) continue;
      nvertex_ = nPV;
+     rhoPF_ = rhoFastjet;
 
+   Cont_PV++; //Other
      //trigger:
      // not yet
 
@@ -339,7 +387,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
          TLorentzVector* thisParticle = new TLorentzVector();
          thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
 
-         if( fabs(idMc[iMc])<7 && idMc[mothMc[iMc]]==24 ) {
+         if( fabs(idMc[iMc])<7 && fabs(idMc[mothMc[iMc]])==24 ) {
            wIndexqq = mothMc[iMc];
            quarksMC.push_back( *thisParticle );
          }
@@ -348,6 +396,14 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 
        // (checked that always 2 quarks are found)
        if( quarksMC.size()==2 && wIndexqq!=-1 ) {
+   eQuark1_=quarksMC[0].E();
+   ptQuark1_=quarksMC[0].Pt();
+   etaQuark1_=quarksMC[0].Eta();
+   phiQuark1_=quarksMC[0].Phi();
+   eQuark2_=quarksMC[1].E();
+   ptQuark2_=quarksMC[1].Pt();
+   etaQuark2_=quarksMC[1].Eta();
+   phiQuark2_=quarksMC[1].Phi();
 
          TLorentzVector WqqMC;
          WqqMC.SetPtEtaPhiE( pMc[wIndexqq]*sin(thetaMc[wIndexqq]), etaMc[wIndexqq], phiMc[wIndexqq], energyMc[wIndexqq] );
@@ -373,11 +429,11 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 	 
          TLorentzVector* thisParticle = new TLorentzVector();
          thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
-	 wIndexll = mothMc[iMc]; 
+
            if( fabs(idMc[iMc])==11 && fabs(idMc[mothMc[iMc]])==24 ) {electronMC.push_back( *thisParticle );}
 	   if( fabs(idMc[iMc])==13 && fabs(idMc[mothMc[iMc]])==24 ) {muonMC.push_back( *thisParticle ); }
 	   if( (fabs(idMc[iMc])==12 || fabs(idMc[iMc])==14 ) && fabs(idMc[mothMc[iMc]])==24 ) {
-	     neutrinoMC.push_back( *thisParticle );
+	     neutrinoMC.push_back( *thisParticle );  wIndexll = mothMc[iMc];
 	       }//for comparison with fit
  
          delete thisParticle;
@@ -423,7 +479,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        eNeuMC_=1.;
        ptNeuMC_=1.;
        etaNeuMC_=10.;
-       phiNeuMC_=1.;
+       phiNeuMC_=1.;    
        }
 
        if( !noLeptons ) {
@@ -459,7 +515,6 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      //      FROM NOW ON RECO
      // -----------------------------
 
-     
      energyPFMet_ = energyPFMet[0];
      phiPFMet_ = phiPFMet[0];
      pxPFMet_ = pxPFMet[0];
@@ -476,7 +531,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      //###      SumEt
      // -----------------------------
        
-     SumEt_ = sumEtPFMet; 
+     SumEt_ = sumEtPFMet[0]; 
  
      // ------------------
      // MUON
@@ -485,7 +540,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      std::vector<AnalysisMuon> muon;
 
 
-     for( unsigned int iMuon=0; iMuon<nMuon /*&& (muon.size()<1) @@*/; ++iMuon ) {
+     for( unsigned int iMuon=0; iMuon<nMuon; ++iMuon ) {
 
          AnalysisMuon thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
 
@@ -493,18 +548,28 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        // kinematics:
        // --------------
 
+       if( thisMuon.Pt() < 20. ) continue;
+       if( fabs(thisMuon.Eta()) > 2.1 ) continue; //Other
+
 	 thisMuon.isGlobalMuonPromptTight = (muonIdMuon[iMuon]>>8)&1;
 	 thisMuon.isAllTrackerMuon = (muonIdMuon[iMuon]>>11)&1;
-	 
-       if( thisMuon.Pt() < 20. ) continue;
+
        //     // --------------
        //     // ID:
        //     // --------------
        //     if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
        //     if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuon
-//     //if( numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]==0 && numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
+       //if( numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]==0 && numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
        
-       
+         
+	thisMuon.pixelHits = numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]+numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]];
+        thisMuon.trackerHits = trackValidHitsTrack[trackIndexMuon[iMuon]];
+        thisMuon.nMatchedStations = numberOfMatchesMuon[iMuon]; // This branch not exists yet in WW500
+       if( thisMuon.trackerHits < 10 ) continue; //Other
+       if( thisMuon.pixelHits < 1 ) continue; //Other   // This branch not exists yet in WW500 
+       if( thisMuon.nMatchedStations < 1 ) continue; //Other
+
+
        // to compute dxy, look for leading primary vertex:
        int hardestPV = -1;
        float sumPtMax = 0.0;
@@ -524,11 +589,11 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 				     pxTrack[trackIndexMuon[iMuon]], pyTrack[trackIndexMuon[iMuon]], pzTrack[trackIndexMuon[iMuon]]));
        }
        
-       //       if( dxy > 0.02 ) continue;
+       if( dxy > 0.02 ) continue; //Other
        
        
        float dz = fabs(trackVzTrack[trackIndexMuon[iMuon]]-PVzPV[hardestPV]);
-       //       if(dz > 1.0) continue;
+       if(dz > 1.0) continue; //Other
        
        thisMuon.dxy = dxy;
        thisMuon.dz = dz;
@@ -536,9 +601,9 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        thisMuon.sumPt03 = sumPt03Muon[iMuon];
        thisMuon.emEt03  = emEt03Muon[iMuon];
        thisMuon.hadEt03 = hadEt03Muon[iMuon];
-       
+
        if( !thisMuon.passedVBTF() ) continue;
-       
+     
        // --------------
        // isolation:
        // --------------
@@ -551,8 +616,9 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 
        // for now simple selection, will have to optimize this (T&P?)
        chargeLept_=chargeMuon[iMuon];
-       muon.push_back( thisMuon );
-     } //for muon
+     muon.push_back( thisMuon );
+  
+   } //for muon
 
      // ------------------
      // ELECTRON
@@ -560,8 +626,9 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 
      std::vector<AnalysisElectron> electron;
      bool firstPassedVBTF80 = false;
-
-     for( unsigned int iEle=0; (iEle<nEle) /*&& (electron.size()<1) @@*/ ; ++iEle ) {
+     bool looseEle = false; //Other
+     
+     for( unsigned int iEle=0; iEle<nEle ; ++iEle ) {
 
 
        AnalysisElectron thisEle( pxEle[iEle], pyEle[iEle], pzEle[iEle], energyEle[iEle] );
@@ -712,7 +779,8 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        bool passed_VBTF95 = thisEle.passedVBTF95();
        bool passed_VBTF80 = thisEle.passedVBTF80();
 
-       if( !passed_VBTF95 ) continue;
+       if( !passed_VBTF80 && passed_VBTF95 ) looseEle=true; //Other
+       if( !passed_VBTF80 ) continue;//Other (I used 95)
 
        // check that not matched to muon (clean electron faked by muon MIP):
        bool matchedtomuon=false;
@@ -726,13 +794,22 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        // one electron required to pass VBTF80, the other VBTF95
        chargeLept_=chargeEle[iEle];
        electron.push_back( thisEle );
-
      } //for electron
 
 
      //                               FILL LEPTONS
+// Fill Efficiency for Others
+bool findJetELE=false;
+bool findJetMU=false;
 
-     if( electron.size() > 1 ||  muon.size() > 1 ) continue; //@@
+if( electron.size() >= 1 ) { Cont_ELE++;
+if( electron.size() == 1 && muon.size()==0 && !looseEle ) { Cont_VetoELE++; findJetELE=true; }}
+
+if( muon.size() >= 1 ) { Cont_MU++;
+if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJetMU=true; }}
+ 
+    if( electron.size() > 1 ) continue;
+    if( muon.size() > 1 ) continue;
 
      if( electron.size() < 1 &&  muon.size() < 1 ) continue;
      
@@ -751,16 +828,17 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      
      std::vector< AnalysisLepton > leptons;
 
-     if( (electron.size() == 1 && muon.size() == 1) ) { //veto H->WW->2l2v
-       
-       continue;
+     if( (electron.size() == 1 && muon.size() == 1) ) continue;
 
-     } else if( electron.size() == 1 ) {
+     if( electron.size() == 1 && looseEle ) continue;
+     if( muon.size() == 1 && looseEle ) continue;
+
+     if( electron.size() == 1 && !looseEle ) { //Other 
 
        leptType_ = 1;
          leptons.push_back( electron[0] );
 
-     } else if( muon.size() == 1 ) {
+     } else if( muon.size() == 1 && !looseEle ) {
 
        leptType_ = 0;
        leptons.push_back( muon[0] );
@@ -820,7 +898,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
       // JETS
       // ------------------
 	     
-	float jetPt_thresh = 30.;
+	float jetPt_thresh = 20.;//30.; //Other
 	bool matched=false;      
 	
 	// first save leading jets in event:
@@ -851,6 +929,8 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        thisJet.rmsCand =  rmsCandAK5PFPUcorrJet[iJet];
        thisJet.ptD =  ptDAK5PFPUcorrJet[iJet];
 
+       thisJet.trackCountingHighEffBJetTag = trackCountingHighEffBJetTagsAK5PFPUcorrJet[iJet];
+
        //thisJet.QGlikelihood = qglc.ComputeLikelihood( thisJet.Pt(), thisJet.nCharged, thisJet.nNeutral, thisJet.ptD, thisJet.rmsCand );
 
        if( thisJet.Pt()>jetPt_thresh ) nJets30++;
@@ -859,7 +939,8 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        if( leadJets.size()>=3 && thisJet.Pt()<jetPt_thresh ) break;
 
        // far away from leptons:
-          if( thisJet.DeltaR( leptons[0] ) <= 0.5 ) continue;
+      if( leptType_==0){ if(thisJet.DeltaR( leptons[0] ) < 0.1/*0.5*/ ) continue;}//Other    
+      if( leptType_==1){ if(thisJet.DeltaR( leptons[0] ) < 0.3/*0.5*/ ) continue;}//Other 
 
        // jet ID:
        int multiplicity = thisJet.nCharged +  thisJet.nNeutral + HFEMMultiplicityAK5PFPUcorrJet[iJet] + HFHadronMultiplicityAK5PFPUcorrJet[iJet];
@@ -876,7 +957,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
          if( thisGenJet.DeltaR(thisJet) < bestDeltaR ) {
            bestDeltaR=thisGenJet.DeltaR(thisJet);
            matchedGenJet=thisGenJet;
-	   matched=true;//?
+	   matched=true;
          }
        }
 
@@ -930,7 +1011,6 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
          if( otherJet.Pt() < jetPt_thresh ) continue;
          if( fabs(otherJet.Eta()) > 2.4 ) continue;
 
-	 
          if( nPairs_>=50 ) {
         
            std::cout << "MORE than 50 jet pairs found. SKIPPING!!" << std::endl;
@@ -952,6 +1032,9 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
            nNeutralHadronsJet1_[nPairs_] = leadJets[iJet].nNeutralHadrons;
            nElectronsJet1_[nPairs_]      = leadJets[iJet].nElectrons;
            nMuonsJet1_[nPairs_]          = leadJets[iJet].nMuons;
+
+           trackCountingHighEffBJetTagJet1_[nPairs_] = leadJets[iJet].trackCountingHighEffBJetTag;
+           trackCountingHighEffBJetTagJet2_[nPairs_] = leadJets[jJet].trackCountingHighEffBJetTag;
 
            ptDJet1_[nPairs_] = leadJets[iJet].ptD;
            rmsCandJet1_[nPairs_] = leadJets[iJet].rmsCand;
@@ -1000,7 +1083,8 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        } //for j
      } //for i
 
-
+   if( findJetELE && nPairs_>=1 ) {Cont_JetsELE++;} //Other 
+   if( findJetMU && nPairs_>=1 ) {Cont_JetsMU++;} //Other 
 
      //if( jets.size() < 2 ) continue;
      //if( best_i==-1 || best_j==-1 ) continue; //means that less than 2 jets were found
@@ -1112,13 +1196,24 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      reducedTree_->Fill(); 
 
    } //for entries
+                       // Other
+float proportion;
+proportion=109989./Cont_inclusive;
+	if( Jentry == (nentries-1) ){
+  std::cout << std::fixed << std::setprecision(6) << "Inclusive: " << Cont_inclusive*proportion << " PV: " << Cont_PV*proportion << " MU: " << Cont_MU*proportion << " ELE: " << Cont_ELE*proportion << " VetoMU: " << Cont_VetoMU*proportion 
+  << " VetoELE: " << Cont_VetoELE*proportion << " JetsELE: " << Cont_JetsELE*proportion << " JetsMU: " << Cont_JetsMU*proportion << std::endl;
 
+h1_Cont_inclusive->SetBinContent(1,Cont_inclusive*proportion);
+h1_Cont_PV->SetBinContent(1,Cont_PV*proportion);
+h1_Cont_TightMu->SetBinContent(1,Cont_MU*proportion);
+h1_Cont_TightEle->SetBinContent(1,Cont_ELE*proportion);
+h1_Cont_VetoMU->SetBinContent(1,Cont_VetoMU*proportion);
+h1_Cont_VetoELE->SetBinContent(1,Cont_VetoELE*proportion);
+h1_Cont_JetsELE->SetBinContent(1,Cont_JetsELE*proportion);
+h1_Cont_JetsMU->SetBinContent(1,Cont_JetsMU*proportion);
+}
 
 } //loop
-
-
-
-
 
 
 /*

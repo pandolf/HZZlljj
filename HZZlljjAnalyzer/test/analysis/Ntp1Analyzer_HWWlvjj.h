@@ -34,6 +34,8 @@ class Ntp1Analyzer_HWWlvjj : public Ntp1Analyzer {
 
    Int_t TotEvent_;//###
 
+
+   Float_t rhoPF_;
    Float_t eWqqMC_;
    Float_t ptWqqMC_;
    Float_t etaWqqMC_;
@@ -48,7 +50,17 @@ class Ntp1Analyzer_HWWlvjj : public Ntp1Analyzer {
    Float_t ptHiggsMC_;
    Float_t etaHiggsMC_;
    Float_t phiHiggsMC_;
-   
+
+   Float_t eQuark1_;
+   Float_t ptQuark1_;
+   Float_t etaQuark1_;
+   Float_t phiQuark1_;
+  
+   Float_t eQuark2_;
+   Float_t ptQuark2_;
+   Float_t etaQuark2_;
+   Float_t phiQuark2_;
+
    Float_t eLept_;
    Float_t ptLept_;
    Float_t etaLept_;
@@ -101,6 +113,9 @@ class Ntp1Analyzer_HWWlvjj : public Ntp1Analyzer {
    Float_t   eJet1Gen_[50];
    Float_t phiJet1Gen_[50];
    Float_t etaJet1Gen_[50];
+
+   Float_t trackCountingHighEffBJetTagJet1_[50];
+   Float_t trackCountingHighEffBJetTagJet2_[50];
 
    Int_t  nPFCand1_;
    Float_t  ePFCand1_[100];
@@ -186,6 +201,14 @@ class Ntp1Analyzer_HWWlvjj : public Ntp1Analyzer {
 // TH1F* h1_pdgIdParton2;
 // TH1F* h1_ptHadronicZ; 
 // TH1F* h1_deltaRqq; 
+ TH1F* h1_Cont_inclusive;
+ TH1F* h1_Cont_PV;
+ TH1F* h1_Cont_TightMu;
+ TH1F* h1_Cont_TightEle;
+ TH1F* h1_Cont_VetoMU;
+ TH1F* h1_Cont_VetoELE;
+ TH1F* h1_Cont_JetsELE;
+ TH1F* h1_Cont_JetsMU;
 
    TH1F *h1_resoPz;
    TH1F *h1_resoPt;
