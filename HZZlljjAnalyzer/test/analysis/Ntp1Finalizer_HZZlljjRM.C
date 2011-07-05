@@ -61,6 +61,11 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   TTree* tree_passedEvents = new TTree("tree_passedEvents", "Unbinned data for statistical treatment");
 
+  TH1D* h1_nCounter = new TH1D("nCounter", "", 1, 0., 1.);
+  h1_nCounter->Sumw2();
+  TH1D* h1_nCounterW = new TH1D("nCounterW", "", 1, 0., 1.);
+  h1_nCounterW->Sumw2();
+
   TH1D* h1_nEventsCategories_presel = new TH1D("nEventsCategories_presel", "", 4, -1.5, 2.5);
   h1_nEventsCategories_presel->Sumw2();
   h1_nEventsCategories_presel->GetXaxis()->SetLabelSize(0.1);
@@ -626,6 +631,9 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_mZjj_cut->Sumw2();
   TH1D* h1_mZZ_mZjj_notcut = new TH1D("mZZ_mZjj_notcut", "", 200, 100., 700.);
   h1_mZZ_mZjj_notcut->Sumw2();
+
+  TH1D* h1_mZZ_nokinfit_hiMass_all = new TH1D("mZZ_nokinfit_hiMass_all", "", 600, 150., 750.);
+  h1_mZZ_nokinfit_hiMass_all->Sumw2();
 
   TH1D* h1_mZZ_kinfit_hiMass_all = new TH1D("mZZ_kinfit_hiMass_all", "", 600, 150., 750.);
   h1_mZZ_kinfit_hiMass_all->Sumw2();
@@ -1752,6 +1760,8 @@ ofstream ofs("run_event.txt");
       }
       
       mZjj = Zjj_nokinfit.M();
+      isSidebands = true;
+
 
       tree_passedEvents->Fill();
 
@@ -2578,6 +2588,7 @@ ofs << run << " " << event << std::endl;
 
     } // if 0/glue tags
 
+    h1_mZZ_nokinfit_hiMass_all->Fill( ZZ_nokinfit.M(), eventWeight);
     h1_mZZ_ZjjMassConstr_hiMass->Fill(ZZ_constr.M(), eventWeight);
     h1_mZZ_kinfit_hiMass_all->Fill( ZZ_kinfit.M(), eventWeight);
     if( maxBTag_found==0 ) {
@@ -2669,6 +2680,9 @@ ofs << run << " " << event << std::endl;
 
   } //for entries
 
+
+  h1_nCounter->SetBinContent(1, nCounter_);
+  h1_nCounterW->SetBinContent(1, nCounterW_);
 
   float eff_gluetag_250 = nEventsPassed_fb_gluetag_250/nCounterW_;
   float eff_0btag_250 = nEventsPassed_fb_0btag_250/nCounterW_;
@@ -3039,6 +3053,9 @@ ofs << run << " " << event << std::endl;
 
   tree_passedEvents->Write();
 
+  h1_nCounter->Write();
+  h1_nCounterW->Write();
+
   h1_nEventsCategories_presel->Write();
 
   h1_nEvents_fb_gluetag_250->Write();
@@ -3359,6 +3376,7 @@ ofs << run << " " << event << std::endl;
   h1_mZZ_mZjj_cut->Write();
   h1_mZZ_mZjj_notcut->Write();
   h1_mZZ_ZjjMassConstr_hiMass->Write();
+  h1_mZZ_nokinfit_hiMass_all->Write();
   h1_mZZ_kinfit_hiMass_all->Write();
   h1_mZZ_kinfit_hiMass_gluetag->Write();
   h1_mZZ_kinfit_hiMass_gluetag_ELE->Write();
