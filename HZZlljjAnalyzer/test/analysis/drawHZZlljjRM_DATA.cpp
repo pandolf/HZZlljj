@@ -20,12 +20,11 @@ int main(int argc, char* argv[]) {
   std::string selType(argv[1]);
 
   std::string ZJetsMC = "madgraph";
-  if( argc==3 ) {
+  if( argc>=3 ) {
     std::string ZJetsMC_str(argv[2]);
     ZJetsMC = ZJetsMC_str;
   }
 
-  
   std::string normType = "LUMI";
   if( argc==4 ) {
     std::string normType_str(argv[3]);
@@ -204,6 +203,7 @@ int main(int argc, char* argv[]) {
   db->set_rebin(5);
   db->drawHisto("mZll", "M(ll)", "GeV", "Events", log);
   db->set_yAxisMaxScale( 1.3 );
+  db->set_rebin(10);
   db->drawHisto("mZjj", "M(jj)", "GeV", "Events", log);
   db->set_legendTitle("Dielectron channel");
   db->drawHisto("mZjj_ELE", "M(jj)", "GeV", "Events", log);
