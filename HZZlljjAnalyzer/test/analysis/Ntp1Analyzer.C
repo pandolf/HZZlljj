@@ -210,7 +210,9 @@ void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
         bool foundThisTrigger = false;
         for(unsigned int i=0; i<nameHLT_->size(); i++) 
           {
-            if( !strcmp ((*fIter).c_str(), nameHLT_->at(i).c_str() ) ) 
+            TString nameHLT_tstr(nameHLT_->at(i));
+            //if( !strcmp ((*fIter).c_str(), nameHLT_->at(i).c_str() ) ) 
+            if( nameHLT_tstr.Contains((*fIter).c_str()) ) 
               {
                 foundThisTrigger = true;
                 triggerMask.push_back( indexHLT_->at(i) ) ;
@@ -376,7 +378,9 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("orbitNumber", &orbitNumber, &b_orbitNumber);
    fChain->SetBranchAddress("rhoFastjet", &rhoFastjet, &b_rhoFastjet);
    if( isMC_ ) {
-     fChain->SetBranchAddress("nPU", &nPU, &b_nPU);
+     fChain->SetBranchAddress("nBX", &nBX, &b_nBX);
+     fChain->SetBranchAddress("nPU", nPU, &b_nPU);
+     fChain->SetBranchAddress("bxPU", bxPU, &b_bxPU);
      fChain->SetBranchAddress("nMc", &nMc, &b_nMc);
      fChain->SetBranchAddress("pMc", pMc, &b_pMc);
      fChain->SetBranchAddress("thetaMc", thetaMc, &b_thetaMc);

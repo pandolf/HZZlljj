@@ -53,7 +53,9 @@ public :
    Int_t           bunchCrossing;
    Int_t           orbitNumber;
    Float_t         rhoFastjet;
-   Int_t           nPU;
+   Int_t           nBX;
+   Int_t           nPU[3];   //[nBX]
+   Int_t           bxPU[3];   //[nBX]
    Int_t           nMc;
    Float_t         pMc[1000];   //[nMc]
    Float_t         thetaMc[1000];   //[nMc]
@@ -664,7 +666,9 @@ public :
    TBranch        *b_bunchCrossing;   //!
    TBranch        *b_orbitNumber;   //!
    TBranch        *b_rhoFastjet;   //!
+   TBranch        *b_nBX;   //!
    TBranch        *b_nPU;   //!
+   TBranch        *b_bxPU;   //!
    TBranch        *b_nMc;   //!
    TBranch        *b_pMc;   //!
    TBranch        *b_thetaMc;   //!
