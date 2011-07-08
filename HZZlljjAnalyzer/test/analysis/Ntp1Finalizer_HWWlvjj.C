@@ -19,6 +19,7 @@
 inline double delta_phi(double phi1, double phi2);
 std::pair<TLorentzVector,TLorentzVector> getPzRight( TLorentzVector lepton, float pxPFMet, float pyPFMet,  TLorentzVector neuMC );
 float getPz( TLorentzVector lepton, float pxPFMet, float pyPFMet);
+std::pair<TLorentzVector,TLorentzVector> getBothPz( TLorentzVector lepton, float pxPFMet, float pyPFMet);
 float getPzMH( TLorentzVector lepton, float pxPFMet, float pyPFMet, TLorentzVector jet1, TLorentzVector jet2);
 float getPzATLAS( TLorentzVector lepton, float pxPFMet, float pyPFMet, TLorentzVector jet1, TLorentzVector jet2);
 
@@ -63,11 +64,7 @@ class AnalysisJet : public TLorentzVector {
 
 };
 
-
-
 HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
-
-
 
 int getNJets( int nPairs );
 
@@ -76,7 +73,7 @@ std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string his
 
 // constructor:
 
-Ntp1Finalizer_HWWlvjj::Ntp1Finalizer_HWWlvjj( const std::string& dataset, const std::string& selectionType, const std::string& leptType ) : Ntp1Finalizer( "HWWlvjj", dataset, leptType ) {
+Ntp1Finalizer_HWWlvjj::Ntp1Finalizer_HWWlvjj( const std::string& dataset, const std::string& selectionType, float HiggsMass, const std::string& leptType ) : Ntp1Finalizer( "HWWlvjj", dataset, leptType ) {
 
   if( leptType!="ALL" && leptType!="MU" && leptType!="ELE" ) {
     std::cout << "Lept type '" << leptType << "' currently not supported. Exiting." << std::endl;
@@ -84,6 +81,7 @@ Ntp1Finalizer_HWWlvjj::Ntp1Finalizer_HWWlvjj( const std::string& dataset, const 
   }
 
   leptType_ = leptType;
+  HiggsMass_ = HiggsMass;
 
   setSelectionType(selectionType);
 
@@ -100,9 +98,6 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 
   if( outFile_==0 ) this->createOutputFile();
 
-
-  //  std::string btagFileName = "btagfile_" + selectionType_ + ".root";
-  //  TFile* btagFile = TFile::Open(btagFileName.c_str(), "RECREATE");
 
   TH1D* h1_Ev_Presel = new TH1D("Ev_Presel","",1,0.,1.);
   TH1D* h1_Ev_Jet1 = new TH1D("Ev_Jet1","",1,0.,1.);
@@ -574,8 +569,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_etaHrightSol = new TH1D("etaHrightSol", "", 50, -5., 5.);
   TH1D* h1_etaHwrongSol = new TH1D("etaHwrongSol", "", 50, -5., 5.);
 
-  TH1D* h1_Studio1 = new TH1D("Studio1", "", 100, -6., 6.);
-  TH1D* h1_Studio2 = new TH1D("Studio2", "", 100, -6., 6.);
+  TH1D* h1_Studio1 = new TH1D("Studio1", "", 50, -2, 2.);
+  TH1D* h1_Studio2 = new TH1D("Studio2", "", 50, -2, 2.);
+  TH1D* h1_Studio3 = new TH1D("Studio3", "", 50, -2, 2.);
+  TH1D* h1_Studio4 = new TH1D("Studio4", "", 50, -2, 2.);
 
 //Double_t ptBins[16];
 //fitTools::getBins_int( 16, ptBins, 20., 500.);
@@ -853,6 +850,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 
   int totSol=0, oneSol=0, oneSolMC=0, totPz=0, totPzR=0, totPzMC=0, totPzRMC=0, chooseHely=0, rightHely=0; // In order to count the right solutions of GetPz and the helicity
   int timesTryJets=0, rightMatch=0;
+
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
     
     if( (iEntry % 50000)==0 ) std::cout << "Entry: " << iEntry << " /" << nEntries << std::endl;
@@ -866,8 +864,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       if( leptType_=="MU" && leptType==1 ) continue;
     }
 
-
-    bool isMC = (run<5);
+   bool isMC = (run<5);
 
 
     if( !isMC ) { 
@@ -888,7 +885,6 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
         run_lumi_ev_map.insert( std::pair<int, std::map<int, std::vector<int> > > (run, lumi_ev_map) );
 
       } else { //run exists, look for LS
-
 
         std::map<int, std::vector<int> >::iterator it_LS;
         it_LS = it->second.find( LS );
@@ -1014,7 +1010,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 
       TLorentzVector diJet = jet1 + jet2;
 
-      jetPairs_JustPresel_selected.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );//#####
+      jetPairs_JustPresel_selected.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );// Push jet after preselection
       if( !ripet_Presel ){ nEvent_Presel++; ripet_Presel = true;}
 
     if( jet1.Pt/*Other E*/()>ptJet1_thresh_ ){
@@ -1065,7 +1061,8 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
         cached_jetpt = jet1.Pt();
       }
 
-    }//for iJetPairs
+    }//for iJetPairs 
+
       //### Scelgo i due jet migliori senza pero' tagli, ma solo preselezione.
     if( jetPairs_JustPresel_selected.size()>0. ) {
       // now look for best W mass jet pair, among the preselected jets:
@@ -1092,7 +1089,6 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 	  h1_ptJet1_JustPresel->Fill(jet1_JustPresel.Pt(), eventWeight );
 	  h1_ptJet2_JustPresel->Fill(jet2_JustPresel.Pt(), eventWeight );
     }
- //###
 
 
     TLorentzVector jet1_presel, jet2_presel;
@@ -1144,24 +1140,19 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       AnalysisJet jet1 = jetPairs_selected[bestPair].first;
       AnalysisJet jet2 = jetPairs_selected[bestPair].second;
       TLorentzVector bestWDiJet = jet1 + jet2;
-
-float minMatch1=10;
-float minMatch2=10;
-int bestAmong=-1;
-for( unsigned iPair=0; iPair<jetPairs_selected.size(); ++iPair ) {
-if( (jetPairs_selected[iPair].first.DeltaR(Quark1MC)<minMatch1 && jetPairs_selected[iPair].second.DeltaR(Quark2MC)<minMatch2)){ minMatch1=jetPairs_selected[iPair].first.DeltaR(Quark1MC); minMatch2=jetPairs_selected[iPair].second.DeltaR(Quark2MC); bestAmong=iPair; }
-else if(jetPairs_selected[iPair].first.DeltaR(Quark2MC)<minMatch1 && jetPairs_selected[iPair].second.DeltaR(Quark1MC)<minMatch2){minMatch1=jetPairs_selected[iPair].first.DeltaR(Quark2MC); minMatch2=jetPairs_selected[iPair].second.DeltaR(Quark1MC); bestAmong=iPair; }
-}
-// Matching Efficiency
-//if(bestAmong!=-1){
-//timesTryJets++;
-//if( (jetPairs_selected[bestAmong].first.DeltaR(Quark1MC)<0.5 && jetPairs_selected[bestAmong].second.DeltaR(Quark2MC)<0.5) || ((jetPairs_selected[bestAmong].first.DeltaR(Quark2MC)<0.5 && jetPairs_selected[bestAmong].second.DeltaR(Quark1MC)<0.5)) ) rightMatch++;
+ // In Order to verify How often you choose the right jets if right jets are preselected
+//float minMatch1=10;
+//float minMatch2=10;
+//int bestAmong=-1;
+//for( unsigned iPair=0; iPair<jetPairs_selected.size(); ++iPair ) {
+//if( (jetPairs_selected[iPair].first.DeltaR(Quark1MC)<minMatch1 && jetPairs_selected[iPair].second.DeltaR(Quark2MC)<minMatch2)){ minMatch1=jetPairs_selected[iPair].first.DeltaR(Quark1MC); minMatch2=jetPairs_selected[iPair].second.DeltaR(Quark2MC); bestAmong=iPair; }
+//else if(jetPairs_selected[iPair].first.DeltaR(Quark2MC)<minMatch1 && jetPairs_selected[iPair].second.DeltaR(Quark1MC)<minMatch2){minMatch1=jetPairs_selected[iPair].first.DeltaR(Quark2MC); minMatch2=jetPairs_selected[iPair].second.DeltaR(Quark1MC); bestAmong=iPair; }
 //}
 // Matching Efficiency
-if(bestPair!=-1 && bestAmong!=-1 && ((jetPairs_selected[bestAmong].first.DeltaR(Quark1MC)<0.5 && jetPairs_selected[bestAmong].second.DeltaR(Quark2MC)<0.5) || ((jetPairs_selected[bestAmong].first.DeltaR(Quark2MC)<0.5 && jetPairs_selected[bestAmong].second.DeltaR(Quark1MC)<0.5))) && fabs(Quark1MC.Eta())<4.5 && fabs(Quark2MC.Eta())<4.5 ){
-timesTryJets++;
-if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Quark2MC)<0.5 && jet2.DeltaR(Quark1MC)<0.5)) ) rightMatch++; 
-}
+//if(bestPair!=-1 && bestAmong!=-1 && ((jetPairs_selected[bestAmong].first.DeltaR(Quark1MC)<0.5 && jetPairs_selected[bestAmong].second.DeltaR(Quark2MC)<0.5) || ((jetPairs_selected[bestAmong].first.DeltaR(Quark2MC)<0.5 && jetPairs_selected[bestAmong].second.DeltaR(Quark1MC)<0.5))) && fabs(Quark1MC.Eta())<4.5 && fabs(Quark2MC.Eta())<4.5 ){
+//timesTryJets++;
+//if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Quark2MC)<0.5 && jet2.DeltaR(Quark1MC)<0.5)) ) rightMatch++; 
+//}
 
      // LEPTONS
     TLorentzVector lept1, lept2, lept2MC;
@@ -1169,11 +1160,12 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
 
     // Find Pz
     float pn=0., pnMC=0., pnMH=0.;//, pnATLAS=0.;
-    std::pair<TLorentzVector,TLorentzVector> NeuRWMC, NeuRW;
+    std::pair<TLorentzVector,TLorentzVector> NeuRWMC, NeuRW, BothPzNeu;
 
     NeuRWMC=getPzRight( LepMC, NeuMC.Px(),NeuMC.Py(), NeuMC );
     NeuRW=getPzRight(lept1, pxPFMet, pyPFMet, NeuMC); 
     pn=getPz(lept1, pxPFMet, pyPFMet);
+    BothPzNeu=getBothPz(lept1, pxPFMet, pyPFMet);
     pnMC=getPz(LepMC, NeuMC.Px(),NeuMC.Py());
     pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
     //pnATLAS=getPzATLAS(lept1, pxPFMet, pyPFMet, jet1, jet2);
@@ -1181,7 +1173,6 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
     lept2MC.SetPxPyPzE(NeuMC.Px(), NeuMC.Py(), pnMC,  sqrt(pow( NeuMC.Px(),2)+pow(NeuMC.Py(),2)+pow(pnMC,2)));
     if( energyPFMet < /*25.Other*/ 30. ) continue;
     h1_energyMet->Fill( energyPFMet );
-
 /*
      h1_FindPz_EtaR->Fill(lept1.Eta()-neuR.Eta());     h1_FindPz_EtaW->Fill(lept1.Eta()-neuW.Eta());
      h1_FindPz_EtaWnR->Fill((neuR+lept1).Eta()-neuR.Eta());  h1_FindPz_EtaWnW->Fill((neuW+lept1).Eta()-neuW.Eta()); 
@@ -1196,7 +1187,6 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
      neuW_Wstar.Boost(-(neuW+lept1).BoostVector());
      h1_FindPz_WNeutWW->Fill( cos(neuW_Wstar.Angle((neuW+lept1).Vect())) );
 */
-
      // Resolution with Wll
      TLorentzVector neuMH;
      neuMH.SetPxPyPzE( pxPFMet, pyPFMet, pnMH, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pnMH,2)) );
@@ -1244,8 +1234,7 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
 */
 
 	      // Helicity angles with two solution:
-
-       HelicityLikelihoodDiscriminant::HelicityAngles hanglesRight;
+      HelicityLikelihoodDiscriminant::HelicityAngles hanglesRight;
        if( chargeLept<0. ) hanglesRight = computeHelicityAngles(lept1, NeuRW.first, jet1, jet2);
        else                          hanglesRight = computeHelicityAngles(NeuRWMC.first, LepMC, jet1, jet2);
      
@@ -1268,16 +1257,48 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
       h1_helicityLDWrong->Fill(helicityLDWrong, eventWeight);
 
       if( helicityLDRight-helicityLDWrong>=0. ){
-      h1_pzResoNeut_heli->Fill( (isMC) ? (NeuRW.first.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );}
+      h1_pzResoNeut_heli->Fill( (isMC) ? (NeuRW.first.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );  }
       if( helicityLDRight-helicityLDWrong<0. ){
-      h1_pzResoNeut_heli->Fill( (isMC) ? (NeuRW.second.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );}
+      h1_pzResoNeut_heli->Fill( (isMC) ? (NeuRW.second.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );  }
       if( NeuRW.first.Pz() != NeuRW.second.Pz() ){chooseHely++;  h1_diffHelicity->Fill( helicityLDRight-helicityLDWrong );
       if( helicityLDRight-helicityLDWrong >= 0. ) rightHely++;
       }
 
+     // Selecting Neutrino Pz with elicity 
+
+       HelicityLikelihoodDiscriminant::HelicityAngles hangles1;
+       if( chargeLept<0. ) hangles1 = computeHelicityAngles(lept1, BothPzNeu.first, jet1, jet2);
+       else                          hangles1 = computeHelicityAngles(BothPzNeu.first, lept1, jet1, jet2);
+
+       HelicityLikelihoodDiscriminant::HelicityAngles hangles2;
+       if( chargeLept<0. ) hangles2 = computeHelicityAngles(lept1, BothPzNeu.second, jet1, jet2);
+       else                          hangles2 = computeHelicityAngles(BothPzNeu.second, lept1, jet1, jet2);
+
+      HelicityLikelihoodDiscriminant *LDChoose = new HelicityLikelihoodDiscriminant();
+
+      LDChoose->setMeasurables(hangles1);
+      double sProb1=LDChoose->getSignalProbability();
+      double bProb1=LDChoose->getBkgdProbability();
+      double helicityLD1=sProb1/(sProb1+bProb1);
+
+      LDChoose->setMeasurables(hangles2);
+      double sProb2=LDChoose->getSignalProbability();
+      double bProb2=LDChoose->getBkgdProbability();
+      double helicityLD2=sProb2/(sProb2+bProb2);
+TLorentzVector LL;
+      if( helicityLD1 >= helicityLD2 ) 
+      LL.SetPxPyPzE( pxPFMet, pyPFMet, BothPzNeu.first.Pz(), sqrt(pow(pxPFMet,2)+pow(pyPFMet,2)+pow(BothPzNeu.first.Pz(),2) ));
+      else 
+      LL.SetPxPyPzE( pxPFMet, pyPFMet, BothPzNeu.second.Pz(), sqrt(pow(pxPFMet,2)+pow(pyPFMet,2)+pow(BothPzNeu.second.Pz(),2)) );
+
+h1_Studio1->Fill( ((lept1+LL).E()-WllMC.E())/WllMC.E() );
+h1_Studio2->Fill( ((lept1+lept2).E()-WllMC.E())/WllMC.E() );
+h1_Studio3->Fill( ((lept1+LL).Pz()-WllMC.Pz())/WllMC.Pz() );
+h1_Studio4->Fill( ((lept1+lept2).Pz()-WllMC.Pz())/WllMC.Pz() );
+
      // Sort leptons and them charges
      float chargeLept1=0., chargeLept2=0.;
-     bool sorted=false;
+     bool  sorted=false;
      chargeLept1=chargeLept;
      chargeLept2=0.;
      TLorentzVector SortLeptons;
@@ -1320,10 +1341,9 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
         h1_mWmumu_presel_0jets->Fill( diLepton.M(), eventWeight );
       else
         h1_mWee_presel_0jets->Fill( diLepton.M(), eventWeight );
-
     }
-    
-  if( !hibtag /*&& medbtag<2*/ ){ nEvent_btag++;
+
+   if( !hibtag /*&& medbtag<2*/ ){ nEvent_btag++;
       if( diLepton.Pt() > ptWll_thresh_ ){
 	nEvent_DileptPt++;
 	if(  lept1.Pt() > ptLept1_thresh_ ){
@@ -1336,6 +1356,7 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
 		nEvent_mtW++;
 		if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
 		  nEvent_DrLeptLept++;
+
                     //if( nPairs < 4 ){ // Veto su altri Jet //Other
               // if( (delta_phi(diLepton.Phi(),bestWDiJet      h1_ResomH_heli->Fill( (isMC) ? ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );      .Phi()) >1.) && (delta_phi(lept1.Phi(),lept2.Phi()) > 1.) && (delta_phi(jet1.Phi(),jet2.Phi()) >1.) ){
 		  // event has passed kinematic selection
@@ -1394,7 +1415,7 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
     if( NeuRWMC.first.Pz() != NeuRWMC.second.Pz() ){
        totPzMC++;
        if( fabs(pnMC-NeuRWMC.first.Pz()) < fabs(pnMC-NeuRWMC.second.Pz()) ) totPzRMC++; }
-
+    /*
                   // ------------------------
                   //   GLOBAL FIT : BEGIN
                   // ------------------------
@@ -1406,9 +1427,9 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
                   if( Quark1MC.DeltaR(jet1) < 0.5 && Quark2MC.DeltaR(jet2) < 0.5 ){
                   //if(fabs(Quark1MC.Eta())<3. && fabs(Quark2MC.Eta())<3.){
                   if( sorted ){
-                  pro.SetPtEtaPhiE(/*NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt());*/lept1.Pt(),0.,lept1.Phi(),sqrt(lept1.Px()*lept1.Px()+lept1.Py()*lept1.Py()));
+                  pro.SetPtEtaPhiE(//NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt());//lept1.Pt(),0.,lept1.Phi(),sqrt(lept1.Px()*lept1.Px()+lept1.Py()*lept1.Py()));
                   neut.SetNeutrino(pro);
-                  GlobalFitter* fitter_global = new GlobalFitter( "fitter_lept", "fitter_lept", 200., Wmass );
+                  GlobalFitter* fitter_global = new GlobalFitter( "fitter_lept", "fitter_lept", HiggsMass_, Wmass );
                   std::vector<TLorentzVector> AllFitted_kinfit = fitter_global->fit(jet1,jet2,lept2, neut);
                   Jet1_kinfit = AllFitted_kinfit[0];
                   Jet2_kinfit = AllFitted_kinfit[1];
@@ -1420,9 +1441,9 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbGlob, eventWeight );
                  }
                   else{
-                  pro.SetPtEtaPhiE(/*NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt());*/lept2.Pt(),0.,lept2.Phi(),sqrt(lept2.Px()*lept2.Px()+lept2.Py()*lept2.Py()));
+                  pro.SetPtEtaPhiE(//NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt());//lept2.Pt(),0.,lept2.Phi(),sqrt(lept2.Px()*lept2.Px()+lept2.Py()*lept2.Py()));
                   neut.SetNeutrino(pro);
-                  GlobalFitter* fitter_global = new GlobalFitter( "fitter_lept", "fitter_lept", 200., Wmass );
+                  GlobalFitter* fitter_global = new GlobalFitter( "fitter_lept", "fitter_lept", HiggsMass_, Wmass );
                   std::vector<TLorentzVector> AllFitted_kinfit = fitter_global->fit(jet1,jet2,lept1, neut);
                   Jet1_kinfit = AllFitted_kinfit[0];
                   Jet2_kinfit = AllFitted_kinfit[1];
@@ -1454,7 +1475,7 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
     Lept2_kinfit = SortLeptons;
   }
 
-/*
+
 		  // ------------------------
 		  //   KINEMATIC FIT (LEPTON) : BEGIN
 		  // ------------------------
@@ -1475,8 +1496,8 @@ if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Qu
                   h1_kinfit2_chiSquare->Fill( fitter_lept->getS()/fitter_lept->getNDF(),eventWeight);
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
                   h1_resoPt->Fill( (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() );
-            h1_Studio1->Fill( (lept1.Pt()-NeuMC.Pt())/((0.5)*sqrt(SumEt)*(neut.Neutrino_.Px()+neut.Neutrino_.Py())/(2*neut.Neutrino_.Pt())) );
-            h1_Studio2->Fill( (lept1.Phi()-NeuMC.Phi())/((0.6)*(1-(neut.Neutrino_.Py()/neut.Neutrino_.Px()))*(sqrt(SumEt)*0.5)/(neut.Neutrino_.Px()*(1+(pow(neut.Neutrino_.Py(),2)/pow(neut.Neutrino_.Px(),2))))) );
+            //h1_Studio1->Fill( (lept1.Pt()-NeuMC.Pt())/((0.5)*sqrt(SumEt)*(neut.Neutrino_.Px()+neut.Neutrino_.Py())/(2*neut.Neutrino_.Pt())) );
+            //h1_Studio2->Fill( (lept1.Phi()-NeuMC.Phi())/((0.6)*(1-(neut.Neutrino_.Py()/neut.Neutrino_.Px()))*(sqrt(SumEt)*0.5)/(neut.Neutrino_.Px()*(1+(pow(neut.Neutrino_.Py(),2)/pow(neut.Neutrino_.Px(),2))))) );
 h2_correlation->Fill(lept1.Pt()-NeuMC.Pt(),lept1.Phi()-NeuMC.Phi(),eventWeight);
                   }
                   else{
@@ -1490,8 +1511,8 @@ h2_correlation->Fill(lept1.Pt()-NeuMC.Pt(),lept1.Phi()-NeuMC.Phi(),eventWeight);
                   h1_kinfit2_chiSquare->Fill( fitter_lept->getS()/fitter_lept->getNDF(), eventWeight );
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
                   h1_resoPt->Fill( (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() );
-            h1_Studio1->Fill( (lept2.Pt()-NeuMC.Pt())/((0.5)*sqrt(SumEt)*(neut.Neutrino_.Px()+neut.Neutrino_.Py())/(2*neut.Neutrino_.Pt())) );
-            h1_Studio2->Fill( (lept2.Phi()-NeuMC.Phi())/((0.6)*(1.13)*(1-(neut.Neutrino_.Py()/neut.Neutrino_.Px()))*(sqrt(SumEt)*0.5)/(neut.Neutrino_.Px()*(1+(pow(neut.Neutrino_.Py(),2)/pow(neut.Neutrino_.Px(),2))))) );
+            //h1_Studio1->Fill( (lept2.Pt()-NeuMC.Pt())/((0.5)*sqrt(SumEt)*(neut.Neutrino_.Px()+neut.Neutrino_.Py())/(2*neut.Neutrino_.Pt())) );
+            //h1_Studio2->Fill( (lept2.Phi()-NeuMC.Phi())/((0.6)*(1.13)*(1-(neut.Neutrino_.Py()/neut.Neutrino_.Px()))*(sqrt(SumEt)*0.5)/(neut.Neutrino_.Px()*(1+(pow(neut.Neutrino_.Py(),2)/pow(neut.Neutrino_.Px(),2))))) );
 h2_correlation->Fill(lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight);
                  }
         // Reso
@@ -1512,14 +1533,13 @@ h2_correlation->Fill(lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight);
 		  }
           }//match
 		 // h1_mWW_kinLept->Fill( (bestWDiJet+lept1_kinfit+lept2_kinfit).M() );
-     */
-     		     
+        		     */
 		  // ------------------------
 		  //   KINEMATIC FIT (JET) : BEGIN
 		  // ------------------------
-                  if( (((Quark1MC.DeltaR(jet1) <= Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet1)<0.3 && Quark2MC.DeltaR(jet2)<0.3)) || ((Quark1MC.DeltaR(jet1) > Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet2)<0.3 && Quark2MC.DeltaR(jet1)<0.3))) && jet1.DeltaR(jet2)>1. ){//only matched jets
+                //  if( (((Quark1MC.DeltaR(jet1) <= Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet1)<0.3 && Quark2MC.DeltaR(jet2)<0.3)) || ((Quark1MC.DeltaR(jet1) > Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet2)<0.3 && Quark2MC.DeltaR(jet1)<0.3))) && jet1.DeltaR(jet2)>1. ){//only matched jets
 		  h1_mWW_nokinfit->Fill( (bestWDiJet+lept1+lept2).M() );
-		  DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", (Quark1MC+Quark2MC).M() );
+		  DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", 80.399 );
 		  std::pair<TLorentzVector,TLorentzVector> jets_kinfit = fitter_jets->fit(jet1, jet2);
 		  TLorentzVector jet1_kinfit(jets_kinfit.first);
 		  TLorentzVector jet2_kinfit(jets_kinfit.second);
@@ -1540,7 +1560,6 @@ h2_correlation->Fill(lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight);
             matchedPart2 = thisPart;
           }
         }
- 
                   //h1_Glob_ptResoJet1_KinFit->Fill( (isMC) ? (Jet1_kinfit.Pt()-matchedPart1.Pt())/matchedPart1.Pt() : 0 );//Global Fit
                   //h1_Glob_ptResoJet2_KinFit->Fill( (isMC) ? (Jet2_kinfit.Pt()-matchedPart2.Pt())/matchedPart2.Pt() : 0 );
 
@@ -1556,7 +1575,6 @@ h2_correlation->Fill(lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight);
 		  h1_ptResoJet1_afterKin->Fill( ptReso1_after, eventWeight );
 		  h1_ptResoJet2_afterKin->Fill( ptReso2_after, eventWeight );
 
-	
 		  TLorentzVector Wjj_kinfit = jet1_kinfit + jet2_kinfit;
 		  
 		  TLorentzVector matchedW;
@@ -1603,7 +1621,7 @@ if( bestWDiJet.M()>75. && bestWDiJet.M()<105. ) {
   h1_mWW_mWjj_notcut->Fill( WW_kinfit.M(), eventWeight );
 }
 
-if( TMath::Prob(fitter_jets->getS(), fitter_jets->getNDF())<0.2 ) h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
+h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 
 		 
     //// match to parton:
@@ -1841,7 +1859,9 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
       //
       // QG LIKELIHOOD   ***BEGIN***
       //
-      
+ // Better caculate QG after WW cuts
+  // if ( (jet1+jet2+lept1+lept2).M() < HiggsMass_-50. || (jet1+jet2+lept1+lept2).M() > HiggsMass_+50. ) continue;
+   
       int jet1PtBin=-1;
       if( jet1.Pt() > ptBins[nPtBins] ) {
         jet1PtBin = nPtBins-1;
@@ -1885,12 +1905,10 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
       h1_jetBProbabilityBJetTagJet2->Fill(jet2.jetBProbabilityBJetTag, eventWeight);
       h1_jetProbabilityBJetTagJet2->Fill(jet2.jetProbabilityBJetTag, eventWeight);
 
-
-
       h1_ptDJet1->Fill( jet1.ptD, eventWeight );
       h1_ptDJet2->Fill( jet2.ptD, eventWeight );
 
-      //vh1_rmsCandJet1[jet1PtBin]->Fill( jet1.rmsCand, eventWeight );
+          //vh1_rmsCandJet1[jet1PtBin]->Fill( jet1.rmsCand, eventWeight );
       vh1_ptDJet1[jet1PtBin]->Fill( jet1.ptD, eventWeight );
       vh1_nChargedJet1[jet1PtBin]->Fill( jet1.nCharged, eventWeight );
       vh1_nNeutralJet1[jet1PtBin]->Fill( jet1.nNeutral, eventWeight );
@@ -1899,13 +1917,13 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
       h1_QGLikelihoodJet1->Fill( QGLikelihoodJet1, eventWeight );
      
     //  vh1_rmsCandJet2[jet2PtBin]->Fill( jet2.rmsCand, eventWeight );
-       vh1_ptDJet2[jet2PtBin]->Fill( jet2.ptD, eventWeight );
+      vh1_ptDJet2[jet2PtBin]->Fill( jet2.ptD, eventWeight );
       vh1_nChargedJet2[jet2PtBin]->Fill( jet2.nCharged, eventWeight ); 
       vh1_nNeutralJet2[jet2PtBin]->Fill( jet2.nNeutral, eventWeight );
       float QGLikelihoodJet2 = qglikeli-> computeQGLikelihoodPU( jet2.Pt(), rhoPF, jet2.nCharged, jet2.nNeutral, jet2.ptD ); //qglikeli->computeQGLikelihoodPU( jet2.Pt(), rhoPF, jet2.nCharged, jet2.nNeutral, jet2.ptD);
       vh1_QGLikelihoodJet2[jet2PtBin]->Fill( QGLikelihoodJet2, eventWeight );
       h1_QGLikelihoodJet2->Fill( QGLikelihoodJet2, eventWeight );
-
+      
       //  if( !btag_TChighPur ) {
       //   h1_QGLikelihoodJet1_antiBtag_TChighPur->Fill( QGLikelihoodJet1, eventWeight );
       //   h1_QGLikelihoodJet2_antiBtag_TChighPur->Fill( QGLikelihoodJet2, eventWeight );
@@ -1954,6 +1972,7 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
       if( WW_kinfit.M() > mWW_threshLo_ && WW_kinfit.M() < mWW_threshHi_ ) {
         nEventsPassed_fb_kinfit += eventWeight;
         nEventsPassed_kinfit++;
+
 	 //if( !btag_SSVhighEff ) nEventsPassed_kinfit_antiBtag++;
       }
       if( WW.M() > mWW_threshLo_ && WW.M() < mWW_threshHi_ ) {
@@ -2029,7 +2048,7 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
         h1_phi_kinfit->Fill(hangles_kinfit.helPhi, eventWeight);
         h1_phi1_kinfit->Fill(hangles_kinfit.helPhi1, eventWeight);
 
-}//Match Jets during fit
+//}//Match Jets during fit
 
         //match to partons:
         int partFlavor1=0;
@@ -2060,13 +2079,12 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
         h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
         h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
 	
-		}}}}} }/*btag*/  //} /*if you use (veto on second (fourth for Other) jet*/
+	}}}}} }/*btag*/  //} /*if you use (veto on second (fourth for Other) jet*/
 //}//Other DPhi WW
-      } //if passes selection
+      } //if passed selection
 
     } //if selected jet pairs
       
-   
   } //for entries
 
   //Histo for efficiencies.
@@ -2109,7 +2127,7 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
   std::cout<<"One solution: "<<(double)oneSol/totSol<<"  One solution MC: "<<(double)oneSolMC/totSol<<std::endl;
   std::cout<<"GetPz guess: "<<(double)totPzR/totPz<<" GetPzMC instead: "<<(double)totPzRMC/totPzMC<<std::endl;
   std::cout<<"Helicity guess: "<<(double)rightHely/chooseHely<<std::endl;
-  std::cout<<"Guessing Jets: "<<(double)rightMatch/timesTryJets<<std::endl;
+  //std::cout<<"Guessing Jets: "<<(double)rightMatch/timesTryJets<<std::endl;
   outFile_->cd();
 
 //@@@@
@@ -2137,6 +2155,8 @@ h2_correlation->Write();
 
   h1_Studio1->Write();
   h1_Studio2->Write();
+  h1_Studio3->Write();
+  h1_Studio4->Write();
 
   h1_mHwrongSol->Write();
   h1_mHrightSol->Write();
@@ -3073,8 +3093,30 @@ std::pair<TLorentzVector,TLorentzVector> getPzRight( TLorentzVector lepton, floa
   return Neutrinos;
 }
 
+// Get Both Pz
+std::pair<TLorentzVector,TLorentzVector> getBothPz( TLorentzVector lepton, float pxPFMet, float pyPFMet) {
+  float pn=0., app=0., pznp=0., pznm=0.;
+  float a=0., b=0., c=0.;
+  std::pair<TLorentzVector,TLorentzVector> Solutions;
+  TLorentzVector neu1, neu2;
 
-// Get Pz Scegliendo
+  app = pow(lepton.E(),2)+pow(pxPFMet,2)+pow(pyPFMet,2)-pow(lepton.Px()+pxPFMet,2)-pow(lepton.Py()+pyPFMet,2)-pow(lepton.Pz(),2)-pow(80.399,2);
+  a= pow(lepton.E(),2)-pow(lepton.Pz(),2);
+  b= lepton.Pz()*app;
+  c= ( pow(pxPFMet,2)+pow(pyPFMet,2) )*pow(lepton.E(),2) - pow(app,2)/4.;
+
+  pznp = ( -b + sqrt( pow(b,2)-4.*a*c ) )/(2.*a);
+  pznm = ( -b - sqrt( pow(b,2)-4.*a*c ) )/(2.*a);
+  if ( pow(b,2)-4.*a*c < 0. ){ pznp=-b/(2.*a); pznm =-b/(2.*a); }
+
+  neu1.SetPxPyPzE( pxPFMet,pyPFMet,pznp,sqrt(pow(pxPFMet,2)+pow(pyPFMet,2)+pow(pznp,2)) );
+  neu2.SetPxPyPzE( pxPFMet,pyPFMet,pznm,sqrt(pow(pxPFMet,2)+pow(pyPFMet,2)+pow(pznm,2)) );
+  Solutions.first = neu1;
+  Solutions.second = neu2;
+  return Solutions;
+}
+
+// Get Pz choosing the lower solution
 float getPz( TLorentzVector lepton, float pxPFMet, float pyPFMet) {
   float pn=0., app=0., pznp=0., pznm=0.;
   float a=0., b=0., c=0.;
@@ -3082,8 +3124,6 @@ float getPz( TLorentzVector lepton, float pxPFMet, float pyPFMet) {
   app = pow(lepton.E(),2)+pow(pxPFMet,2)+pow(pyPFMet,2)-pow(lepton.Px()+pxPFMet,2)-pow(lepton.Py()+pyPFMet,2)-pow(lepton.Pz(),2)-pow(80.399,2);
   a= pow(lepton.E(),2)-pow(lepton.Pz(),2);
   b= lepton.Pz()*app;
-  c= ( pow(pxPFMet,2)+pow(pyPFMet,2) )*pow(lepton.E(),2) - pow(app,2)/4.;
-
   c= ( pow(pxPFMet,2)+pow(pyPFMet,2) )*pow(lepton.E(),2) - pow(app,2)/4.;
 
   pznp = ( -b + sqrt( pow(b,2)-4.*a*c ) )/(2.*a);
