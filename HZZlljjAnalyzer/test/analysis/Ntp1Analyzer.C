@@ -148,6 +148,7 @@ void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
   if( treeCond==0 ) { 
 
     fChain->GetEntry(iEntry);
+    //fChain->GetEntry(0);
 
     // required triggers:
     std::vector<int> triggerMask_required;
@@ -156,10 +157,12 @@ void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
         bool foundThisTrigger = false;
         for(unsigned int i=0; i<nameHLT->size(); i++) 
           {
-//std::cout << std::endl << nameHLT->at(i);
-            if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) ) 
+std::cout << std::endl << indexHLT[i] << " " << nameHLT->at(i);
+            TString nameHLT_tstr(nameHLT->at(i));
+            if( nameHLT_tstr.Contains((*fIter)) )
+            //if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) ) 
               {
-//std::cout << " <----- HERE IT IS!" << std::endl;
+std::cout << " <----- HERE IT IS!" << std::endl;
                 foundThisTrigger = true;
                 triggerMask_required.push_back( indexHLT[i] ) ;
                 break;
@@ -264,12 +267,10 @@ bool Ntp1Analyzer::PassedHLT( const std::string& HLTName ) { //default is OR of 
 
     if( HLTName=="" || requiredTriggers_[i]==HLTName ) {
 
-//std::cout << std::endl << "+++ " << requiredTriggers_[i];
       int block_required =  index_requiredTriggers_[i]/30;
       int pos_required = index_requiredTriggers_[i]%30;
       int word_required = firedTrg[block_required];
-      
-//if( (word_required >> pos_required)%2 ) std::cout << "PASSED = true!";
+
       if ( (word_required >> pos_required)%2 ) return true;
 
     } // if required
