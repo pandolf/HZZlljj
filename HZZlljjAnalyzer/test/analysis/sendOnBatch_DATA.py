@@ -7,7 +7,7 @@ import time
 ### usage  cmst3_submit_manyfilesperjob.py dataset njobs applicationName queue 
 #######################################
 if (len(sys.argv) != 4) and (len(sys.argv) != 5) and (len(sys.argv) != 6):
-    print "usage sendOnBatch.py PDname SDname filesPerJobs analyzerType=\"HZZlljj\" flags=\"\""
+    print "usage sendOnBatch.py PDname SDname filesPerJobs analyzerType=\"HWWlvjj\" flags=\"\""
     sys.exit(1)
 PDname = sys.argv[1]
 SDname = sys.argv[2]
@@ -22,7 +22,7 @@ queue = "8nh"
 #ijobmax = 40
 ijobmax = int(sys.argv[3])
 #application = "VecbosApp"
-analyzerType = "HZZlljj"
+analyzerType = "HWWlvjj"
 if len(sys.argv) == 5:
     analyzerType = sys.argv[4]
 flags = ""
@@ -36,7 +36,7 @@ application = application + "_DATA"
 #outputmain = castordir+output
 # to write on local disks
 ################################################
-diskoutputdir = "/cmsrm/pc23_2/pandolf/DATA/"+dirname
+diskoutputdir = "/cmsrm/pc23_2/lpernie/DATA/"+dirname
 #outputmain = castordir
 diskoutputmain = diskoutputdir
 # prepare job to write on the cmst3 cluster disks
@@ -55,7 +55,7 @@ os.system("mkdir -p "+dir+"/src/")
 #else: os.system("mkdir -p "+outputroot)
 
 if diskoutputdir != "none": 
-    os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm21 mkdir -p "+diskoutputmain)
+    os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm22 mkdir -p "+diskoutputmain)
 
 #look for the current directory
 #######################################
@@ -84,18 +84,18 @@ while (len(inputfiles) > 0):
     outputname = dir+"/src/submit_"+str(ijob)+".src"
     outputfile = open(outputname,'w')
     outputfile.write('#!/bin/bash\n')
-    outputfile.write('export STAGE_HOST=castorcms\n')
-    outputfile.write('export STAGE_SVCCLASS=cmst3\n')
+    outputfile.write('export SCRAM_ARCH=slc5_amd64_gcc434\n')
+    outputfile.write('cd /afs/cern.ch/user/l/lpernie/CMSSW_4_1_3/src/; eval `scramv1 runtime -sh` ; cd -\n')
     #    outputfile.write('cd '+pwd)
     outputfile.write('cp '+pwd+'/Cert_*.txt $WORKDIR\n')
     #outputfile.write('cp '+pwd+'/lumi_by_LS_132440_140401.csv $WORKDIR\n')
     outputfile.write('cd $WORKDIR\n')
     #outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" _"+str(ijob)+"\n")
     outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" "+str(ijob)+"\n")
-    outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm21:'+diskoutputmain+'/{}\n') 
+    outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm22:'+diskoutputmain+'/{}\n') 
     outputfile.close
-    os.system("echo bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
-    os.system("bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname+" -copyInput="+dataset+"_"+str(ijob))
+    os.system("echo bsub -q "+queue+" -o "+pwd+"/"+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
+    os.system("bsub -q "+queue+" -o "+pwd+"/"+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname+" -copyInput="+dataset+"_"+str(ijob))
     ijob = ijob+1
     time.sleep(2.)
     continue

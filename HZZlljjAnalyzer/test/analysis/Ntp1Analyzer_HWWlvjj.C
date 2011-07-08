@@ -617,6 +617,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
   
    } //for muon
 
+
      // ------------------
      // ELECTRON
      // ------------------
@@ -888,7 +889,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
 	      }
 	    }  //if lept type
 	  } //if yes leptons
-         
+   
       // ------------------
       // JETS
       // ------------------
@@ -943,8 +944,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
        if( fabs(thisJet.Eta())<2.4 && thisJet.nChargedHadrons == 0 ) continue;
        if( thisJet.eNeutralHadrons >= 0.99*thisJet.Energy() ) continue;
        if( thisJet.ePhotons >= 0.99*thisJet.Energy() ) continue;
-
-// match to genjet:
+       // match to genjet:
        float bestDeltaR=999.;
        TLorentzVector matchedGenJet;
        for( unsigned iGenJet=0; iGenJet<nAK5GenJet; ++iGenJet ) {
@@ -978,13 +978,12 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
 
        leadJets.push_back(thisJet);
        leadJetsIndex.push_back(iJet);
-
      }//iJet
 
      h1_nJets30->Fill(nJets30);
      if( leadJets.size()<2 ) continue;
      if( leadJets[1].Pt()<jetPt_thresh ) continue; //at least 2 jets over thresh
-
+   
      // now look for best invariant mass jet pair 
      float Wmass = 80.399;
      float bestMass = 0.;
@@ -1008,6 +1007,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
        if( fabs(thisJet.Eta()) > 2.4 ) continue;
 
 
+
        for( unsigned int jJet=iJet+1; jJet<leadJets.size(); ++jJet ) {
 
          AnalysisJet otherJet = leadJets[jJet];
@@ -1017,6 +1017,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
          // --------------
          if( otherJet.Pt() < jetPt_thresh ) continue;
          if( fabs(otherJet.Eta()) > 2.4 ) continue;
+
 
          if( nPairs_>=50 ) {
         
