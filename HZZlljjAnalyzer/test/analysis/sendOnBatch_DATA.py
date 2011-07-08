@@ -84,8 +84,10 @@ while (len(inputfiles) > 0):
     outputname = dir+"/src/submit_"+str(ijob)+".src"
     outputfile = open(outputname,'w')
     outputfile.write('#!/bin/bash\n')
+    outputfile.write('export STAGE_HOST=castorcms\n')
+    outputfile.write('export STAGE_SVCCLASS=cmst3\n')
     outputfile.write('export SCRAM_ARCH=slc5_amd64_gcc434\n')
-    outputfile.write('cd /afs/cern.ch/user/l/lpernie/CMSSW_4_1_3/src/; eval `scramv1 runtime -sh` ; cd -\n')
+    outputfile.write('cd /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_4_2_3_patch5/ ; eval `scramv1 runtime -sh` ; cd -\n')
     #    outputfile.write('cd '+pwd)
     outputfile.write('cp '+pwd+'/Cert_*.txt $WORKDIR\n')
     #outputfile.write('cp '+pwd+'/lumi_by_LS_132440_140401.csv $WORKDIR\n')

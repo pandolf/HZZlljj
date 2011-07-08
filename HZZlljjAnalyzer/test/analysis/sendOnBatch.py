@@ -15,7 +15,8 @@ inputlist = "files_"+dataset+".txt"
 # choose among cmt3 8nm 1nh 8nh 1nd 1nw 
 #queue = "cmst3"
 #queue = "cms8nht3"
-queue = "8nh"
+#queue = "8nh"
+queue = "2nd"
 #ijobmax = 40
 ijobmax = int(sys.argv[2])
 #application = "VecbosApp"
@@ -39,8 +40,8 @@ afsdir = "/afs/cern.ch/user/p/pandolf/scratch0/NTUPLES/"+dataset
 # to write on local disks
 ################################################
 #diskoutputdir = "/cmsrm/pc21_2/pandolf/MC/"+dataset
-#diskoutputdir = "/cmsrm/pc23_2/pandolf/MC/Spring11_v2/"+dataset
-diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Spring11_v2/"+dataset
+diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Summer11/"+dataset
+#diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Summer11/"+dataset
 #diskoutputmain2 = castordir
 #diskoutputmain2 = pnfsdir
 diskoutputmain2 = afsdir
@@ -93,7 +94,7 @@ while (len(inputfiles) > 0):
     outputfile.write('export STAGE_HOST=castorcms\n')
     outputfile.write('export STAGE_SVCCLASS=cmst3\n')
     outputfile.write('export SCRAM_ARCH=slc5_amd64_gcc434\n')
-    outputfile.write('cd /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_4_1_3_patch2/ ; eval `scramv1 runtime -sh` ; cd -\n')
+    outputfile.write('cd /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_4_2_3_patch5/ ; eval `scramv1 runtime -sh` ; cd -\n')
     #outputfile.write('export ROOTSYS=/afs/cern.ch/sw/lcg/app/releases/ROOT/5.26.00/x86_64-slc5-gcc34-opt/root\n')
     #outputfile.write('export LD_LIBRARY_PATH=$ROOTSYS/lib\n')
     #    outputfile.write('cd '+pwd)
@@ -112,5 +113,5 @@ while (len(inputfiles) > 0):
     os.system("echo bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
     os.system("bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname+" -copyInput="+dataset+"_"+str(ijob))
     ijob = ijob+1
-    time.sleep(2.)
+    time.sleep(3.)
     continue
