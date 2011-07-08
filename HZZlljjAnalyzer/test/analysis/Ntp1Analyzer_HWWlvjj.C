@@ -372,8 +372,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      TLorentzVector lept1MC, lept2MC;
      int wIndexqq=-1;
      int wIndexll=-1;
-     
-     if( !isMC_ ) std::cout<<"isMC_ is false"<<std::endl;
+    
      if( isMC_ ) {
        
        // first look for W->qq'
@@ -404,7 +403,6 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
    ptQuark2_=quarksMC[1].Pt();
    etaQuark2_=quarksMC[1].Eta();
    phiQuark2_=quarksMC[1].Phi();
-
          TLorentzVector WqqMC;
          WqqMC.SetPtEtaPhiE( pMc[wIndexqq]*sin(thetaMc[wIndexqq]), etaMc[wIndexqq], phiMc[wIndexqq], energyMc[wIndexqq] );
          ptWqqMC_  = WqqMC.Pt();
@@ -414,7 +412,6 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 
 	 //float deltaRqq = quarksMC[0].DeltaR(quarksMC[1]);
 	 // h1_deltaRqq->Fill(deltaRqq);
-
        }
        
        // now look for W->lv
@@ -824,8 +821,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
      //   } //for mu
      
      //   if( electron.size() < 2 && muon.size() < 1 ) continue;
-     
-     
+    
      std::vector< AnalysisLepton > leptons;
 
      if( (electron.size() == 1 && muon.size() == 1) ) continue;
@@ -892,7 +888,6 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
 	      }
 	    }  //if lept type
 	  } //if yes leptons
-
          
       // ------------------
       // JETS
@@ -939,8 +934,8 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
        if( leadJets.size()>=3 && thisJet.Pt()<jetPt_thresh ) break;
 
        // far away from leptons:
-      if( leptType_==0){ if(thisJet.DeltaR( leptons[0] ) < 0.1/*0.5*/ ) continue;}//Other    
-      if( leptType_==1){ if(thisJet.DeltaR( leptons[0] ) < 0.3/*0.5*/ ) continue;}//Other 
+      if( leptType_==0){ if(thisJet.DeltaR( leptons[0] ) < 0.5 ) continue;}    
+      if( leptType_==1){ if(thisJet.DeltaR( leptons[0] ) < 0.5 ) continue;} 
 
        // jet ID:
        int multiplicity = thisJet.nCharged +  thisJet.nNeutral + HFEMMultiplicityAK5PFPUcorrJet[iJet] + HFHadronMultiplicityAK5PFPUcorrJet[iJet];
@@ -949,7 +944,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
        if( thisJet.eNeutralHadrons >= 0.99*thisJet.Energy() ) continue;
        if( thisJet.ePhotons >= 0.99*thisJet.Energy() ) continue;
 
-       // match to genjet:
+// match to genjet:
        float bestDeltaR=999.;
        TLorentzVector matchedGenJet;
        for( unsigned iGenJet=0; iGenJet<nAK5GenJet; ++iGenJet ) {
@@ -957,26 +952,38 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
          if( thisGenJet.DeltaR(thisJet) < bestDeltaR ) {
            bestDeltaR=thisGenJet.DeltaR(thisJet);
            matchedGenJet=thisGenJet;
-	   matched=true;
          }
        }
 
-       if( matched ){
-       thisJet.ptGen  = matchedGenJet.Pt();
-       thisJet.etaGen = matchedGenJet.Eta();
-       thisJet.phiGen = matchedGenJet.Phi();
-       thisJet.eGen   = matchedGenJet.Energy();
+       thisJet.ptGen  = (isMC_) ? matchedGenJet.Pt() : 0.;
+       thisJet.etaGen = (isMC_) ? matchedGenJet.Eta() : 20.;
+       thisJet.phiGen = (isMC_) ? matchedGenJet.Phi() : 0.;
+       thisJet.eGen   = (isMC_) ? matchedGenJet.Energy() : 0.;
+
+       // match to parton:
+       float bestDeltaR_part=999.;
+       TLorentzVector matchedPart;
+       int pdgIdPart=0;
+       for( unsigned iPart=0; iPart<nMc; ++iPart ) {
+         if( statusMc[iPart]!=3 ) continue; //partons
+         if( idMc[iPart]!=21 && abs(idMc[iPart])>6 ) continue; //quarks or gluons
+         TLorentzVector thisPart;
+         thisPart.SetPtEtaPhiE(pMc[iPart]*sin(thetaMc[iPart]), etaMc[iPart], phiMc[iPart], energyMc[iPart]);
+         if( thisPart.DeltaR(thisJet) < bestDeltaR_part ) {
+           bestDeltaR_part=thisPart.DeltaR(thisJet);
+           matchedPart=thisPart;
+           pdgIdPart=idMc[iPart];
+         }
+       }
 
        leadJets.push_back(thisJet);
        leadJetsIndex.push_back(iJet);
-       }
+
      }//iJet
 
      h1_nJets30->Fill(nJets30);
      if( leadJets.size()<2 ) continue;
      if( leadJets[1].Pt()<jetPt_thresh ) continue; //at least 2 jets over thresh
-
-
 
      // now look for best invariant mass jet pair 
      float Wmass = 80.399;
@@ -1082,11 +1089,10 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
 
        } //for j
      } //for i
-
    if( findJetELE && nPairs_>=1 ) {Cont_JetsELE++;} //Other 
    if( findJetMU && nPairs_>=1 ) {Cont_JetsMU++;} //Other 
-
-     //if( jets.size() < 2 ) continue;
+ 
+    //if( jets.size() < 2 ) continue;
      //if( best_i==-1 || best_j==-1 ) continue; //means that less than 2 jets were found
 
 
@@ -1152,9 +1158,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
       }  // for candidates
      
      }
-
 */
-
      if( isMC_ ) {
 
        // store event partons in tree:
