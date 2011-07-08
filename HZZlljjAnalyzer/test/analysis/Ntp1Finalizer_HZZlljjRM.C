@@ -29,6 +29,8 @@ bool USE_MC_MASS=false;
 
 
 int getNJets( int nPairs );
+float getWeight_adish( int nPU );
+float getMuonHLTSF( float eta );
 
 std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string histoName, int nBins, float xMin, float xMax );
 
@@ -424,7 +426,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_mZjj_all_presel = new TH1D("mZjj_all_presel", "", 400, 30., 430.);
   h1_mZjj_all_presel->Sumw2();
 
-  TH1D* h1_deltaRjj_all_presel = new TH1D("deltaRjj_all_presel", "", 18, 0.5, 5.);
+  TH1D* h1_deltaRjj_all_presel = new TH1D("deltaRjj_all_presel", "", 50, 0.5, 5.);
   h1_deltaRjj_all_presel->Sumw2();
   TH1D* h1_deltaRll_presel = new TH1D("deltaRll_presel", "", 20, 0., 5.);
   h1_deltaRll_presel->Sumw2();
@@ -546,6 +548,18 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZjj_MU->Sumw2();
   TH1D* h1_mZjj_ELE= new TH1D("mZjj_ELE", "", 400, 30., 430.);
   h1_mZjj_ELE->Sumw2();
+  TH1D* h1_mZjj_0btag= new TH1D("mZjj_0btag", "", 400, 30., 430.);
+  h1_mZjj_0btag->Sumw2();
+  TH1D* h1_mZjj_1btag= new TH1D("mZjj_1btag", "", 400, 30., 430.);
+  h1_mZjj_1btag->Sumw2();
+  TH1D* h1_mZjj_2btag= new TH1D("mZjj_2btag", "", 400, 30., 430.);
+  h1_mZjj_2btag->Sumw2();
+  TH1D* h1_mZjj_loMass= new TH1D("mZjj_loMass", "", 400, 30., 430.);
+  h1_mZjj_loMass->Sumw2();
+  TH1D* h1_mZjj_medMass= new TH1D("mZjj_medMass", "", 400, 30., 430.);
+  h1_mZjj_medMass->Sumw2();
+  TH1D* h1_mZjj_hiMass= new TH1D("mZjj_hiMass", "", 400, 30., 430.);
+  h1_mZjj_hiMass->Sumw2();
   TH1D* h1_mZjj_loChiSquareProb= new TH1D("mZjj_loChiSquareProb", "", 100, 30., 200.);
   h1_mZjj_loChiSquareProb->Sumw2();
   TH1D* h1_mZjj_hiChiSquareProb= new TH1D("mZjj_hiChiSquareProb", "", 100, 30., 200.);
@@ -1170,18 +1184,24 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   HelicityLikelihoodDiscriminant::HelicityAngles hangles_selected;
 
   BTagSFUtil* btsfutil = new BTagSFUtil(13);
-  PUWeight* fPUWeight = new PUWeight();
+  std::string puType = "Spring11_Flat10";
   TString dataset_tstr(dataset_);
   if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") ) {
-    TFile* filePUMC = TFile::Open("PUWeight_Summer11-PU_S4_START42_V11.root");
-    TH1F* h1MC = (TH1F*)filePUMC->Get("pileup");
-    fPUWeight->SetMCHistogram(h1MC);
+    puType = "Summer11_S4";
   }
+  PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
+//TString dataset_tstr(dataset_);
+//if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") ) {
+//  TFile* filePUMC = TFile::Open("PUWeight_Summer11-PU_S4_START42_V11.root");
+//  TH1F* h1MC = (TH1F*)filePUMC->Get("pileup");
+//  fPUWeight->SetMCHistogram(h1MC);
+//}
 
   int maxBTag_found = -1;
   float mZZ, mZjj;
   bool isSidebands=false;
   bool foundSignalRegionMjj=false;
+  bool atLeastOneInSignalRegionMjj=false;
 
   tree_passedEvents->Branch( "leptType", &leptType, "leptType/I" );
   tree_passedEvents->Branch( "mZjj", &mZjj, "mZjj/F" );
@@ -1192,13 +1212,17 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
 
 
-float nEventsTot = 0.;
-float nEvents_hiChiSquareProb = 0.;
-float nEvents_mZjj_cut = 0.;
 
 ofstream ofs("run_event.txt");
 
 
+  
+  float nEvents_presel=0.;
+  float nEvents_presel_mZll=0.;
+  float nEvents_presel_mZll_mZjj=0.;
+  float nEvents_presel_mZll_mZjj_0btag=0.;
+  float nEvents_presel_mZll_mZjj_1btag=0.;
+  float nEvents_presel_mZll_mZjj_2btag=0.;
 
 
 //nEntries=10000;
@@ -1219,11 +1243,11 @@ ofstream ofs("run_event.txt");
     }
 
 
-    // BUG FIX in Z->ll BR in Spring11 Alpgen Z+jets:
-    if( dataset_=="ZJets_alpgen_TuneZ2_Spring11_v2" ) {
-      if( leptType==0 )      eventWeight = eventWeight_Zmm;
-      else if( leptType==1 ) eventWeight = eventWeight_Zee;
-    }
+  //// BUG FIX in Z->ll BR in Spring11 Alpgen Z+jets:
+  //if( dataset_=="ZJets_alpgen_TuneZ2_Spring11_v2" ) {
+  //  if( leptType==0 )      eventWeight = eventWeight_Zmm;
+  //  else if( leptType==1 ) eventWeight = eventWeight_Zee;
+  //}
 
 
 
@@ -1232,9 +1256,26 @@ ofstream ofs("run_event.txt");
     h1_nvertex->Fill(nvertex, eventWeight);
 
     if( isMC ) {
+
       // PU reweighting:
-      eventWeight *= fPUWeight->GetWeight(nPU);
-    }
+      if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") )
+        eventWeight *= getWeight_adish(nPU);
+      else
+        eventWeight *= fPUWeight->GetWeight(nPU);
+     
+      // scale factor for double mu triggers:
+      if( leptType==0 ) {
+
+        float eff1 = getMuonHLTSF( etaLept1 );
+        float eff2 = getMuonHLTSF( etaLept2 );
+
+        float HLTSF = eff1*eff2;
+        eventWeight *= HLTSF;
+
+      }
+
+    } // if is MC
+
 
     h1_nvertex_PUW->Fill(nvertex, eventWeight);
 
@@ -1308,6 +1349,7 @@ ofstream ofs("run_event.txt");
 
 
 
+    nEvents_presel += eventWeight;
 
     std::vector< std::pair< AnalysisJet, AnalysisJet > > jetPairs_selected;
 
@@ -1363,7 +1405,7 @@ ofstream ofs("run_event.txt");
     if( fabs(lept2.Eta()) > etaLept2_thresh_ ) continue;
     if( diLepton.M() < mZll_threshLo_ || diLepton.M() > mZll_threshHi_ ) continue;
 
-
+    nEvents_presel_mZll += eventWeight;
 
 
     float cached_jetpt = 0.;
@@ -1373,6 +1415,7 @@ ofstream ofs("run_event.txt");
     bool foundJets_ZZmass = false;
     maxBTag_found = -1;
     foundSignalRegionMjj = false;
+    atLeastOneInSignalRegionMjj = false;
 
     for( unsigned iJetPair=0; iJetPair<nPairs; ++iJetPair ) {
 
@@ -1493,7 +1536,11 @@ ofstream ofs("run_event.txt");
       if( foundSignalRegionMjj && ( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) ) continue;
 
 
-      if( diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ ) isSignalRegionMjj = true;
+      if( diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ ) {
+        if( !atLeastOneInSignalRegionMjj ) nEvents_presel_mZll_mZjj += eventWeight;
+        atLeastOneInSignalRegionMjj = true;
+        isSignalRegionMjj = true;
+      }
 
 
 
@@ -1704,6 +1751,8 @@ ofstream ofs("run_event.txt");
 
 
 
+    h1_nCandidates->Fill( foundJets, eventWeight );
+
 
     if( foundJets==0 ) continue;
 
@@ -1725,6 +1774,14 @@ ofstream ofs("run_event.txt");
       h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
       if( leptType==0 ) h1_mZjj_MU->Fill( Zjj_nokinfit.M(), eventWeight);
       if( leptType==1 ) h1_mZjj_ELE->Fill( Zjj_nokinfit.M(), eventWeight);
+
+      if( mZZ>150. && mZZ<250. ) h1_mZjj_loMass->Fill( Zjj_nokinfit.M(), eventWeight);
+      else if( mZZ>250. && mZZ<400. ) h1_mZjj_medMass->Fill( Zjj_nokinfit.M(), eventWeight);
+      else if( mZZ>400. ) h1_mZjj_hiMass->Fill( Zjj_nokinfit.M(), eventWeight);
+
+      if( maxBTag_found==0 )  h1_mZjj_0btag->Fill( Zjj_nokinfit.M(), eventWeight);
+      else if( maxBTag_found==1 )  h1_mZjj_1btag->Fill( Zjj_nokinfit.M(), eventWeight);
+      else if( maxBTag_found==2 )  h1_mZjj_2btag->Fill( Zjj_nokinfit.M(), eventWeight);
 
       if( Zjj_nokinfit.M()<60. || Zjj_nokinfit.M()>130. ) continue;
       
@@ -1772,10 +1829,10 @@ ofstream ofs("run_event.txt");
 
 
 
+    if( maxBTag_found==0 ) nEvents_presel_mZll_mZjj_0btag += eventWeight;
+    if( maxBTag_found==1 ) nEvents_presel_mZll_mZjj_1btag += eventWeight;
+    if( maxBTag_found==2 ) nEvents_presel_mZll_mZjj_2btag += eventWeight;
 
-    h1_nCandidates->Fill( foundJets, eventWeight );
-
-    if( foundJets==0 ) continue;
 
 
 
@@ -2078,6 +2135,12 @@ ofs << run << " " << event << std::endl;
     h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
     if( leptType==0 ) h1_mZjj_MU->Fill( Zjj_nokinfit.M(), eventWeight);
     if( leptType==1 ) h1_mZjj_ELE->Fill( Zjj_nokinfit.M(), eventWeight);
+    if( mZZ>150. && mZZ<250. ) h1_mZjj_loMass->Fill( Zjj_nokinfit.M(), eventWeight);
+    else if( mZZ>250. && mZZ<400. ) h1_mZjj_medMass->Fill( Zjj_nokinfit.M(), eventWeight);
+    else if( mZZ>400. ) h1_mZjj_hiMass->Fill( Zjj_nokinfit.M(), eventWeight);
+    if( maxBTag_found==0 ) h1_mZjj_0btag->Fill( Zjj_nokinfit.M(), eventWeight);
+    else if( maxBTag_found==1 ) h1_mZjj_1btag->Fill( Zjj_nokinfit.M(), eventWeight);
+    else if( maxBTag_found==2 ) h1_mZjj_2btag->Fill( Zjj_nokinfit.M(), eventWeight);
 
     h2_mZjj_vs_mZZ->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
     if( maxBTag_found==0 ) h2_mZjj_vs_mZZ_0btag->Fill( ZZ_nokinfit.M(), Zjj_nokinfit.M() );
@@ -2680,6 +2743,13 @@ ofs << run << " " << event << std::endl;
 
   } //for entries
 
+
+  std::cout << "nEvents_presel: " << nEvents_presel << std::endl;
+  std::cout << "nEvents_presel_mZll: " << nEvents_presel_mZll << std::endl;
+  std::cout << "nEvents_presel_mZll_mZjj: " << nEvents_presel_mZll_mZjj << std::endl;
+  std::cout << "nEvents_presel_mZll_mZjj_0btag: " << nEvents_presel_mZll_mZjj_0btag << std::endl;
+  std::cout << "nEvents_presel_mZll_mZjj_1btag: " << nEvents_presel_mZll_mZjj_1btag << std::endl;
+  std::cout << "nEvents_presel_mZll_mZjj_2btag: " << nEvents_presel_mZll_mZjj_2btag << std::endl;
 
   h1_nCounter->SetBinContent(1, nCounter_);
   h1_nCounterW->SetBinContent(1, nCounterW_);
@@ -3327,6 +3397,12 @@ ofs << run << " " << event << std::endl;
   h1_mZjjMC->Write();
 
   h1_mZjj->Write();
+  h1_mZjj_0btag->Write();
+  h1_mZjj_1btag->Write();
+  h1_mZjj_2btag->Write();
+  h1_mZjj_loMass->Write();
+  h1_mZjj_medMass->Write();
+  h1_mZjj_hiMass->Write();
   h1_mZjj_MU->Write();
   h1_mZjj_ELE->Write();
   h1_mZjj_loChiSquareProb->Write();
@@ -4023,3 +4099,55 @@ float Ntp1Finalizer_HZZlljjRM::get_helicityLD_thresh(float mass, int nBTags) {
 
 }
 
+
+
+float getWeight_adish( int nPU ) {
+
+  float weights[] = {0.110043,
+                     0.457365,
+                     0.98622,
+                     1.60429,
+                     2.06065,
+                     2.22437,
+                     2.1078,
+                     1.76987,
+                     1.37698,
+                     0.99556,
+                     0.693361,
+                     0.458662,
+                     0.295982,
+                     0.185586,
+                     0.113966,
+                     0.068645,
+                     0.041019,
+                     0.0239427,
+                     0.0139931,
+                     0.00810005,
+                     0.00473432,
+                     0.0026347,
+                     0.00152847,
+                     0.000864942,
+                     0.000756823};
+
+  float returnWeight;
+
+  if( nPU <=24 ) returnWeight = weights[nPU];
+  else returnWeight = 0.;
+
+  return returnWeight;
+
+}
+
+
+
+float getMuonHLTSF( float eta ) {
+
+  float eff;
+
+  if( fabs(eta)<0.9 ) eff = 0.97;
+  else if( fabs(eta)<2.1 ) eff = 0.95;
+  else eff = 0.91;
+
+  return eff;
+
+}
