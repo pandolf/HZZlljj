@@ -143,6 +143,8 @@ void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
   
   TTree* treeCond = (condFile==0) ? 0 : (TTree*)(condFile->Get("Conditions"));
 
+  std::vector<std::string> foundTriggers;
+  std::vector<std::string> foundTriggersNOT;
 
   //new version: trigger loaded directly from ntp1 tree:
   if( treeCond==0 ) { 
@@ -155,16 +157,18 @@ void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
     for (std::vector< std::string >::const_iterator fIter=requiredTriggers_.begin();fIter!=requiredTriggers_.end();++fIter)
       {
         bool foundThisTrigger = false;
+//std::cout << "looking for: " << (*fIter) << std::endl;
         for(unsigned int i=0; i<nameHLT->size(); i++) 
           {
-std::cout << std::endl << indexHLT[i] << " " << nameHLT->at(i);
+//std::cout << std::endl << indexHLT[i] << " " << nameHLT->at(i);
             TString nameHLT_tstr(nameHLT->at(i));
             if( nameHLT_tstr.Contains((*fIter)) )
             //if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) ) 
               {
-std::cout << " <----- HERE IT IS!" << std::endl;
+//std::cout << " <----- HERE IT IS!" << std::endl;
                 foundThisTrigger = true;
                 triggerMask_required.push_back( indexHLT[i] ) ;
+                foundTriggers.push_back( nameHLT->at(i) ) ;
                 break;
               }
           }
@@ -180,11 +184,14 @@ std::cout << " <----- HERE IT IS!" << std::endl;
         for(unsigned int i=0; i<nameHLT->size(); i++) 
           {
 //std::cout << std::endl << nameHLT->at(i);
-            if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) ) 
+            TString nameHLT_tstr(nameHLT->at(i));
+            if( nameHLT_tstr.Contains((*fIter)) )
+            //if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) ) 
               {
 //std::cout << " <----- HERE IT IS!" << std::endl;
                 foundThisTrigger = true;
                 triggerMask_NOT.push_back( indexHLT[i] ) ;
+                foundTriggersNOT.push_back( nameHLT->at(i) ) ;
                 break;
               }
           }
@@ -233,10 +240,10 @@ std::cout << " <----- HERE IT IS!" << std::endl;
     std::cout << "-> No trigger selection required." << std::endl;
 
   for (int i=0;i<index_requiredTriggers_.size();++i)
-    std::cout << "[ReloadTriggerMask]::Requiring bit " << index_requiredTriggers_[i] << " " << requiredTriggers_[i] << std::endl;
+    std::cout << "[ReloadTriggerMask]::Requiring bit " << index_requiredTriggers_[i] << " " << foundTriggers[i] << std::endl;
 
   for (int i=0;i<index_notTriggers_.size();++i)
-    std::cout << "[ReloadTriggerMask]::Vetoing bit " << index_notTriggers_[i] << " " << notTriggers_[i] << std::endl;
+    std::cout << "[ReloadTriggerMask]::Vetoing bit " << index_notTriggers_[i] << " " << foundTriggersNOT[i] << std::endl;
 
 
 } // LoadTrigger
