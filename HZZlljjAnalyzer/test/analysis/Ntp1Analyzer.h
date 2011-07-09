@@ -66,7 +66,7 @@ public :
    Int_t           mothMc[1000];   //[nMc]
    Int_t           statusMc[1000];   //[nMc]
    Int_t           nTrg;
-   Int_t           firedTrg[500];   //[nTrg]
+   Int_t           firedTrg[100];   //[nTrg]
    Int_t           nHLT;
    Int_t           indexHLT[3000];   //[nHLT]
    std::vector<std::string>  *nameHLT;
@@ -1263,7 +1263,7 @@ public :
    virtual void SetFlags( const std::string& flags ) { flags_ = flags; };
    virtual void SetRequiredTriggers( const std::vector<std::string>& reqTrigz ) { requiredTriggers_ = reqTrigz; };
    virtual void AddRequiredTrigger( const std::string& trigger ) { requiredTriggers_.push_back(trigger); };
-   virtual void AddNOTTrigger( const std::string& trigger ) { notTriggers_.push_back(trigger); };
+   virtual void AddRequiredTriggerNOT( const std::string& trigger ) { notTriggers_.push_back(trigger); };
    virtual bool PassedHLT( const std::string& HLTName="" );
 
    virtual Int_t    Cut(Long64_t entry);
