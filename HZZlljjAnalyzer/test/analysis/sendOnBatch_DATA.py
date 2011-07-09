@@ -22,7 +22,7 @@ queue = "8nh"
 #ijobmax = 40
 ijobmax = int(sys.argv[3])
 #application = "VecbosApp"
-analyzerType = "HWWlvjj"
+analyzerType = "HZZlljj"
 if len(sys.argv) == 5:
     analyzerType = sys.argv[4]
 flags = ""
@@ -36,7 +36,7 @@ application = application + "_DATA"
 #outputmain = castordir+output
 # to write on local disks
 ################################################
-diskoutputdir = "/cmsrm/pc23_2/lpernie/DATA/"+dirname
+diskoutputdir = "/cmsrm/pc23_2/pandolf/DATA/"+dirname
 #outputmain = castordir
 diskoutputmain = diskoutputdir
 # prepare job to write on the cmst3 cluster disks
@@ -99,5 +99,5 @@ while (len(inputfiles) > 0):
     os.system("echo bsub -q "+queue+" -o "+pwd+"/"+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
     os.system("bsub -q "+queue+" -o "+pwd+"/"+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname+" -copyInput="+dataset+"_"+str(ijob))
     ijob = ijob+1
-    time.sleep(2.)
+    time.sleep(2.5)
     continue
