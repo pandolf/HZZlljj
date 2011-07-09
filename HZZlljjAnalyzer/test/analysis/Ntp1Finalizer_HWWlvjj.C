@@ -1171,7 +1171,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     //pnATLAS=getPzATLAS(lept1, pxPFMet, pyPFMet, jet1, jet2);
     lept2.SetPxPyPzE(pxPFMet, pyPFMet, pn, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pn,2)) );
     lept2MC.SetPxPyPzE(NeuMC.Px(), NeuMC.Py(), pnMC,  sqrt(pow( NeuMC.Px(),2)+pow(NeuMC.Py(),2)+pow(pnMC,2)));
-    if( energyPFMet < /*25.Other*/ 30. ) continue;
+    if( energyPFMet < /*other:25*/ 30. ) continue;
     h1_energyMet->Fill( energyPFMet );
 /*
      h1_FindPz_EtaR->Fill(lept1.Eta()-neuR.Eta());     h1_FindPz_EtaW->Fill(lept1.Eta()-neuW.Eta());
@@ -1285,16 +1285,16 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       double sProb2=LDChoose->getSignalProbability();
       double bProb2=LDChoose->getBkgdProbability();
       double helicityLD2=sProb2/(sProb2+bProb2);
-TLorentzVector LL;
+       TLorentzVector LL;
       if( helicityLD1 >= helicityLD2 ) 
       LL.SetPxPyPzE( pxPFMet, pyPFMet, BothPzNeu.first.Pz(), sqrt(pow(pxPFMet,2)+pow(pyPFMet,2)+pow(BothPzNeu.first.Pz(),2) ));
       else 
       LL.SetPxPyPzE( pxPFMet, pyPFMet, BothPzNeu.second.Pz(), sqrt(pow(pxPFMet,2)+pow(pyPFMet,2)+pow(BothPzNeu.second.Pz(),2)) );
-
-h1_Studio1->Fill( ((lept1+LL).E()-WllMC.E())/WllMC.E() );
-h1_Studio2->Fill( ((lept1+lept2).E()-WllMC.E())/WllMC.E() );
-h1_Studio3->Fill( ((lept1+LL).Pz()-WllMC.Pz())/WllMC.Pz() );
-h1_Studio4->Fill( ((lept1+lept2).Pz()-WllMC.Pz())/WllMC.Pz() );
+      //std::cout<<NeuRW.first.Pz()<<"<-1  2->"<<NeuRW.second.Pz()<<"  lept2->"<<lept2.Pz()<<"  LL->"<<LL.Pz()<<std::endl;
+      //h1_Studio1->Fill( ((LL+lept1).Pz()-WllMC.Pz())/WllMC.Pz() );
+      //h1_Studio2->Fill( ((lept2+lept1).Pz()-WllMC.Pz())/WllMC.Pz() );
+      //h1_Studio3->Fill( ((LL+lept1).E()-WllMC.E())/WllMC.E() );
+      //h1_Studio4->Fill( ((lept2+lept1).E()-WllMC.E())/WllMC.E() );
 
      // Sort leptons and them charges
      float chargeLept1=0., chargeLept2=0.;
@@ -1588,7 +1588,14 @@ h2_correlation->Fill(lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight);
             matchedW = thisW;
           }
         }
-
+        // TAGLI OTHERS (No Mte, btag, veto 4jet)
+       /* if( delta_phi(lept1.Phi(),lept2.Phi())>1.5 ) continue;
+        if( delta_phi(jet1_kinfit.Phi(),jet2_kinfit.Phi())>1.25 ) continue; 
+        if( fabs(jet1_kinfit.Eta()-jet2_kinfit.Eta())>1.5 ) continue;
+        if( sorted ){ if( delta_phi(lept2.Phi(),(jet1_kinfit+jet2_kinfit).Phi())>3.15 ) continue;}
+        if( !sorted){ if( delta_phi(lept1.Phi(),(jet1_kinfit+jet2_kinfit).Phi())>3.15 ) continue;}
+        if( delta_phi((jet1_kinfit+jet2_kinfit).Phi(),(lept1+lept2).Phi())>3.15 ) continue;
+*/
         float ptWreso_before = (isMC) ? ( bestWDiJet.Pt()-matchedW.Pt() )/matchedW.Pt() : 0.;
         float ptWreso_after  = (isMC) ? ( Wjj_kinfit.Pt()-matchedW.Pt() )/matchedW.Pt() : 0.;
         h1_ptWreso_beforeKin->Fill( ptWreso_before, eventWeight);
@@ -2464,9 +2471,9 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     ptWll_thresh_ = 0.;
     ptWjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.8;
-    QGLikelihoodProd_thresh_ = 0.;
-    mWW_threshLo_ = 0.;
-    mWW_threshHi_ = 10000.;
+    QGLikelihoodProd_thresh_ = 0.1;
+    mWW_threshLo_ = 450.;
+    mWW_threshHi_ = 550.;
 
 
   } else if( selectionType_=="loose" ) {
@@ -2490,12 +2497,12 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
     mWW_threshLo_ = 0.;
-    mWW_threshHi_ = 10000.;
+    mWW_threshHi_ = 1000.;
     QGLikelihoodProd_thresh_ = 0.;
 
-  } else if( selectionType_=="other" ) {
+  } else if( selectionType_=="other500" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 30.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 2.1;
     etaLept2_thresh_ = 2.1;
@@ -2503,18 +2510,18 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     ptJet2_thresh_ = 30.;
     etaJet1_thresh_ = 2.5;
     etaJet2_thresh_ = 2.5;
-    mtWll_threshLo_ = 20.;
+    mtWll_threshLo_ = 30.;
     mtWll_threshHi_ = 999.;
     mWjj_threshLo_ = 60.;//## cambiata
-    mWjj_threshHi_ = 100.;
+    mWjj_threshHi_ = 110.;
     deltaRll_thresh_ = 999.;
     deltaRjj_thresh_ = 999.;
     ptWll_thresh_ = 0.;
     ptWjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
     QGLikelihoodProd_thresh_ = 0.;
-    mWW_threshLo_ = 150.;
-    mWW_threshHi_ = 250.;
+    mWW_threshLo_ = 400.;
+    mWW_threshHi_ = 650.;
 
 
   } else if( selectionType=="tight" ) {
