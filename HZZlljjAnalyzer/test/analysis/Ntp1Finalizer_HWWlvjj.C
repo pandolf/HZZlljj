@@ -849,7 +849,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   float nEvent_btag=0;
 
   int totSol=0, oneSol=0, oneSolMC=0, totPz=0, totPzR=0, totPzMC=0, totPzRMC=0, chooseHely=0, rightHely=0; // In order to count the right solutions of GetPz and the helicity
-  int timesTryJets=0, rightMatch=0;
+  int timesTryJets=0, rightMatch=0, AA=0, BB=0,CC=0;
 
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
     
@@ -865,7 +865,6 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     }
 
    bool isMC = (run<5);
-
 
     if( !isMC ) { 
 
@@ -1290,12 +1289,18 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       LL.SetPxPyPzE( pxPFMet, pyPFMet, BothPzNeu.first.Pz(), sqrt(pow(pxPFMet,2)+pow(pyPFMet,2)+pow(BothPzNeu.first.Pz(),2) ));
       else 
       LL.SetPxPyPzE( pxPFMet, pyPFMet, BothPzNeu.second.Pz(), sqrt(pow(pxPFMet,2)+pow(pyPFMet,2)+pow(BothPzNeu.second.Pz(),2)) );
-      //std::cout<<NeuRW.first.Pz()<<"<-1  2->"<<NeuRW.second.Pz()<<"  lept2->"<<lept2.Pz()<<"  LL->"<<LL.Pz()<<std::endl;
-      //h1_Studio1->Fill( ((LL+lept1).Pz()-WllMC.Pz())/WllMC.Pz() );
-      //h1_Studio2->Fill( ((lept2+lept1).Pz()-WllMC.Pz())/WllMC.Pz() );
-      //h1_Studio3->Fill( ((LL+lept1).E()-WllMC.E())/WllMC.E() );
-      //h1_Studio4->Fill( ((lept2+lept1).E()-WllMC.E())/WllMC.E() );
 
+      //std::cout<<NeuRW.first.Pz()<<"<-1  2->"<<NeuRW.second.Pz()<<"  lept2->"<<lept2.Pz()<<"  LL->"<<LL.Pz()<<std::endl;
+
+      h1_Studio1->Fill( ((LL+lept1).Pz()-WllMC.Pz())/WllMC.Pz() );
+      h1_Studio2->Fill( ((lept2+lept1).Pz()-WllMC.Pz())/WllMC.Pz() );
+      h1_Studio3->Fill( ((LL+lept1).E()-WllMC.E())/WllMC.E() );
+      h1_Studio4->Fill( ((lept2+lept1).E()-WllMC.E())/WllMC.E() );
+      if( fabs(((LL+lept1).Pz()-WllMC.Pz())/WllMC.Pz()) != fabs(((lept2+lept1).Pz()-WllMC.Pz())/WllMC.Pz()) ){
+      CC++;
+      if( fabs(((LL+lept1).Pz()-WllMC.Pz())/WllMC.Pz()) > fabs(((lept2+lept1).Pz()-WllMC.Pz())/WllMC.Pz()) && fabs(((LL+lept1).E()-WllMC.E())/WllMC.E()) < fabs(((lept2+lept1).E()-WllMC.E())/WllMC.E()) ) AA++;
+      if( fabs(((LL+lept1).Pz()-WllMC.Pz())/WllMC.Pz()) > fabs(((lept2+lept1).Pz()-WllMC.Pz())/WllMC.Pz()) && fabs(((LL+lept1).E()-WllMC.E())/WllMC.E()) > fabs(((lept2+lept1).E()-WllMC.E())/WllMC.E()) ) BB++;
+      }
      // Sort leptons and them charges
      float chargeLept1=0., chargeLept2=0.;
      bool  sorted=false;
@@ -1479,14 +1484,14 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 		  // ------------------------
 		  //   KINEMATIC FIT (LEPTON) : BEGIN
 		  // ------------------------
-	          if( (sorted && lept2.DeltaR(LepMC)<0.3) || (!sorted && lept1.DeltaR(LepMC)<0.3) ){ //only matched leptons
+	          //if( (sorted && lept2.DeltaR(LepMC)<0.3) || (!sorted && lept1.DeltaR(LepMC)<0.3) ){ //only matched leptons
 		  MissingEnergy neut; // Class defined in LeptonNeutrinoKinfitter.h
 		  neut.SetSumEt(SumEt);
                   TLorentzVector lept1_kinfit;
                   TLorentzVector lept2_kinfit, PRO;
                   float chiSquareProbLept;
                   if( sorted ){
-                  PRO.SetPtEtaPhiE(//NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt() );//lept1.Pt(),0.,lept1.Phi(),sqrt(lept1.Px()*lept1.Px()+lept1.Py()*lept1.Py()));
+                  PRO.SetPtEtaPhiE(//NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt() );/lept1.Pt(),0.,lept1.Phi(),sqrt(lept1.Px()*lept1.Px()+lept1.Py()*lept1.Py()));
 		  neut.SetNeutrino(PRO);
                   LeptonNeutrinoKinFitter* fitter_lept = new LeptonNeutrinoKinFitter( "fitter_lept", "fitter_lept", WllMC.M() );
                   std::pair<TLorentzVector,TLorentzVector> lept_kinfit = fitter_lept->fit(lept2, neut);
@@ -1496,12 +1501,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   h1_kinfit2_chiSquare->Fill( fitter_lept->getS()/fitter_lept->getNDF(),eventWeight);
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
                   h1_resoPt->Fill( (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() );
-            //h1_Studio1->Fill( (lept1.Pt()-NeuMC.Pt())/((0.5)*sqrt(SumEt)*(neut.Neutrino_.Px()+neut.Neutrino_.Py())/(2*neut.Neutrino_.Pt())) );
-            //h1_Studio2->Fill( (lept1.Phi()-NeuMC.Phi())/((0.6)*(1-(neut.Neutrino_.Py()/neut.Neutrino_.Px()))*(sqrt(SumEt)*0.5)/(neut.Neutrino_.Px()*(1+(pow(neut.Neutrino_.Py(),2)/pow(neut.Neutrino_.Px(),2))))) );
-h2_correlation->Fill(lept1.Pt()-NeuMC.Pt(),lept1.Phi()-NeuMC.Phi(),eventWeight);
+                  h2_correlation->Fill(lept1.Pt()-NeuMC.Pt(),lept1.Phi()-NeuMC.Phi(),eventWeight);
+lept1.SetPxPyPzE( lept1_kinfit.Px(),lept1_kinfit.Py(),pn,sqrt(pow(lept1_kinfit.Px(),2)+pow(lept1_kinfit.Py(),2)+pow(pn,2)) );
                   }
                   else{
-                  PRO.SetPtEtaPhiE(//NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt() );//lept2.Pt(),0.,lept2.Phi(),sqrt(lept2.Px()*lept2.Px()+lept2.Py()*lept2.Py()));
+                  PRO.SetPtEtaPhiE(//NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt() );/lept2.Pt(),0.,lept2.Phi(),sqrt(lept2.Px()*lept2.Px()+lept2.Py()*lept2.Py()));
                   neut.SetNeutrino(PRO);
                   LeptonNeutrinoKinFitter* fitter_lept = new LeptonNeutrinoKinFitter( "fitter_lept", "fitter_lept", WllMC.M() );
                   std::pair<TLorentzVector,TLorentzVector> lept_kinfit = fitter_lept->fit(lept1, neut);
@@ -1511,10 +1515,10 @@ h2_correlation->Fill(lept1.Pt()-NeuMC.Pt(),lept1.Phi()-NeuMC.Phi(),eventWeight);
                   h1_kinfit2_chiSquare->Fill( fitter_lept->getS()/fitter_lept->getNDF(), eventWeight );
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
                   h1_resoPt->Fill( (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() );
-            //h1_Studio1->Fill( (lept2.Pt()-NeuMC.Pt())/((0.5)*sqrt(SumEt)*(neut.Neutrino_.Px()+neut.Neutrino_.Py())/(2*neut.Neutrino_.Pt())) );
-            //h1_Studio2->Fill( (lept2.Phi()-NeuMC.Phi())/((0.6)*(1.13)*(1-(neut.Neutrino_.Py()/neut.Neutrino_.Px()))*(sqrt(SumEt)*0.5)/(neut.Neutrino_.Px()*(1+(pow(neut.Neutrino_.Py(),2)/pow(neut.Neutrino_.Px(),2))))) );
-h2_correlation->Fill(lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight);
-                 }
+                  h2_correlation->Fill(lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight);
+lept2.SetPxPyPzE( lept2_kinfit.Px(),lept2_kinfit.Py(),pn,sqrt(pow(lept2_kinfit.Px(),2)+pow(lept2_kinfit.Py(),2)+pow(pn,2)) );
+}
+diLepton=lept1+lept2;
         // Reso
         h1_pzResoNeut_KinFit->Fill( (isMC) ? (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
         h1_ptResoNeut_KinFit->Fill( (isMC) ? (lept2_kinfit.Pt()-NeuMC.Pt())/NeuMC.Pt() : 0 );  
@@ -1525,15 +1529,15 @@ h2_correlation->Fill(lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight);
         if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) == fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_One->Fill( (isMC) ? (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
 
 		  // Sort lept_kinfit
-		  TLorentzVector SortLeptons;
+	          TLorentzVector SortLeptons;
 		  if( lept1_kinfit.Pt() < lept2_kinfit.Pt() ){
 		    SortLeptons = lept1_kinfit;
 		    lept1_kinfit = lept2_kinfit;
 		    lept2_kinfit = SortLeptons;
-		  }
-          }//match
+		  }*/
+          //}//match
 		 // h1_mWW_kinLept->Fill( (bestWDiJet+lept1_kinfit+lept2_kinfit).M() );
-        		     */
+        		     
 		  // ------------------------
 		  //   KINEMATIC FIT (JET) : BEGIN
 		  // ------------------------
@@ -2135,6 +2139,7 @@ jet2.SetPtEtaPhiE(36.2, 0.64, -0.57, 44.47);
   std::cout<<"GetPz guess: "<<(double)totPzR/totPz<<" GetPzMC instead: "<<(double)totPzRMC/totPzMC<<std::endl;
   std::cout<<"Helicity guess: "<<(double)rightHely/chooseHely<<std::endl;
   //std::cout<<"Guessing Jets: "<<(double)rightMatch/timesTryJets<<std::endl;
+  std::cout<<AA<<"  "<<BB<<"  "<<CC<<std::endl;
   outFile_->cd();
 
 //@@@@
@@ -2470,8 +2475,8 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 999.;
     ptWll_thresh_ = 0.;
     ptWjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.8;
-    QGLikelihoodProd_thresh_ = 0.1;
+    helicityLD_thresh_ = 0.7;
+    QGLikelihoodProd_thresh_ = 0.2;
     mWW_threshLo_ = 450.;
     mWW_threshHi_ = 550.;
 
@@ -2796,7 +2801,7 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     ptWll_thresh_ = 155.;
     ptWjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.;
-    QGLikelihoodProd_thresh_ = 0.;
+    QGLikelihoodProd_thresh_ = 0.1;
     mWW_threshLo_ = 450.;
     mWW_threshHi_ = 550.;
 

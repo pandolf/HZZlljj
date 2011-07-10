@@ -15,7 +15,7 @@ class Ntp1Finalizer_HWWlvjj : public Ntp1Finalizer {
 
  public:
 
-  Ntp1Finalizer_HWWlvjj( const std::string& dataset, const std::string& selectionType, const std::string& leptType="ALL" );
+  Ntp1Finalizer_HWWlvjj( const std::string& dataset, const std::string& selectionType, float HiggsMass, const std::string& leptType="ALL" );
   virtual ~Ntp1Finalizer_HWWlvjj() {};
 
   virtual void finalize();
@@ -27,7 +27,7 @@ class Ntp1Finalizer_HWWlvjj : public Ntp1Finalizer {
 
    std::string leptType_;
    std::string selectionType_;
-
+   float HiggsMass_;
    float ptLept1_thresh_;
    float ptLept2_thresh_;
    float etaLept1_thresh_;
