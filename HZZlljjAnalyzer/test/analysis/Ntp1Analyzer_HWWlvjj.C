@@ -60,7 +60,6 @@ class AnalysisJet : public TLorentzVector {
   float trackCountingHighEffBJetTag;
 };
 
-
 Ntp1Analyzer_HWWlvjj::Ntp1Analyzer_HWWlvjj( const std::string& dataset, const std::string& flags, TTree* tree ) :
      Ntp1Analyzer( "HWWlvjj", dataset, flags, tree ) {
 
@@ -71,16 +70,12 @@ Ntp1Analyzer_HWWlvjj::Ntp1Analyzer_HWWlvjj( const std::string& dataset, const st
 void Ntp1Analyzer_HWWlvjj::CreateOutputFile() {
 
   Ntp1Analyzer::CreateOutputFile();
-
-
-
   reducedTree_->Branch("run",&run_,"run_/I");
   reducedTree_->Branch("LS",&LS_,"LS_/I");
   reducedTree_->Branch("event",&event_,"event_/I");
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
   reducedTree_->Branch("rhoPF",&rhoPF_,"rhoPF_/F");
-
 
 //// triggers:
 //reducedTree_->Branch("HLT_Mu11", &HLT_Mu11_, "HLT_Mu11_/O");
@@ -233,7 +228,7 @@ void Ntp1Analyzer_HWWlvjj::CreateOutputFile() {
   reducedTree_->Branch("pxPFMet",&pxPFMet_,"pxPFMet_/F");
   reducedTree_->Branch("pyPFMet",&pyPFMet_,"pyPFMet_/F");
 
-  reducedTree_->Branch("uncorrEnergyAK5Jet",&uncorrEnergyAK5Jet_,"uncorrEnergyAK5Jet_/F");//###
+  reducedTree_->Branch("uncorrEnergyAK5Jet",&uncorrEnergyAK5Jet_,"uncorrEnergyAK5Jet_/F");
   reducedTree_->Branch("SumEt",&SumEt_,"SumEt_/F");
  
   int nBins_eff = 20;
@@ -321,7 +316,6 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 
    Long64_t nbytes = 0, nb = 0;
 
-
    TRandom3 rand;
    float Cont_inclusive=0., Cont_PV=0., Cont_MU=0., Cont_ELE=0., Cont_VetoMU=0., Cont_VetoELE=0., Cont_JetsELE=0., Cont_JetsMU=0.;
    Long64_t Jentry;
@@ -347,7 +341,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      event_ = eventNumber;
      eventWeight_ = -1.; //default
 
- Cont_inclusive++;//Other;
+     Cont_inclusive++;//Other;
 
      if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
 
@@ -357,16 +351,15 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      nvertex_ = nPV;
      rhoPF_ = rhoFastjet;
 
-   Cont_PV++; //Other
+     Cont_PV++; //Other
+
      //trigger:
      // not yet
 
-     //bool isMC = ( runNumber < 5 );
-
      ptHat_ = (isMC_) ? genPtHat : ptHat_;
 
-   //if( isMC_ ) 
-   //  if( (ptHat_ > ptHatMax_) || (ptHat_ < ptHatMin_) ) continue;
+     //if( isMC_ ) 
+     //  if( (ptHat_ > ptHatMax_) || (ptHat_ < ptHatMin_) ) continue;
 
      bool noLeptons = false;
      TLorentzVector lept1MC, lept2MC;
@@ -390,26 +383,25 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
            wIndexqq = mothMc[iMc];
            quarksMC.push_back( *thisParticle );
          }
-
        }
 
        // (checked that always 2 quarks are found)
        if( quarksMC.size()==2 && wIndexqq!=-1 ) {
-   eQuark1_=quarksMC[0].E();
-   ptQuark1_=quarksMC[0].Pt();
-   etaQuark1_=quarksMC[0].Eta();
-   phiQuark1_=quarksMC[0].Phi();
-   eQuark2_=quarksMC[1].E();
-   ptQuark2_=quarksMC[1].Pt();
-   etaQuark2_=quarksMC[1].Eta();
-   phiQuark2_=quarksMC[1].Phi();
+	   eQuark1_=quarksMC[0].E();
+	   ptQuark1_=quarksMC[0].Pt();
+	   etaQuark1_=quarksMC[0].Eta();
+	   phiQuark1_=quarksMC[0].Phi();
+	   eQuark2_=quarksMC[1].E();
+	   ptQuark2_=quarksMC[1].Pt();
+	   etaQuark2_=quarksMC[1].Eta();
+	   phiQuark2_=quarksMC[1].Phi();
+ 
          TLorentzVector WqqMC;
          WqqMC.SetPtEtaPhiE( pMc[wIndexqq]*sin(thetaMc[wIndexqq]), etaMc[wIndexqq], phiMc[wIndexqq], energyMc[wIndexqq] );
          ptWqqMC_  = WqqMC.Pt();
          eWqqMC_   = WqqMC.Energy();
          etaWqqMC_ = WqqMC.Eta();
          phiWqqMC_ = WqqMC.Phi();
-
 	 //float deltaRqq = quarksMC[0].DeltaR(quarksMC[1]);
 	 // h1_deltaRqq->Fill(deltaRqq);
        }
@@ -427,30 +419,30 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
          TLorentzVector* thisParticle = new TLorentzVector();
          thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
 
-           if( fabs(idMc[iMc])==11 && fabs(idMc[mothMc[iMc]])==24 ) {electronMC.push_back( *thisParticle );}
-	   if( fabs(idMc[iMc])==13 && fabs(idMc[mothMc[iMc]])==24 ) {muonMC.push_back( *thisParticle ); }
+           if( fabs(idMc[iMc])==11 && fabs(idMc[mothMc[iMc]])==24 ) {electronMC.push_back( *thisParticle ); wIndexll = mothMc[iMc]; }
+	   if( fabs(idMc[iMc])==13 && fabs(idMc[mothMc[iMc]])==24 ) {muonMC.push_back( *thisParticle ); wIndexll = mothMc[iMc]; }
 	   if( (fabs(idMc[iMc])==12 || fabs(idMc[iMc])==14 ) && fabs(idMc[mothMc[iMc]])==24 ) {
 	     neutrinoMC.push_back( *thisParticle );  wIndexll = mothMc[iMc];
 	       }//for comparison with fit
  
          delete thisParticle;
          thisParticle = 0;
-
        }
        
        if( electronMC.size()==1 && neutrinoMC.size()==1 ) {
 	 lept1MC = electronMC[0];
 	 lept2MC = neutrinoMC[0];
 	
-	 if( (fabs(lept1MC.Eta()) < 2.5) && ( fabs(lept1MC.Eta())<1.4442 || fabs(lept1MC.Eta())>1.566) ){ h1_nEvents_vs_ptEle->Fill( lept1MC.Pt() );}
-	 h1_nEvents_vs_ptEle->Fill( lept2MC.Pt() );
-       }
+       	 if( (fabs(lept1MC.Eta()) < 2.5) && ( fabs(lept1MC.Eta())<1.4442 || fabs(lept1MC.Eta())>1.566) ){
+       	 h1_nEvents_vs_ptEle->Fill( lept1MC.Pt() );}
+       	 h1_nEvents_vs_ptEle->Fill( lept2MC.Pt() );
+       	 }
        else if( muonMC.size()==1 && neutrinoMC.size()==1 ) {
 	 lept1MC = muonMC[0];
 	 lept2MC = neutrinoMC[0];
 
-	 if( fabs(lept1MC.Eta()) < 2.4 ){ h1_nEvents_vs_ptMuon->Fill( lept1MC.Pt() );}
-	 h1_nEvents_vs_ptMuon->Fill( lept2MC.Pt() );
+	 if( fabs(lept1MC.Eta()) < 2.4 ){ 
+         h1_nEvents_vs_ptMuon->Fill( lept1MC.Pt() );} h1_nEvents_vs_ptMuon->Fill( lept2MC.Pt() );
        }
        else {
 	 //taus
@@ -489,7 +481,6 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        phiWllMC_ = WllMC.Phi();
        }
        
-       
        // now look for the higgs:
        if( wIndexll!=-1 && wIndexqq!=-1 ) {
 	 
@@ -524,6 +515,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        for( int i=0;i<nAK5Jet;i++ ){
        uncorrEnergyAK5Jet_ += uncorrEnergyAK5Jet[i];
        }
+
      // -----------------------------
      //###      SumEt
      // -----------------------------
@@ -535,7 +527,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
      // ------------------
 
      std::vector<AnalysisMuon> muon;
-
+     bool looseMuon=false;
 
      for( unsigned int iMuon=0; iMuon<nMuon; ++iMuon ) {
 
@@ -545,8 +537,8 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        // kinematics:
        // --------------
 
-       if( thisMuon.Pt() < 20. ) continue;
-       if( fabs(thisMuon.Eta()) > 2.1 ) continue; //Other
+       if( thisMuon.Pt() < 10. ) continue;
+       if( fabs(thisMuon.Eta()) > 2.4 ) continue;
 
 	 thisMuon.isGlobalMuonPromptTight = (muonIdMuon[iMuon]>>8)&1;
 	 thisMuon.isAllTrackerMuon = (muonIdMuon[iMuon]>>11)&1;
@@ -556,16 +548,11 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        //     // --------------
        //     if( !( (muonIdMuon[iMuon]>>8)&1 ) ) continue; //GlobalMuonPromptTight
        //     if( !( (muonIdMuon[iMuon]>>11)&1 ) ) continue; //AllTrackerMuon
-       //if( numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]==0 && numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;
-       
+       //if( numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]==0 && numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]]==0 ) continue;      
          
 	thisMuon.pixelHits = numberOfValidPixelBarrelHitsTrack[trackIndexMuon[iMuon]]+numberOfValidPixelEndcapHitsTrack[trackIndexMuon[iMuon]];
         thisMuon.trackerHits = trackValidHitsTrack[trackIndexMuon[iMuon]];
         thisMuon.nMatchedStations = numberOfMatchesMuon[iMuon]; // This branch not exists yet in WW500
-       if( thisMuon.trackerHits < 10 ) continue; //Other
-       if( thisMuon.pixelHits < 1 ) continue; //Other   // This branch not exists yet in WW500 
-       if( thisMuon.nMatchedStations < 1 ) continue; //Other
-
 
        // to compute dxy, look for leading primary vertex:
        int hardestPV = -1;
@@ -576,7 +563,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
            hardestPV = v;
          }
        }  
-       
+      
        float dxy;
        if( hardestPV==-1 ) {
          dxy = 0.;
@@ -585,13 +572,9 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
                               trackVxTrack[trackIndexMuon[iMuon]], trackVyTrack[trackIndexMuon[iMuon]], trackVzTrack[trackIndexMuon[iMuon]],
 				     pxTrack[trackIndexMuon[iMuon]], pyTrack[trackIndexMuon[iMuon]], pzTrack[trackIndexMuon[iMuon]]));
        }
-       
-       if( dxy > 0.02 ) continue; //Other
-       
-       
+ 
        float dz = fabs(trackVzTrack[trackIndexMuon[iMuon]]-PVzPV[hardestPV]);
-       if(dz > 1.0) continue; //Other
-       
+      
        thisMuon.dxy = dxy;
        thisMuon.dz = dz;
        
@@ -609,33 +592,32 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        // combined isolation < 15%:
        //if( (sumPt03Muon[iMuon] + emEt03Muon[iMuon] + hadEt03Muon[iMuon]) >= 0.15*thisMuon.Pt() ) continue;
 
-
+       // looking at loose muon
+       looseMuon=true;
+       if( thisMuon.Pt()<20. ) continue;
 
        // for now simple selection, will have to optimize this (T&P?)
        chargeLept_=chargeMuon[iMuon];
      muon.push_back( thisMuon );
-  
-   } //for muon
+       looseMuon=false;
 
+   } //for muon
 
      // ------------------
      // ELECTRON
      // ------------------
 
-     std::vector<AnalysisElectron> electron;
-     bool firstPassedVBTF80 = false;
+     std::vector<AnalysisElectron> electron;    
      bool looseEle = false; //Other
      
      for( unsigned int iEle=0; iEle<nEle ; ++iEle ) {
 
-
        AnalysisElectron thisEle( pxEle[iEle], pyEle[iEle], pzEle[iEle], energyEle[iEle] );
-
 
        // --------------
        // kinematics:
        // --------------
-       if( thisEle.Pt() < 20. ) continue;
+       if( thisEle.Pt() < 15. ) continue;
        if( (fabs(thisEle.Eta()) > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) continue;
 
        // isolation
@@ -653,132 +635,13 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        thisEle.expInnerLayersGsfTrack = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
        thisEle.convDist = convDistEle[iEle];
        thisEle.convDcot = convDcotEle[iEle];
-     
-/*
-       // ELE ID vars:
-       Float_t dr03TkSumPt_thresh95;
-       Float_t dr03EcalRecHitSumEt_thresh95;
-       Float_t dr03HcalTowerSumEt_thresh95;
-       Float_t combinedIsoRel_thresh95;
-       Float_t sigmaIetaIeta_thresh95;
-       Float_t deltaPhiAtVtx_thresh95;
-       Float_t deltaEtaAtVtx_thresh95;
-       Float_t hOverE_thresh95;
-
-       Float_t dr03TkSumPt_thresh80;
-       Float_t dr03EcalRecHitSumEt_thresh80;
-       Float_t dr03HcalTowerSumEt_thresh80;
-       Float_t combinedIsoRel_thresh80;
-       Float_t sigmaIetaIeta_thresh80;
-       Float_t deltaPhiAtVtx_thresh80;
-       Float_t deltaEtaAtVtx_thresh80;
-       Float_t hOverE_thresh80;
-
-       // CONVERSION REJECTION VARS:
-       Int_t nMissingHits_thresh95 = 1;
-       Float_t deltaCotTheta_thresh95 = -1.;
-       Float_t dist_thresh95 = -1.;
-
-       Int_t nMissingHits_thresh80 = 0;
-       Float_t deltaCotTheta_thresh80 = 0.02;
-       Float_t dist_thresh80 = 0.02;
-
-
-       if( fabs(thisEle.Eta())<1.4442 ) {
-         dr03TkSumPt_thresh95 = 0.15;
-         dr03EcalRecHitSumEt_thresh95 = 2.;
-         dr03HcalTowerSumEt_thresh95 = 0.12;
-         combinedIsoRel_thresh95 = 0.15;
-
-         dr03TkSumPt_thresh80 = 0.09;
-         dr03EcalRecHitSumEt_thresh80 = 0.07;
-         dr03HcalTowerSumEt_thresh80 = 0.10;
-         combinedIsoRel_thresh80 = 0.07;
-
-         sigmaIetaIeta_thresh95 = 0.01;
-         deltaPhiAtVtx_thresh95 = 0.8;
-         deltaEtaAtVtx_thresh95 = 0.007;
-         hOverE_thresh95 = 0.15;
-
-         sigmaIetaIeta_thresh80 = 0.01;
-         deltaPhiAtVtx_thresh80 = 0.06;
-         deltaEtaAtVtx_thresh80 = 0.004;
-         hOverE_thresh80 = 0.04;
-
-       } else {
-         dr03TkSumPt_thresh95 = 0.08;
-         dr03EcalRecHitSumEt_thresh95 = 0.06;
-         dr03HcalTowerSumEt_thresh95 = 0.05;
-         combinedIsoRel_thresh95 = 0.1;
-
-         dr03TkSumPt_thresh80 = 0.04;
-         dr03EcalRecHitSumEt_thresh80 = 0.05;
-         dr03HcalTowerSumEt_thresh80 = 0.025;
-         combinedIsoRel_thresh80 = 0.06;
-
-         sigmaIetaIeta_thresh80 = 0.03;
-         deltaPhiAtVtx_thresh80 = 0.7;
-         deltaEtaAtVtx_thresh80 = 0.007;
-         hOverE_thresh80 = 0.025;
-
-         sigmaIetaIeta_thresh95 = 0.03;
-         deltaPhiAtVtx_thresh95 = 0.7;
-         deltaEtaAtVtx_thresh95 = 0.01; 
-         hOverE_thresh95 = 0.07;
-       }
-
-
-       // --------------
-       // isolation:
-       // --------------
-     //// no relative iso, using combined
-     //if( dr03TkSumPtEle[iEle]/thisEle.Pt() > dr03TkSumPt_thresh ) continue;
-     //if( dr03EcalRecHitSumEtEle[iEle]/thisEle.Pt() > dr03EcalRecHitSumEt_thresh ) continue;
-     //if( dr03HcalTowerSumEtEle[iEle]/thisEle.Pt() > dr03HcalTowerSumEt_thresh ) continue;
-
-       Float_t combinedIsoRel;
-       if( fabs(thisEle.Eta())<1.4442 )
-         combinedIsoRel = ( dr03TkSumPtEle[iEle] + TMath::Max(0., dr03EcalRecHitSumEtEle[iEle] - 1.) + dr03HcalTowerSumEtEle[iEle] ) / thisEle.Pt();
-       else
-         combinedIsoRel = ( dr03TkSumPtEle[iEle] + dr03EcalRecHitSumEtEle[iEle] + dr03HcalTowerSumEtEle[iEle] ) / thisEle.Pt();
-
-       bool iso_VBTF95 = (combinedIsoRel < combinedIsoRel_thresh95);
-       bool iso_VBTF80 = (combinedIsoRel < combinedIsoRel_thresh80);
-
-       
-       // --------------
-       // electron ID:
-       // --------------
-       bool eleID_VBTF95 = (covIEtaIEtaSC[iEle] < sigmaIetaIeta_thresh95) &&
-                           (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh95) &&
-                           (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh95) &&
-                           (hOverEEle[iEle] < hOverE_thresh95);
-
-       bool eleID_VBTF80 = (covIEtaIEtaSC[iEle] < sigmaIetaIeta_thresh80) &&
-                           (fabs(deltaPhiAtVtxEle[iEle]) < deltaPhiAtVtx_thresh80) &&
-                           (fabs(deltaEtaAtVtxEle[iEle]) < deltaEtaAtVtx_thresh80) &&
-                           (hOverEEle[iEle] < hOverE_thresh80);
-       
-       // ---------------------
-       // conversion rejection:
-       // ---------------------
-       int nMissingHits = expInnerLayersGsfTrack[gsfTrackIndexEle[iEle]];
-       bool convRej_VBTF95 = (nMissingHits<=nMissingHits_thresh95) && (fabs(convDistEle[iEle])>dist_thresh95 || fabs(convDcotEle[iEle])>deltaCotTheta_thresh95);
-       bool convRej_VBTF80 = (nMissingHits<=nMissingHits_thresh80) && (fabs(convDistEle[iEle])>dist_thresh80 || fabs(convDcotEle[iEle])>deltaCotTheta_thresh80);
-
-
-
-       bool passed_VBTF95 = (iso_VBTF95 && eleID_VBTF95 && convRej_VBTF95);
-       bool passed_VBTF80 = (iso_VBTF80 && eleID_VBTF80 && convRej_VBTF80);
-*/
-     
-       
 
        bool passed_VBTF95 = thisEle.passedVBTF95();
        bool passed_VBTF80 = thisEle.passedVBTF80();
 
        if( !passed_VBTF80 && passed_VBTF95 ) looseEle=true; //Other
-       if( !passed_VBTF80 ) continue;//Other (I used 95)
+       if( !passed_VBTF80 ) continue; 
+       if( thisEle.Pt() < 20. ) continue; // if is not a loose ele I require a higher Pt     
 
        // check that not matched to muon (clean electron faked by muon MIP):
        bool matchedtomuon=false;
@@ -787,27 +650,25 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 
        if( matchedtomuon ) continue;
 
-
        // for now simple selection, will have to optimize this (T&P?)
        // one electron required to pass VBTF80, the other VBTF95
        chargeLept_=chargeEle[iEle];
        electron.push_back( thisEle );
      } //for electron
-
-
-     //                               FILL LEPTONS
+                                         //  FILL LEPTONS
 // Fill Efficiency for Others
 bool findJetELE=false;
 bool findJetMU=false;
 
 if( electron.size() >= 1 ) { Cont_ELE++;
-if( electron.size() == 1 && muon.size()==0 && !looseEle ) { Cont_VetoELE++; findJetELE=true; }}
+  if( electron.size() == 1 && muon.size()==0 && !looseEle && !looseMuon ) { Cont_VetoELE++; findJetELE=true; }
+  }
 
 if( muon.size() >= 1 ) { Cont_MU++;
-if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJetMU=true; }}
- 
-    if( electron.size() > 1 ) continue;
-    if( muon.size() > 1 ) continue;
+  if( muon.size() == 1 && electron.size()==0 && !looseEle && !looseMuon ) { Cont_VetoMU++; findJetMU=true; }
+  }
+// Fill lepton
+    if( electron.size() > 1 || muon.size() > 1 ) continue;
 
      if( electron.size() < 1 &&  muon.size() < 1 ) continue;
      
@@ -825,31 +686,27 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
     
      std::vector< AnalysisLepton > leptons;
 
-     if( (electron.size() == 1 && muon.size() == 1) ) continue;
+     if( electron.size() == 1 && muon.size() == 1 ) continue;
+     if( electron.size() == 1 && (looseEle || looseMuon) ) continue;
+     if( muon.size() == 1 && (looseEle || looseMuon) ) continue;
 
-     if( electron.size() == 1 && looseEle ) continue;
-     if( muon.size() == 1 && looseEle ) continue;
-
-     if( electron.size() == 1 && !looseEle ) { //Other 
-
+     if( electron.size() == 1 && (!looseEle || !looseMuon) ) { //Other 
        leptType_ = 1;
-         leptons.push_back( electron[0] );
+       leptons.push_back( electron[0] );
 
-     } else if( muon.size() == 1 && !looseEle ) {
-
+     } else if( muon.size() == 1 && (!looseEle || !looseMuon) ) {
        leptType_ = 0;
        leptons.push_back( muon[0] );
-     } else {
 
+     } else {
        std::cout << "There must be an error this is not possible." << std::endl;
        exit(9101);
-
      }
 
      eLept_ = leptons[0].Energy();
      ptLept_ = leptons[0].Pt();
      etaLept_ = leptons[0].Eta();
-     phiLept_ = leptons[0].Phi();
+     phiLept_ = leptons[0].Phi(); //chargeLept_ filled before
     
      // --------------------
      // match leptons to MC:
@@ -870,12 +727,11 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
 	     }
 	     
 	     delete thisParticle;
-	     thisParticle = 0;
-	     
+	     thisParticle = 0; 
 	   } //if correct id mc
 	   
 	  } // for i mc
-	  
+
 	  if( !noLeptons ) {
 	    if( leptType_==0 ) {
 	      h1_deltaRmatching_muons->Fill( deltaRmin );
@@ -894,7 +750,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
       // JETS
       // ------------------
 	     
-	float jetPt_thresh = 20.;//30.; //Other
+	float jetPt_thresh = 20.;
 	bool matched=false;      
 	
 	// first save leading jets in event:
@@ -926,8 +782,6 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
        thisJet.ptD =  ptDAK5PFPUcorrJet[iJet];
 
        thisJet.trackCountingHighEffBJetTag = trackCountingHighEffBJetTagsAK5PFPUcorrJet[iJet];
-
-       //thisJet.QGlikelihood = qglc.ComputeLikelihood( thisJet.Pt(), thisJet.nCharged, thisJet.nNeutral, thisJet.ptD, thisJet.rmsCand );
 
        if( thisJet.Pt()>jetPt_thresh ) nJets30++;
 
@@ -981,6 +835,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
      }//iJet
 
      h1_nJets30->Fill(nJets30);
+
      if( leadJets.size()<2 ) continue;
      if( leadJets[1].Pt()<jetPt_thresh ) continue; //at least 2 jets over thresh
    
@@ -994,8 +849,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
 
      nPairs_ = 0;
      nPart_ = 0;
-
-     
+    
      for( unsigned iJet=0; iJet<leadJets.size(); ++iJet ) {
    
        AnalysisJet thisJet = leadJets[iJet];
@@ -1006,8 +860,6 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
        if( thisJet.Pt() < jetPt_thresh ) continue;
        if( fabs(thisJet.Eta()) > 2.4 ) continue;
 
-
-
        for( unsigned int jJet=iJet+1; jJet<leadJets.size(); ++jJet ) {
 
          AnalysisJet otherJet = leadJets[jJet];
@@ -1017,7 +869,6 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
          // --------------
          if( otherJet.Pt() < jetPt_thresh ) continue;
          if( fabs(otherJet.Eta()) > 2.4 ) continue;
-
 
          if( nPairs_>=50 ) {
         
@@ -1087,79 +938,12 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
           
          }
 	
-
        } //for j
      } //for i
    if( findJetELE && nPairs_>=1 ) {Cont_JetsELE++;} //Other 
    if( findJetMU && nPairs_>=1 ) {Cont_JetsMU++;} //Other 
+
  
-    //if( jets.size() < 2 ) continue;
-     //if( best_i==-1 || best_j==-1 ) continue; //means that less than 2 jets were found
-
-
-	  
-
-/*
-
-    // and now full kinematic fit with PFCands:
-    TLorentzVector ZZ_kinfit_cands;
-    TRegexp cands_tstr("CANDS");
-    TString dataset_tstr(dataset_);
-    if( dataset_tstr.Contains(cands_tstr) ) {
-
-      nPFCand1_=0;
-      nPFCand2_=0;
-    
-      // get the candidates for 2 candidate jets:
-      for( unsigned iCand=0; iCand<nPFCand; ++iCand) {
-
-        TLorentzVector thisCand( pxPFCand[iCand], pyPFCand[iCand], pzPFCand[iCand], energyPFCand[iCand] );
-
-        if( iPFJetPFCand[iCand]==best_i_eventIndex ) {
-
-          if( nPFCand1_>=100 ) {
-
-            std::cout << "More than 100 candidates found. Skipping" << std::endl;
-
-          } else {
-
-            ePFCand1_[nPFCand1_] = thisCand.Energy();
-            ptPFCand1_[nPFCand1_] = thisCand.Pt();
-            etaPFCand1_[nPFCand1_] = thisCand.Eta();
-            phiPFCand1_[nPFCand1_] = thisCand.Phi();
-            particleTypePFCand1_[nPFCand1_] = particleTypePFCand[iCand];
-
-            nPFCand1_++;
-
-          }
-
-
-        } // if best_i
-
-        if( iPFJetPFCand[iCand]==best_j_eventIndex ) {
-
-          if( nPFCand2_>=100 ) {
-
-            std::cout << "More than 100 candidates found. Skipping" << std::endl;
-
-          } else {
-
-            ePFCand2_[nPFCand2_] = thisCand.Energy();
-            ptPFCand2_[nPFCand2_] = thisCand.Pt();
-            etaPFCand2_[nPFCand2_] = thisCand.Eta();
-            phiPFCand2_[nPFCand2_] = thisCand.Phi();
-            particleTypePFCand2_[nPFCand2_] = particleTypePFCand[iCand];
-
-            nPFCand2_++;
-
-          }
-
-        } // if best_j
-
-      }  // for candidates
-     
-     }
-*/
      if( isMC_ ) {
 
        // store event partons in tree:
@@ -1202,8 +986,7 @@ if( muon.size() == 1 && electron.size()==0 && !looseEle ) { Cont_VetoMU++; findJ
 
    } //for entries
                        // Other
-float proportion;
-proportion=109989./Cont_inclusive;
+float proportion = 109989./Cont_inclusive;
 	if( Jentry == (nentries-1) ){
   std::cout << std::fixed << std::setprecision(6) << "Inclusive: " << Cont_inclusive*proportion << " PV: " << Cont_PV*proportion << " MU: " << Cont_MU*proportion << " ELE: " << Cont_ELE*proportion << " VetoMU: " << Cont_VetoMU*proportion 
   << " VetoELE: " << Cont_VetoELE*proportion << " JetsELE: " << Cont_JetsELE*proportion << " JetsMU: " << Cont_JetsMU*proportion << std::endl;
