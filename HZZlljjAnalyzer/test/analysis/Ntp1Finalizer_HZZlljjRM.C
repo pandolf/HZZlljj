@@ -378,6 +378,11 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_etaJet2 = new TH1D("etaJet2", "", 100, -2.4, 2.4);
   h1_etaJet2->Sumw2();
 
+  TH1D* h1_tcheJet1 = new TH1D("tcheJet1", "", 100, 0., 20.);
+  h1_tcheJet1->Sumw2();
+  TH1D* h1_tcheJet2 = new TH1D("tcheJet2", "", 100, 0., 20.);
+  h1_tcheJet2->Sumw2();
+
   TH1D* h1_eElectronsJet1 = new TH1D("eElectronsJet1", "", 60, 0., 1.0001);
   h1_eElectronsJet1->Sumw2();
   TH1D* h1_eElectronsJet2 = new TH1D("eElectronsJet2", "", 60, 0., 1.0001);
@@ -1199,6 +1204,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   int maxBTag_found = -1;
   float mZZ, mZjj;
+  float HLTSF;
   bool isSidebands=false;
   bool foundSignalRegionMjj=false;
   bool atLeastOneInSignalRegionMjj=false;
@@ -1207,6 +1213,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_passedEvents->Branch( "mZjj", &mZjj, "mZjj/F" );
   tree_passedEvents->Branch( "mZZ", &mZZ, "mZZ/F" );
   tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
+  tree_passedEvents->Branch( "HLTSF", &HLTSF, "HLTSF/F" );
   tree_passedEvents->Branch( "nBTags", &maxBTag_found, "maxBTag_found/I" );
   tree_passedEvents->Branch( "isSidebands", &isSidebands, "isSidebands/O" );
 
@@ -1269,8 +1276,12 @@ ofstream ofs("run_event.txt");
         float eff1 = getMuonHLTSF( etaLept1 );
         float eff2 = getMuonHLTSF( etaLept2 );
 
-        float HLTSF = eff1*eff2;
+        HLTSF = eff1*eff2;
         eventWeight *= HLTSF;
+
+      } else { //electrons
+
+        HLTSF = 1.;
 
       }
 
@@ -2575,6 +2586,8 @@ ofs << run << " " << event << std::endl;
       h1_ptJet2_prekin->Fill( jet2_nokinfit.Pt(), eventWeight );
       h1_etaJet1->Fill( jet1_selected.Eta(), eventWeight );
       h1_etaJet2->Fill( jet2_selected.Eta(), eventWeight );
+      h1_tcheJet1->Fill( jet1_selected.trackCountingHighEffBJetTag, eventWeight );
+      h1_tcheJet2->Fill( jet2_selected.trackCountingHighEffBJetTag, eventWeight );
     } else {
       h1_ptJet1->Fill( jet2_selected.Pt(), eventWeight );
       h1_ptJet2->Fill( jet1_selected.Pt(), eventWeight );
@@ -2582,6 +2595,8 @@ ofs << run << " " << event << std::endl;
       h1_ptJet2_prekin->Fill( jet1_nokinfit.Pt(), eventWeight );
       h1_etaJet1->Fill( jet2_selected.Eta(), eventWeight );
       h1_etaJet2->Fill( jet1_selected.Eta(), eventWeight );
+      h1_tcheJet1->Fill( jet2_selected.trackCountingHighEffBJetTag, eventWeight );
+      h1_tcheJet2->Fill( jet1_selected.trackCountingHighEffBJetTag, eventWeight );
     }
     h1_eMuonsJet1->Fill( jet1_selected.muonEnergyFraction, eventWeight );
     h1_eMuonsJet2->Fill( jet2_selected.muonEnergyFraction, eventWeight );
@@ -3501,6 +3516,7 @@ ofs << run << " " << event << std::endl;
   h1_partFlavorJet1_1btag->Write();
   h1_partFlavorJet1_2btag->Write();
   h1_partFlavorJet1_gluetag->Write();
+  h1_tcheJet1->Write();
 
   h1_deltaR_part2->Write();
   h1_ptJet2->Write();
@@ -3513,6 +3529,7 @@ ofs << run << " " << event << std::endl;
   h1_partFlavorJet2_1btag->Write();
   h1_partFlavorJet2_2btag->Write();
   h1_partFlavorJet2_gluetag->Write();
+  h1_tcheJet2->Write();
 
   h1_deltaRZZ->Write();
 
