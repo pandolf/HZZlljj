@@ -131,6 +131,16 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
 //reducedTree_->Branch("HLT_Mu11", &HLT_Mu11_, "HLT_Mu11_/O");
 //reducedTree_->Branch("HLT_Ele17_SW_EleId_L1R", &HLT_Ele17_SW_EleId_L1R_, "HLT_Ele17_SW_EleId_L1R_/O");
 //reducedTree_->Branch("HLT_DoubleMu3", &HLT_DoubleMu3_, "HLT_DoubleMu3_/O");
+  reducedTree_->Branch("passed_HLT_DoubleMu6", &passed_HLT_DoubleMu6_,"passed_HLT_DoubleMu6_/O)");
+  reducedTree_->Branch("passed_HLT_DoubleMu7", &passed_HLT_DoubleMu7_,"passed_HLT_DoubleMu7_/O)");
+  reducedTree_->Branch("passed_HLT_Mu13_Mu8",  &passed_HLT_Mu13_Mu8_, "passed_HLT_Mu13_Mu8_/O)");
+  reducedTree_->Branch("passed_HLT_IsoMu17",   &passed_HLT_IsoMu17_,  "passed_HLT_IsoMu17_/O)");
+  reducedTree_->Branch("passed_HLT_IsoMu24",   &passed_HLT_IsoMu24_,  "passed_HLT_IsoMu24_/O)");
+  reducedTree_->Branch("passed_HLT_Mu8_Jet40",   &passed_HLT_Mu8_Jet40_,  "passed_HLT_Mu8_Jet40_/O)");
+  reducedTree_->Branch("passed_HLT_L2DoubleMu23_NoVertex",   &passed_HLT_L2DoubleMu23_NoVertex_,  "passed_HLT_L2DoubleMu23_NoVertex_/O)");
+  reducedTree_->Branch("passed_HLT_L2DoubleMu30_NoVertex",   &passed_HLT_L2DoubleMu30_NoVertex_,  "passed_HLT_L2DoubleMu30_NoVertex_/O)");
+  reducedTree_->Branch("passed_HLT_TripleMu5",   &passed_HLT_TripleMu5_,  "passed_HLT_TripleMu5_/O)");
+  reducedTree_->Branch("passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL", &passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_, "passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_/O");
 
 
   reducedTree_->Branch("ptHat",&ptHat_,"ptHat_/F");
@@ -409,11 +419,32 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      if( !goodVertex ) continue;
   
      for( unsigned iBX=0; iBX<nBX; ++iBX ) {
-       if( bxPU[iBX]==0 )  nPU_ = nPU[iBX];
+       if( bxPU[iBX]==0 ) nPU_ = nPU[iBX]; 
      }
+
+   //nPU_ = 0;
+   //for( unsigned iBX=0; iBX<nBX; ++iBX ) {
+   //  nPU_ += nPU[iBX]; 
+   //}
+   //nPU_ /= nBX; //average of the three
+
 
      nvertex_ = nPV;
      rhoPF_ = rhoFastjet;
+
+
+     // save trigger info:
+     passed_HLT_DoubleMu6_ = this->PassedHLT( jentry, "HLT_DoubleMu6");
+     passed_HLT_DoubleMu7_ = this->PassedHLT( jentry, "HLT_DoubleMu7");
+     passed_HLT_Mu13_Mu8_ = this->PassedHLT( jentry, "HLT_Mu13_Mu8");
+     passed_HLT_IsoMu17_ = this->PassedHLT( jentry, "HLT_IsoMu17");
+     passed_HLT_IsoMu24_ = this->PassedHLT( jentry, "HLT_IsoMu24");
+     passed_HLT_Mu8_Jet40_ = this->PassedHLT( jentry, "HLT_Mu8_Jet40");
+     passed_HLT_L2DoubleMu23_NoVertex_ = this->PassedHLT( jentry, "HLT_L2DoubleMu23_NoVertex");
+     passed_HLT_L2DoubleMu30_NoVertex_ = this->PassedHLT( jentry, "HLT_L2DoubleMu30_NoVertex");
+     passed_HLT_TripleMu5_ = this->PassedHLT( jentry, "HLT_TripleMu5");
+     passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_ = this->PassedHLT( jentry, "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL");
+  
 
 
      //bool isMC = ( runNumber < 5 );
@@ -441,6 +472,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
          TLorentzVector* thisParticle = new TLorentzVector();
          thisParticle->SetPtEtaPhiE( pMc[iMc]*sin(thetaMc[iMc]), etaMc[iMc], phiMc[iMc], energyMc[iMc] );
+         if( thisParticle->Pt()<0.1 ) continue;
 
          if( fabs(idMc[iMc])<7 && idMc[mothMc[iMc]]==23 ) {
            zIndexqq = mothMc[iMc];
@@ -891,10 +923,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          }
        }
 
-       thisJet.ptGen  = (isMC_) ? matchedGenJet.Pt() : 0.;
-       thisJet.etaGen = (isMC_) ? matchedGenJet.Eta() : 20.;
-       thisJet.phiGen = (isMC_) ? matchedGenJet.Phi() : 0.;
-       thisJet.eGen   = (isMC_) ? matchedGenJet.Energy() : 0.;
+       thisJet.ptGen  = (isMC_ && matchedGenJet.Pt()>0.) ? matchedGenJet.Pt() : 0.;
+       thisJet.etaGen = (isMC_ && matchedGenJet.Pt()>0.) ? matchedGenJet.Eta() : 20.;
+       thisJet.phiGen = (isMC_ && matchedGenJet.Pt()>0.) ? matchedGenJet.Phi() : 0.;
+       thisJet.eGen   = (isMC_ && matchedGenJet.Pt()>0.) ? matchedGenJet.Energy() : 0.;
 
        // match to parton:
        float bestDeltaR_part=999.;
@@ -903,8 +935,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        for( unsigned iPart=0; iPart<nMc; ++iPart ) {
          if( statusMc[iPart]!=3 ) continue; //partons
          if( idMc[iPart]!=21 && abs(idMc[iPart])>6 ) continue; //quarks or gluons
+         if( pMc[iPart]*sin(thetaMc[iPart])<0.1 ) continue; 
          TLorentzVector thisPart;
          thisPart.SetPtEtaPhiE(pMc[iPart]*sin(thetaMc[iPart]), etaMc[iPart], phiMc[iPart], energyMc[iPart]);
+         if( thisPart.Pt() < 0.1 ) continue;
          if( thisPart.DeltaR(thisJet) < bestDeltaR_part ) {
            bestDeltaR_part=thisPart.DeltaR(thisJet);
            matchedPart=thisPart;
@@ -912,10 +946,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          }
        }
    
-       thisJet.ptPart  = (isMC_ && matchedPart.Energy()>0.) ? matchedPart.Pt() : 0.;
-       thisJet.etaPart = (isMC_ && matchedPart.Energy()>0.) ? matchedPart.Eta() : 20.;
-       thisJet.phiPart = (isMC_ && matchedPart.Energy()>0.) ? matchedPart.Phi() : 0.;
-       thisJet.ePart   = (isMC_ && matchedPart.Energy()>0.) ? matchedPart.Energy() : 0.;
+       thisJet.ptPart  = (isMC_ && matchedPart.Pt()>0.) ? matchedPart.Pt() : 0.;
+       thisJet.etaPart = (isMC_ && matchedPart.Pt()>0.) ? matchedPart.Eta() : 20.;
+       thisJet.phiPart = (isMC_ && matchedPart.Pt()>0.) ? matchedPart.Phi() : 0.;
+       thisJet.ePart   = (isMC_ && matchedPart.Pt()>0.) ? matchedPart.Energy() : 0.;
        thisJet.pdgIdPart   = pdgIdPart;
 
        

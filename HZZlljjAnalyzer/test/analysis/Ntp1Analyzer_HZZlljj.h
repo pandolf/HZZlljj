@@ -29,6 +29,19 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
 
  private:
 
+   Bool_t passed_HLT_DoubleMu6_;
+   Bool_t passed_HLT_DoubleMu7_;
+   Bool_t passed_HLT_Mu13_Mu8_;
+   Bool_t passed_HLT_IsoMu17_;
+   Bool_t passed_HLT_IsoMu24_;
+   Bool_t passed_HLT_Mu8_Jet40_;
+   Bool_t passed_HLT_L2DoubleMu23_NoVertex_;
+   Bool_t passed_HLT_L2DoubleMu30_NoVertex_;
+   Bool_t passed_HLT_TripleMu5_;
+
+   Bool_t passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_;
+
+
    int leptType_; //0: muon; 1: electron
    int leptTypeMC_; //0: muon; 1: electron
 
