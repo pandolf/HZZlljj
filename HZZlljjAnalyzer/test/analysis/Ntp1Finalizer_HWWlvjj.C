@@ -1158,16 +1158,17 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     // Find Pz
     float pn=0., pnMC=0., pnMH=0.;
     std::pair<TLorentzVector,TLorentzVector> NeuRWMC, NeuRW, BothPzNeu;
-
+  if(isMC){
     NeuRWMC=getPzRight( LepMC, NeuMC.Px(),NeuMC.Py(), NeuMC );
     NeuRW=getPzRight(lept1, pxPFMet, pyPFMet, NeuMC); 
+    pnMC=getPz(LepMC, NeuMC.Px(),NeuMC.Py());
+    lept2MC.SetPxPyPzE( NeuMC.Px(), NeuMC.Py(), pnMC, sqrt(pow( NeuMC.Px(),2)+pow(NeuMC.Py(),2)+pow(pnMC,2)) );
+  }
     pn=getPz(lept1, pxPFMet, pyPFMet);
     BothPzNeu=getBothPz(lept1, pxPFMet, pyPFMet);
-    pnMC=getPz(LepMC, NeuMC.Px(),NeuMC.Py());
-    pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
-
     lept2.SetPxPyPzE( pxPFMet, pyPFMet, pn, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pn,2)) );
-    lept2MC.SetPxPyPzE( NeuMC.Px(), NeuMC.Py(), pnMC,  sqrt(pow( NeuMC.Px(),2)+pow(NeuMC.Py(),2)+pow(pnMC,2)) );
+    pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
+ 
     if( energyPFMet < 30./* Other 50.*/ ) continue;
     h1_energyMet->Fill( energyPFMet );
 /*
