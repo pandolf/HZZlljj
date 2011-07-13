@@ -1372,8 +1372,8 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   chiSquareProbLept=TMath::Prob(fitter_lept->getS(),fitter_lept->getNDF());
                   h1_kinfit2_chiSquare->Fill( fitter_lept->getS()/fitter_lept->getNDF(),eventWeight);
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
-                  h1_resoPt->Fill( (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() );
-                  h2_correlation->Fill(lept1.Pt()-NeuMC.Pt(),lept1.Phi()-NeuMC.Phi(),eventWeight);
+                  h1_resoPt->Fill( (isMC) ? (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() :0 );
+                  if(isMC) h2_correlation->Fill( lept1.Pt()-NeuMC.Pt(),lept1.Phi()-NeuMC.Phi(),eventWeight );
                   }
                   else{
                   PRO.SetPtEtaPhiE(/*NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt() );*/lept2.Pt(),0.,lept2.Phi(),sqrt(lept2.Px()*lept2.Px()+lept2.Py()*lept2.Py()));
@@ -1385,21 +1385,22 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   chiSquareProbLept=TMath::Prob(fitter_lept->getS(),fitter_lept->getNDF());
                   h1_kinfit2_chiSquare->Fill( fitter_lept->getS()/fitter_lept->getNDF(), eventWeight );
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
-                  h1_resoPt->Fill( (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() );
-                  h2_correlation->Fill(lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight);
+                  h1_resoPt->Fill( (isMC) ? (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() :0 );
+                  if(isMC) h2_correlation->Fill( lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight );
                   }
         TLorentzVector Neu_MetFitted;     
         Neu_MetFitted.SetPxPyPzE(lept2_kinfit.Px(),lept2_kinfit.Py(),pn,sqrt(pow(lept2_kinfit.Px(),2)+pow(lept2_kinfit.Py(),2)+pow(pn,2)) );
         // Reso
-        h1_pzResoNeut_KinFit->Fill( (isMC) ? (Neu_MetFitted.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-        h1_ptResoNeut_KinFit->Fill( (isMC) ? (Neu_MetFitted.Pt()-NeuMC.Pt())/NeuMC.Pt() : 0 );  
-        h1_pzResoW_KinFit->Fill(  (isMC) ? ((lept1_kinfit+lept2_kinfit).Pz()-WllMC.Pz())/WllMC.Pz() : 0 ) ;
-        if(sorted ) h1_ptResoW_KinFit->Fill(  (isMC) ? ((lept2+Neu_MetFitted).Pt()-WllMC.Pt())/WllMC.Pt() : 0 ) ;
-        if(!sorted) h1_ptResoW_KinFit->Fill(  (isMC) ? ((lept1+Neu_MetFitted).Pt()-WllMC.Pt())/WllMC.Pt() : 0 ) ;
-        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) < fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Right->Fill( (isMC) ? (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) > fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Wrong->Fill( (isMC) ? (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) == fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_One->Fill( (isMC) ? (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-
+      if(isMC){
+        h1_pzResoNeut_KinFit->Fill( (Neu_MetFitted.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+        h1_ptResoNeut_KinFit->Fill( (Neu_MetFitted.Pt()-NeuMC.Pt())/NeuMC.Pt() );
+        h1_pzResoW_KinFit->Fill( ((lept1_kinfit+lept2_kinfit).Pz()-WllMC.Pz())/WllMC.Pz() ) ;
+        if(sorted ) h1_ptResoW_KinFit->Fill( ((lept2+Neu_MetFitted).Pt()-WllMC.Pt())/WllMC.Pt() ) ;
+        if(!sorted) h1_ptResoW_KinFit->Fill( ((lept1+Neu_MetFitted).Pt()-WllMC.Pt())/WllMC.Pt() ) ;
+        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) < fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Right->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) > fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Wrong->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) == fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_One->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+      }
           //}//match
 		  if(sorted ) h1_mWW_kinLept->Fill( (bestWDiJet+lept2+Neu_MetFitted).M() );
 		  if(!sorted) h1_mWW_kinLept->Fill( (bestWDiJet+lept1+Neu_MetFitted).M() );
@@ -1545,7 +1546,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       if(sorted)  diLepton=Neu_MetFitted+lept2;
       else        diLepton=Neu_MetFitted+lept1;
 
-          //float ptReso1_before = (isMC) ? ( jet1.Pt()-jet1.ptGen )/jet1.ptGen : 0.;
+        //float ptReso1_before = (isMC) ? ( jet1.Pt()-jet1.ptGen )/jet1.ptGen : 0.;
 	  //float ptReso2_before = (isMC) ? ( jet2.Pt()-jet2.ptGen )/jet2.ptGen : 0.;
 	  float ptReso1_before = (isMC) ? ( jet1.Pt()-matchedPart1.Pt() )/matchedPart1.Pt() : 0.;
 	  float ptReso2_before = (isMC) ? ( jet2.Pt()-matchedPart2.Pt() )/matchedPart2.Pt() : 0.;
