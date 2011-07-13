@@ -1293,47 +1293,51 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
               // if( (delta_phi(diLepton.Phi(),bestWDiJet      h1_ResomH_heli->Fill( (isMC) ? ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );      .Phi()) >1.) && (delta_phi(lept1.Phi(),lept2.Phi()) > 1.) && (delta_phi(jet1.Phi(),jet2.Phi()) >1.) ){
 		  // event has passed kinematic selection
 		  
-		  //  M(Higgs) prima.		  
-		  h1_mWW_GetPz->Fill( (bestWDiJet+ diLepton).M() );
+		  //  M(Higgs) prima.
+                  h1_mWW_GetPz->Fill( (bestWDiJet+ diLepton).M() );
                   h1_ResomWW_GetPz->Fill( (isMC) ? ((lept1+lept2+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );
+
                   //  M(Higgs) with higher helicity
-                  if( helicityLDRight-helicityLDWrong>=0. ){
-		     if( sorted ){ h1_ResomH_heli->Fill( (isMC) ? ((lept2+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );
-                                   h1_ResoPzW_heli->Fill( (isMC) ? ((lept2+NeuRW.first).Pz()-WllMC.Pz())/WllMC.Pz() : 0 );}
-                     else{         h1_ResomH_heli->Fill( (isMC) ? ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );
-                                   h1_ResoPzW_heli->Fill( (isMC) ? ((lept1+NeuRW.first).Pz()-WllMC.Pz())/WllMC.Pz() : 0 );}
+                if(isMC){
+                 if( helicityLDRight-helicityLDWrong>=0. ){
+                     if( sorted ){ h1_ResomH_heli->Fill( ((lept2+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
+                                   h1_ResoPzW_heli->Fill( ((lept2+NeuRW.first).Pz()-WllMC.Pz())/WllMC.Pz() );}
+                     else{         h1_ResomH_heli->Fill( ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
+                                   h1_ResoPzW_heli->Fill( ((lept1+NeuRW.first).Pz()-WllMC.Pz())/WllMC.Pz() );}
                   }
-		  if( helicityLDRight-helicityLDWrong<0. ){
-		      if( sorted ){ h1_ResomH_heli->Fill( (isMC) ? ((lept2+NeuRW.second+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );
-                                    h1_ResoPzW_heli->Fill( (isMC) ? ((lept2+NeuRW.second).Pz()-WllMC.Pz())/WllMC.Pz() : 0 );}
-                      else{         h1_ResomH_heli->Fill( (isMC) ? ((lept1+NeuRW.second+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );
-                                    h1_ResoPzW_heli->Fill( (isMC) ? ((lept1+NeuRW.second).Pz()-WllMC.Pz())/WllMC.Pz() : 0 );}
+                  if( helicityLDRight-helicityLDWrong<0. ){
+                      if( sorted ){ h1_ResomH_heli->Fill( ((lept2+NeuRW.second+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
+                                    h1_ResoPzW_heli->Fill( ((lept2+NeuRW.second).Pz()-WllMC.Pz())/WllMC.Pz() );}
+                      else{         h1_ResomH_heli->Fill( ((lept1+NeuRW.second+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
+                                    h1_ResoPzW_heli->Fill( ((lept1+NeuRW.second).Pz()-WllMC.Pz())/WllMC.Pz() );}
                   }
+                 }
 
      // GetPz Resolution (here, to have same cuts than KinFit)
-    h1_resoPzGetRight->Fill( (isMC) ? (NeuRW.first.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    h1_resoPzGetMCRight->Fill( (isMC) ? (NeuRWMC.first.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    h1_resoPzWll->Fill( (isMC) ? ((lept1+lept2).Pz()-WllMC.Pz())/WllMC.Pz() : 0 );
-    h1_resoPtWll->Fill( (isMC) ? ((lept1+lept2).Pt()-WllMC.Pt())/WllMC.Pt() : 0 );
+  if(isMC){
+    h1_resoPzGetRight->Fill( (NeuRW.first.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    h1_resoPzGetMCRight->Fill( (NeuRWMC.first.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    h1_resoPzWll->Fill( ((lept1+lept2).Pz()-WllMC.Pz())/WllMC.Pz() );
+    h1_resoPtWll->Fill( ((lept1+lept2).Pt()-WllMC.Pt())/WllMC.Pt() );
     if(sorted){
-    h1_pzResoNeut_GetPzMC->Fill( (isMC) ? (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    h1_pzResoNeut_GetPz->Fill( (isMC) ? (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    h1_ptResoNeut_GetPz->Fill( (isMC) ? (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() : 0 );
-    if( fabs(NeuRW.first.Pz()-lept1.Pz())<fabs(NeuRW.second.Pz()-lept1.Pz()) ) h1_pzResoNeut_GetPz_Right->Fill( (isMC) ? (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    if( fabs(NeuRW.first.Pz()-lept1.Pz())>fabs(NeuRW.second.Pz()-lept1.Pz()) ) h1_pzResoNeut_GetPz_Wrong->Fill( (isMC) ? (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    if( fabs(NeuRW.first.Pz()-lept1.Pz())==fabs(NeuRW.second.Pz()-lept1.Pz()) ) h1_pzResoNeut_GetPz_One->Fill( (isMC) ? (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())<fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Right->Fill( (isMC) ? (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())>fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Wrong->Fill( (isMC) ? (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
+    h1_pzResoNeut_GetPzMC->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    h1_pzResoNeut_GetPz->Fill( (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    h1_ptResoNeut_GetPz->Fill( (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() );
+    if( fabs(NeuRW.first.Pz()-lept1.Pz())<fabs(NeuRW.second.Pz()-lept1.Pz()) ) h1_pzResoNeut_GetPz_Right->Fill( (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    if( fabs(NeuRW.first.Pz()-lept1.Pz())>fabs(NeuRW.second.Pz()-lept1.Pz()) ) h1_pzResoNeut_GetPz_Wrong->Fill( (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    if( fabs(NeuRW.first.Pz()-lept1.Pz())==fabs(NeuRW.second.Pz()-lept1.Pz()) ) h1_pzResoNeut_GetPz_One->Fill( (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())<fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Right->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())>fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Wrong->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
     }
     else{
-    h1_pzResoNeut_GetPzMC->Fill( (isMC) ? (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    h1_pzResoNeut_GetPz->Fill( (isMC) ? (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    h1_ptResoNeut_GetPz->Fill( (isMC) ? (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() : 0 );
-    if( fabs(NeuRW.first.Pz()-lept2.Pz())<fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_Right->Fill( (isMC) ? (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    if( fabs(NeuRW.first.Pz()-lept2.Pz())>fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_Wrong->Fill( (isMC) ? (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    if( fabs(NeuRW.first.Pz()-lept2.Pz())==fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_One->Fill( (isMC) ? (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())<fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Right->Fill( (isMC) ? (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())>fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Wrong->Fill( (isMC) ? (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
+    h1_pzResoNeut_GetPzMC->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    h1_pzResoNeut_GetPz->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    h1_ptResoNeut_GetPz->Fill( (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() );
+    if( fabs(NeuRW.first.Pz()-lept2.Pz())<fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_Right->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    if( fabs(NeuRW.first.Pz()-lept2.Pz())>fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_Wrong->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    if( fabs(NeuRW.first.Pz()-lept2.Pz())==fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_One->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())<fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Right->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())>fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Wrong->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
     }
     // Times you have complex Solutions
     totSol++;
@@ -1346,6 +1350,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     if( NeuRWMC.first.Pz() != NeuRWMC.second.Pz() ){
        totPzMC++;
        if( fabs(pnMC-NeuRWMC.first.Pz()) < fabs(pnMC-NeuRWMC.second.Pz()) ) totPzRMC++; }
+  }
 
 		  // ------------------------
 		  //   KINEMATIC FIT (LEPTON) : BEGIN
