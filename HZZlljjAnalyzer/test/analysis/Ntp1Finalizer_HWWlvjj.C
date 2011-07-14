@@ -1391,7 +1391,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   } 
 //}
         TLorentzVector Neu_MetFitted;     
-        Neu_MetFitted.SetPxPyPzE(NeuMC.Px(),NeuMC.Py(),NeuMC.Pz(),NeuMC.E());//lept2_kinfit.Px(),lept2_kinfit.Py(),pn,sqrt(pow(lept2_kinfit.Px(),2)+pow(lept2_kinfit.Py(),2)+pow(pn,2)) );
+        Neu_MetFitted.SetPxPyPzE(/*NeuMC.Px(),NeuMC.Py(),NeuMC.Pz(),NeuMC.E());*/lept2_kinfit.Px(),lept2_kinfit.Py(),pn,sqrt(pow(lept2_kinfit.Px(),2)+pow(lept2_kinfit.Py(),2)+pow(pn,2)) );
         // Reso
       if(isMC){
         h1_pzResoNeut_KinFit->Fill( (Neu_MetFitted.Pz()-NeuMC.Pz())/NeuMC.Pz() );
