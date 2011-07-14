@@ -1356,13 +1356,13 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 		  // ------------------------
 		  //   KINEMATIC FIT (LEPTON) : BEGIN
 		  // ------------------------
-	          //if( (sorted && lept2.DeltaR(LepMC)<0.3) || (!sorted && lept1.DeltaR(LepMC)<0.3) ){ //only matched leptons
 		  MissingEnergy neut; // Class defined in LeptonNeutrinoKinfitter.h
 		  neut.SetSumEt(SumEt);
                   TLorentzVector lept1_kinfit;
                   TLorentzVector lept2_kinfit, PRO;
 
                   float chiSquareProbLept;
+//if( (sorted && lept2.DeltaR(LepMC)<0.3) || (!sorted && lept1.DeltaR(LepMC)<0.3) ){ //only matched leptons
                   if( sorted ){
                   PRO.SetPtEtaPhiE(/*NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt() );*/lept1.Pt(),0.,lept1.Phi(),sqrt(lept1.Px()*lept1.Px()+lept1.Py()*lept1.Py()));
 		  neut.SetNeutrino(PRO);
@@ -1388,9 +1388,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
                   h1_resoPt->Fill( (isMC) ? (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() :0 );
                   if(isMC) h2_correlation->Fill( lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight );
-                  }
+                  } 
+//}
         TLorentzVector Neu_MetFitted;     
-        Neu_MetFitted.SetPxPyPzE(lept2_kinfit.Px(),lept2_kinfit.Py(),pn,sqrt(pow(lept2_kinfit.Px(),2)+pow(lept2_kinfit.Py(),2)+pow(pn,2)) );
+        Neu_MetFitted.SetPxPyPzE(NeuMC.Px(),NeuMC.Py(),NeuMC.Pz(),NeuMC.E());//lept2_kinfit.Px(),lept2_kinfit.Py(),pn,sqrt(pow(lept2_kinfit.Px(),2)+pow(lept2_kinfit.Py(),2)+pow(pn,2)) );
         // Reso
       if(isMC){
         h1_pzResoNeut_KinFit->Fill( (Neu_MetFitted.Pz()-NeuMC.Pz())/NeuMC.Pz() );
@@ -1547,7 +1548,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       if(sorted)  diLepton=Neu_MetFitted+lept2;
       else        diLepton=Neu_MetFitted+lept1;
 
-        //float ptReso1_before = (isMC) ? ( jet1.Pt()-jet1.ptGen )/jet1.ptGen : 0.;
+          //float ptReso1_before = (isMC) ? ( jet1.Pt()-jet1.ptGen )/jet1.ptGen : 0.;
 	  //float ptReso2_before = (isMC) ? ( jet2.Pt()-jet2.ptGen )/jet2.ptGen : 0.;
 	  float ptReso1_before = (isMC) ? ( jet1.Pt()-matchedPart1.Pt() )/matchedPart1.Pt() : 0.;
 	  float ptReso2_before = (isMC) ? ( jet2.Pt()-matchedPart2.Pt() )/matchedPart2.Pt() : 0.;
@@ -1685,10 +1686,10 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
       if( jet1PtBin<0 ){ std::cout<<"Jet1 not reconstructed"<<std::endl;  break;}
       if( jet2PtBin<0 ){ std::cout<<"Jet2 not reconstructed"<<std::endl;  break;} // se e' meno uno vuol dire che non ha trovato il jet
 
-      //   bool btag_TChighPur = ( jet1.trackCountingHighPurBJetTag>5. || jet2.trackCountingHighPurBJetTag>5. );
+      //  bool btag_TChighPur = ( jet1.trackCountingHighPurBJetTag>5. || jet2.trackCountingHighPurBJetTag>5. );
       //  bool btag_TChighEff = ( jet1.trackCountingHighEffBJetTag>5. || jet2.trackCountingHighEffBJetTag>5. );
       //  bool btag_SSVhighPur = ( jet1.simpleSecondaryVertexHighPurBJetTag>2. || jet2.simpleSecondaryVertexHighPurBJetTag>2. );
-      // bool btag_SSVhighEff = ( jet1.simpleSecondaryVertexHighEffBJetTag>2. || jet2.simpleSecondaryVertexHighEffBJetTag>2. );
+      //  bool btag_SSVhighEff = ( jet1.simpleSecondaryVertexHighEffBJetTag>2. || jet2.simpleSecondaryVertexHighEffBJetTag>2. );
       //  bool btag_SSVhighPurhighEff = ( ( jet1.simpleSecondaryVertexHighPurBJetTag>2. && jet2.simpleSecondaryVertexHighEffBJetTag>2. ) ||
       //                             ( jet1.simpleSecondaryVertexHighEffBJetTag>2. && jet2.simpleSecondaryVertexHighPurBJetTag>2. ) );
 
@@ -1705,7 +1706,7 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
       h1_ptDJet1->Fill( jet1.ptD, eventWeight );
       h1_ptDJet2->Fill( jet2.ptD, eventWeight );
 
-          //vh1_rmsCandJet1[jet1PtBin]->Fill( jet1.rmsCand, eventWeight );
+      //vh1_rmsCandJet1[jet1PtBin]->Fill( jet1.rmsCand, eventWeight );
       vh1_ptDJet1[jet1PtBin]->Fill( jet1.ptD, eventWeight );
       vh1_nChargedJet1[jet1PtBin]->Fill( jet1.nCharged, eventWeight );
       vh1_nNeutralJet1[jet1PtBin]->Fill( jet1.nNeutral, eventWeight );
@@ -1713,7 +1714,7 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
       vh1_QGLikelihoodJet1[jet1PtBin]->Fill( QGLikelihoodJet1, eventWeight );
       h1_QGLikelihoodJet1->Fill( QGLikelihoodJet1, eventWeight );
      
-    //  vh1_rmsCandJet2[jet2PtBin]->Fill( jet2.rmsCand, eventWeight );
+      //vh1_rmsCandJet2[jet2PtBin]->Fill( jet2.rmsCand, eventWeight );
       vh1_ptDJet2[jet2PtBin]->Fill( jet2.ptD, eventWeight );
       vh1_nChargedJet2[jet2PtBin]->Fill( jet2.nCharged, eventWeight ); 
       vh1_nNeutralJet2[jet2PtBin]->Fill( jet2.nNeutral, eventWeight );
@@ -2232,8 +2233,8 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     ptJet2_thresh_ = 30.;
     etaJet1_thresh_ = 2.4;
     etaJet2_thresh_ = 2.4;
-    mtWll_threshLo_ = 40.;
-    mtWll_threshHi_ = 999.;
+    mtWll_threshLo_ = 50.;
+    mtWll_threshHi_ = 120.;
     mWjj_threshLo_ = 60.;//###
     mWjj_threshHi_ = 100.;
     deltaRll_thresh_ = 999.;
