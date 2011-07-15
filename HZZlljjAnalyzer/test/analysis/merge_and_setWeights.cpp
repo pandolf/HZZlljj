@@ -23,13 +23,13 @@ float getWeight( const std::string& dataset, int nEvents );
 int main( int argc, char* argv[] ) {
 
   if( argc!=2 && argc!=3 && argc!=4 ) {
-    std::cout << "USAGE: ./merge_and_setWeights [dataset] [analysisType=\"HWWlvjj\"] [flags=\"\"]" << std::endl;
+    std::cout << "USAGE: ./merge_and_setWeights [dataset] [analysisType=\"HZZlljj\"] [flags=\"\"]" << std::endl;
     exit(917);
   }
 
   std::string dataset = argv[1];
 
-  analysisType_ = "HWWlvjj";
+  analysisType_ = "HZZlljj";
   if( argc>=3 ) {
     std::string analysisType_str(argv[2]);
     analysisType_ = analysisType_str;
