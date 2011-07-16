@@ -840,7 +840,13 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   float nEvent_btag=0;
   // In order to calculate efficiency
   int totSol=0, oneSol=0, oneSolMC=0, totPz=0, totPzR=0, totPzMC=0, totPzRMC=0, chooseHely=0, rightHely=0; // In order to count the right solutions of GetPz and the helicity
-  int timesTryJets=0, rightMatch=0;
+  //int timesTryJets=0, rightMatch=0;
+
+  // To optimize helicity cut
+  double helicityLD_kinfit; 
+  TTree * Tree_optim_hely = new TTree("Tree_optim_hely","Tree to optimize the helicity cut");
+  Tree_optim_hely->Branch("helicityLD_kinfit", &helicityLD_kinfit, "helicityLD_kinfit/F");
+  Tree_optim_hely->Branch("eventWeight", &eventWeight, "eventWeight/F");
   // FOR iEntry
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
     
@@ -1106,10 +1112,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       } //for pairs
 
 //Other Btag
-  //   bool hibtagOthers=false;
-   //  if( (trackCountingHighEffBJetTagJet1[bestPair] > 2.5 || trackCountingHighEffBJetTagJet1[bestPair] < 4.) || trackCountingHighEffBJetTagJet2[bestPair] > 2.5 || trackCountingHighEffBJetTagJet2[bestPair] < 4. ){
-   //     hibtagOthers=false;//true;
-   //  }
+  //  bool hibtagOthers=false;
+    // if( (trackCountingHighEffBJetTagJet1[bestPair] > 3.3 || trackCountingHighEffBJetTagJet2[bestPair] > 3.3) ){
+      //  hibtagOthers=true;
+    // }
 
       // now look for leading jet who is not coming from a W from H
  if( jetPairs_selected.size() > 1 ){
@@ -1277,7 +1283,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
         h1_mWee_presel_0jets->Fill( diLepton.M(), eventWeight );
     }
 
-   if( !hibtag /* !hibtagOthers*/ ){ nEvent_btag++;
+   if( !hibtag /*!hibtagOthers*/ ){ nEvent_btag++;
       if( diLepton.Pt() > ptWll_thresh_ ){
 	nEvent_DileptPt++;
 	if(  lept1.Pt() > ptLept1_thresh_ ){
@@ -1286,11 +1292,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 	    nEvent_SubleadLeptPt++;
 	    if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
 	      nEvent_EtaLept++;
-	      if( diLepton.M() /*Other sqrt(2*lept1.Pt()*lept2.Pt()*(1-cos(delta_phi(lept1.Phi(),lept2.Phi()))))*/ > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+	      if( diLepton.M() /*OtherMine sqrt(2*lept1.Pt()*lept2.Pt()*(1-cos(delta_phi(lept1.Phi(),lept2.Phi()))))*/ > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
 		nEvent_mtW++;
 		if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
 		  nEvent_DrLeptLept++;
-             //       if( nPairs < 4 ){ // Veto su altri Jet //Other
+                    //if( nPairs < 4 ){ // Veto su altri Jet //Other
               // if( (delta_phi(diLepton.Phi(),bestWDiJet      h1_ResomH_heli->Fill( (isMC) ? ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );      .Phi()) >1.) && (delta_phi(lept1.Phi(),lept2.Phi()) > 1.) && (delta_phi(jet1.Phi(),jet2.Phi()) >1.) ){
 		  // event has passed kinematic selection
 		  
@@ -1354,6 +1360,44 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   }
 
 		  // ------------------------
+		  //   KINEMATIC FIT (JET) : BEGIN
+		  // ------------------------
+                  // if( (((Quark1MC.DeltaR(jet1) <= Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet1)<0.3 && Quark2MC.DeltaR(jet2)<0.3)) || ((Quark1MC.DeltaR(jet1) > Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet2)<0.3 && Quark2MC.DeltaR(jet1)<0.3))) && jet1.DeltaR(jet2)>1. ){//only matched jets
+		  h1_mWW_nokinfit->Fill( (bestWDiJet+lept1+lept2).M() );
+		  DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", 80.399 );
+		  std::pair<TLorentzVector,TLorentzVector> jets_kinfit = fitter_jets->fit(jet1, jet2);
+		  TLorentzVector jet1_kinfit(jets_kinfit.first);
+		  TLorentzVector jet2_kinfit(jets_kinfit.second);
+		  
+		  TLorentzVector matchedPart1, matchedPart2;
+		  float bestDeltaRPart1=999.;
+		  float bestDeltaRPart2=999.;
+		  for( unsigned iPart=0; iPart<nPart; ++iPart ) {
+		    if( abs(pdgIdPart[iPart])>6 ) continue;
+		    TLorentzVector thisPart;
+          thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+          if( jet1.DeltaR(thisPart) < bestDeltaRPart1 ) {
+            bestDeltaRPart1 = jet1.DeltaR(thisPart);
+            matchedPart1 = thisPart;
+          }
+          if( jet2.DeltaR(thisPart) < bestDeltaRPart2 ) {
+            bestDeltaRPart2 = jet2.DeltaR(thisPart);
+            matchedPart2 = thisPart;
+          }
+        }
+       // Using KinFit on jets in order to Improve MET
+       //TVector3 OldMET, METCorrect, NewMET;
+       TVector3 OldMET;
+       OldMET.SetXYZ( pxPFMet,pyPFMet,0. );
+       TVector3 JET1=jet1.Vect();
+       TVector3 JET2=jet2.Vect(); 
+       TVector3 JET1_new=jet1_kinfit.Vect();
+       TVector3 JET2_new=jet2_kinfit.Vect();
+       TVector3 NewMET=OldMET-JET1_new-JET2_new+JET1+JET2;
+       h1_Studio1->Fill( (NewMET.Pt()-NeuMC.Pt())/NeuMC.Pt() );
+       h1_Studio2->Fill( (OldMET.Pt()-NeuMC.Pt())/NeuMC.Pt() );
+
+		  // ------------------------
 		  //   KINEMATIC FIT (LEPTON) : BEGIN
 		  // ------------------------
 		  MissingEnergy neut; // Class defined in LeptonNeutrinoKinfitter.h
@@ -1362,6 +1406,8 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   TLorentzVector lept2_kinfit, PRO;
 
                   float chiSquareProbLept;
+                  //PRO.SetPtEtaPhiE(NewMET.Pt(),0.,NewMET.Phi(),sqrt((pow(NewMET.Px(),2)+pow(NewMET.Py(),2))));
+		  //neut.SetNeutrino(PRO);
 //if( (sorted && lept2.DeltaR(LepMC)<0.3) || (!sorted && lept1.DeltaR(LepMC)<0.3) ){ //only matched leptons
                   if( sorted ){
                   PRO.SetPtEtaPhiE(/*NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt() );*/lept1.Pt(),0.,lept1.Phi(),sqrt(lept1.Px()*lept1.Px()+lept1.Py()*lept1.Py()));
@@ -1470,32 +1516,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                  //} //Matching
 */
 		     
-		  // ------------------------
-		  //   KINEMATIC FIT (JET) : BEGIN
-		  // ------------------------
-                  // if( (((Quark1MC.DeltaR(jet1) <= Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet1)<0.3 && Quark2MC.DeltaR(jet2)<0.3)) || ((Quark1MC.DeltaR(jet1) > Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet2)<0.3 && Quark2MC.DeltaR(jet1)<0.3))) && jet1.DeltaR(jet2)>1. ){//only matched jets
-		  h1_mWW_nokinfit->Fill( (bestWDiJet+lept1+lept2).M() );
-		  DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", 80.399 );
-		  std::pair<TLorentzVector,TLorentzVector> jets_kinfit = fitter_jets->fit(jet1, jet2);
-		  TLorentzVector jet1_kinfit(jets_kinfit.first);
-		  TLorentzVector jet2_kinfit(jets_kinfit.second);
-		  
-		  TLorentzVector matchedPart1, matchedPart2;
-		  float bestDeltaRPart1=999.;
-		  float bestDeltaRPart2=999.;
-		  for( unsigned iPart=0; iPart<nPart; ++iPart ) {
-		    if( abs(pdgIdPart[iPart])>6 ) continue;
-		    TLorentzVector thisPart;
-          thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
-          if( jet1.DeltaR(thisPart) < bestDeltaRPart1 ) {
-            bestDeltaRPart1 = jet1.DeltaR(thisPart);
-            matchedPart1 = thisPart;
-          }
-          if( jet2.DeltaR(thisPart) < bestDeltaRPart2 ) {
-            bestDeltaRPart2 = jet2.DeltaR(thisPart);
-            matchedPart2 = thisPart;
-          }
-        }
+
 
        // Selecting Neutrino Pz with elicity 
        std::pair<TLorentzVector,TLorentzVector> BothNeutrino_fitted;
@@ -1548,6 +1569,8 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       if(sorted)  diLepton=Neu_MetFitted+lept2;
       else        diLepton=Neu_MetFitted+lept1;
 
+          // Reso KinFit on Jets  
+        
           //float ptReso1_before = (isMC) ? ( jet1.Pt()-jet1.ptGen )/jet1.ptGen : 0.;
 	  //float ptReso2_before = (isMC) ? ( jet2.Pt()-jet2.ptGen )/jet2.ptGen : 0.;
 	  float ptReso1_before = (isMC) ? ( jet1.Pt()-matchedPart1.Pt() )/matchedPart1.Pt() : 0.;
@@ -1585,9 +1608,9 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
         if( sorted ){ if( delta_phi(lept2.Phi(),(jet1_kinfit+jet2_kinfit).Phi())>3.15 ) continue;}
         if( !sorted){ if( delta_phi(lept1.Phi(),(jet1_kinfit+jet2_kinfit).Phi())>3.15 ) continue;}
 
-        if( sorted ){ if( (jet1_kinfit+jet2_kinfit+lept2).Pt()>100 ) continue;}
-        if( !sorted){ if( (jet1_kinfit+jet2_kinfit+lept1).Pt()>100 ) continue;}
-
+        if( sorted ){ if( (jet1_kinfit+jet2_kinfit+lept2).Pt()<100 ) continue;}
+        if( !sorted){ if( (jet1_kinfit+jet2_kinfit+lept1).Pt()<100 ) continue;}
+        
         diLepton =lept1+lept2;
         */
         float ptWreso_before = (isMC) ? ( bestWDiJet.Pt()-matchedW.Pt() )/matchedW.Pt() : 0.;
@@ -1650,15 +1673,15 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
       LD->setMeasurables(hangles_kinfit);
       double sProb_kinfit=LD->getSignalProbability();
       double bProb_kinfit=LD->getBkgdProbability();
-      double helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
+             helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
       h1_helicityLD_kinfit->Fill(helicityLD_kinfit, eventWeight);      
       
       //
       // QG LIKELIHOOD   ***BEGIN***
       //
 
- // You had better to caculate QG after WW cuts
-  // if ( (jet1+jet2+lept1+lept2).M() < HiggsMass_-50. || (jet1+jet2+lept1+lept2).M() > HiggsMass_+50. ) continue;
+   // You had better to caculate QG after WW cuts
+      //if( WW_kinfit.M() < HiggsMass_-((HiggsMass_*6.)/100.)  || WW_kinfit.M() > HiggsMass_+((HiggsMass_*10.)/100.) || helicityLD_kinfit<0.7 ) continue;
    
       int jet1PtBin=-1;
       if( jet1.Pt() > ptBins[nPtBins] ) {
@@ -1734,6 +1757,11 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 
       if( QGLikelihoodJet1>0.8 || QGLikelihoodJet2>0.8 ) h1_QGLikelihoodProd_hi->Fill(QGLikelihoodProd, eventWeight); 
 
+      // Optimizing Cuts
+
+      if( WW_kinfit.M() > mWW_threshLo_  && WW_kinfit.M() < mWW_threshHi_ && QGLikelihoodProd > 0.2  ){
+        Tree_optim_hely->Fill(); 
+        }
       // last step of selection:
       // QG and helicity LD's
 
@@ -1745,12 +1773,14 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
       // *****  PASSED ANALYSIS SELECTION ********
       // *****************************************
       
-      if( WW_kinfit.M() > mWW_threshLo_ && WW_kinfit.M() < mWW_threshHi_ ) {
+      //if( WW_kinfit.M() > mWW_threshLo_ && WW_kinfit.M() < mWW_threshHi_ ) {
+        if( WW_kinfit.M() > mWW_threshLo_  && WW_kinfit.M() < mWW_threshHi_ ){
         nEventsPassed_fb_kinfit += eventWeight;
         nEventsPassed_kinfit++;
 
 	 //if( !btag_SSVhighEff ) nEventsPassed_kinfit_antiBtag++;
       }
+      //if( WW.M() > mWW_threshLo_ && WW.M() < mWW_threshHi_ ) {
       if( WW.M() > mWW_threshLo_ && WW.M() < mWW_threshHi_ ) {
         nEventsPassed_fb_nokinfit += eventWeight;
         nEventsPassed_nokinfit++;
@@ -1904,8 +1934,9 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
   std::cout<<"GetPz guess: "<<(double)totPzR/totPz<<" GetPzMC instead: "<<(double)totPzRMC/totPzMC<<std::endl;
   std::cout<<"Helicity guess: "<<(double)rightHely/chooseHely<<std::endl;
   //std::cout<<"Guessing Jets: "<<(double)rightMatch/timesTryJets<<std::endl;
-  outFile_->cd();
 
+  outFile_->cd();
+  Tree_optim_hely->Write();
 
   h2_correlation->Write();
 
@@ -2156,7 +2187,7 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 
   outFile_->mkdir("QGbins");
   outFile_->cd("QGbins");
-
+  
   for( unsigned iPtBin=0; iPtBin<nPtBins; ++iPtBin ) {
 
     vh1_rmsCandJet1[iPtBin]->Write();
@@ -2173,9 +2204,7 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 
   }
 
-
   outFile_->Close();
-
 
 // btagFile->cd();
 
@@ -2243,8 +2272,8 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     ptWjj_thresh_ = 0.;
     helicityLD_thresh_ = 0.75;
     QGLikelihoodProd_thresh_ = 0.2;
-    mWW_threshLo_ = HiggsMass_-50.;
-    mWW_threshHi_ = HiggsMass_+50.;
+    mWW_threshLo_ = HiggsMass_-((HiggsMass_*10.)/100.);
+    mWW_threshHi_ = HiggsMass_+((HiggsMass_*12.)/100.);
 
 
   } else if( selectionType_=="loose" ) {
@@ -2872,7 +2901,7 @@ std::pair<TLorentzVector,TLorentzVector> getPzRight( TLorentzVector lepton, floa
 
 // Get Both Pz
 std::pair<TLorentzVector,TLorentzVector> getBothPz( TLorentzVector lepton, float pxPFMet, float pyPFMet) {
-  float pn=0., app=0., pznp=0., pznm=0.;
+  float app=0., pznp=0., pznm=0.;
   float a=0., b=0., c=0.;
   std::pair<TLorentzVector,TLorentzVector> Solutions;
   TLorentzVector neu1, neu2;
