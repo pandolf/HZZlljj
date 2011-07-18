@@ -141,10 +141,10 @@ int main( int argc, char* argv[] ) {
     nf->addFile( "TToBLNu_TuneZ2_t-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" );
     nf->addFile( "TToBLNu_TuneZ2_tW-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" );
 
-  } else if ( dataset == "HWWlvjj_2ndLevelTreeW_DATA_6july.root" ) {
+  } else if ( dataset == "DATA_6july" ) {
 
-     nf->addFile(HWWlvjj_2ndLevelTreeW_SingleElectron_6july.root);
-     nf->addFile(HWWlvjj_2ndLevelTreeW_SingleMu_6july.root);
+     nf->addFile("SingleMu_6july");
+     nf->addFile("SingleElectron_6july");
 
   } else if( dataset=="all" ) {
 
