@@ -34,42 +34,42 @@ int main(int argc, char* argv[]) {
   outputdir_str += "_" + leptType;
   db->set_outputdir(outputdir_str);
 
-   TFile* mcSignal_WW200 = TFile::Open("HWWlvjj_WW200_loose_ALL.root");
-   db->add_mcFile(mcSignal_WW200, "WW200", "HWW (200)", 2);
- //  TFile* mcSignal_WW300 = TFile::Open("HWWlvjj_WW300_presel_ALL.root");
- // db->add_mcFile(mcSignal_WW300, "WW300", "HWW (300)", 46);
- //  TFile* mcSignal_WW400 = TFile::Open("HWWlvjj_WW400_opt400_ALL.root");
- // db->add_mcFile(mcSignal_WW400, "WW400", "HWW (400)", 93);
-  //  TFile* mcSignal_WW500 = TFile::Open("HWWlvjj_WW500_loose_ALL.root");
-  //  db->add_mcFile(mcSignal_WW500, "WW500", "HWW (500)", 98);
+  //TFile* mcSignal_WW200 = TFile::Open("HWWlvjj_WW200_loose_ALL.root");
+  //db->add_mcFile(mcSignal_WW200, "WW200", "HWW (200)", 2);
+  //TFile* mcSignal_WW300 = TFile::Open("HWWlvjj_WW300_loose_ALL.root");
+  //db->add_mcFile(mcSignal_WW300, "WW300", "HWW (300)", 46); 
+  //TFile* mcSignal_WW400 = TFile::Open("HWWlvjj_WW400_loose_ALL.root");
+  //db->add_mcFile(mcSignal_WW400, "WW400", "HWW (400)", 93);
+  TFile* mcSignal_WW500 = TFile::Open("HWWlvjj_WW500_loose_ALL.root");
+  db->add_mcFile(mcSignal_WW500, "WW500", "HWW (500)", 98);
 
- // TFile* mcBkg_WJets = TFile::Open("HWWlvjj_WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_Spring11-PU_S1_START311_V1G1-v1_2_helicity_ALL.root");
- // db->add_mcFile(mcBkg_WJets, "WJets", "W + Jets", 38);
- // TFile* mcBkg_VV = TFile::Open("HWWlvjj_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2_helicity_ALL.root");
- // db->add_mcFile(mcBkg_VV, "VV", " Diboson ", 65);
- // TFile* mcBkg_TT = TFile::Open("HWWlvjj_TT_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3_helicity_ALL.root");
- // db->add_mcFile(mcBkg_TT, "tt", " tt ", 30);
+
+  //TFile* mcBkg_WJets = TFile::Open("HWWlvjj_WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_Spring11-PU_S1_START311_V1G1-v1_2_loose_ALL.root");
+  //db->add_mcFile(mcBkg_WJets, "WJets", "W + Jets", 38);
+  //TFile* mcBkg_VV = TFile::Open("HWWlvjj_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2_helicity_ALL.root");
+  //db->add_mcFile(mcBkg_VV, "VV", " Diboson ", 65);
+  //TFile* mcBkg_TT = TFile::Open("HWWlvjj_TT_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3_helicity_ALL.root");
+  //db->add_mcFile(mcBkg_TT, "tt", " tt ", 30);
   //TFile* mcBkg_DY = TFile::Open("HWWlvjj_DY_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2_helicity_ALL.root");
-//  db->add_mcFile(mcBkg_DY, "DY", " DY ", 39);
- // TFile* mcBkg_T = TFile::Open("HWWlvjj_TToBLNu_TuneZ2_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2_helicity_ALL.root");
+  //db->add_mcFile(mcBkg_DY, "DY", " DY ", 39);
+  //TFile* mcBkg_T = TFile::Open("HWWlvjj_TToBLNu_TuneZ2_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2_helicity_ALL.root");
   //db->add_mcFile(mcBkg_T, "top", " top ", 50);
 
+  //TFile* mcBkg_T = TFile::Open("");
+  //db->add_mcFile(mcBkg_T, "top", " top ", 50);
 
- // db->set_lumiNormalization( 1000. ); //1 fb-1 li somma e norm alla lumi
+  //db->set_lumiNormalization( 1000. ); //1 fb-1 li somma e norm alla lumi
   //db->set_noStack( false);//(bool)true );
   db->set_shapeNormalization();
-
 
  // db->drawHisto( "nJets_presel", "Number of jets after preselection","", "Events",false);
  // db->drawHisto( "EtaOtherJets", "Eta Leading Jet not from H","", "Events",false);
 
  // db->drawHisto( "mtW_JustPresel", "W Boson Transverse Mass", "Gev/c^{2}", "Events", false);
- // db->set_rebin( 10 );
- // db->drawHisto( "mWW_kinfit", "H mass after all cuts", "Gev/c^{2}", "Events", false);
- // db->drawHisto( "helicityLD_kinfit", "Helicity Angles Likelihood Discriminant", "", "Events", false);
-//  db->drawHisto( "QGLikelihoodProd", "Quark-Gluon Likelihood", "", "Events", false);
-//  db->drawHisto( "QGLikelihoodJet1", "Jet1 Quark-Gluon Likelihood", "", "Events", false);
-//  db->drawHisto( "QGLikelihoodJet2", "Jet2 Quark-Gluon Likelihood", "", "Events", false);
+  //db->drawHisto( "helicityLD_kinfit", "Helicity Angles Likelihood Discriminant", "", "Events", false);
+  //db->drawHisto( "QGLikelihoodProd", "Quark-Gluon Likelihood", "", "Events", false);
+  //db->drawHisto( "QGLikelihoodJet1", "Jet1 Quark-Gluon Likelihood", "", "Events", false);
+  //db->drawHisto( "QGLikelihoodJet2", "Jet2 Quark-Gluon Likelihood", "", "Events", false);
 
 // db->drawHisto( "btag", "B-Tag Value for all jet after preselection", "", "Events", false);
 
@@ -82,15 +82,15 @@ int main(int argc, char* argv[]) {
 //  db->drawHisto( "deltaRjj_JustPresel", "Jet-Jet #Delta R", "", "Events", false);
 //  db->drawHisto( "energyMet", "Missing Energy", "GeV", "Events", false);
    
-   //db->set_rebin(2);
-   //db->set_xAxisMin(400.);
-   //db->set_yAxisMax(500);
-   //db->drawHisto( "mWW_kinfit", "WW Inv. Mass After all cuts", "GeV/c^{2}", "Events", false, 2);
+  // db->set_rebin(2);
+  // db->set_xAxisMin(400.);
+  // db->set_yAxisMax(500);
+  // db->drawHisto( "mWW_kinfit", "WW Inv. Mass After all cuts", "GeV/c^{2}", "Events", false, 2);
 
  // db->drawHisto( "ptJet1", "Pt Leading Jet", "GeV/c2", "Events", false);
  // db->drawHisto( "ptJet2", "Pt Leading Jet", "GeV/c2", "Events", false);
               // Resolution before and after Fit Jet1
-/*  std::vector< HistoAndName > ptResoJet1_withFit;
+  std::vector< HistoAndName > ptResoJet1_withFit;
   HistoAndName ptResoJet1_beforeKin;
   ptResoJet1_beforeKin.histoName = "ptResoJet1_beforeKin";
   ptResoJet1_beforeKin.legendName = "Before KinFit";
@@ -99,8 +99,6 @@ int main(int argc, char* argv[]) {
   ptResoJet1_afterKin.histoName = "ptResoJet1_afterKin";
   ptResoJet1_afterKin.legendName = "After KinFit";
   ptResoJet1_withFit.push_back( ptResoJet1_afterKin ); 
-  //char legendResoJet1Title[200];
-  //db->set_legendTitle( legendResoJet1Title );
   db->compareDifferentHistos( ptResoJet1_withFit, "ptResoJet1_withFit", "Pt Resolution Jet1",  "");
               // Resolution before and after Fit Jet2
   std::vector< HistoAndName > ptResoJet2_withFit;
@@ -113,7 +111,7 @@ int main(int argc, char* argv[]) {
   ptResoJet2_afterKin.legendName = "After KinFit";
   ptResoJet2_withFit.push_back( ptResoJet2_afterKin );
   db->compareDifferentHistos( ptResoJet2_withFit, "ptResoJet2_withFit", "Pt Resolution Jet2",  "");
-              // Resolution before and after Fit ptW
+  /*            // Resolution before and after Fit ptW
   std::vector< HistoAndName > ptWReso_withFit;
   HistoAndName ptWReso_beforeKin;
   ptWReso_beforeKin.histoName = "ptWreso_beforeKin";
@@ -194,7 +192,7 @@ int main(int argc, char* argv[]) {
   GetPz_pzO.legendName = "One Sol";
   GetPzRW.push_back( GetPz_pzO );
   db->compareDifferentHistos( GetPzRW, "Pz_ResolRW_Get", "Neu Pz Resolution","","Entries",true);
-          */   // Pz Reso RW
+             // Pz Reso RW
   std::vector< HistoAndName > FitRW;
   HistoAndName Fit_pzR;
   Fit_pzR.histoName = "Studio1";//"pzResoNeut_KinFit_Right";
@@ -209,7 +207,7 @@ int main(int argc, char* argv[]) {
   //Fit_pzO.legendName = "Global KinFit";//"One Sol";
   //FitRW.push_back( Fit_pzO);
   db->compareDifferentHistos( FitRW, "Higgsreso_fits","Pt Higgs Resolution","");//FitRW, "Pz_ResolRW_Fit", "Neu Pz Resolution","","Entries",true);
-   /*         // Improvment on Pt Neu
+            // Improvment on Pt Neu
   std::vector< HistoAndName > ImpPtNeu_Fit2;
   HistoAndName ptFit2;
   ptFit2.histoName = "ptResoNeut_KinFit";
@@ -242,7 +240,22 @@ int main(int argc, char* argv[]) {
   ptGetW.legendName = "No KinFit ";
   ImpPtW_Fit2.push_back( ptGetW );
   db->compareDifferentHistos( ImpPtW_Fit2, "ImpPtW_Fit2", "Pt Resolution",  "");
-             // Improvment on Pz Neu
+             // Improvment on mH
+  std::vector< HistoAndName > ImpmH_Fit2;
+  HistoAndName mHhely;
+  mHhely.histoName = "mWW_hely";
+  mHhely.legendName = "With Helicity";
+  ImpmH_Fit2.push_back( mHhely );
+  HistoAndName mHFit2W;
+  mHFit2W.histoName = "mWW_kinLept";
+  mHFit2W.legendName = "KinFit";
+  ImpmH_Fit2.push_back( mHFit2W );
+  HistoAndName mHGetW;
+  mHGetW.histoName = "mWW_GetPz";
+  mHGetW.legendName = "No KinFit ";
+  ImpmH_Fit2.push_back( mHGetW );
+  db->compareDifferentHistos( ImpmH_Fit2, "ImpmH_Fit2", "m(H) Resolution",  ""); 
+            // Improvment on Pz Neu
   std::vector< HistoAndName > ImpPzW_Fit2;
   HistoAndName pzFit2W;
   pzFit2W.histoName = "pzResoW_KinFit";
@@ -253,6 +266,10 @@ int main(int argc, char* argv[]) {
   pzGetW.legendName = "No KinFit ";
   ImpPzW_Fit2.push_back( pzGetW );
   db->compareDifferentHistos( ImpPzW_Fit2, "ImpPzW_Fit2", "Pz Resolution",  "");
+
+
+db->drawHisto( "kinfit2_chiSquareProb", "Chi Square Prob.", "", "Events", false);
+
             // Chi-Square Fit/fitJet
   std::vector< HistoAndName > chisquare_FitJets;
   HistoAndName chisquare_Fit;
@@ -303,18 +320,18 @@ int main(int argc, char* argv[]) {
   resomHGet.legendName = "Using Invers.";
   resomHHeli.push_back( resomHGet );
   db->compareDifferentHistos( resomHHeli, "ResomH_helicity", "M(H) resolution",  "");
-            // Reso Pz Neu with Helicity 
+          */  // Reso Pz Neu with Helicity 
   std::vector< HistoAndName > resoPzWHeli;
   HistoAndName resoPzWH;
-  resoPzWH.histoName = "Studio3";//"ResoPzW_heli";
-  resoPzWH.legendName = "Using Helicity";
+  resoPzWH.histoName = "Studio1";//"ResoPzW_heli";
+  resoPzWH.legendName = "Met corretta";//Using Helicity";
   resoPzWHeli.push_back( resoPzWH );
   HistoAndName resoPzWGet;
-  resoPzWGet.histoName = "Studio4";//"resoPzWll";
-  resoPzWGet.legendName = "Using Invers.";
+  resoPzWGet.histoName = "Studio2";//"resoPzWll";
+  resoPzWGet.legendName = "Met non corr.";//Using Invers.";
   resoPzWHeli.push_back( resoPzWGet );
   db->compareDifferentHistos( resoPzWHeli, "ResoPzW_helicity", "W Pz Resolution",  "");
-*/
+
   delete db;
  
   db = 0;
