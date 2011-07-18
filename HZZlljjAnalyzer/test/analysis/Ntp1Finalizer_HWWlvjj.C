@@ -91,6 +91,8 @@ Ntp1Finalizer_HWWlvjj::Ntp1Finalizer_HWWlvjj( const std::string& dataset, const 
 void Ntp1Finalizer_HWWlvjj::finalize() {
 
   if( outFile_==0 ) this->createOutputFile();
+  // To optimize helicity cut
+  TTree * Tree_optim_hely = new TTree("Tree_optim_hely","Tree to optimize the helicity cut");
 
   TH1D* h1_Ev_Presel = new TH1D("Ev_Presel","",1,0.,1.);
   TH1D* h1_Ev_Jet1 = new TH1D("Ev_Jet1","",1,0.,1.);
@@ -813,6 +815,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   int nEventsPassed_kinfit=0;
   // int nEventsPassed_kinfit_antiBtag=0;
   int nEventsPassed_nokinfit=0;
+  float nEvents_presel=0;
 
   int nEntries = tree_->GetEntries();
   std::map< int, std::map<int, std::vector<int> > > run_lumi_ev_map;
@@ -842,11 +845,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   int totSol=0, oneSol=0, oneSolMC=0, totPz=0, totPzR=0, totPzMC=0, totPzRMC=0, chooseHely=0, rightHely=0; // In order to count the right solutions of GetPz and the helicity
   //int timesTryJets=0, rightMatch=0;
 
-  // To optimize helicity cut
-  double helicityLD_kinfit; 
-  TTree * Tree_optim_hely = new TTree("Tree_optim_hely","Tree to optimize the helicity cut");
+  Float_t helicityLD_kinfit; 
   Tree_optim_hely->Branch("helicityLD_kinfit", &helicityLD_kinfit, "helicityLD_kinfit/F");
   Tree_optim_hely->Branch("eventWeight", &eventWeight, "eventWeight/F");
+
   // FOR iEntry
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
     
@@ -933,6 +935,9 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     std::vector< std::pair< AnalysisJet, AnalysisJet > > jetPairs_JustPresel_selected;
 
     float cached_jetpt = 0.;
+
+    // Number of event after preselection   
+    nEvents_presel+=eventWeight;
 
     //to avoid repetition in efficiency during jet selection
     bool ripet_Presel = false;
@@ -1112,10 +1117,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       } //for pairs
 
 //Other Btag
-  //  bool hibtagOthers=false;
-    // if( (trackCountingHighEffBJetTagJet1[bestPair] > 3.3 || trackCountingHighEffBJetTagJet2[bestPair] > 3.3) ){
-      //  hibtagOthers=true;
-    // }
+    bool hibtagOthers=false;
+     if( (trackCountingHighEffBJetTagJet1[bestPair] > 3.3 || trackCountingHighEffBJetTagJet2[bestPair] > 3.3) ){
+        hibtagOthers=true;
+    }
 
       // now look for leading jet who is not coming from a W from H
  if( jetPairs_selected.size() > 1 ){
@@ -1175,7 +1180,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     lept2.SetPxPyPzE( pxPFMet, pyPFMet, pn, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pn,2)) );
     pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
  
-    if( energyPFMet < 30./* Other 50.*/ ) continue;
+    if( energyPFMet < 25./* Othermine 50.*/ ) continue;
     h1_energyMet->Fill( energyPFMet );
 /*
      h1_FindPz_EtaR->Fill(lept1.Eta()-neuR.Eta());     h1_FindPz_EtaW->Fill(lept1.Eta()-neuW.Eta());
@@ -1283,7 +1288,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
         h1_mWee_presel_0jets->Fill( diLepton.M(), eventWeight );
     }
 
-   if( !hibtag /*!hibtagOthers*/ ){ nEvent_btag++;
+   if( !hibtag /* !hibtagOthers*/ ){ nEvent_btag++;
       if( diLepton.Pt() > ptWll_thresh_ ){
 	nEvent_DileptPt++;
 	if(  lept1.Pt() > ptLept1_thresh_ ){
@@ -1292,7 +1297,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 	    nEvent_SubleadLeptPt++;
 	    if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
 	      nEvent_EtaLept++;
-	      if( diLepton.M() /*OtherMine sqrt(2*lept1.Pt()*lept2.Pt()*(1-cos(delta_phi(lept1.Phi(),lept2.Phi()))))*/ > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+	      if( diLepton.M() /*Other sqrt(2*lept1.Pt()*lept2.Pt()*(1-cos(delta_phi(lept1.Phi(),lept2.Phi())))) */ > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
 		nEvent_mtW++;
 		if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
 		  nEvent_DrLeptLept++;
@@ -1597,9 +1602,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
           }
         }
         // TAGLI Others (No Mte, btag, veto 4jet)
-       /* 
-        if( sorted ){ if( leptType_==0 && fabs(lept2.Eta()) > 2.1 ) continue;}
-        if(!sorted ){ if( leptType_==0 && fabs(lept1.Eta()) > 2.1 ) continue;}
+/*
+        if( sorted ){ if( leptType==0 && (fabs(lept2.Eta()) > 2.1 || lept2.Pt()<20 ) ) continue;}
+        if(!sorted ){ if( leptType==0 && (fabs(lept1.Eta()) > 2.1 || lept1.Pt()<20 ) ) continue;}
+        if( sorted ){ if( leptType==1 && lept2.Pt()<30  ) continue;}
+        if(!sorted ){ if( leptType==1 && lept1.Pt()<30  ) continue;}
 
         if( delta_phi(lept1.Phi(),lept2.Phi())>1.5 ) continue;
         if( delta_phi(jet1_kinfit.Phi(),jet2_kinfit.Phi())>1.25 ) continue; 
@@ -1608,11 +1615,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
         if( sorted ){ if( delta_phi(lept2.Phi(),(jet1_kinfit+jet2_kinfit).Phi())>3.15 ) continue;}
         if( !sorted){ if( delta_phi(lept1.Phi(),(jet1_kinfit+jet2_kinfit).Phi())>3.15 ) continue;}
 
-        if( sorted ){ if( (jet1_kinfit+jet2_kinfit+lept2).Pt()<100 ) continue;}
-        if( !sorted){ if( (jet1_kinfit+jet2_kinfit+lept1).Pt()<100 ) continue;}
+        if( sorted ){ if( (jet1_kinfit+jet2_kinfit+lept2).Pt()<100. ) continue;}
+        if( !sorted){ if( (jet1_kinfit+jet2_kinfit+lept1).Pt()<100. ) continue;}
         
         diLepton =lept1+lept2;
-        */
+  */      
         float ptWreso_before = (isMC) ? ( bestWDiJet.Pt()-matchedW.Pt() )/matchedW.Pt() : 0.;
         float ptWreso_after  = (isMC) ? ( Wjj_kinfit.Pt()-matchedW.Pt() )/matchedW.Pt() : 0.;
         h1_ptWreso_beforeKin->Fill( ptWreso_before, eventWeight);
@@ -1758,12 +1765,11 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
       if( QGLikelihoodJet1>0.8 || QGLikelihoodJet2>0.8 ) h1_QGLikelihoodProd_hi->Fill(QGLikelihoodProd, eventWeight); 
 
       // Optimizing Cuts
-
       if( WW_kinfit.M() > mWW_threshLo_  && WW_kinfit.M() < mWW_threshHi_ && QGLikelihoodProd > 0.2  ){
         Tree_optim_hely->Fill(); 
         }
-      // last step of selection:
-      // QG and helicity LD's
+
+      // last step of selection: QG and helicity LD's
 
       if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
       if( helicityLD_kinfit < helicityLD_thresh_ ) continue;
@@ -1885,7 +1891,7 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
         h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
         h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
 	
-	}}}}} }/*btag*/  //} /*if you use (veto on second (fourth for Other) jet*/
+	}}}}} }/*btag*/  //} /*if you use (veto on second (fourth for Others) jet*/
 //}//Other DPhi WW
       } //if passed selection
 
@@ -1925,6 +1931,8 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 	   <<nEvent_EtaLept<<" Ev(mtW)="<<nEvent_mtW<<" Ev(DrLept)="<<nEvent_DrLeptLept<<std::endl;
 
   std::cout << std::endl << std::endl;
+  std::cout << "----> PASSED preSELECTION: " << 1000.*nEvents_presel<<" ev/fb-1"<<std::endl;
+
   std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1(" << nEventsPassed_kinfit << " events)"<< std::endl;
   std::cout << "----> PASSED SELECTION (no kinfit): " << 1000.*nEventsPassed_fb_nokinfit << " ev/fb-1 (" << nEventsPassed_nokinfit << " events)" << std::endl;
   std::cout << std::endl;
