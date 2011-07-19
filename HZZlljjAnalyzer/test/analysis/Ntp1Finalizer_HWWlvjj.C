@@ -576,7 +576,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_Jet1Pt = new TH1D("Jet1Pt", "", 100, 0., 220.);
   TH1D* h1_Jet2Pt = new TH1D("Jet2Pt", "", 100, 0., 220.);
   TH1D* h1_Jet1Eta = new TH1D("Jet1Eta", "", 100, -3., 3.);
-  TH1D* h1_Jet2Eta = new TH1D("lept2Eta", "", 100, -3., 3.);
+  TH1D* h1_Jet2Eta = new TH1D("Jet2Eta", "", 100, -3., 3.);
   TH1D* h1_Mdijet = new TH1D("Mdijet", "", 100, 60., 100.);
 
   // To try
@@ -1176,11 +1176,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 //if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Quark2MC)<0.5 && jet2.DeltaR(Quark1MC)<0.5)) ) rightMatch++; 
 //}
      // DATA-MC (JET)
-     h1_Jet1Pt->Fill( jet1.Pt() );
-     h1_Jet2Pt->Fill( jet2.Pt() );
-     h1_Jet1Eta->Fill( jet1.Eta() );
-     h1_Jet2Eta->Fill( jet2.Eta() );
-     h1_Mdijet->Fill( (jet1+jet2).M() );
+     h1_Jet1Pt->Fill( jet1.Pt(),eventWeight );
+     h1_Jet2Pt->Fill( jet2.Pt(),eventWeight );
+     h1_Jet1Eta->Fill( jet1.Eta(),eventWeight );
+     h1_Jet2Eta->Fill( jet2.Eta(),eventWeight );
+     h1_Mdijet->Fill( (jet1+jet2).M(),eventWeight );
 
      // LEPTONS
     TLorentzVector lept1, lept2, lept2MC;
@@ -1201,33 +1201,34 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
  
     if( energyPFMet < 25./* Othermine 50.*/ ) continue;
-    h1_energyMet->Fill( energyPFMet );
+    h1_energyMet->Fill( energyPFMet,eventWeight );
 /*
-     h1_FindPz_EtaR->Fill(lept1.Eta()-neuR.Eta());     h1_FindPz_EtaW->Fill(lept1.Eta()-neuW.Eta());
-     h1_FindPz_EtaWnR->Fill((neuR+lept1).Eta()-neuR.Eta());  h1_FindPz_EtaWnW->Fill((neuW+lept1).Eta()-neuW.Eta()); 
+     h1_FindPz_EtaR->Fill(lept1.Eta()-neuR.Eta(),eventWeight);     h1_FindPz_EtaW->Fill(lept1.Eta()-neuW.Eta(),eventWeight);
+     h1_FindPz_EtaWnR->Fill((neuR+lept1).Eta()-neuR.Eta(),eventWeight);  h1_FindPz_EtaWnW->Fill((neuW+lept1).Eta()-neuW.Eta(),eventWeight); 
 
-     h1_FindPz_DeltaPz->Fill(fabs(neuR.Pz()-neuW.Pz()));
-     h1_FindPz_DeltaEta->Fill( fabs(neuR.Eta()-lept1.Eta())-fabs(neuW.Eta()-lept1.Eta()) );
-     h1_FindPz_DeltaEtaWn->Fill(  fabs(neuR.Eta()-(lept1+neuR).Eta())-fabs(neuW.Eta()-(lept1+neuW).Eta()) );
+     h1_FindPz_DeltaPz->Fill(fabs(neuR.Pz()-neuW.Pz()),eventWeight);
+     h1_FindPz_DeltaEta->Fill( fabs(neuR.Eta()-lept1.Eta())-fabs(neuW.Eta()-lept1.Eta()),eventWeight );
+     h1_FindPz_DeltaEtaWn->Fill(  fabs(neuR.Eta()-(lept1+neuR).Eta())-fabs(neuW.Eta()-(lept1+neuW).Eta()),eventWeight );
      TLorentzVector neuR_Wstar(neuR);
      neuR_Wstar.Boost(-(neuR+lept1).BoostVector());
-     h1_FindPz_WNeutWR->Fill(cos( neuR_Wstar.Angle((neuR+lept1).Vect())) );
+     h1_FindPz_WNeutWR->Fill(cos( neuR_Wstar.Angle((neuR+lept1).Vect())) ,eventWeight);
      TLorentzVector neuW_Wstar(neuW);
      neuW_Wstar.Boost(-(neuW+lept1).BoostVector());
-     h1_FindPz_WNeutWW->Fill( cos(neuW_Wstar.Angle((neuW+lept1).Vect())) );
+     h1_FindPz_WNeutWW->Fill( cos(neuW_Wstar.Angle((neuW+lept1).Vect())) ,eventWeight);
 */
      // Resolution with Wll
      TLorentzVector neuMH;
-     neuMH.SetPxPyPzE( pxPFMet, pyPFMet, pnMH, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pnMH,2)) );
-     h1_resoPzWMH->Fill( (isMC) ? ((lept1+neuMH).Pz()-WllMC.Pz())/WllMC.Pz() :0 );
-     h1_resomH->Fill( (isMC) ? ((lept1+neuMH+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M(): 0 );
+     if(isMC){
+     neuMH.SetPxPyPzE(pxPFMet, pyPFMet, pnMH, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pnMH,2)) );
+     h1_resoPzWMH->Fill( ((lept1+neuMH).Pz()-WllMC.Pz())/WllMC.Pz() ,eventWeight);
+     h1_resomH->Fill( ((lept1+neuMH+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() ,eventWeight);
 
  //  Higgs with 2 solutions
-     h1_mHrightSol->Fill( (isMC) ? (LepMC+NeuRWMC.first+Quark1MC+Quark2MC).M() :0 );
-     h1_mHwrongSol->Fill( (isMC) ? (LepMC+NeuRWMC.second+Quark1MC+Quark2MC).M() :0 );
-     h1_etaHrightSol->Fill( (isMC) ? (LepMC+NeuRWMC.first+Quark1MC+Quark2MC).Eta() :0 );
-     h1_etaHwrongSol->Fill( (isMC) ? (LepMC+NeuRWMC.second+Quark1MC+Quark2MC).Eta() :0 );
-
+     h1_mHrightSol->Fill( (LepMC+NeuRWMC.first+Quark1MC+Quark2MC).M() ,eventWeight);
+     h1_mHwrongSol->Fill( (LepMC+NeuRWMC.second+Quark1MC+Quark2MC).M() ,eventWeight);
+     h1_etaHrightSol->Fill( (LepMC+NeuRWMC.first+Quark1MC+Quark2MC).Eta() ,eventWeight);
+     h1_etaHwrongSol->Fill( (LepMC+NeuRWMC.second+Quark1MC+Quark2MC).Eta() ,eventWeight);
+     }
               // Helicity angles with two solution:
     double helicityLDRight, helicityLDWrong;
     if(isMC){
@@ -1254,10 +1255,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       h1_helicityLDWrong->Fill(helicityLDWrong, eventWeight);
 
       if( helicityLDRight-helicityLDWrong>=0. ){
-      h1_pzResoNeut_heli->Fill( (isMC) ? (NeuRW.first.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );  }
+      h1_pzResoNeut_heli->Fill( (NeuRW.first.Pz()-NeuMC.Pz())/NeuMC.Pz(),eventWeight);  }
       if( helicityLDRight-helicityLDWrong<0. ){
-      h1_pzResoNeut_heli->Fill( (isMC) ? (NeuRW.second.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );  }
-      if( NeuRW.first.Pz() != NeuRW.second.Pz() ){chooseHely++;  h1_diffHelicity->Fill( helicityLDRight-helicityLDWrong );
+      h1_pzResoNeut_heli->Fill( (NeuRW.second.Pz()-NeuMC.Pz())/NeuMC.Pz(),eventWeight );  }
+      if( NeuRW.first.Pz() != NeuRW.second.Pz() ){chooseHely++;  h1_diffHelicity->Fill( helicityLDRight-helicityLDWrong,eventWeight);
       if( helicityLDRight-helicityLDWrong >= 0. ) rightHely++;
       }
     }
@@ -1301,7 +1302,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
            if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
              if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
               if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
-              h1_lept1Pt->Fill( lept1.Pt() );
+              h1_lept1Pt->Fill( lept1.Pt(),eventWeight);
               }}}}}}
    if( !hibtag ){ 
       if( diLepton.Pt() > ptWll_thresh_ ){
@@ -1310,7 +1311,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
            if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
              if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
               if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
-              h1_lept2Pt->Fill(lept2.Pt());
+              h1_lept2Pt->Fill(lept2.Pt(),eventWeight);
               }}}}}}}
    if( !hibtag ){ 
       if( diLepton.Pt() > ptWll_thresh_ ){
@@ -1319,8 +1320,8 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
            if( true ){ 
              if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
               if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
-              h1_lept1Eta->Fill(lept1.Eta());
-              h1_lept2Eta->Fill(lept2.Eta());
+              h1_lept1Eta->Fill(lept1.Eta(),eventWeight);
+              h1_lept2Eta->Fill(lept2.Eta(),eventWeight);
               }}}}}}}
    if( !hibtag ){ 
       if( diLepton.Pt() > ptWll_thresh_ ){
@@ -1329,7 +1330,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
            if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
              if( true ){
               if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
-              h1_Mdilept->Fill((lept1+lept2).M());
+              h1_Mdilept->Fill((lept1+lept2).M(),eventWeight);
               }}}}}}}
 
    if( !hibtag /* !hibtagOthers*/ ){ nEvent_btag++;
@@ -1350,35 +1351,35 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 		  // event has passed kinematic selection
 		  
 		  //  M(Higgs) prima.
-                  h1_mWW_GetPz->Fill( (bestWDiJet+ diLepton).M() );
-                  h1_ResomWW_GetPz->Fill( (isMC) ? ((lept1+lept2+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );
+                  h1_mWW_GetPz->Fill( (bestWDiJet+ diLepton).M() ,eventWeight);
+                  h1_ResomWW_GetPz->Fill( (isMC) ? ((lept1+lept2+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 ,eventWeight);
 
                   //  M(Higgs) with higher helicity
                 if(isMC){
                  if( helicityLDRight-helicityLDWrong>=0. ){
-                             h1_ResomH_heli->Fill( ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
-                             h1_ResoPzW_heli->Fill( ((lept1+NeuRW.first).Pz()-WllMC.Pz())/WllMC.Pz() );}
+                             h1_ResomH_heli->Fill( ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() ,eventWeight);
+                             h1_ResoPzW_heli->Fill( ((lept1+NeuRW.first).Pz()-WllMC.Pz())/WllMC.Pz() ,eventWeight);}
                   
                   if( helicityLDRight-helicityLDWrong<0. ){
-                              h1_ResomH_heli->Fill( ((lept1+NeuRW.second+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
-                              h1_ResoPzW_heli->Fill( ((lept1+NeuRW.second).Pz()-WllMC.Pz())/WllMC.Pz() );}      
+                              h1_ResomH_heli->Fill( ((lept1+NeuRW.second+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() ,eventWeight);
+                              h1_ResoPzW_heli->Fill( ((lept1+NeuRW.second).Pz()-WllMC.Pz())/WllMC.Pz() ,eventWeight);}      
                  }
 
      // GetPz Resolution (here, to have same cuts than KinFit)
   if(isMC){
-    h1_resoPzGetRight->Fill( (NeuRW.first.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    h1_resoPzGetMCRight->Fill( (NeuRWMC.first.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    h1_resoPzWll->Fill( ((lept1+lept2).Pz()-WllMC.Pz())/WllMC.Pz() );
-    h1_resoPtWll->Fill( ((lept1+lept2).Pt()-WllMC.Pt())/WllMC.Pt() );
+    h1_resoPzGetRight->Fill( (NeuRW.first.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+    h1_resoPzGetMCRight->Fill( (NeuRWMC.first.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+    h1_resoPzWll->Fill( ((lept1+lept2).Pz()-WllMC.Pz())/WllMC.Pz() ,eventWeight);
+    h1_resoPtWll->Fill( ((lept1+lept2).Pt()-WllMC.Pt())/WllMC.Pt() ,eventWeight);
     
-    h1_pzResoNeut_GetPzMC->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    h1_pzResoNeut_GetPz->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    h1_ptResoNeut_GetPz->Fill( (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() );
-    if( fabs(NeuRW.first.Pz()-lept2.Pz())<fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_Right->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    if( fabs(NeuRW.first.Pz()-lept2.Pz())>fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_Wrong->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    if( fabs(NeuRW.first.Pz()-lept2.Pz())==fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_One->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())<fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Right->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())>fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Wrong->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+    h1_pzResoNeut_GetPzMC->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+    h1_pzResoNeut_GetPz->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+    h1_ptResoNeut_GetPz->Fill( (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() ,eventWeight);
+    if( fabs(NeuRW.first.Pz()-lept2.Pz())<fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_Right->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+    if( fabs(NeuRW.first.Pz()-lept2.Pz())>fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_Wrong->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+    if( fabs(NeuRW.first.Pz()-lept2.Pz())==fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_One->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())<fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Right->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())>fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Wrong->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
     
     // Times you have complex Solutions
     totSol++;
@@ -1397,7 +1398,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 		  //   KINEMATIC FIT (JET) : BEGIN
 		  // ------------------------
                   // if( (((Quark1MC.DeltaR(jet1) <= Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet1)<0.3 && Quark2MC.DeltaR(jet2)<0.3)) || ((Quark1MC.DeltaR(jet1) > Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet2)<0.3 && Quark2MC.DeltaR(jet1)<0.3))) && jet1.DeltaR(jet2)>1. ){//only matched jets
-		  h1_mWW_nokinfit->Fill( (bestWDiJet+lept1+lept2).M() );
+		  h1_mWW_nokinfit->Fill( (bestWDiJet+lept1+lept2).M() ,eventWeight);
 		  DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", 80.399 );
 		  std::pair<TLorentzVector,TLorentzVector> jets_kinfit = fitter_jets->fit(jet1, jet2);
 		  TLorentzVector jet1_kinfit(jets_kinfit.first);
@@ -1428,8 +1429,8 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
        TVector3 JET1_new=jet1_kinfit.Vect();
        TVector3 JET2_new=jet2_kinfit.Vect();
        TVector3 NewMET=OldMET-JET1_new-JET2_new+JET1+JET2;
-       h1_Studio1->Fill( (NewMET.Pt()-NeuMC.Pt())/NeuMC.Pt() );
-       h1_Studio2->Fill( (OldMET.Pt()-NeuMC.Pt())/NeuMC.Pt() );
+       h1_Studio1->Fill( (NewMET.Pt()-NeuMC.Pt())/NeuMC.Pt() ,eventWeight);
+       h1_Studio2->Fill( (OldMET.Pt()-NeuMC.Pt())/NeuMC.Pt() ,eventWeight);
 
 		  // ------------------------
 		  //   KINEMATIC FIT (LEPTON) : BEGIN
@@ -1450,7 +1451,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 		  lept1_kinfit = lept_kinfit.first;
 		  lept2_kinfit = lept_kinfit.second;   
                   chiSquareProbLept=TMath::Prob(fitter_lept->getS(),fitter_lept->getNDF());
-                  h1_kinfit2_chiSquare->Fill( fitter_lept->getS()/fitter_lept->getNDF(), eventWeight );
+                  h1_kinfit2_chiSquare->Fill( fitter_lept->getS()/fitter_lept->getNDF(), eventWeight);
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
                   h1_resoPt->Fill( (isMC) ? (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() :0 );
                   if(isMC) h2_correlation->Fill( lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight );
@@ -1459,17 +1460,17 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
         Neu_MetFitted.SetPxPyPzE(/*NeuMC.Px(),NeuMC.Py(),NeuMC.Pz(),NeuMC.E());*/lept2_kinfit.Px(),lept2_kinfit.Py(),pn,sqrt(pow(lept2_kinfit.Px(),2)+pow(lept2_kinfit.Py(),2)+pow(pn,2)) );
         // Reso
       if(isMC){
-        h1_pzResoNeut_KinFit->Fill( (Neu_MetFitted.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-        h1_ptResoNeut_KinFit->Fill( (Neu_MetFitted.Pt()-NeuMC.Pt())/NeuMC.Pt() );
-        h1_pzResoW_KinFit->Fill( ((lept1_kinfit+lept2_kinfit).Pz()-WllMC.Pz())/WllMC.Pz() ) ;
-        h1_ptResoW_KinFit->Fill( ((lept1+Neu_MetFitted).Pt()-WllMC.Pt())/WllMC.Pt() ) ;
-        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) < fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Right->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) > fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Wrong->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) == fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_One->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() );
+        h1_pzResoNeut_KinFit->Fill( (Neu_MetFitted.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+        h1_ptResoNeut_KinFit->Fill( (Neu_MetFitted.Pt()-NeuMC.Pt())/NeuMC.Pt() ,eventWeight);
+        h1_pzResoW_KinFit->Fill( ((lept1_kinfit+lept2_kinfit).Pz()-WllMC.Pz())/WllMC.Pz() ,eventWeight) ;
+        h1_ptResoW_KinFit->Fill( ((lept1+Neu_MetFitted).Pt()-WllMC.Pt())/WllMC.Pt() ,eventWeight) ;
+        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) < fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Right->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) > fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Wrong->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
+        if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) == fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_One->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
       }
           //}//match
 
-	   h1_mWW_kinLept->Fill( (bestWDiJet+lept1+Neu_MetFitted).M() );
+	   h1_mWW_kinLept->Fill( (bestWDiJet+lept1+Neu_MetFitted).M() ,eventWeight);
    /* 
                   // ------------------------
                   //   GLOBAL FIT : BEGIN
@@ -1495,21 +1496,21 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   h1_kinfit2_chiSquare->Fill( fitter_global->getS()/fitter_global->getNDF(),eventWeight);
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbGlob, eventWeight );
      
-   //         h1_Studio1->Fill( ((lept1+lept2+jet1+jet2).Pt()-HiggsMC.Pt())/HiggsMC.Pt() );
-  //          h1_Studio2->Fill( ((lept1+lept2_kinfit+jet1+jet2).Pt()-HiggsMC.Pt())/HiggsMC.Pt() );
-          //  h1_Studio3->Fill( ((lept1+Lept2_kinfit+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
+   //         h1_Studio1->Fill( ((lept1+lept2+jet1+jet2).Pt()-HiggsMC.Pt())/HiggsMC.Pt() ,eventWeight);
+  //          h1_Studio2->Fill( ((lept1+lept2_kinfit+jet1+jet2).Pt()-HiggsMC.Pt())/HiggsMC.Pt() ,eventWeight);
+          //  h1_Studio3->Fill( ((lept1+Lept2_kinfit+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() ,eventWeight);
 
 		// Reso
-		h1_pzResoNeut_KinFit->Fill( (isMC) ? (Lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-		h1_ptResoNeut_KinFit->Fill( (isMC) ? (Lept2_kinfit.Pt()-NeuMC.Pt())/NeuMC.Pt() : 0 );  
-		h1_pzResoW_KinFit->Fill(  (isMC) ? ((Lept1_kinfit+Lept2_kinfit).Pz()-WllMC.Pz())/WllMC.Pz() : 0 ) ;
-		h1_ptResoW_KinFit->Fill(  (isMC) ? ((Lept1_kinfit+Lept2_kinfit).Pt()-WllMC.Pt())/WllMC.Pt() : 0 ) ;
-		if( fabs(Lept2_kinfit.Pz()-NeuRW.first.Pz()) < fabs(Lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Right->Fill( (isMC) ? (Lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-		if( fabs(Lept2_kinfit.Pz()-NeuRW.first.Pz()) > fabs(Lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Wrong->Fill( (isMC) ? (Lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
-                if( fabs(Lept2_kinfit.Pz()-NeuRW.first.Pz()) == fabs(Lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_One->Fill( (isMC) ? (Lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
+		h1_pzResoNeut_KinFit->Fill( (isMC) ? (Lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 ,eventWeight);
+		h1_ptResoNeut_KinFit->Fill( (isMC) ? (Lept2_kinfit.Pt()-NeuMC.Pt())/NeuMC.Pt() : 0 ,eventWeight);  
+		h1_pzResoW_KinFit->Fill(  (isMC) ? ((Lept1_kinfit+Lept2_kinfit).Pz()-WllMC.Pz())/WllMC.Pz() : 0 ,eventWeight) ;
+		h1_ptResoW_KinFit->Fill(  (isMC) ? ((Lept1_kinfit+Lept2_kinfit).Pt()-WllMC.Pt())/WllMC.Pt() : 0 ,eventWeight) ;
+		if( fabs(Lept2_kinfit.Pz()-NeuRW.first.Pz()) < fabs(Lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Right->Fill( (isMC) ? (Lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 ,eventWeight);
+		if( fabs(Lept2_kinfit.Pz()-NeuRW.first.Pz()) > fabs(Lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Wrong->Fill( (isMC) ? (Lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 ,eventWeight);
+                if( fabs(Lept2_kinfit.Pz()-NeuRW.first.Pz()) == fabs(Lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_One->Fill( (isMC) ? (Lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 ,eventWeight);
              
-                  //h1_Studio1->Fill( HiggsMC()/HiggsMC.M() );
-                  //h1_Studio2->Fill( Quark2MC.DeltaR(jet1) );
+                  //h1_Studio1->Fill( HiggsMC()/HiggsMC.M() ,eventWeight);
+                  //h1_Studio2->Fill( Quark2MC.DeltaR(jet1) ,eventWeight);
 	         // }  //if Eta<3
                  //} //Matching
 */
@@ -1549,7 +1550,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       LastNeu.SetPxPyPzE( Neu_MetFitted.Px(), Neu_MetFitted.Py(), BothNeutrino_fitted.second.Pz(), sqrt(pow(Neu_MetFitted.Px(),2)+pow(Neu_MetFitted.Py(),2)+pow(BothNeutrino_fitted.second.Pz(),2)) );
  
 
-      h1_mWW_hely->Fill((lept1+LastNeu+bestWDiJet).M());
+      h1_mWW_hely->Fill((lept1+LastNeu+bestWDiJet).M(),eventWeight);
 
 
       //         diLepton=LastNeu+lept1;
@@ -2256,7 +2257,7 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     etaJet1_thresh_ = 2.4;
     etaJet2_thresh_ = 2.4;
     mtWll_threshLo_ = 50.;
-    mtWll_threshHi_ = 120.;
+    mtWll_threshHi_ = 110.;
     mWjj_threshLo_ = 60.;//###
     mWjj_threshHi_ = 100.;
     deltaRll_thresh_ = 999.;
