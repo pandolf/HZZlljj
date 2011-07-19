@@ -55,9 +55,6 @@ int main(int argc, char* argv[]) {
   //TFile* mcBkg_T = TFile::Open("HWWlvjj_TToBLNu_TuneZ2_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2_helicity_ALL.root");
   //db->add_mcFile(mcBkg_T, "top", " top ", 50);
 
-  //TFile* mcBkg_T = TFile::Open("");
-  //db->add_mcFile(mcBkg_T, "top", " top ", 50);
-
   //db->set_lumiNormalization( 1000. ); //1 fb-1 li somma e norm alla lumi
   //db->set_noStack( false);//(bool)true );
   db->set_shapeNormalization();
