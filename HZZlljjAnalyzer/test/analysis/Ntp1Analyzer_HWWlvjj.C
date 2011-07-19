@@ -538,7 +538,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
        // --------------
 
        if( thisMuon.Pt() < 10. ) continue;
-       if( fabs(thisMuon.Eta()) > 2.4 ) continue;
+       if( fabs(thisMuon.Eta()) > 2.4 /*2.1 Other*/ ) continue;
 
 	 thisMuon.isGlobalMuonPromptTight = (muonIdMuon[iMuon]>>8)&1;
 	 thisMuon.isAllTrackerMuon = (muonIdMuon[iMuon]>>11)&1;
@@ -986,7 +986,7 @@ if( muon.size() >= 1 ) { Cont_MU++;
 
    } //for entries
                        // Other
-float proportion = 109989./Cont_inclusive;
+float proportion = 2061760. /*109989.*/ /Cont_inclusive;
 	if( Jentry == (nentries-1) ){
   std::cout << std::fixed << std::setprecision(6) << "Inclusive: " << Cont_inclusive*proportion << " PV: " << Cont_PV*proportion << " MU: " << Cont_MU*proportion << " ELE: " << Cont_ELE*proportion << " VetoMU: " << Cont_VetoMU*proportion 
   << " VetoELE: " << Cont_VetoELE*proportion << " JetsELE: " << Cont_JetsELE*proportion << " JetsMU: " << Cont_JetsMU*proportion << std::endl;
