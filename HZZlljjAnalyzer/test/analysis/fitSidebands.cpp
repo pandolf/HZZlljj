@@ -434,10 +434,19 @@ void fitSidebands( DrawBase* db, TTree* treeMC, TTree* treeDATA, int btagCategor
 
   RooPlot *plot_sidebandsDATA = mZZ->frame();
 
-  plotOnFrame(plot_signalMC, &signalMC, nBins, mZZ, &a_exp, &exp);
 
-//sidebandsDATA.plotOn(plot_sidebandsDATA, Binning(nBins));
-//exp.plotOn(plot_sidebandsDATA, LineColor(kRed));
+  sidebandsDATA.plotOn(plot_sidebandsDATA, Binning(nBins));
+
+  a_exp_plusSigma = new RooRealVar("a_exp_plusSigma", "a_exp_plusSigma", a_exp.getVal()+a_exp.getError(), -1., 0.);
+  exp_plusSigma = new RooExponential("exp_plusSigma", "exp_plusSigma",*mZZ,*a_exp_plusSigma);
+  exp_plusSigma->plotOn(plot_sidebandsDATA,LineColor(38),LineStyle(2));
+
+  a_exp_minusSigma = new RooRealVar("a_exp_minusSigma", "a_exp_minusSigma", a_exp.getVal()-a_exp.getError(), -1., 0.);
+  exp_minusSigma = new RooExponential("exp_minusSigma", "exp_minusSigma",*mZZ,*a_exp_minusSigma);
+  exp_minusSigma->plotOn(plot_sidebandsDATA,LineColor(38),LineStyle(2));
+
+  exp.plotOn(plot_sidebandsDATA, LineColor(kRed));
+  sidebandsDATA.plotOn(plot_sidebandsDATA, Binning(nBins));
 
   plot_sidebandsDATA->Draw();
 
