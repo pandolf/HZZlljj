@@ -343,7 +343,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 
      Cont_inclusive++;//Other;
 
-     if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
+     if( !isGoodEvent( jentry ) ) continue; //this takes care also of integrated luminosity and trigger
 
        if( nPV==0 ) continue;
      bool goodVertex = (ndofPV[0] >= 4.0 && sqrt(PVxPV[0]*PVxPV[0]+PVyPV[0]*PVyPV[0]) < 2. && fabs(PVzPV[0]) < 24. );
