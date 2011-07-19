@@ -566,6 +566,20 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_etaHrightSol = new TH1D("etaHrightSol", "", 50, -5., 5.);
   TH1D* h1_etaHwrongSol = new TH1D("etaHwrongSol", "", 50, -5., 5.);
 
+  // DATA-MC
+  TH1D* h1_lept1Eta = new TH1D("lept1Eta", "", 100, -3., 3.);
+  TH1D* h1_lept2Eta = new TH1D("lept2Eta", "", 100, -3., 3.);
+  TH1D* h1_lept1Pt = new TH1D("lept1Pt", "", 100, 0., 220.);
+  TH1D* h1_lept2Pt = new TH1D("lept2Pt", "", 100, 0., 220.);
+  TH1D* h1_Mdilept = new TH1D("Mdilept", "", 100, 0., 120.);
+
+  TH1D* h1_Jet1Pt = new TH1D("Jet1Pt", "", 100, 0., 220.);
+  TH1D* h1_Jet2Pt = new TH1D("Jet2Pt", "", 100, 0., 220.);
+  TH1D* h1_Jet1Eta = new TH1D("Jet1Eta", "", 100, -3., 3.);
+  TH1D* h1_Jet2Eta = new TH1D("lept2Eta", "", 100, -3., 3.);
+  TH1D* h1_Mdijet = new TH1D("Mdijet", "", 100, 60., 100.);
+
+  // To try
   TH1D* h1_Studio1 = new TH1D("Studio1", "", 50, -2, 2.);
   TH1D* h1_Studio2 = new TH1D("Studio2", "", 50, -2, 2.);
   TH1D* h1_Studio3 = new TH1D("Studio3", "", 50, -2, 2.);
@@ -1161,6 +1175,12 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 //timesTryJets++;
 //if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Quark2MC)<0.5 && jet2.DeltaR(Quark1MC)<0.5)) ) rightMatch++; 
 //}
+     // DATA-MC (JET)
+     h1_Jet1Pt->Fill( jet1.Pt() );
+     h1_Jet2Pt->Fill( jet2.Pt() );
+     h1_Jet1Eta->Fill( jet1.Eta() );
+     h1_Jet2Eta->Fill( jet2.Eta() );
+     h1_Mdijet->Fill( (jet1+jet2).M() );
 
      // LEPTONS
     TLorentzVector lept1, lept2, lept2MC;
@@ -1213,11 +1233,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     if(isMC){
       HelicityLikelihoodDiscriminant::HelicityAngles hanglesRight;
       if( chargeLept<0. ) hanglesRight = computeHelicityAngles(lept1, NeuRW.first, jet1, jet2);
-      else                          hanglesRight = computeHelicityAngles(NeuRWMC.first, LepMC, jet1, jet2);
+      else                hanglesRight = computeHelicityAngles(NeuRWMC.first, LepMC, jet1, jet2);
 
       HelicityLikelihoodDiscriminant::HelicityAngles hanglesWrong;
       if( chargeLept<0. ) hanglesWrong = computeHelicityAngles(lept1, NeuRW.second, jet1, jet2);
-      else                          hanglesWrong = computeHelicityAngles(NeuRW.second, lept1, jet1, jet2);
+      else                hanglesWrong = computeHelicityAngles(NeuRW.second, lept1, jet1, jet2);
 
       HelicityLikelihoodDiscriminant *LDGlob = new HelicityLikelihoodDiscriminant();
 
@@ -1242,20 +1262,6 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       }
     }
 
-     // Sort leptons and them charges
-     float chargeLept1=chargeLept, chargeLept2=0.;
-     bool  sorted=false;
-     TLorentzVector SortLeptons;
-
-     if( lept1.Pt() < lept2.Pt() ){
-       SortLeptons = lept1;
-       lept1 = lept2;
-       lept2 = SortLeptons;
-       chargeLept1=0.;
-       chargeLept2=chargeLept;
-       sorted=true;
-     }
-      
      TLorentzVector diLepton = lept1+lept2;
      
      if( nPairs>0 ) {
@@ -1288,6 +1294,44 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
         h1_mWee_presel_0jets->Fill( diLepton.M(), eventWeight );
     }
 
+// Plot DATA-MC(LEPT)
+   if( !hibtag ){
+      if( diLepton.Pt() > ptWll_thresh_ ){
+        if(  lept2.Pt() > ptLept2_thresh_ ){
+           if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
+             if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_lept1Pt->Fill( lept1.Pt() );
+              }}}}}}
+   if( !hibtag ){ 
+      if( diLepton.Pt() > ptWll_thresh_ ){
+       if(  lept1.Pt() > ptLept1_thresh_ ){
+         if( true) {
+           if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
+             if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_lept2Pt->Fill(lept2.Pt());
+              }}}}}}}
+   if( !hibtag ){ 
+      if( diLepton.Pt() > ptWll_thresh_ ){
+       if(  lept1.Pt() > ptLept1_thresh_ ){
+         if(  lept2.Pt() > ptLept2_thresh_ ){
+           if( true ){ 
+             if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_lept1Eta->Fill(lept1.Eta());
+              h1_lept2Eta->Fill(lept2.Eta());
+              }}}}}}}
+   if( !hibtag ){ 
+      if( diLepton.Pt() > ptWll_thresh_ ){
+       if(  lept1.Pt() > ptLept1_thresh_ ){
+         if(  lept2.Pt() > ptLept2_thresh_ ){
+           if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
+             if( true ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_Mdilept->Fill((lept1+lept2).M());
+              }}}}}}}
+
    if( !hibtag /* !hibtagOthers*/ ){ nEvent_btag++;
       if( diLepton.Pt() > ptWll_thresh_ ){
 	nEvent_DileptPt++;
@@ -1312,17 +1356,12 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   //  M(Higgs) with higher helicity
                 if(isMC){
                  if( helicityLDRight-helicityLDWrong>=0. ){
-                     if( sorted ){ h1_ResomH_heli->Fill( ((lept2+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
-                                   h1_ResoPzW_heli->Fill( ((lept2+NeuRW.first).Pz()-WllMC.Pz())/WllMC.Pz() );}
-                     else{         h1_ResomH_heli->Fill( ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
-                                   h1_ResoPzW_heli->Fill( ((lept1+NeuRW.first).Pz()-WllMC.Pz())/WllMC.Pz() );}
-                  }
+                             h1_ResomH_heli->Fill( ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
+                             h1_ResoPzW_heli->Fill( ((lept1+NeuRW.first).Pz()-WllMC.Pz())/WllMC.Pz() );}
+                  
                   if( helicityLDRight-helicityLDWrong<0. ){
-                      if( sorted ){ h1_ResomH_heli->Fill( ((lept2+NeuRW.second+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
-                                    h1_ResoPzW_heli->Fill( ((lept2+NeuRW.second).Pz()-WllMC.Pz())/WllMC.Pz() );}
-                      else{         h1_ResomH_heli->Fill( ((lept1+NeuRW.second+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
-                                    h1_ResoPzW_heli->Fill( ((lept1+NeuRW.second).Pz()-WllMC.Pz())/WllMC.Pz() );}
-                  }
+                              h1_ResomH_heli->Fill( ((lept1+NeuRW.second+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
+                              h1_ResoPzW_heli->Fill( ((lept1+NeuRW.second).Pz()-WllMC.Pz())/WllMC.Pz() );}      
                  }
 
      // GetPz Resolution (here, to have same cuts than KinFit)
@@ -1331,26 +1370,16 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     h1_resoPzGetMCRight->Fill( (NeuRWMC.first.Pz()-NeuMC.Pz())/NeuMC.Pz() );
     h1_resoPzWll->Fill( ((lept1+lept2).Pz()-WllMC.Pz())/WllMC.Pz() );
     h1_resoPtWll->Fill( ((lept1+lept2).Pt()-WllMC.Pt())/WllMC.Pt() );
-    if(sorted){
-    h1_pzResoNeut_GetPzMC->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    h1_pzResoNeut_GetPz->Fill( (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    h1_ptResoNeut_GetPz->Fill( (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() );
-    if( fabs(NeuRW.first.Pz()-lept1.Pz())<fabs(NeuRW.second.Pz()-lept1.Pz()) ) h1_pzResoNeut_GetPz_Right->Fill( (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    if( fabs(NeuRW.first.Pz()-lept1.Pz())>fabs(NeuRW.second.Pz()-lept1.Pz()) ) h1_pzResoNeut_GetPz_Wrong->Fill( (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    if( fabs(NeuRW.first.Pz()-lept1.Pz())==fabs(NeuRW.second.Pz()-lept1.Pz()) ) h1_pzResoNeut_GetPz_One->Fill( (lept1.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())<fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Right->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())>fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Wrong->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    }
-    else{
+    
     h1_pzResoNeut_GetPzMC->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
     h1_pzResoNeut_GetPz->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    h1_ptResoNeut_GetPz->Fill( (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() );
+    h1_ptResoNeut_GetPz->Fill( (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() );
     if( fabs(NeuRW.first.Pz()-lept2.Pz())<fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_Right->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
     if( fabs(NeuRW.first.Pz()-lept2.Pz())>fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_Wrong->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
     if( fabs(NeuRW.first.Pz()-lept2.Pz())==fabs(NeuRW.second.Pz()-lept2.Pz()) ) h1_pzResoNeut_GetPz_One->Fill( (lept2.Pz()-NeuMC.Pz())/NeuMC.Pz() );
     if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())<fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Right->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
     if( fabs(NeuRWMC.first.Pz()-lept2MC.Pz())>fabs(NeuRWMC.second.Pz()-lept2MC.Pz()) ) h1_pzResoNeut_GetPzMC_Wrong->Fill( (lept2MC.Pz()-NeuMC.Pz())/NeuMC.Pz() );
-    }
+    
     // Times you have complex Solutions
     totSol++;
     if( NeuRW.first.Pz() == NeuRW.second.Pz() ) oneSol++;
@@ -1412,22 +1441,8 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 
                   float chiSquareProbLept;
                   //PRO.SetPtEtaPhiE(NewMET.Pt(),0.,NewMET.Phi(),sqrt((pow(NewMET.Px(),2)+pow(NewMET.Py(),2))));
-		  //neut.SetNeutrino(PRO);
-//if( (sorted && lept2.DeltaR(LepMC)<0.3) || (!sorted && lept1.DeltaR(LepMC)<0.3) ){ //only matched leptons
-                  if( sorted ){
-                  PRO.SetPtEtaPhiE(/*NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt() );*/lept1.Pt(),0.,lept1.Phi(),sqrt(lept1.Px()*lept1.Px()+lept1.Py()*lept1.Py()));
-		  neut.SetNeutrino(PRO);
-                  LeptonNeutrinoKinFitter* fitter_lept = new LeptonNeutrinoKinFitter( "fitter_lept", "fitter_lept", 80.399 );
-                  std::pair<TLorentzVector,TLorentzVector> lept_kinfit = fitter_lept->fit(lept2, neut);
- 		  lept1_kinfit = lept_kinfit.first;
-		  lept2_kinfit = lept_kinfit.second;
-                  chiSquareProbLept=TMath::Prob(fitter_lept->getS(),fitter_lept->getNDF());
-                  h1_kinfit2_chiSquare->Fill( fitter_lept->getS()/fitter_lept->getNDF(),eventWeight);
-                  h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
-                  h1_resoPt->Fill( (isMC) ? (lept1.Pt()-NeuMC.Pt())/NeuMC.Pt() :0 );
-                  if(isMC) h2_correlation->Fill( lept1.Pt()-NeuMC.Pt(),lept1.Phi()-NeuMC.Phi(),eventWeight );
-                  }
-                  else{
+		      //neut.SetNeutrino(PRO);
+//if( (lept1.DeltaR(LepMC)<0.3) ){ //only matched leptons
                   PRO.SetPtEtaPhiE(/*NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt() );*/lept2.Pt(),0.,lept2.Phi(),sqrt(lept2.Px()*lept2.Px()+lept2.Py()*lept2.Py()));
                   neut.SetNeutrino(PRO);
                   LeptonNeutrinoKinFitter* fitter_lept = new LeptonNeutrinoKinFitter( "fitter_lept", "fitter_lept", 80.399 );
@@ -1439,7 +1454,6 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
                   h1_resoPt->Fill( (isMC) ? (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() :0 );
                   if(isMC) h2_correlation->Fill( lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight );
-                  } 
 //}
         TLorentzVector Neu_MetFitted;     
         Neu_MetFitted.SetPxPyPzE(/*NeuMC.Px(),NeuMC.Py(),NeuMC.Pz(),NeuMC.E());*/lept2_kinfit.Px(),lept2_kinfit.Py(),pn,sqrt(pow(lept2_kinfit.Px(),2)+pow(lept2_kinfit.Py(),2)+pow(pn,2)) );
@@ -1448,15 +1462,14 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
         h1_pzResoNeut_KinFit->Fill( (Neu_MetFitted.Pz()-NeuMC.Pz())/NeuMC.Pz() );
         h1_ptResoNeut_KinFit->Fill( (Neu_MetFitted.Pt()-NeuMC.Pt())/NeuMC.Pt() );
         h1_pzResoW_KinFit->Fill( ((lept1_kinfit+lept2_kinfit).Pz()-WllMC.Pz())/WllMC.Pz() ) ;
-        if(sorted ) h1_ptResoW_KinFit->Fill( ((lept2+Neu_MetFitted).Pt()-WllMC.Pt())/WllMC.Pt() ) ;
-        if(!sorted) h1_ptResoW_KinFit->Fill( ((lept1+Neu_MetFitted).Pt()-WllMC.Pt())/WllMC.Pt() ) ;
+        h1_ptResoW_KinFit->Fill( ((lept1+Neu_MetFitted).Pt()-WllMC.Pt())/WllMC.Pt() ) ;
         if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) < fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Right->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() );
         if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) > fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_Wrong->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() );
         if( fabs(lept2_kinfit.Pz()-NeuRW.first.Pz()) == fabs(lept2_kinfit.Pz()-NeuRW.second.Pz()) ) h1_pzResoNeut_KinFit_One->Fill( (lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() );
       }
           //}//match
-		  if(sorted ) h1_mWW_kinLept->Fill( (bestWDiJet+lept2+Neu_MetFitted).M() );
-		  if(!sorted) h1_mWW_kinLept->Fill( (bestWDiJet+lept1+Neu_MetFitted).M() );
+
+	   h1_mWW_kinLept->Fill( (bestWDiJet+lept1+Neu_MetFitted).M() );
    /* 
                   // ------------------------
                   //   GLOBAL FIT : BEGIN
@@ -1468,21 +1481,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   float chiSquareProbGlob=0.;
                   //if( Quark1MC.DeltaR(jet1) < 0.5 && Quark2MC.DeltaR(jet2) < 0.5 ){
                   //if(fabs(Quark1MC.Eta())<3. && fabs(Quark2MC.Eta())<3.){
-                  if( sorted ){
-                  pro.SetPtEtaPhiE(//NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt());//lept1.Pt(),0.,lept1.Phi(),sqrt(lept1.Px()*lept1.Px()+lept1.Py()*lept1.Py()));
-                  neutG.SetNeutrino(pro);
-                  GlobalFitter* fitter_global = new GlobalFitter( "fitter_lept", "fitter_lept", HiggsMass_, Wmass );
-                  std::vector<TLorentzVector> AllFitted_kinfit = fitter_global->fit(jet1,jet2,lept2, neutG);
-                  Jet1_kinfit = AllFitted_kinfit[0];
-                  Jet2_kinfit = AllFitted_kinfit[1];
-                  Lept1_kinfit = AllFitted_kinfit[2];
-                  Lept2_kinfit = AllFitted_kinfit[3];      
-         
-                  chiSquareProbGlob=TMath::Prob(fitter_global->getS(),fitter_global->getNDF());
-                  h1_kinfit2_chiSquare->Fill( fitter_global->getS()/fitter_global->getNDF(),eventWeight);
-                  h1_kinfit2_chiSquareProb->Fill( chiSquareProbGlob, eventWeight );
-                 }
-                  else{
+                  
                   pro.SetPtEtaPhiE(//NeuMC.Pt(),0.,NeuMC.Phi(),NeuMC.Pt());//lept2.Pt(),0.,lept2.Phi(),sqrt(lept2.Px()*lept2.Px()+lept2.Py()*lept2.Py()));
                   neutG.SetNeutrino(pro);
                   GlobalFitter* fitter_global = new GlobalFitter( "fitter_lept", "fitter_lept", HiggsMass_, Wmass );
@@ -1495,17 +1494,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
                   chiSquareProbGlob=TMath::Prob(fitter_global->getS(),fitter_global->getNDF());
                   h1_kinfit2_chiSquare->Fill( fitter_global->getS()/fitter_global->getNDF(),eventWeight);
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbGlob, eventWeight );
-                 }
-//if(sorted){
-  //          h1_Studio1->Fill( ((lept1+lept2+jet1+jet2).Pt()-HiggsMC.Pt())/HiggsMC.Pt() );
-    //        h1_Studio2->Fill( ((lept2+lept2_kinfit+jet1+jet2).Pt()-HiggsMC.Pt())/HiggsMC.Pt() );
-            //h1_Studio3->Fill( ((lept2+Lept2_kinfit+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
-//}
-//else{
+     
    //         h1_Studio1->Fill( ((lept1+lept2+jet1+jet2).Pt()-HiggsMC.Pt())/HiggsMC.Pt() );
   //          h1_Studio2->Fill( ((lept1+lept2_kinfit+jet1+jet2).Pt()-HiggsMC.Pt())/HiggsMC.Pt() );
           //  h1_Studio3->Fill( ((lept1+Lept2_kinfit+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() );
-//}
+
 		// Reso
 		h1_pzResoNeut_KinFit->Fill( (isMC) ? (Lept2_kinfit.Pz()-NeuMC.Pz())/NeuMC.Pz() : 0 );
 		h1_ptResoNeut_KinFit->Fill( (isMC) ? (Lept2_kinfit.Pt()-NeuMC.Pt())/NeuMC.Pt() : 0 );  
@@ -1530,24 +1523,13 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
        BothNeutrino_fitted.second.SetPxPyPzE( Neu_MetFitted.Px(),Neu_MetFitted.Py(),BothPzNeu.second.Pz(),sqrt(pow(Neu_MetFitted.Px(),2)+pow(Neu_MetFitted.Py(),2)+pow(BothPzNeu.second.Pz(),2)) );
        
        HelicityLikelihoodDiscriminant::HelicityAngles hangles1;     
-       if (sorted){
-         if( chargeLept<0. ) hangles1 = computeHelicityAngles(lept2, BothNeutrino_fitted.first, jet1_kinfit, jet2_kinfit);
-         else                          hangles1 = computeHelicityAngles(BothNeutrino_fitted.first, lept2, jet1_kinfit, jet2_kinfit);
-       }
-       else{
          if( chargeLept<0. ) hangles1 = computeHelicityAngles(lept1, BothNeutrino_fitted.first, jet1_kinfit, jet2_kinfit);
          else                          hangles1 = computeHelicityAngles(BothNeutrino_fitted.first, lept1, jet1_kinfit, jet2_kinfit);
-       }
-      
+       
        HelicityLikelihoodDiscriminant::HelicityAngles hangles2;
-       if(sorted){
-       if( chargeLept<0. ) hangles2 = computeHelicityAngles(lept2, BothNeutrino_fitted.second, jet1_kinfit, jet2_kinfit);
-       else                          hangles2 = computeHelicityAngles(BothNeutrino_fitted.second, lept2, jet1_kinfit, jet2_kinfit);
-       }
-       else{
        if( chargeLept<0. ) hangles2 = computeHelicityAngles(lept1, BothNeutrino_fitted.second, jet1_kinfit, jet2_kinfit);
        else                          hangles2 = computeHelicityAngles(BothNeutrino_fitted.second, lept1, jet1_kinfit, jet2_kinfit);
-       }
+       
        HelicityLikelihoodDiscriminant *LDChoose = new HelicityLikelihoodDiscriminant();
 
       LDChoose->setMeasurables(hangles1);
@@ -1566,13 +1548,12 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       else 
       LastNeu.SetPxPyPzE( Neu_MetFitted.Px(), Neu_MetFitted.Py(), BothNeutrino_fitted.second.Pz(), sqrt(pow(Neu_MetFitted.Px(),2)+pow(Neu_MetFitted.Py(),2)+pow(BothNeutrino_fitted.second.Pz(),2)) );
  
-      if(sorted ) h1_mWW_hely->Fill((lept2+LastNeu+bestWDiJet).M());
-      if(!sorted) h1_mWW_hely->Fill((lept1+LastNeu+bestWDiJet).M());
 
-      //if(sorted )   diLepton=LastNeu+lept2;
-      //else          diLepton=LastNeu+lept1;
-      if(sorted)  diLepton=Neu_MetFitted+lept2;
-      else        diLepton=Neu_MetFitted+lept1;
+      h1_mWW_hely->Fill((lept1+LastNeu+bestWDiJet).M());
+
+
+      //         diLepton=LastNeu+lept1;
+                 diLepton=Neu_MetFitted+lept1;
 
           // Reso KinFit on Jets  
         
@@ -1603,21 +1584,17 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
         }
         // TAGLI Others (No Mte, btag, veto 4jet)
 /*
-        if( sorted ){ if( leptType==0 && (fabs(lept2.Eta()) > 2.1 || lept2.Pt()<20 ) ) continue;}
-        if(!sorted ){ if( leptType==0 && (fabs(lept1.Eta()) > 2.1 || lept1.Pt()<20 ) ) continue;}
-        if( sorted ){ if( leptType==1 && lept2.Pt()<30  ) continue;}
-        if(!sorted ){ if( leptType==1 && lept1.Pt()<30  ) continue;}
+
+        if( leptType==0 && (fabs(lept1.Eta()) > 2.1 || lept1.Pt()<20 ) ) continue;
+        if( leptType==1 && lept1.Pt()<30  ) continue;
 
         if( delta_phi(lept1.Phi(),lept2.Phi())>1.5 ) continue;
         if( delta_phi(jet1_kinfit.Phi(),jet2_kinfit.Phi())>1.25 ) continue; 
         if( fabs(jet1_kinfit.Eta()-jet2_kinfit.Eta())>1.5 ) continue;
 
-        if( sorted ){ if( delta_phi(lept2.Phi(),(jet1_kinfit+jet2_kinfit).Phi())>3.15 ) continue;}
-        if( !sorted){ if( delta_phi(lept1.Phi(),(jet1_kinfit+jet2_kinfit).Phi())>3.15 ) continue;}
-
-        if( sorted ){ if( (jet1_kinfit+jet2_kinfit+lept2).Pt()<100. ) continue;}
-        if( !sorted){ if( (jet1_kinfit+jet2_kinfit+lept1).Pt()<100. ) continue;}
-        
+        if( delta_phi(lept1.Phi(),(jet1_kinfit+jet2_kinfit).Phi())>3.15 ) continue;
+        if( (jet1_kinfit+jet2_kinfit+lept1).Pt()<100. ) continue;
+     
         diLepton =lept1+lept2;
   */      
         float ptWreso_before = (isMC) ? ( bestWDiJet.Pt()-matchedW.Pt() )/matchedW.Pt() : 0.;
@@ -1656,18 +1633,12 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 
       //GET HELICITY ANGLES:
  HelicityLikelihoodDiscriminant::HelicityAngles hangles;
- if( chargeLept1<chargeLept2 ) hangles = computeHelicityAngles(lept1, lept2, jet1, jet2);
+ if( chargeLept<0. ) hangles = computeHelicityAngles(lept1, lept2, jet1, jet2);
  else                          hangles = computeHelicityAngles(lept2, lept1, jet1, jet2);
  
  HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinfit;
- if(sorted){
-   if( chargeLept<0. ) hangles_kinfit = computeHelicityAngles(LastNeu, lept2, jet1_kinfit, jet2_kinfit);
-   else                hangles_kinfit = computeHelicityAngles(lept2, LastNeu, jet1_kinfit, jet2_kinfit);
- }
- else{
-   if( chargeLept<0. ) hangles_kinfit = computeHelicityAngles(LastNeu, lept1, jet1_kinfit, jet2_kinfit);
-   else                hangles_kinfit = computeHelicityAngles(lept1, LastNeu, jet1_kinfit, jet2_kinfit);
- }
+   if( chargeLept<0. ) hangles_kinfit = computeHelicityAngles(lept1, LastNeu, jet1_kinfit, jet2_kinfit);
+   else                hangles_kinfit = computeHelicityAngles(LastNeu, lept1, jet1_kinfit, jet2_kinfit);
 
       HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
                  
@@ -1809,7 +1780,7 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 
         h1_ptLept1->Fill( lept1.Pt(), eventWeight );
         h1_ptLept2->Fill( lept2.Pt(), eventWeight );
-	h1_mtW->Fill(sqrt(2*lept1.Pt()*lept2.Pt()*(1-cos(delta_phi(lept1.Phi(),lept2.Phi())))));//###
+        h1_mtW->Fill(sqrt(2*lept1.Pt()*lept2.Pt()*(1-cos(delta_phi(lept1.Phi(),lept2.Phi())))));
         h1_deltaRjj->Fill( jet1.DeltaR(jet2), eventWeight);
         h1_ptWll->Fill( diLepton.Pt(), eventWeight);
         h1_ptWjj->Fill( bestWDiJet.Pt(), eventWeight);
@@ -2046,16 +2017,16 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 
   h1_ptLept1->Write();
   h1_ptLept2->Write();
-  h1_mtW->Write();//###
+  h1_mtW->Write();
 
   h1_ptLept1_JustPresel->Write();
   h1_ptLept2_JustPresel->Write();
   h1_etaLept1_presel->Write();
   h1_etaLept2_presel->Write();
-  h1_mtW_JustPresel->Write();//###
-  h1_deltaRjj_JustPresel->Write();//####
+  h1_mtW_JustPresel->Write();
+  h1_deltaRjj_JustPresel->Write();
   h1_ptJet1_JustPresel->Write();
-  h1_ptJet2_JustPresel->Write();//###
+  h1_ptJet2_JustPresel->Write();
   h1_mWjj_JustPresel->Write();
   h1_mWll->Write();
   h1_mWll_presel->Write();
@@ -2193,6 +2164,20 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
   h2_QGLikelihoodJet1_vs_Jet2->Write();
   h1_QGLikelihoodRevProd->Write();
 
+  //DATA-MC
+  h1_lept1Eta->Write();
+  h1_lept2Eta->Write();
+  h1_lept1Pt->Write();
+  h1_lept2Pt->Write();
+  h1_Mdilept->Write();
+
+  h1_Jet1Eta->Write();
+  h1_Jet2Eta->Write();
+  h1_Jet1Pt->Write();
+  h1_Jet2Pt->Write();
+  h1_Mdijet->Write();
+
+
   outFile_->mkdir("QGbins");
   outFile_->cd("QGbins");
   
@@ -2278,7 +2263,7 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 999.;
     ptWll_thresh_ = 0.;
     ptWjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.75;
+    helicityLD_thresh_ = 0.74;
     QGLikelihoodProd_thresh_ = 0.2;
     mWW_threshLo_ = HiggsMass_-((HiggsMass_*10.)/100.);
     mWW_threshHi_ = HiggsMass_+((HiggsMass_*12.)/100.);
