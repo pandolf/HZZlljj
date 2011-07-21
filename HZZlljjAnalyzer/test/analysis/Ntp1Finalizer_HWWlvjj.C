@@ -574,37 +574,33 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_lept1Pt = new TH1D("lept1Pt", "", 100, 0., 220.);
   TH1D* h1_lept2Pt = new TH1D("lept2Pt", "", 100, 0., 220.);
   TH1D* h1_Mdilept = new TH1D("Mdilept", "", 100, 0., 120.);
-
   TH1D* h1_Jet1Pt = new TH1D("Jet1Pt", "", 100, 0., 220.);
   TH1D* h1_Jet2Pt = new TH1D("Jet2Pt", "", 100, 0., 220.);
   TH1D* h1_Jet1Eta = new TH1D("Jet1Eta", "", 100, -3., 3.);
   TH1D* h1_Jet2Eta = new TH1D("Jet2Eta", "", 100, -3., 3.);
   TH1D* h1_Mdijet = new TH1D("Mdijet", "", 100, 60., 100.);
 
-  TH1D* h1_lept1Eta_mu = new TH1D("lept1Eta", "", 100, -3., 3.);
-  TH1D* h1_lept2Eta_mu = new TH1D("lept2Eta", "", 100, -3., 3.);
-  TH1D* h1_lept1Pt_mu = new TH1D("lept1Pt", "", 100, 0., 220.);
-  TH1D* h1_lept2Pt_mu = new TH1D("lept2Pt", "", 100, 0., 220.);
-  TH1D* h1_Mdilept_mu = new TH1D("Mdilept", "", 100, 0., 120.);
+  TH1D* h1_lept1Eta_mu = new TH1D("lept1Eta_mu", "", 100, -3., 3.);
+  TH1D* h1_lept2Eta_mu = new TH1D("lept2Eta_mu", "", 100, -3., 3.);
+  TH1D* h1_lept1Pt_mu = new TH1D("lept1Pt_mu", "", 100, 0., 220.);
+  TH1D* h1_lept2Pt_mu = new TH1D("lept2Pt_mu", "", 100, 0., 220.);
+  TH1D* h1_Mdilept_mu = new TH1D("Mdilept_mu", "", 100, 0., 120.);
+  TH1D* h1_Jet1Pt_mu = new TH1D("Jet1Pt_mu", "", 100, 0., 220.);
+  TH1D* h1_Jet2Pt_mu = new TH1D("Jet2Pt_mu", "", 100, 0., 220.);
+  TH1D* h1_Jet1Eta_mu = new TH1D("Jet1Eta_mu", "", 100, -3., 3.);
+  TH1D* h1_Jet2Eta_mu = new TH1D("Jet2Eta_mu", "", 100, -3., 3.);
+  TH1D* h1_Mdijet_mu = new TH1D("Mdijet_mu", "", 100, 60., 100.);
 
-  TH1D* h1_Jet1Pt_mu = new TH1D("Jet1Pt", "", 100, 0., 220.);
-  TH1D* h1_Jet2Pt_mu = new TH1D("Jet2Pt", "", 100, 0., 220.);
-  TH1D* h1_Jet1Eta_mu = new TH1D("Jet1Eta", "", 100, -3., 3.);
-  TH1D* h1_Jet2Eta_mu = new TH1D("Jet2Eta", "", 100, -3., 3.);
-  TH1D* h1_Mdijet_mu = new TH1D("Mdijet", "", 100, 60., 100.);
-
-  TH1D* h1_lept1Eta_e = new TH1D("lept1Eta", "", 100, -3., 3.);
-  TH1D* h1_lept2Eta_e = new TH1D("lept2Eta", "", 100, -3., 3.);
-  TH1D* h1_lept1Pt_e = new TH1D("lept1Pt", "", 100, 0., 220.);
-  TH1D* h1_lept2Pt_e = new TH1D("lept2Pt", "", 100, 0., 220.);
-  TH1D* h1_Mdilept_e = new TH1D("Mdilept", "", 100, 0., 120.);
-
-  TH1D* h1_Jet1Pt_e = new TH1D("Jet1Pt", "", 100, 0., 220.);
-  TH1D* h1_Jet2Pt_e = new TH1D("Jet2Pt", "", 100, 0., 220.);
-  TH1D* h1_Jet1Eta_e = new TH1D("Jet1Eta", "", 100, -3., 3.);
-  TH1D* h1_Jet2Eta_e = new TH1D("Jet2Eta", "", 100, -3., 3.);
-  TH1D* h1_Mdijet_e = new TH1D("Mdijet", "", 100, 60., 100.);
-
+  TH1D* h1_lept1Eta_e = new TH1D("lept1Eta_e", "", 100, -3., 3.);
+  TH1D* h1_lept2Eta_e = new TH1D("lept2Eta_e", "", 100, -3., 3.);
+  TH1D* h1_lept1Pt_e = new TH1D("lept1Pt_e", "", 100, 0., 220.);
+  TH1D* h1_lept2Pt_e = new TH1D("lept2Pt_e", "", 100, 0., 220.);
+  TH1D* h1_Mdilept_e = new TH1D("Mdilept_e", "", 100, 0., 120.);
+  TH1D* h1_Jet1Pt_e = new TH1D("Jet1Pt_e", "", 100, 0., 220.);
+  TH1D* h1_Jet2Pt_e = new TH1D("Jet2Pt_e", "", 100, 0., 220.);
+  TH1D* h1_Jet1Eta_e = new TH1D("Jet1Eta_e", "", 100, -3., 3.);
+  TH1D* h1_Jet2Eta_e = new TH1D("Jet2Eta_e", "", 100, -3., 3.);
+  TH1D* h1_Mdijet_e = new TH1D("Mdijet_e", "", 100, 60., 100.);
 
   // To try
   TH1D* h1_Studio1 = new TH1D("Studio1", "", 50, -2, 2.);
@@ -1363,7 +1359,7 @@ if(leptType==0){
               if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
               h1_Mdilept_mu->Fill((lept1+lept2).M(),eventWeight);
               }}}}}}}
-}
+} //if leptType
 
 if(leptType==1){
      // E: DATA-MC (JET)
@@ -1410,7 +1406,8 @@ if(leptType==1){
               if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
               h1_Mdilept_e->Fill((lept1+lept2).M(),eventWeight);
               }}}}}}}
-}
+} //if leptType
+
      // DATA-MC (JET)
      h1_Jet1Pt->Fill( jet1.Pt(),eventWeight );
      h1_Jet2Pt->Fill( jet2.Pt(),eventWeight );
