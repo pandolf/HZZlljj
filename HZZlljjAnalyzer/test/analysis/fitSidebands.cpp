@@ -74,9 +74,18 @@ int main() {
   chainMC->Add("HZZlljjRM_TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11_v2_optLD_looseBTags_v2_ALL.root/tree_passedEvents");
   chainMC->Add("HZZlljjRM_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2_optLD_looseBTags_v2_ALL.root/tree_passedEvents");
 
-  fitSidebands( db, (TTree*)chainMC, treeDATA, 0, "ALL", alpha_0btag );
-  fitSidebands( db, (TTree*)chainMC, treeDATA, 1, "ALL", alpha_1btag );
-  fitSidebands( db, (TTree*)chainMC, treeDATA, 2, "ALL", alpha_2btag );
+  TTree* treeDATA_0btag = treeDATA->CopyTree("nBTags==0");
+  TTree* treeDATA_1btag = treeDATA->CopyTree("nBTags==1");
+  TTree* treeDATA_2btag = treeDATA->CopyTree("nBTags==2");
+
+  TTree* treeMC_0btag = chainMC->CopyTree("nBTags==0");
+  TTree* treeMC_1btag = chainMC->CopyTree("nBTags==1");
+  TTree* treeMC_2btag = chainMC->CopyTree("nBTags==2");
+
+
+  fitSidebands( db, treeMC_0btag, treeDATA_0btag, 0, "ALL", alpha_0btag );
+  fitSidebands( db, treeMC_1btag, treeDATA_1btag, 1, "ALL", alpha_1btag );
+  fitSidebands( db, treeMC_2btag, treeDATA_2btag, 2, "ALL", alpha_2btag );
 
   return 0;
 
@@ -256,12 +265,12 @@ void fitSidebands( DrawBase* db, TTree* treeMC, TTree* treeDATA, int btagCategor
 //TFile* file_prova = TFile::Open("PROVA.root", "recreate");
 //file_prova->cd();
   std::cout << "Correcting signal (MC): " << std::endl;
-  TTree* tree_signalMC_alpha = correctTreeWithAlpha( treeMC, h1_alpha, btagCategory, "signalMC_alpha");
+  TTree* tree_sidebandsMC_alpha = correctTreeWithAlpha( treeMC, h1_alpha, btagCategory, "sidebandsMC_alpha");
   std::cout << "Correcting signal (DATA): " << std::endl;
-  TTree* tree_signalDATA_alpha = correctTreeWithAlpha( treeDATA, h1_alpha, btagCategory, "signalDATA_alpha");
+  TTree* tree_sidebandsDATA_alpha = correctTreeWithAlpha( treeDATA, h1_alpha, btagCategory, "sidebandsDATA_alpha");
 
-//tree_signalMC_alpha->Write();
-//tree_signalDATA_alpha->Write();
+//tree_sidebandsMC_alpha->Write();
+//tree_sidebandsDATA_alpha->Write();
 //treeMC->SetName("tree_passedEventsMC");
 //treeDATA->SetName("tree_passedEventsDATA");
 //treeMC->Write();
@@ -288,7 +297,8 @@ void fitSidebands( DrawBase* db, TTree* treeMC, TTree* treeDATA, int btagCategor
   float mZZ_min = 190.;
   //float mZZ_max = 300.;
   float mZZ_max = 810.;
-  int nBins = (int)(mZZ_max-mZZ_min)/10.;
+  float binWidth = 20.;
+  int nBins = (int)(mZZ_max-mZZ_min)/binWidth;
 
   RooRealVar* eventWeight = new RooRealVar("eventWeight", "event weight", 0., 2., "");
   RooRealVar* eventWeight_alpha = new RooRealVar("eventWeight_alpha", "event weight (alpha corrected)", 0., 2., "");
@@ -303,11 +313,11 @@ void fitSidebands( DrawBase* db, TTree* treeMC, TTree* treeDATA, int btagCategor
   //RooDataSet signalMC("signalMC","signalMC",treeMC,RooArgSet(*eventWeight,*mZZ,*nBTags,*mZjj,*weight_lumi),cut_signal,"weight_lumi");
   RooDataSet sidebandsMC("sidebandsMC","sidebandsMC",treeMC,RooArgSet(*eventWeight,*mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight");
   RooDataSet signalMC("signalMC","signalMC",treeMC,RooArgSet(*eventWeight,*mZZ,*nBTags,*mZjj),cut_signal,"eventWeight");
-  RooDataSet signalMC_alpha("signalMC_alpha","signalMC_alpha",tree_signalMC_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*mZZ,*nBTags,*mZjj),cut_signal,"eventWeight_alpha");
+  RooDataSet sidebandsMC_alpha("sidebandsMC_alpha","sidebandsMC_alpha",tree_sidebandsMC_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight_alpha");
 
   RooDataSet sidebandsDATA("sidebandsDATA","sidebandsDATA",treeDATA,RooArgSet(*eventWeight,*mZZ,*nBTags,*mZjj),cut_sidebands);
   RooDataSet signalDATA("signalDATA","signalDATA",treeDATA,RooArgSet(*eventWeight,*mZZ,*nBTags,*mZjj),cut_signal);
-  RooDataSet signalDATA_alpha("signalDATA_alpha","signalDATA_alpha",tree_signalDATA_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*mZZ,*nBTags,*mZjj),cut_signal,"eventWeight_alpha");
+  RooDataSet sidebandsDATA_alpha("sidebandsDATA_alpha","sidebandsDATA_alpha",tree_sidebandsDATA_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight_alpha");
 
 
 
@@ -343,7 +353,7 @@ void fitSidebands( DrawBase* db, TTree* treeMC, TTree* treeDATA, int btagCategor
   
 
   // -------------------- landau ---------------------------
-  RooRealVar m_land("m_land","m_land",220., 150., 300.);
+  RooRealVar m_land("m_land","m_land",220., 190., 300.);
   RooRealVar s_land("s_land","s_land",50., 0., 100.);
   RooLandau landau("landau","landau",*mZZ,m_land,s_land);
   
@@ -372,6 +382,8 @@ void fitSidebands( DrawBase* db, TTree* treeMC, TTree* treeDATA, int btagCategor
 
 
 
+
+/*
   // FIRST: fit MC sidebands:
 
   std::cout << std::endl << std::endl;
@@ -491,6 +503,7 @@ void fitSidebands( DrawBase* db, TTree* treeMC, TTree* treeDATA, int btagCategor
   float alpha = a_exp_sidebandsMC - a_exp_signalMC;
 
 
+
   // FOURTH: fit DATA sidebands:
 
   std::cout << std::endl << std::endl;
@@ -607,20 +620,217 @@ void fitSidebands( DrawBase* db, TTree* treeMC, TTree* treeDATA, int btagCategor
 
   ofs.close();
 
+*/
+
+  TCanvas* c1 = new TCanvas("c1", "", 600, 600);
+  c1->cd();
+
+
+  std::cout << std::endl << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << "  FIT ALPHA-CORRECTED MC SIDEBANDS (" << btagCategory << " btags)" << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << std::endl << std::endl;
+
+
+  c1->Clear();
+  c1->SetLogy(false);
+
+  RooFitResult *r_sidebandsMC_alpha = landau_exp.fitTo(sidebandsMC_alpha);
+  //RooFitResult *r_sidebandsMC = exp.fitTo(sidebandsMC,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
+
+
+  RooPlot *plot_sidebandsMC_alpha = mZZ->frame();
+
+  sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
+
+  landau_exp.plotOn(plot_sidebandsMC_alpha, LineColor(kRed));
+  sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
+
+  plot_sidebandsMC_alpha->Draw();
+
+  char canvasName[400];
+  sprintf( canvasName, "FitSidebands/mZZ_sidebandsMC_alpha_%dbtag_%s", btagCategory, leptType.c_str());
+  std::string* canvasName_str = new std::string(canvasName);
+  std::string canvasName_eps = *canvasName_str + ".eps";
+  c1->SaveAs(canvasName_eps.c_str());
+
+  c1->SetLogy();
+  *canvasName_str += "_log";
+  canvasName_eps = *canvasName_str + ".eps";
+  c1->SaveAs(canvasName_eps.c_str());
+
+
+
+
+  std::cout << std::endl << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << "  FIT MC SIGNAL (" << btagCategory << " btags)" << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << std::endl << std::endl;
+
+
+
+  // -------------------- const landau ---------------------------
+  RooRealVar m_land_const("m_land_const","m_land_const",m_land.getVal(), 190., 300.);
+  m_land_const.setConstant(kTRUE);
+  RooRealVar s_land_const("s_land_const","s_land_const",s_land.getVal(), 0., 100.);
+  s_land_const.setConstant(kTRUE);
+  RooLandau landau_const("landau_const","landau_const",*mZZ,m_land_const,s_land_const);
+
+  // -------------------- const exp ---------------------------
+  RooRealVar a_exp_const("a_exp_const","a_exp_const",a_exp.getVal(), -2., 1.);
+  a_exp_const.setConstant(kTRUE);
+  RooExponential exp_const("exp_const","exp_const",*mZZ,a_exp_const);
+
+  RooProdPdf landau_exp_const("landau_exp_const","landau_exp_const",RooArgSet(landau_const,exp_const));
+
+
+
+  c1->Clear();
+  c1->SetLogy(false);
+
+  RooFitResult *r_signalMC_alpha = landau_exp_const.fitTo(signalMC);
+  //RooFitResult *r_signalMC = exp.fitTo(signalMC,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
+
+
+  RooPlot *plot_signalMC_alpha = mZZ->frame();
+
+  signalMC.plotOn(plot_signalMC_alpha, Binning(nBins));
+
+  landau_exp_const.plotOn(plot_signalMC_alpha, LineColor(kRed));
+  signalMC.plotOn(plot_signalMC_alpha, Binning(nBins));
+
+  plot_signalMC_alpha->Draw();
+
+  sprintf( canvasName, "FitSidebands/mZZ_signalMC_alpha_%dbtag_%s", btagCategory, leptType.c_str());
+  canvasName_str = new std::string(canvasName);
+  canvasName_eps = *canvasName_str + ".eps";
+  c1->SaveAs(canvasName_eps.c_str());
+
+  c1->SetLogy();
+  *canvasName_str += "_log";
+  canvasName_eps = *canvasName_str + ".eps";
+  c1->SaveAs(canvasName_eps.c_str());
+
+
+
+
+  std::cout << std::endl << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << "  FIT ALPHA-CORRECTED DATA SIDEBANDS (" << btagCategory << " btags)" << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << std::endl << std::endl;
+
+
+  c1->Clear();
+  c1->SetLogy(false);
+
+  RooFitResult *r_sidebandsDATA_alpha = landau_exp.fitTo(sidebandsDATA_alpha);
+  //RooFitResult *r_sidebandsDATA = exp.fitTo(sidebandsDATA,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
+
+
+  RooPlot *plot_sidebandsDATA_alpha = mZZ->frame();
+
+  sidebandsDATA_alpha.plotOn(plot_sidebandsDATA_alpha, Binning(nBins));
+
+  landau_exp.plotOn(plot_sidebandsDATA_alpha, LineColor(kRed));
+  sidebandsDATA_alpha.plotOn(plot_sidebandsDATA_alpha, Binning(nBins));
+
+  plot_sidebandsDATA_alpha->Draw();
+
+  sprintf( canvasName, "FitSidebands/mZZ_sidebandsDATA_alpha_%dbtag_%s", btagCategory, leptType.c_str());
+  canvasName_str = new std::string(canvasName);
+  canvasName_eps = *canvasName_str + ".eps";
+  c1->SaveAs(canvasName_eps.c_str());
+
+  c1->SetLogy();
+  *canvasName_str += "_log";
+  canvasName_eps = *canvasName_str + ".eps";
+  c1->SaveAs(canvasName_eps.c_str());
+
+
+
+
+
+  std::cout << std::endl << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << "  FIT DATA SIGNAL (" << btagCategory << " btags)" << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << std::endl << std::endl;
+
+
+  // -------------------- const landau ---------------------------
+  RooRealVar m_land_const_data("m_land_const_data","m_land_const_data",m_land.getVal(), 190., 300.);
+  m_land_const_data.setConstant(kTRUE);
+  RooRealVar s_land_const_data("s_land_const_data","s_land_const_data",s_land.getVal(), 0., 100.);
+  s_land_const_data.setConstant(kTRUE);
+  RooLandau landau_const_data("landau_const_data","landau_const_data",*mZZ,m_land_const_data,s_land_const_data);
+
+  // -------------------- const exp ---------------------------
+  RooRealVar a_exp_const_data("a_exp_const","a_exp_const",a_exp.getVal(), -2., 1.);
+  a_exp_const_data.setConstant(kTRUE);
+  RooExponential exp_const_data("exp_const_data","exp_const_data",*mZZ,a_exp_const_data);
+
+  RooProdPdf landau_exp_const_data("landau_exp_const_data","landau_exp_const_data",RooArgSet(landau_const_data,exp_const_data));
+
+
+  c1->Clear();
+  c1->SetLogy(false);
+
+  RooFitResult *r_signalDATA_alpha = landau_exp_const_data.fitTo(signalDATA);
+  //RooFitResult *r_signalDATA = exp.fitTo(signalDATA,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
+
+
+  RooPlot *plot_signalDATA_alpha = mZZ->frame();
+
+  signalDATA.plotOn(plot_signalDATA_alpha, Binning(nBins));
+
+  landau_exp_const_data.plotOn(plot_signalDATA_alpha, LineColor(kRed));
+  signalDATA.plotOn(plot_signalDATA_alpha, Binning(nBins));
+
+  plot_signalDATA_alpha->Draw();
+
+  sprintf( canvasName, "FitSidebands/mZZ_signalDATA_alpha_%dbtag_%s", btagCategory, leptType.c_str());
+  canvasName_str = new std::string(canvasName);
+  canvasName_eps = *canvasName_str + ".eps";
+  c1->SaveAs(canvasName_eps.c_str());
+
+  c1->SetLogy();
+  *canvasName_str += "_log";
+  canvasName_eps = *canvasName_str + ".eps";
+  c1->SaveAs(canvasName_eps.c_str());
+
+
+
+
+
+
+
+
   delete eventWeight;
+  delete eventWeight_alpha;
   delete mZZ;
   delete nBTags;
   delete mZjj;
   delete c1;
-  delete plot_signalMC;
-  delete plot_sidebandsMC;
-  delete plot_signalDATA;
-  delete plot_sidebandsDATA;
-  delete r_sidebandsMC;
-  delete r_signalMC;
-  delete r_sidebandsDATA;
-  delete r_signalDATA;
+ // delete plot_signalMC;
+ // delete plot_sidebandsMC;
+  delete plot_sidebandsMC_alpha;
+ // delete plot_signalDATA;
+ // delete plot_sidebandsDATA;
+  delete plot_sidebandsDATA_alpha;
+ // delete r_sidebandsMC;
+ // delete r_signalMC;
+  delete r_sidebandsMC_alpha;
+//  delete r_sidebandsDATA;
+  delete r_sidebandsDATA_alpha;
+ // delete r_signalDATA;
   delete canvasName_str;
+  //delete treeMC;
+  //delete treeDATA;
+  //delete tree_sidebandsMC_alpha;
+  //delete tree_sidebandsDATA_alpha;
 
 }
 
@@ -658,6 +868,7 @@ TTree* correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int btagCategory, cons
 
     if( !isSidebands ) continue;
     if( nBTags!=btagCategory ) continue;
+    if( mZZ>800. ) continue;
 
     int alphabin = h1_alpha->FindBin( mZZ );
     float alpha = h1_alpha->GetBinContent( alphabin );
@@ -665,7 +876,6 @@ TTree* correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int btagCategory, cons
     // alpha correction
     newWeight = eventWeight*alpha;
 
-    //newTree->Fill();
     newTree->Fill();
 
   }
