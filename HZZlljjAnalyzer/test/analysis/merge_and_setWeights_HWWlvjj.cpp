@@ -429,6 +429,12 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 3457./3.;//##
   } else if( dataset=="DYToMuMu_M-20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. MUMU >20
     xSection = 4819.6/3.;//##
+  } else if( dataset=="QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6_3" ) {//## QCD_EMEnriched Pt20to30
+    xSection = 236000000. * 0.0104;//##
+  } else if( dataset=="QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia6_3" ) {//## QCD_EMEnriched Pt30to80
+    xSection = 59480000. * 0.065;//##
+  } else if( dataset=="QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6_3" ) {//## QCD_EMEnriched Pt80to170
+    xSection = 900000 * 0.155;//##
   } else {
     std::cout << std::endl;
     std::cout << "-> WARNING!! Dataset: '" << dataset << "' not present in database. Cross section unknown." << std::endl;
