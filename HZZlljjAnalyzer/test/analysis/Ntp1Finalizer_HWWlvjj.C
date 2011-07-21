@@ -539,8 +539,6 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_deltaPt_gamma = new TH1D("deltaPt_gamma", "", 100, -1., 1.);
   TH1D* h1_deltaPt_nh = new TH1D("deltaPt_nh", "", 100, -1., 1.);
 
-  TH1D* h1_energyMet= new TH1D("energyMet","",100,0.,400);
-
   TH1D* h1_resoPt = new TH1D("resoPt", "", 100, -4., 4.);
   TH1D* h1_resoPzGetRight = new TH1D("resoPzGetRight", "", 100, -5., 5.);
   TH1D* h1_resoPzGetMCRight = new TH1D("resoPzGetMCRight", "", 100, -5., 5.);
@@ -567,6 +565,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_etaHwrongSol = new TH1D("etaHwrongSol", "", 50, -5., 5.);
 
   // DATA-MC
+  TH1D* h1_energyMet= new TH1D("energyMet","",100,0.,400);
+  TH1D* h1_energyMet_mu= new TH1D("energyMet_mu","",100,0.,400);
+  TH1D* h1_energyMet_e= new TH1D("energyMet_e","",100,0.,400);
+
   TH1D* h1_lept1Eta = new TH1D("lept1Eta", "", 100, -3., 3.);
   TH1D* h1_lept2Eta = new TH1D("lept2Eta", "", 100, -3., 3.);
   TH1D* h1_lept1Pt = new TH1D("lept1Pt", "", 100, 0., 220.);
@@ -578,6 +580,31 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_Jet1Eta = new TH1D("Jet1Eta", "", 100, -3., 3.);
   TH1D* h1_Jet2Eta = new TH1D("Jet2Eta", "", 100, -3., 3.);
   TH1D* h1_Mdijet = new TH1D("Mdijet", "", 100, 60., 100.);
+
+  TH1D* h1_lept1Eta_mu = new TH1D("lept1Eta", "", 100, -3., 3.);
+  TH1D* h1_lept2Eta_mu = new TH1D("lept2Eta", "", 100, -3., 3.);
+  TH1D* h1_lept1Pt_mu = new TH1D("lept1Pt", "", 100, 0., 220.);
+  TH1D* h1_lept2Pt_mu = new TH1D("lept2Pt", "", 100, 0., 220.);
+  TH1D* h1_Mdilept_mu = new TH1D("Mdilept", "", 100, 0., 120.);
+
+  TH1D* h1_Jet1Pt_mu = new TH1D("Jet1Pt", "", 100, 0., 220.);
+  TH1D* h1_Jet2Pt_mu = new TH1D("Jet2Pt", "", 100, 0., 220.);
+  TH1D* h1_Jet1Eta_mu = new TH1D("Jet1Eta", "", 100, -3., 3.);
+  TH1D* h1_Jet2Eta_mu = new TH1D("Jet2Eta", "", 100, -3., 3.);
+  TH1D* h1_Mdijet_mu = new TH1D("Mdijet", "", 100, 60., 100.);
+
+  TH1D* h1_lept1Eta_e = new TH1D("lept1Eta", "", 100, -3., 3.);
+  TH1D* h1_lept2Eta_e = new TH1D("lept2Eta", "", 100, -3., 3.);
+  TH1D* h1_lept1Pt_e = new TH1D("lept1Pt", "", 100, 0., 220.);
+  TH1D* h1_lept2Pt_e = new TH1D("lept2Pt", "", 100, 0., 220.);
+  TH1D* h1_Mdilept_e = new TH1D("Mdilept", "", 100, 0., 120.);
+
+  TH1D* h1_Jet1Pt_e = new TH1D("Jet1Pt", "", 100, 0., 220.);
+  TH1D* h1_Jet2Pt_e = new TH1D("Jet2Pt", "", 100, 0., 220.);
+  TH1D* h1_Jet1Eta_e = new TH1D("Jet1Eta", "", 100, -3., 3.);
+  TH1D* h1_Jet2Eta_e = new TH1D("Jet2Eta", "", 100, -3., 3.);
+  TH1D* h1_Mdijet_e = new TH1D("Mdijet", "", 100, 60., 100.);
+
 
   // To try
   TH1D* h1_Studio1 = new TH1D("Studio1", "", 50, -2, 2.);
@@ -1175,13 +1202,6 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 //timesTryJets++;
 //if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Quark2MC)<0.5 && jet2.DeltaR(Quark1MC)<0.5)) ) rightMatch++; 
 //}
-     // DATA-MC (JET)
-     h1_Jet1Pt->Fill( jet1.Pt(),eventWeight );
-     h1_Jet2Pt->Fill( jet2.Pt(),eventWeight );
-     h1_Jet1Eta->Fill( jet1.Eta(),eventWeight );
-     h1_Jet2Eta->Fill( jet2.Eta(),eventWeight );
-     h1_Mdijet->Fill( (jet1+jet2).M(),eventWeight );
-
      // LEPTONS
     TLorentzVector lept1, lept2, lept2MC;
     lept1.SetPtEtaPhiE( ptLept, etaLept, phiLept, eLept );
@@ -1199,9 +1219,13 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     BothPzNeu=getBothPz(lept1, pxPFMet, pyPFMet);
     lept2.SetPxPyPzE( pxPFMet, pyPFMet, pn, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pn,2)) );
     pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
- 
-    if( energyPFMet < 25./* Othermine 50.*/ ) continue;
+
+    // DATA-MC (MET)
     h1_energyMet->Fill( energyPFMet,eventWeight );
+    if(leptType==0) h1_energyMet_mu->Fill( energyPFMet,eventWeight );
+    if(leptType==1) h1_energyMet_e->Fill( energyPFMet,eventWeight );
+
+    if( energyPFMet < 25./* Othermine 50.*/ ) continue;
 /*
      h1_FindPz_EtaR->Fill(lept1.Eta()-neuR.Eta(),eventWeight);     h1_FindPz_EtaW->Fill(lept1.Eta()-neuW.Eta(),eventWeight);
      h1_FindPz_EtaWnR->Fill((neuR+lept1).Eta()-neuR.Eta(),eventWeight);  h1_FindPz_EtaWnW->Fill((neuW+lept1).Eta()-neuW.Eta(),eventWeight); 
@@ -1294,7 +1318,106 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       else
         h1_mWee_presel_0jets->Fill( diLepton.M(), eventWeight );
     }
+if(leptType==0){
+     // MU: DATA-MC (JET)
+     h1_Jet1Pt_mu->Fill( jet1.Pt(),eventWeight );
+     h1_Jet2Pt_mu->Fill( jet2.Pt(),eventWeight );
+     h1_Jet1Eta_mu->Fill( jet1.Eta(),eventWeight );
+     h1_Jet2Eta_mu->Fill( jet2.Eta(),eventWeight );
+     h1_Mdijet_mu->Fill( (jet1+jet2).M(),eventWeight );
 
+     // MU: Plot DATA-MC(LEPT)
+   if( !hibtag ){
+      if( diLepton.Pt() > ptWll_thresh_ ){
+        if(  lept2.Pt() > ptLept2_thresh_ ){
+           if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
+             if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_lept1Pt_mu->Fill( lept1.Pt(),eventWeight);
+              }}}}}}
+   if( !hibtag ){ 
+      if( diLepton.Pt() > ptWll_thresh_ ){
+       if(  lept1.Pt() > ptLept1_thresh_ ){
+         if( true) {
+           if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
+             if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_lept2Pt_mu->Fill(lept2.Pt(),eventWeight);
+              }}}}}}}
+   if( !hibtag ){ 
+      if( diLepton.Pt() > ptWll_thresh_ ){
+       if(  lept1.Pt() > ptLept1_thresh_ ){
+         if(  lept2.Pt() > ptLept2_thresh_ ){
+           if( true ){ 
+             if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_lept1Eta_mu->Fill(lept1.Eta(),eventWeight);
+              h1_lept2Eta_mu->Fill(lept2.Eta(),eventWeight);
+              }}}}}}}
+   if( !hibtag ){ 
+      if( diLepton.Pt() > ptWll_thresh_ ){
+       if(  lept1.Pt() > ptLept1_thresh_ ){
+         if(  lept2.Pt() > ptLept2_thresh_ ){
+           if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
+             if( true ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_Mdilept_mu->Fill((lept1+lept2).M(),eventWeight);
+              }}}}}}}
+}
+
+if(leptType==1){
+     // E: DATA-MC (JET)
+     h1_Jet1Pt_e->Fill( jet1.Pt(),eventWeight );
+     h1_Jet2Pt_e->Fill( jet2.Pt(),eventWeight );
+     h1_Jet1Eta_e->Fill( jet1.Eta(),eventWeight );
+     h1_Jet2Eta_e->Fill( jet2.Eta(),eventWeight );
+     h1_Mdijet_e->Fill( (jet1+jet2).M(),eventWeight );
+
+     // E: Plot DATA-MC(LEPT)
+   if( !hibtag ){
+      if( diLepton.Pt() > ptWll_thresh_ ){
+        if(  lept2.Pt() > ptLept2_thresh_ ){
+           if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
+             if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_lept1Pt_e->Fill( lept1.Pt(),eventWeight);
+              }}}}}}
+   if( !hibtag ){
+      if( diLepton.Pt() > ptWll_thresh_ ){
+       if(  lept1.Pt() > ptLept1_thresh_ ){
+         if( true) {
+           if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
+             if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_lept2Pt_e->Fill(lept2.Pt(),eventWeight);
+              }}}}}}}
+   if( !hibtag ){
+      if( diLepton.Pt() > ptWll_thresh_ ){
+       if(  lept1.Pt() > ptLept1_thresh_ ){
+         if(  lept2.Pt() > ptLept2_thresh_ ){
+           if( true ){
+             if( diLepton.M() > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_lept1Eta_e->Fill(lept1.Eta(),eventWeight);
+              h1_lept2Eta_e->Fill(lept2.Eta(),eventWeight);
+              }}}}}}}
+   if( !hibtag ){
+      if( diLepton.Pt() > ptWll_thresh_ ){
+       if(  lept1.Pt() > ptLept1_thresh_ ){
+         if(  lept2.Pt() > ptLept2_thresh_ ){
+           if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
+             if( true ){
+              if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
+              h1_Mdilept_e->Fill((lept1+lept2).M(),eventWeight);
+              }}}}}}}
+}
+     // DATA-MC (JET)
+     h1_Jet1Pt->Fill( jet1.Pt(),eventWeight );
+     h1_Jet2Pt->Fill( jet2.Pt(),eventWeight );
+     h1_Jet1Eta->Fill( jet1.Eta(),eventWeight );
+     h1_Jet2Eta->Fill( jet2.Eta(),eventWeight );
+     h1_Mdijet->Fill( (jet1+jet2).M(),eventWeight );
+   
 // Plot DATA-MC(LEPT)
    if( !hibtag ){
       if( diLepton.Pt() > ptWll_thresh_ ){
@@ -1313,8 +1436,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
               if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
               h1_lept2Pt->Fill(lept2.Pt(),eventWeight);
               }}}}}}}
-   if( !hibtag ){ 
-      if( diLepton.Pt() > ptWll_thresh_ ){
+   if( !hibtag ){       if( diLepton.Pt() > ptWll_thresh_ ){ 
        if(  lept1.Pt() > ptLept1_thresh_ ){
          if(  lept2.Pt() > ptLept2_thresh_ ){
            if( true ){ 
@@ -1324,7 +1446,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
               h1_lept2Eta->Fill(lept2.Eta(),eventWeight);
               }}}}}}}
    if( !hibtag ){ 
-      if( diLepton.Pt() > ptWll_thresh_ ){
+      if( diLepton.Pt() > ptWll_thresh_ ){ 
        if(  lept1.Pt() > ptLept1_thresh_ ){
          if(  lept2.Pt() > ptLept2_thresh_ ){
            if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
@@ -1920,7 +2042,6 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 
   h2_correlation->Write();
 
-  h1_energyMet->Write();
   h1_resoPt->Write();
   h1_resoPzGetRight->Write();
   h1_resoPzGetMCRight->Write();
@@ -2166,18 +2287,42 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
   h1_QGLikelihoodRevProd->Write();
 
   //DATA-MC
+  h1_energyMet->Write();
+  h1_energyMet_mu->Write();
+  h1_energyMet_e->Write();
+
   h1_lept1Eta->Write();
   h1_lept2Eta->Write();
   h1_lept1Pt->Write();
   h1_lept2Pt->Write();
   h1_Mdilept->Write();
-
   h1_Jet1Eta->Write();
   h1_Jet2Eta->Write();
   h1_Jet1Pt->Write();
   h1_Jet2Pt->Write();
   h1_Mdijet->Write();
 
+  h1_lept1Eta_mu->Write();
+  h1_lept2Eta_mu->Write();
+  h1_lept1Pt_mu->Write();
+  h1_lept2Pt_mu->Write();
+  h1_Mdilept_mu->Write();
+  h1_Jet1Eta_mu->Write();
+  h1_Jet2Eta_mu->Write();
+  h1_Jet1Pt_mu->Write();
+  h1_Jet2Pt_mu->Write();
+  h1_Mdijet_mu->Write();
+
+  h1_lept1Eta_e->Write();
+  h1_lept2Eta_e->Write();
+  h1_lept1Pt_e->Write();
+  h1_lept2Pt_e->Write();
+  h1_Mdilept_e->Write();
+  h1_Jet1Eta_e->Write();
+  h1_Jet2Eta_e->Write();
+  h1_Jet1Pt_e->Write();
+  h1_Jet2Pt_e->Write();
+  h1_Mdijet_e->Write();
 
   outFile_->mkdir("QGbins");
   outFile_->cd("QGbins");
