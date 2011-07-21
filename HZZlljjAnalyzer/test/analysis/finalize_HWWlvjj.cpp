@@ -127,6 +127,7 @@ int main( int argc, char* argv[] ) {
     //nf->addFile( "ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2" );
     nf->addFile( "WZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2" );
     nf->addFile( "WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2" );
+    nf->addFile( "ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1" );
 
   } else if( dataset=="DY_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {
 
@@ -140,6 +141,12 @@ int main( int argc, char* argv[] ) {
     nf->addFile( "TToBLNu_TuneZ2_s-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" );
     nf->addFile( "TToBLNu_TuneZ2_t-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" );
     nf->addFile( "TToBLNu_TuneZ2_tW-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" );
+
+  } else if( dataset=="QCD_EMEnriched_TuneZ2_7TeV-pythia6_3" ) {
+
+    nf->addFile( "QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6_3" );
+    nf->addFile( "QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia6_3" );
+    nf->addFile( "QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6_3" );
 
   } else if ( dataset == "DATA_6july" ) {
 
