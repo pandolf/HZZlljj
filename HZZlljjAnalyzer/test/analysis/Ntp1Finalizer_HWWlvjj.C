@@ -457,7 +457,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 
   TH1D* h1_mWW_nokinfit = new TH1D("mWW_nokinfit", "", 100, 200., 700.);
   h1_mWW_nokinfit->Sumw2();
-  TH1D* h1_mWW_kinfit = new TH1D("mWW_kinfit", "", 100, 200., 700.);
+  TH1D* h1_mWW_kinfit = new TH1D("mWW_kinfit", "", 100, HiggsMass_-200., HiggsMass_+200.);
   h1_mWW_kinfit->Sumw2();
   TH1D* h1_mWW_kinfit_cut = new TH1D("mWW_kinfit_cut", "", 100, 200., 700.);
   h1_mWW_kinfit_cut->Sumw2();
@@ -565,42 +565,42 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_etaHwrongSol = new TH1D("etaHwrongSol", "", 50, -5., 5.);
 
   // DATA-MC
-  TH1D* h1_energyMet= new TH1D("energyMet","",100,0.,400);
-  TH1D* h1_energyMet_mu= new TH1D("energyMet_mu","",100,0.,400);
-  TH1D* h1_energyMet_e= new TH1D("energyMet_e","",100,0.,400);
+  TH1D* h1_energyMet= new TH1D("energyMet","",60,0.,150);
+  TH1D* h1_energyMet_mu= new TH1D("energyMet_mu","",60,0.,150);
+  TH1D* h1_energyMet_e= new TH1D("energyMet_e","",60,0.,150);
 
-  TH1D* h1_lept1Eta = new TH1D("lept1Eta", "", 100, -3., 3.);
-  TH1D* h1_lept2Eta = new TH1D("lept2Eta", "", 100, -3., 3.);
-  TH1D* h1_lept1Pt = new TH1D("lept1Pt", "", 100, 0., 220.);
-  TH1D* h1_lept2Pt = new TH1D("lept2Pt", "", 100, 0., 220.);
-  TH1D* h1_Mdilept = new TH1D("Mdilept", "", 100, 0., 120.);
-  TH1D* h1_Jet1Pt = new TH1D("Jet1Pt", "", 100, 0., 220.);
-  TH1D* h1_Jet2Pt = new TH1D("Jet2Pt", "", 100, 0., 220.);
-  TH1D* h1_Jet1Eta = new TH1D("Jet1Eta", "", 100, -3., 3.);
-  TH1D* h1_Jet2Eta = new TH1D("Jet2Eta", "", 100, -3., 3.);
-  TH1D* h1_Mdijet = new TH1D("Mdijet", "", 100, 60., 100.);
+  TH1D* h1_lept1Eta = new TH1D("lept1Eta", "", 60, -2.7, 2.7);
+  TH1D* h1_lept2Eta = new TH1D("lept2Eta", "", 60, -2.7, 2.7);
+  TH1D* h1_lept1Pt = new TH1D("lept1Pt", "", 60, 0., 160.);
+  TH1D* h1_lept2Pt = new TH1D("lept2Pt", "", 60, 0., 140.);
+  TH1D* h1_Mdilept = new TH1D("Mdilept", "", 60, 0., 120.);
+  TH1D* h1_Jet1Pt = new TH1D("Jet1Pt", "", 60, 0., 200.);
+  TH1D* h1_Jet2Pt = new TH1D("Jet2Pt", "", 60, 0., 140.);
+  TH1D* h1_Jet1Eta = new TH1D("Jet1Eta", "", 60, -2.7, 2.7);
+  TH1D* h1_Jet2Eta = new TH1D("Jet2Eta", "", 60, -2.7, 2.7);
+  TH1D* h1_Mdijet = new TH1D("Mdijet", "", 60, 60., 100.);
 
-  TH1D* h1_lept1Eta_mu = new TH1D("lept1Eta_mu", "", 100, -3., 3.);
-  TH1D* h1_lept2Eta_mu = new TH1D("lept2Eta_mu", "", 100, -3., 3.);
-  TH1D* h1_lept1Pt_mu = new TH1D("lept1Pt_mu", "", 100, 0., 220.);
-  TH1D* h1_lept2Pt_mu = new TH1D("lept2Pt_mu", "", 100, 0., 220.);
-  TH1D* h1_Mdilept_mu = new TH1D("Mdilept_mu", "", 100, 0., 120.);
-  TH1D* h1_Jet1Pt_mu = new TH1D("Jet1Pt_mu", "", 100, 0., 220.);
-  TH1D* h1_Jet2Pt_mu = new TH1D("Jet2Pt_mu", "", 100, 0., 220.);
-  TH1D* h1_Jet1Eta_mu = new TH1D("Jet1Eta_mu", "", 100, -3., 3.);
-  TH1D* h1_Jet2Eta_mu = new TH1D("Jet2Eta_mu", "", 100, -3., 3.);
-  TH1D* h1_Mdijet_mu = new TH1D("Mdijet_mu", "", 100, 60., 100.);
+  TH1D* h1_lept1Eta_mu = new TH1D("lept1Eta_mu", "", 60, -2.7, 2.7);
+  TH1D* h1_lept2Eta_mu = new TH1D("lept2Eta_mu", "", 60, -2.7, 2.7);
+  TH1D* h1_lept1Pt_mu = new TH1D("lept1Pt_mu", "", 60, 0., 160.);
+  TH1D* h1_lept2Pt_mu = new TH1D("lept2Pt_mu", "", 60, 0., 140.);
+  TH1D* h1_Mdilept_mu = new TH1D("Mdilept_mu", "", 60, 0., 120.);
+  TH1D* h1_Jet1Pt_mu = new TH1D("Jet1Pt_mu", "", 60, 0., 200.);
+  TH1D* h1_Jet2Pt_mu = new TH1D("Jet2Pt_mu", "", 60, 0., 140.);
+  TH1D* h1_Jet1Eta_mu = new TH1D("Jet1Eta_mu", "", 60, -2.7, 2.7);
+  TH1D* h1_Jet2Eta_mu = new TH1D("Jet2Eta_mu", "", 60, -2.7, 2.7);
+  TH1D* h1_Mdijet_mu = new TH1D("Mdijet_mu", "", 60, 60., 100.);
 
-  TH1D* h1_lept1Eta_e = new TH1D("lept1Eta_e", "", 100, -3., 3.);
-  TH1D* h1_lept2Eta_e = new TH1D("lept2Eta_e", "", 100, -3., 3.);
-  TH1D* h1_lept1Pt_e = new TH1D("lept1Pt_e", "", 100, 0., 220.);
-  TH1D* h1_lept2Pt_e = new TH1D("lept2Pt_e", "", 100, 0., 220.);
-  TH1D* h1_Mdilept_e = new TH1D("Mdilept_e", "", 100, 0., 120.);
-  TH1D* h1_Jet1Pt_e = new TH1D("Jet1Pt_e", "", 100, 0., 220.);
-  TH1D* h1_Jet2Pt_e = new TH1D("Jet2Pt_e", "", 100, 0., 220.);
-  TH1D* h1_Jet1Eta_e = new TH1D("Jet1Eta_e", "", 100, -3., 3.);
-  TH1D* h1_Jet2Eta_e = new TH1D("Jet2Eta_e", "", 100, -3., 3.);
-  TH1D* h1_Mdijet_e = new TH1D("Mdijet_e", "", 100, 60., 100.);
+  TH1D* h1_lept1Eta_e = new TH1D("lept1Eta_e", "", 60, -2.7, 2.7);
+  TH1D* h1_lept2Eta_e = new TH1D("lept2Eta_e", "", 60, -2.7, 2.7);
+  TH1D* h1_lept1Pt_e = new TH1D("lept1Pt_e", "", 60, 0., 160.);
+  TH1D* h1_lept2Pt_e = new TH1D("lept2Pt_e", "", 60, 0., 140.);
+  TH1D* h1_Mdilept_e = new TH1D("Mdilept_e", "", 60, 0., 120.);
+  TH1D* h1_Jet1Pt_e = new TH1D("Jet1Pt_e", "", 60, 0., 200.);
+  TH1D* h1_Jet2Pt_e = new TH1D("Jet2Pt_e", "", 60, 0., 140.);
+  TH1D* h1_Jet1Eta_e = new TH1D("Jet1Eta_e", "", 60, -2.7, 2.7);
+  TH1D* h1_Jet2Eta_e = new TH1D("Jet2Eta_e", "", 60, -2.7, 2.7);
+  TH1D* h1_Mdijet_e = new TH1D("Mdijet_e", "", 60, 60., 100.);
 
   // To try
   TH1D* h1_Studio1 = new TH1D("Studio1", "", 50, -2, 2.);
@@ -1215,7 +1215,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     BothPzNeu=getBothPz(lept1, pxPFMet, pyPFMet);
     lept2.SetPxPyPzE( pxPFMet, pyPFMet, pn, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pn,2)) );
     pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
-
+    //if( leptType==1 && ptLept<50. ) continue; //PROV TRIGGER
     // DATA-MC (MET)
     h1_energyMet->Fill( energyPFMet,eventWeight );
     if(leptType==0) h1_energyMet_mu->Fill( energyPFMet,eventWeight );
