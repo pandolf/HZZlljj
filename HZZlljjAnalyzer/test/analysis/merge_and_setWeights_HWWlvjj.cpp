@@ -420,7 +420,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
   } else if( dataset=="ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1" ) {//##  ZZ
     xSection = 5.9;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
   } else if( dataset=="WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## W+Jets
-    xSection = 3*9679.9/*31314*/;//##
+    xSection = 31314;//##
   } else if( dataset=="DYToEE_M-10To20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. EE 10to20
     xSection = 3457./3.;//##
   } else if( dataset=="DYToEE_M-20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. EE >20
@@ -434,7 +434,59 @@ float getWeight( const std::string& dataset, int nEvents ) {
   } else if( dataset=="QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia6_3" ) {//## QCD_EMEnriched Pt30to80
     xSection = 59480000. * 0.065;//##
   } else if( dataset=="QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6_3" ) {//## QCD_EMEnriched Pt80to170
-    xSection = 900000 * 0.155;//##
+    xSection = 900000. * 0.155;//##
+  } else if( dataset=="QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6" ) {//## QCD_ Pt20to30
+    xSection = 236000000. * 0.00056;//##
+  } else if( dataset=="QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6" ) {//## QCD_ Pt30to80
+    xSection = 59480000. * 0.00230;//##
+  } else if( dataset=="QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia6" ) {//## QCD_ Pt80to170
+    xSection = 900000 * 0.0104;//##
+  } else if( dataset=="G1Jet_Pt-120to180_TuneZ2_7TeV-alpgen" ) {//##  G1Jet_Pt-120to180
+    xSection = 40.11;//##
+  } else if( dataset=="G1Jet_Pt-180to240_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 5.612;//##
+  } else if( dataset=="G1Jet_Pt-20to60_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 22700;//##
+  } else if( dataset=="G1Jet_Pt-300to5000_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 0.5450;//##
+  } else if( dataset=="G1Jet_Pt-60to120_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 799.3;//##
+  } else if( dataset=="G2Jets_Pt-120to180_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 35.56;//##
+  } else if( dataset=="G2Jets_Pt-180to240_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 5.941;//##
+  } else if( dataset=="G2Jets_Pt-20to60_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 4080.;//##
+  } else if( dataset=="G2Jets_Pt-240to300_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 1.448;//##
+  } else if( dataset=="G2Jets_Pt-300to5000_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 0.7233;//##
+  } else if( dataset=="G2Jets_Pt-60to120_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 425.8;//##
+  } else if( dataset=="G3Jets_Pt-120to180_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 15.27;//##
+  } else if( dataset=="G3Jets_Pt-180to240_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 3.09;//##
+  } else if( dataset=="G3Jets_Pt-20to60_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 794.7;//##
+  } else if( dataset=="G3Jets_Pt-240to300_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 0.7587;//##
+  } else if( dataset=="G3Jets_Pt-300to5000_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 0.4663;//##
+  } else if( dataset=="G3Jets_Pt-60to120_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 118.7;//##
+  } else if( dataset=="G4Jets_Pt-120to180_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 5.732;//##
+  } else if( dataset=="G4Jets_Pt-180to240_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 1.398;//##
+  } else if( dataset=="G4Jets_Pt-20to60_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 148.3;//##
+  } else if( dataset=="G4Jets_Pt-240to300_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 0.4199;//##
+  } else if( dataset=="G4Jets_Pt-300to5000_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 0.2488;//##
+  } else if( dataset=="G4Jets_Pt-60to120_TuneZ2_7TeV-alpgen" ) {//##
+    xSection = 32.08;//##
   } else {
     std::cout << std::endl;
     std::cout << "-> WARNING!! Dataset: '" << dataset << "' not present in database. Cross section unknown." << std::endl;
