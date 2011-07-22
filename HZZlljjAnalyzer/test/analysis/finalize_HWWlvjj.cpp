@@ -148,6 +148,38 @@ int main( int argc, char* argv[] ) {
     nf->addFile( "QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia6_3" );
     nf->addFile( "QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6_3" );
 
+  } else if( dataset=="QCD_BCtoE_TuneZ2_7TeV-pythia6" ) {
+
+    nf->addFile( "QCD_Pt-20to30_BCtoE_TuneZ2_7TeV-pythia6" );
+    nf->addFile( "QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6" );
+    nf->addFile( "QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia6" );
+
+  } else if( dataset=="GJet_TuneZ2_7TeV-alpgen" ) {
+
+    nf->addFile( "G1Jet_Pt-120to180_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G1Jet_Pt-180to240_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G1Jet_Pt-20to60_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G1Jet_Pt-300to5000_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G1Jet_Pt-60to120_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G2Jets_Pt-120to180_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G2Jets_Pt-180to240_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G2Jets_Pt-20to60_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G2Jets_Pt-240to300_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G2Jets_Pt-300to5000_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G2Jets_Pt-60to120_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G3Jets_Pt-120to180_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G3Jets_Pt-180to240_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G3Jets_Pt-20to60_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G3Jets_Pt-240to300_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G3Jets_Pt-300to5000_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G3Jets_Pt-60to120_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G4Jets_Pt-120to180_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G4Jets_Pt-180to240_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G4Jets_Pt-20to60_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G4Jets_Pt-240to300_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G4Jets_Pt-300to5000_TuneZ2_7TeV-alpgen" );
+    nf->addFile( "G4Jets_Pt-60to120_TuneZ2_7TeV-alpgen" );
+
   } else if ( dataset == "DATA_6july" ) {
 
      nf->addFile("SingleMu_6july");
