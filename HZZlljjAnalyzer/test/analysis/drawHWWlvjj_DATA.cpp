@@ -54,9 +54,12 @@ int main(int argc, char* argv[]) {
   db->add_mcFile(mcBkg_DY, "DY", " DY ", 39);
   TFile* mcBkg_T = TFile::Open("HWWlvjj_TToBLNu_TuneZ2_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2_helicity_ALL.root");
   db->add_mcFile(mcBkg_T, "top", " top ", 50);
-  TFile* mcBkg_QCD = TFile::Open("HWWlvjj_QCD_EMEnriched_TuneZ2_7TeV-pythia6_3_helicity_ALL.root");
-  db->add_mcFile(mcBkg_QCD, "QCD", " QCD ", 7);
-
+  TFile* mcBkg_QCDEM = TFile::Open("HWWlvjj_QCD_EMEnriched_TuneZ2_7TeV-pythia6_3_helicity_ALL.root");
+  db->add_mcFile(mcBkg_QCDEM, "QCD_EMenr", " QCD_EMenr ", 7);
+  TFile* mcBkg_QCDBC = TFile::Open("HWWlvjj_QCD_BCtoE_TuneZ2_7TeV-pythia6_helicity_ALL.root");
+  db->add_mcFile(mcBkg_QCDBC, "QCD_BCtoE", " QCD_BCtoE ", 8);
+  TFile* mcBkg_gJ = TFile::Open("HWWlvjj_GJet_TuneZ2_7TeV-alpgen_helicity_ALL.root");
+  db->add_mcFile(mcBkg_gJ, "gJets", " gJEts ", 9);
 
   TFile* Data_ = TFile::Open("HWWlvjj_DATA_6july_helicity_ALL.root");
   db->add_dataFile(Data_, "Data", " Data ", 1);
@@ -102,8 +105,8 @@ int main(int argc, char* argv[]) {
   db->drawHisto( "energyMet_e", "(Ele) Missing Energy", "GeV", "Events", true);
 
   db->set_rebin(2);
-  db->set_xAxisMin(400.);
-  db->set_yAxisMax(500);
+  db->set_xAxisMin(105.);
+  //db->set_yAxisMax(500);
   db->drawHisto( "mWW_kinfit", "WW Inv. Mass After all cuts", "GeV/c^{2}", "Events", false, 2);
 
   delete db;
