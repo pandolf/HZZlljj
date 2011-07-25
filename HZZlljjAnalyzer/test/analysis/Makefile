@@ -12,8 +12,8 @@ merge_and_setWeights: merge_and_setWeights.cpp
 do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o do2ndLevel_HZZlljj.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o $(ROOTFLAG) 
 
-do2ndLevel_HWWlvjj: Ntp1Analyzer.o Ntp1Analyzer_HWWlvjj.o AnalysisElectron.o AnalysisMuon.o do2ndLevel_HWWlvjj.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HWWlvjj do2ndLevel_HWWlvjj.cpp Ntp1Analyzer.o Ntp1Analyzer_HWWlvjj.o AnalysisElectron.o AnalysisMuon.o $(ROOTFLAG)
+do2ndLevel_HWWlvjj: Ntp1Analyzer.o Ntp1Analyzer_HWWlvjj.o AnalysisElectron.o AnalysisMuon.o Utils.o do2ndLevel_HWWlvjj.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HWWlvjj do2ndLevel_HWWlvjj.cpp Ntp1Analyzer.o Ntp1Analyzer_HWWlvjj.o AnalysisElectron.o AnalysisMuon.o Utils.o $(ROOTFLAG)
 
 do2ndLevel_WZ: Ntp1Analyzer.o Ntp1Analyzer_WZ.o do2ndLevel_WZ.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_WZ do2ndLevel_WZ.cpp Ntp1Analyzer.o Ntp1Analyzer_WZ.o $(ROOTFLAG) 
@@ -23,6 +23,9 @@ do2ndLevel_WZ_DATA: Ntp1Analyzer.o Ntp1Analyzer_WZ.o do2ndLevel_WZ_DATA.cpp
 
 do2ndLevel_HZZlljj_DATA: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o do2ndLevel_HZZlljj_DATA.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj_DATA do2ndLevel_HZZlljj_DATA.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o $(ROOTFLAG)
+
+do2ndLevel_HWWlvjj_DATA: Ntp1Analyzer.o Ntp1Analyzer_HWWlvjj.o AnalysisElectron.o AnalysisMuon.o Utils.o do2ndLevel_HWWlvjj_DATA.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HWWlvjj_DATA do2ndLevel_HWWlvjj_DATA.cpp Ntp1Analyzer.o Ntp1Analyzer_HWWlvjj.o AnalysisElectron.o AnalysisMuon.o Utils.o $(ROOTFLAG)
 
 finalize_HZZlljj: Ntp1Finalizer.o Ntp1Finalizer_HZZlljj.o finalize_HZZlljj.cpp fitTools.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o QGLikelihoodCalculator.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -I$(CMSSW_BASE)/src/UserCode/pandolf/QGLikelihood -o finalize_HZZlljj finalize_HZZlljj.cpp Ntp1Finalizer.o Ntp1Finalizer_HZZlljj.o fitTools.o TAbsFitParticle.o TAbsFitConstraint.o TFitConstraintM.o TFitParticleEtEtaPhi.o TKinFitter.o QGLikelihoodCalculator.o HelicityLikelihoodDiscriminant.o RooPentaSpinTwo.o RooBphione.o RooBtheta.o RooBkg2l2jHL.o RooSpinZero5DV2.o RooBkgd2L2JV2.o DiJetKinFitter.o $(ROOTFLAG) -lMinuit
@@ -257,9 +260,11 @@ AnalysisElectron.o: AnalysisElectron.cc AnalysisLepton.o
 AnalysisMuon.o: AnalysisMuon.cc AnalysisLepton.o
 	$(CC) $(CFLAGS) AnalysisMuon.cc $(ROOTFLAG)
 
+AnalysisNeutrino.o: AnalysisNeutrino.h
+	$(CC) $(CFLAGS) AnalysisNeutrino.h $(ROOTFLAG)
+
 AnalysisLepton.o: AnalysisLepton.h
 	$(CC) $(CFLAGS) AnalysisLepton.h $(ROOTFLAG)
-
 
 
 clean:
