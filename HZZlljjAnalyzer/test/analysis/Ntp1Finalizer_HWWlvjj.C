@@ -16,6 +16,8 @@
 #include "KinematicFit/LeptonNeutrinoKinFitter.h"
 #include "KinematicFit/GlobalFitter.h"
 
+//#include "HiggsMLSelection.hh"
+
 inline double delta_phi(double phi1, double phi2);
 std::pair<TLorentzVector,TLorentzVector> getPzRight( TLorentzVector lepton, float pxPFMet, float pyPFMet,  TLorentzVector neuMC );
 float getPz( TLorentzVector lepton, float pxPFMet, float pyPFMet);
@@ -304,6 +306,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   std::vector<TH1D*> vh1_QGLikelihoodJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet1", 60, 0., 1.);
   TH1D* h1_QGLikelihoodJet1 = new TH1D("QGLikelihoodJet1", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet1->Sumw2();
+  TH1D* h1_QGLikelihoodJet1_e = new TH1D("QGLikelihoodJet1_e", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJet1_e->Sumw2();
+  TH1D* h1_QGLikelihoodJet1_mu = new TH1D("QGLikelihoodJet1_mu", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJet1_mu->Sumw2();
   //@ TH1D* h1_QGLikelihoodJet1_antiBtag_SSVhighEff = new TH1D("QGLikelihoodJet1_antiBtag_SSVhighEff", "", 60, 0., 1.0001);
   // h1_QGLikelihoodJet1_antiBtag_SSVhighEff->Sumw2();
   // TH1D* h1_QGLikelihoodJet1_antiBtag_SSVhighPur = new TH1D("QGLikelihoodJet1_antiBtag_SSVhighPur", "", 60, 0., 1.0001);
@@ -342,6 +348,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   std::vector<TH1D*> vh1_QGLikelihoodJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet2", 60, 0., 1.);
   TH1D* h1_QGLikelihoodJet2 = new TH1D("QGLikelihoodJet2", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet2->Sumw2();
+  TH1D* h1_QGLikelihoodJet2_e = new TH1D("QGLikelihoodJet2_e", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJet2_e->Sumw2();
+  TH1D* h1_QGLikelihoodJet2_mu = new TH1D("QGLikelihoodJet2_mu", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJet2_mu->Sumw2();
   //  TH1D* h1_QGLikelihoodJet2_antiBtag_SSVhighEff = new TH1D("QGLikelihoodJet2_antiBtag_SSVhighEff", "", 60, 0., 1.0001);
   // h1_QGLikelihoodJet2_antiBtag_SSVhighEff->Sumw2();
   // TH1D* h1_QGLikelihoodJet2_antiBtag_SSVhighPur = new TH1D("QGLikelihoodJet2_antiBtag_SSVhighPur", "", 60, 0., 1.0001);
@@ -368,6 +378,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 
   TH1D* h1_QGLikelihoodProd = new TH1D("QGLikelihoodProd", "", 60, 0., 1.0001);
   h1_QGLikelihoodProd->Sumw2();
+  TH1D* h1_QGLikelihoodProd_e = new TH1D("QGLikelihoodProd_e", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProd_e->Sumw2();
+  TH1D* h1_QGLikelihoodProd_mu = new TH1D("QGLikelihoodProd_mu", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProd_mu->Sumw2();
+
   // TH1D* h1_QGLikelihoodProd_antiBtag = new TH1D("QGLikelihoodProd_antiBtag", "", 60, 0., 1.0001);
   // h1_QGLikelihoodProd_antiBtag->Sumw2();
   TH1D* h1_QGLikelihoodProd_hi = new TH1D("QGLikelihoodProd_hi", "", 60, 0., 1.0001);
@@ -425,15 +440,27 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   h1_kinfit_chiSquare->Sumw2();
   TH1D* h1_kinfit_chiSquareProb = new TH1D("kinfit_chiSquareProb", "", 60, -0.1, 1.1);
   h1_kinfit_chiSquareProb->Sumw2();
+  TH1D* h1_kinfit_chiSquareProb_e = new TH1D("kinfit_chiSquareProb_e", "", 60, -0.1, 1.1);
+  h1_kinfit_chiSquareProb_e->Sumw2();
+  TH1D* h1_kinfit_chiSquareProb_mu = new TH1D("kinfit_chiSquareProb_mu", "", 60, -0.1, 1.1);
+  h1_kinfit_chiSquareProb_mu->Sumw2();
   TH1D* h1_kinfit2_chiSquare = new TH1D("kinfit2_chiSquare", "", 60, 0., 10.);
   h1_kinfit2_chiSquare->Sumw2();
   TH1D* h1_kinfit2_chiSquareProb = new TH1D("kinfit2_chiSquareProb", "", 60, -0.1, 1.1);
   h1_kinfit2_chiSquareProb->Sumw2();
+  TH1D* h1_kinfit2_chiSquareProb_e = new TH1D("kinfit2_chiSquareProb_e", "", 60, -0.1, 1.1);
+  h1_kinfit2_chiSquareProb_e->Sumw2();
+  TH1D* h1_kinfit2_chiSquareProb_mu = new TH1D("kinfit2_chiSquareProb_mu", "", 60, -0.1, 1.1);
+  h1_kinfit2_chiSquareProb_mu->Sumw2();
 
   TH1D* h1_helicityLD = new TH1D("helicityLD", "", 60, 0., 1.);
   h1_helicityLD->Sumw2();
   TH1D* h1_helicityLD_kinfit = new TH1D("helicityLD_kinfit", "", 60, 0., 1.);
   h1_helicityLD_kinfit->Sumw2();
+  TH1D* h1_helicityLD_kinfit_e = new TH1D("helicityLD_kinfit_e", "", 60, 0., 1.);
+  h1_helicityLD_kinfit_e->Sumw2();
+  TH1D* h1_helicityLD_kinfit_mu = new TH1D("helicityLD_kinfit_mu", "", 60, 0., 1.);
+  h1_helicityLD_kinfit_mu->Sumw2();
   TH1D* h1_helicityLDRight = new TH1D("helicityLDRight", "", 60, 0., 1.);
   h1_helicityLDRight->Sumw2();
   TH1D* h1_helicityLDWrong = new TH1D("helicityLDWrong", "", 60, 0., 1.);
@@ -457,8 +484,20 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 
   TH1D* h1_mWW_nokinfit = new TH1D("mWW_nokinfit", "", 100, 200., 700.);
   h1_mWW_nokinfit->Sumw2();
-  TH1D* h1_mWW_kinfit = new TH1D("mWW_kinfit", "", 100, HiggsMass_-200., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfit_e = new TH1D("mWW_kinfit_e", "", 100, 150., HiggsMass_+200.);
+  h1_mWW_kinfit_e->Sumw2();
+  TH1D* h1_mWW_kinfit_mu = new TH1D("mWW_kinfit_mu", "", 100, 150., HiggsMass_+200.);
+  h1_mWW_kinfit_mu->Sumw2();
+  TH1D* h1_mWW_kinfit = new TH1D("mWW_kinfit", "", 100, 150., HiggsMass_+200.);
   h1_mWW_kinfit->Sumw2();
+  TH1D* h1_mWW_kinfitCUT_e = new TH1D("mWW_kinfitCUT_e", "", 100, 150., HiggsMass_+200.);
+  h1_mWW_kinfitCUT_e->Sumw2();
+  TH1D* h1_mWW_kinfitCUT_mu = new TH1D("mWW_kinfitCUT_mu", "", 100, 150., HiggsMass_+200.);
+  h1_mWW_kinfitCUT_mu->Sumw2();
+  TH1D* h1_mWW_kinfitCUT = new TH1D("mWW_kinfitCUT", "", 100, 150., HiggsMass_+200.);
+  h1_mWW_kinfitCUT->Sumw2();
+
+
   TH1D* h1_mWW_kinfit_cut = new TH1D("mWW_kinfit_cut", "", 100, 200., 700.);
   h1_mWW_kinfit_cut->Sumw2();
   TH1D* h1_mWW_hiChiSquareProb = new TH1D("mWW_hiChiSquareProb", "", 200, 100., 700.);
@@ -569,38 +608,38 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_energyMet_mu= new TH1D("energyMet_mu","",40,0.,150);
   TH1D* h1_energyMet_e= new TH1D("energyMet_e","",40,0.,150);
 
-  TH1D* h1_lept1Eta = new TH1D("lept1Eta", "", 40, -2.7, 2.7);
-  TH1D* h1_lept2Eta = new TH1D("lept2Eta", "", 40, -2.7, 2.7);
+  TH1D* h1_lept1Eta = new TH1D("lept1Eta", "", 20, -2.7, 2.7);
+  TH1D* h1_lept2Eta = new TH1D("lept2Eta", "", 20, -2.7, 2.7);
   TH1D* h1_lept1Pt = new TH1D("lept1Pt", "", 40, 0., 160.);
   TH1D* h1_lept2Pt = new TH1D("lept2Pt", "", 40, 0., 140.);
   TH1D* h1_Mdilept = new TH1D("Mdilept", "", 40, 0., 120.);
   TH1D* h1_Jet1Pt = new TH1D("Jet1Pt", "", 40, 0., 200.);
   TH1D* h1_Jet2Pt = new TH1D("Jet2Pt", "", 40, 0., 140.);
-  TH1D* h1_Jet1Eta = new TH1D("Jet1Eta", "", 40, -2.7, 2.7);
-  TH1D* h1_Jet2Eta = new TH1D("Jet2Eta", "", 40, -2.7, 2.7);
-  TH1D* h1_Mdijet = new TH1D("Mdijet", "", 40, 60., 100.);
+  TH1D* h1_Jet1Eta = new TH1D("Jet1Eta", "", 20, -2.7, 2.7);
+  TH1D* h1_Jet2Eta = new TH1D("Jet2Eta", "", 20, -2.7, 2.7);
+  TH1D* h1_Mdijet = new TH1D("Mdijet", "", 20, 60., 100.);
 
-  TH1D* h1_lept1Eta_mu = new TH1D("lept1Eta_mu", "", 40, -2.7, 2.7);
-  TH1D* h1_lept2Eta_mu = new TH1D("lept2Eta_mu", "", 40, -2.7, 2.7);
+  TH1D* h1_lept1Eta_mu = new TH1D("lept1Eta_mu", "", 20, -2.7, 2.7);
+  TH1D* h1_lept2Eta_mu = new TH1D("lept2Eta_mu", "", 20, -2.7, 2.7);
   TH1D* h1_lept1Pt_mu = new TH1D("lept1Pt_mu", "", 40, 0., 160.);
   TH1D* h1_lept2Pt_mu = new TH1D("lept2Pt_mu", "", 40, 0., 140.);
   TH1D* h1_Mdilept_mu = new TH1D("Mdilept_mu", "", 40, 0., 120.);
   TH1D* h1_Jet1Pt_mu = new TH1D("Jet1Pt_mu", "", 40, 0., 200.);
   TH1D* h1_Jet2Pt_mu = new TH1D("Jet2Pt_mu", "", 40, 0., 140.);
-  TH1D* h1_Jet1Eta_mu = new TH1D("Jet1Eta_mu", "", 40, -2.7, 2.7);
-  TH1D* h1_Jet2Eta_mu = new TH1D("Jet2Eta_mu", "", 40, -2.7, 2.7);
-  TH1D* h1_Mdijet_mu = new TH1D("Mdijet_mu", "", 40, 60., 100.);
+  TH1D* h1_Jet1Eta_mu = new TH1D("Jet1Eta_mu", "", 20, -2.7, 2.7);
+  TH1D* h1_Jet2Eta_mu = new TH1D("Jet2Eta_mu", "", 20, -2.7, 2.7);
+  TH1D* h1_Mdijet_mu = new TH1D("Mdijet_mu", "", 20, 60., 100.);
 
-  TH1D* h1_lept1Eta_e = new TH1D("lept1Eta_e", "", 40, -2.7, 2.7);
-  TH1D* h1_lept2Eta_e = new TH1D("lept2Eta_e", "", 40, -2.7, 2.7);
+  TH1D* h1_lept1Eta_e = new TH1D("lept1Eta_e", "", 20, -2.7, 2.7);
+  TH1D* h1_lept2Eta_e = new TH1D("lept2Eta_e", "", 20, -2.7, 2.7);
   TH1D* h1_lept1Pt_e = new TH1D("lept1Pt_e", "", 40, 0., 160.);
   TH1D* h1_lept2Pt_e = new TH1D("lept2Pt_e", "", 40, 0., 140.);
   TH1D* h1_Mdilept_e = new TH1D("Mdilept_e", "", 40, 0., 120.);
   TH1D* h1_Jet1Pt_e = new TH1D("Jet1Pt_e", "", 40, 0., 200.);
   TH1D* h1_Jet2Pt_e = new TH1D("Jet2Pt_e", "", 40, 0., 140.);
-  TH1D* h1_Jet1Eta_e = new TH1D("Jet1Eta_e", "", 40, -2.7, 2.7);
-  TH1D* h1_Jet2Eta_e = new TH1D("Jet2Eta_e", "", 40, -2.7, 2.7);
-  TH1D* h1_Mdijet_e = new TH1D("Mdijet_e", "", 40, 60., 100.);
+  TH1D* h1_Jet1Eta_e = new TH1D("Jet1Eta_e", "", 20, -2.7, 2.7);
+  TH1D* h1_Jet2Eta_e = new TH1D("Jet2Eta_e", "", 20, -2.7, 2.7);
+  TH1D* h1_Mdijet_e = new TH1D("Mdijet_e", "", 20, 60., 100.);
 
   // To try
   TH1D* h1_Studio1 = new TH1D("Studio1", "", 50, -2, 2.);
@@ -1215,7 +1254,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     BothPzNeu=getBothPz(lept1, pxPFMet, pyPFMet);
     lept2.SetPxPyPzE( pxPFMet, pyPFMet, pn, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pn,2)) );
     pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
-    //if( leptType==1 && ptLept<50. ) continue; //PROV TRIGGER
+    if( leptType==1 && ptLept<50. ) continue; //PROV TRIGGER
     // DATA-MC (MET)
     h1_energyMet->Fill( energyPFMet,eventWeight );
     if(leptType==0) h1_energyMet_mu->Fill( energyPFMet,eventWeight );
@@ -1572,6 +1611,8 @@ if(leptType==1){
                   chiSquareProbLept=TMath::Prob(fitter_lept->getS(),fitter_lept->getNDF());
                   h1_kinfit2_chiSquare->Fill( fitter_lept->getS()/fitter_lept->getNDF(), eventWeight);
                   h1_kinfit2_chiSquareProb->Fill( chiSquareProbLept, eventWeight );
+                  if(leptType==1) h1_kinfit2_chiSquareProb_e->Fill( chiSquareProbLept, eventWeight );
+                  if(leptType==0) h1_kinfit2_chiSquareProb_mu->Fill( chiSquareProbLept, eventWeight );
                   h1_resoPt->Fill( (isMC) ? (lept2.Pt()-NeuMC.Pt())/NeuMC.Pt() :0 );
                   if(isMC) h2_correlation->Fill( lept2.Pt()-NeuMC.Pt(),lept2.Phi()-NeuMC.Phi(),eventWeight );
 //}
@@ -1732,6 +1773,8 @@ if(leptType==1){
         float chiSquareProb = TMath::Prob(fitter_jets->getS(), fitter_jets->getNDF());
         h1_kinfit_chiSquare->Fill( fitter_jets->getS()/fitter_jets->getNDF(), eventWeight ); 
         h1_kinfit_chiSquareProb->Fill( chiSquareProb, eventWeight ); 
+        if(leptType==1) h1_kinfit_chiSquareProb_e->Fill( chiSquareProb, eventWeight ); 
+        if(leptType==0) h1_kinfit_chiSquareProb_mu->Fill( chiSquareProb, eventWeight ); 
 
 nEventsTot += eventWeight;
 if( chiSquareProb>0.01 ) {
@@ -1750,6 +1793,8 @@ if( bestWDiJet.M()>75. && bestWDiJet.M()<105. ) {
 }
 
 h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
+if(leptType==0) h1_mWW_kinfit_e->Fill( WW_kinfit.M(), eventWeight );
+if(leptType==1) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
 
       //GET HELICITY ANGLES:
  HelicityLikelihoodDiscriminant::HelicityAngles hangles;
@@ -1773,6 +1818,8 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
       double bProb_kinfit=LD->getBkgdProbability();
              helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
       h1_helicityLD_kinfit->Fill(helicityLD_kinfit, eventWeight);      
+      if(leptType_==1) h1_helicityLD_kinfit_e->Fill(helicityLD_kinfit, eventWeight);      
+      if(leptType_==0) h1_helicityLD_kinfit_mu->Fill(helicityLD_kinfit, eventWeight);      
       
       //
       // QG LIKELIHOOD   ***BEGIN***
@@ -1834,6 +1881,8 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
       float QGLikelihoodJet1 = qglikeli-> computeQGLikelihoodPU( jet1.Pt(), rhoPF, jet1.nCharged, jet1.nNeutral, jet1.ptD ); //qglikeli->computeQGLikelihoodPU( jet1.Pt(), rhoPF, jet1.nCharged, jet1.nNeutral, jet1.ptD);
       vh1_QGLikelihoodJet1[jet1PtBin]->Fill( QGLikelihoodJet1, eventWeight );
       h1_QGLikelihoodJet1->Fill( QGLikelihoodJet1, eventWeight );
+      if(leptType==1) h1_QGLikelihoodJet1_e->Fill( QGLikelihoodJet1, eventWeight );
+      if(leptType==0) h1_QGLikelihoodJet1_mu->Fill( QGLikelihoodJet1, eventWeight );
      
       //vh1_rmsCandJet2[jet2PtBin]->Fill( jet2.rmsCand, eventWeight );
       vh1_ptDJet2[jet2PtBin]->Fill( jet2.ptD, eventWeight );
@@ -1842,11 +1891,17 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
       float QGLikelihoodJet2 = qglikeli-> computeQGLikelihoodPU( jet2.Pt(), rhoPF, jet2.nCharged, jet2.nNeutral, jet2.ptD ); //qglikeli->computeQGLikelihoodPU( jet2.Pt(), rhoPF, jet2.nCharged, jet2.nNeutral, jet2.ptD);
       vh1_QGLikelihoodJet2[jet2PtBin]->Fill( QGLikelihoodJet2, eventWeight );
       h1_QGLikelihoodJet2->Fill( QGLikelihoodJet2, eventWeight );
-      
+      if(leptType==1) h1_QGLikelihoodJet2_e->Fill( QGLikelihoodJet2, eventWeight );
+      if(leptType==0) h1_QGLikelihoodJet2_mu->Fill( QGLikelihoodJet2, eventWeight );
+
       float QGLikelihoodProd = QGLikelihoodJet1*QGLikelihoodJet2;
       float QGLikelihoodRevProd = (1.-QGLikelihoodJet1)*(1.-QGLikelihoodJet2);
 
       h1_QGLikelihoodProd->Fill( QGLikelihoodProd, eventWeight );
+      if(leptType==1) h1_QGLikelihoodProd_e->Fill( QGLikelihoodProd, eventWeight );
+      if(leptType==0) h1_QGLikelihoodProd_mu->Fill( QGLikelihoodProd, eventWeight );
+
+
       //  if( !btag_SSVhighEff ) h1_QGLikelihoodProd_antiBtag->Fill( QGLikelihoodProd, eventWeight );
       
       h1_QGLikelihoodRevProd->Fill( QGLikelihoodRevProd, eventWeight );
@@ -1865,6 +1920,9 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
       if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
       if( helicityLD_kinfit < helicityLD_thresh_ ) continue;
 
+      h1_mWW_kinfitCUT->Fill( WW_kinfit.M(), eventWeight );
+      if(leptType==0) h1_mWW_kinfitCUT_e->Fill( WW_kinfit.M(), eventWeight );
+      if(leptType==1) h1_mWW_kinfitCUT_mu->Fill( WW_kinfit.M(), eventWeight );
 
       // *****************************************
       // *****  PASSED ANALYSIS SELECTION ********
@@ -2183,11 +2241,17 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 
   h1_kinfit_chiSquare->Write();
   h1_kinfit_chiSquareProb->Write();
+  h1_kinfit_chiSquareProb_e->Write();
+  h1_kinfit_chiSquareProb_mu->Write();
   h1_kinfit2_chiSquare->Write();
   h1_kinfit2_chiSquareProb->Write(); 
+  h1_kinfit2_chiSquareProb_e->Write(); 
+  h1_kinfit2_chiSquareProb_mu->Write(); 
  
   h1_helicityLD->Write();
   h1_helicityLD_kinfit->Write();
+  h1_helicityLD_kinfit_e->Write();
+  h1_helicityLD_kinfit_mu->Write();
   h1_helicityLDRight->Write();
   h1_helicityLDWrong->Write();
   h1_diffHelicity->Write();
@@ -2202,6 +2266,11 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
 
   h1_mWW_nokinfit->Write();//###
   h1_mWW_kinfit->Write();
+  h1_mWW_kinfit_e->Write();
+  h1_mWW_kinfit_mu->Write();
+  h1_mWW_kinfitCUT->Write();
+  h1_mWW_kinfitCUT_e->Write();
+  h1_mWW_kinfitCUT_mu->Write();
   h1_mWW_hiChiSquareProb->Write();
   h1_mWW_loChiSquareProb->Write();
   h1_mWW_mWjj_cut->Write();
@@ -2266,7 +2335,11 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
   h1_ptDJet2->Write();
 
   h1_QGLikelihoodJet1->Write();
+  h1_QGLikelihoodJet1_e->Write();
+  h1_QGLikelihoodJet1_mu->Write();
   h1_QGLikelihoodJet2->Write();
+  h1_QGLikelihoodJet2_e->Write();
+  h1_QGLikelihoodJet2_mu->Write();
 /*  h1_QGLikelihoodJet1_antiBtag_TChighPur->Write();
   h1_QGLikelihoodJet2_antiBtag_TChighPur->Write();
   h1_QGLikelihoodJet1_antiBtag_TChighEff->Write();
@@ -2278,6 +2351,8 @@ h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
   h1_QGLikelihoodJet1_antiBtag_SSVhighPurhighEff->Write();
   h1_QGLikelihoodJet2_antiBtag_SSVhighPurhighEff->Write();*/
   h1_QGLikelihoodProd->Write();
+  h1_QGLikelihoodProd_e->Write();
+  h1_QGLikelihoodProd_mu->Write();
 //  h1_QGLikelihoodProd_antiBtag->Write();
   h1_QGLikelihoodProd_hi->Write();
   h2_QGLikelihoodJet1_vs_Jet2->Write();
