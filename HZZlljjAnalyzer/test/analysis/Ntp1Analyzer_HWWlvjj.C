@@ -456,8 +456,12 @@ requiredTriggerMuon.push_back("167039-999999:HLT_IsoMu20_eta2p1_v");
      if( !isMC_ ){
      reloadTriggerMask(runNumber);
      bool passedElectronTrigger=true, passedMuonTrigger=true;
-     if(dataset_=="SingleElectron"){ passedElectronTrigger = hasPassedHLT(0);}
-     if(dataset_=="SingleMuon"){ passedMuonTrigger = hasPassedHLT(1);}
+     std::string SingEle("SingleElectron");
+     std::string SingMuo("SingleMu");
+     int elect=dataset_.compare(SingEle), muo=dataset_.compare(SingMuo);
+     if( elect==0 ){ passedElectronTrigger = hasPassedHLT(0);}
+     if( muo==0 ){ passedMuonTrigger = hasPassedHLT(1);}
+     if( elect!=0 && muo!=0  ){ std::cout<<"Trigger doesn't works; dataset wrong"<<std::endl; }
      if( !passedElectronTrigger || !passedMuonTrigger ) continue;
     }
 
