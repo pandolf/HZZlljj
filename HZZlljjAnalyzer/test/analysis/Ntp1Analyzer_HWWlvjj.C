@@ -463,7 +463,7 @@ requiredTriggerMuon.push_back("167039-999999:HLT_IsoMu20_eta2p1_v");
      if( muo==0 ){ passedMuonTrigger = hasPassedHLT(1);}
      if( elect!=0 && muo!=0  ){ std::cout<<"Trigger doesn't works; dataset wrong"<<std::endl; }
      if( !passedElectronTrigger || !passedMuonTrigger ) continue;
-    }
+     }
 
      ptHat_ = (isMC_) ? genPtHat : ptHat_;
 
@@ -474,7 +474,7 @@ requiredTriggerMuon.push_back("167039-999999:HLT_IsoMu20_eta2p1_v");
      TLorentzVector lept1MC, lept2MC;
      int wIndexqq=-1;
      int wIndexll=-1;
-    
+   
      if( isMC_ ) {
        
        // first look for W->qq'
@@ -607,7 +607,7 @@ requiredTriggerMuon.push_back("167039-999999:HLT_IsoMu20_eta2p1_v");
        } //if found two W's
      
      } //if isMC
-     
+    
      // -----------------------------
      //      FROM NOW ON RECO
      // -----------------------------
@@ -647,7 +647,7 @@ requiredTriggerMuon.push_back("167039-999999:HLT_IsoMu20_eta2p1_v");
        // --------------
 
        if( thisMuon.Pt() < 10. ) continue;
-       if( fabs(thisMuon.Eta()) > 2.4 /*2.1 Other*/ ) continue;
+       if( fabs(thisMuon.Eta()) > 2.4 ) continue; //2.4 OtherMine
 
 	 thisMuon.isGlobalMuonPromptTight = (muonIdMuon[iMuon]>>8)&1;
 	 thisMuon.isAllTrackerMuon = (muonIdMuon[iMuon]>>11)&1;
@@ -763,9 +763,10 @@ requiredTriggerMuon.push_back("167039-999999:HLT_IsoMu20_eta2p1_v");
        // one electron required to pass VBTF80, the other VBTF95
        chargeLept_=chargeEle[iEle];
        electron.push_back( thisEle );
-     } //for electron
+     } //for electron 
                                          //  FILL LEPTONS
 // Fill Efficiency for Others
+
 bool findJetELE=false;
 bool findJetMU=false;
 
@@ -908,21 +909,27 @@ if( muon.size() >= 1 ) { Cont_MU++;
        if( thisJet.eNeutralHadrons >= 0.99*thisJet.Energy() ) continue;
        if( thisJet.ePhotons >= 0.99*thisJet.Energy() ) continue;
        // match to genjet:
+
        float bestDeltaR=999.;
        TLorentzVector matchedGenJet;
+       bool matched=false;
        for( unsigned iGenJet=0; iGenJet<nAK5GenJet; ++iGenJet ) {
          TLorentzVector thisGenJet(pxAK5GenJet[iGenJet], pyAK5GenJet[iGenJet], pzAK5GenJet[iGenJet], energyAK5GenJet[iGenJet]);
          if( thisGenJet.DeltaR(thisJet) < bestDeltaR ) {
            bestDeltaR=thisGenJet.DeltaR(thisJet);
-           matchedGenJet=thisGenJet;
+           matchedGenJet=thisGenJet; matched==true;
          }
        }
-
+       if(matched){
        thisJet.ptGen  = (isMC_) ? matchedGenJet.Pt() : 0.;
        thisJet.etaGen = (isMC_) ? matchedGenJet.Eta() : 20.;
        thisJet.phiGen = (isMC_) ? matchedGenJet.Phi() : 0.;
-       thisJet.eGen   = (isMC_) ? matchedGenJet.Energy() : 0.;
-
+       thisJet.eGen   = (isMC_) ? matchedGenJet.Energy() : 0.;}
+       else{
+       thisJet.ptGen  = 0.;
+       thisJet.etaGen = 20.;
+       thisJet.phiGen = 0.;
+       thisJet.eGen   = 0.;}
        // match to parton:
        float bestDeltaR_part=999.;
        TLorentzVector matchedPart;
@@ -940,7 +947,7 @@ if( muon.size() >= 1 ) { Cont_MU++;
        }
 
        leadJets.push_back(thisJet);
-       leadJetsIndex.push_back(iJet);
+       leadJetsIndex.push_back(iJet); 
      }//iJet
 
      h1_nJets30->Fill(nJets30);
@@ -1089,7 +1096,6 @@ if( muon.size() >= 1 ) { Cont_MU++;
        } // for i mc
 
      } // if is mc
-
 
      reducedTree_->Fill(); 
 
