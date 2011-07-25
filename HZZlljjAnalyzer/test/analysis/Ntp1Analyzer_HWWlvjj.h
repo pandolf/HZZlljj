@@ -7,11 +7,14 @@
 //------------------------------------------------------------------
 
 
-#ifndef Ntp1Analyzer_HWWlvjj_h
-#define Ntp1Analyzer_HWWlvjj_h
+#ifndef NTP1ANALYZER_HWWLVJJ_H
+#define NTP1ANALYZER_HWWLVJJ_H
 
 #include "Ntp1Analyzer.h"
 #include "TH1F.h"
+#include <vector>
+#include <string>
+#include <iostream>
 
 
 class Ntp1Analyzer_HWWlvjj : public Ntp1Analyzer {
@@ -22,6 +25,11 @@ class Ntp1Analyzer_HWWlvjj : public Ntp1Analyzer {
    virtual ~Ntp1Analyzer_HWWlvjj();
 
    virtual void CreateOutputFile();
+   
+   void reloadTriggerMask(int runN);
+   std::string getHLTPathForRun(int runN, std::string fullname);
+   bool hasPassedHLT(int channel);
+
    virtual void Loop();
    //Double_t computeQGLikelihood(const Double_t jtpt, Int_t ncharged, Int_t nneutral, Double_t PtD, Double_t r);
 
@@ -29,6 +37,11 @@ class Ntp1Analyzer_HWWlvjj : public Ntp1Analyzer {
 
 
  private:
+   
+    std::vector<int> m_requiredTriggersElectron;
+    std::vector<int> m_requiredTriggersMuon;      
+    std::vector<std::string> requiredTriggerElectron;
+    std::vector<std::string> requiredTriggerMuon;
 
    int leptType_; //0: muon; 1: electron
 

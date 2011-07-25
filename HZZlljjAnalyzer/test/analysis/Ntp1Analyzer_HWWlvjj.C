@@ -11,6 +11,8 @@
 #include "AnalysisMuon.h"
 #include "AnalysisNeutrino.h"
 
+#include "Utils.hh"
+
 //#include "fitTools.h"
 
 class AnalysisJet : public TLorentzVector {
@@ -63,9 +65,91 @@ class AnalysisJet : public TLorentzVector {
 Ntp1Analyzer_HWWlvjj::Ntp1Analyzer_HWWlvjj( const std::string& dataset, const std::string& flags, TTree* tree ) :
      Ntp1Analyzer( "HWWlvjj", dataset, flags, tree ) {
 
+     std::string dataset_=dataset;
   //nothing to do here
 
 } //constructor
+
+/// specific for HWW that has multiple channels with different HLT requirements
+void Ntp1Analyzer_HWWlvjj::reloadTriggerMask(int runN){
+  std::vector<int> triggerMask;
+
+  // load the triggers required for E
+  for (std::vector< std::string >::const_iterator fIter=requiredTriggerElectron.begin();fIter!=requiredTriggerElectron.end();++fIter)
+    {   
+      std::string pathName = getHLTPathForRun(runN,*fIter);
+      for(unsigned int i=0; i<nameHLT->size(); i++)
+        {
+          //if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) )
+          // nameHLT[i] has ..._vXXX
+          if(nameHLT->at(i).find(pathName) != std::string::npos)
+            {
+              triggerMask.push_back( indexHLT[i] ) ;
+              break;
+            }
+        }
+    }
+  m_requiredTriggersElectron = triggerMask;
+
+  // load the triggers required for M
+  triggerMask.clear();
+  for (std::vector< std::string >::const_iterator fIter=requiredTriggerMuon.begin();fIter!=requiredTriggerMuon.end();++fIter)
+    {   
+      //      std::cout << "For MM required: " << *fIter << std::endl;
+      std::string pathName = getHLTPathForRun(runN,*fIter);
+      for(unsigned int i=0; i<nameHLT->size(); i++)
+        {
+          if(nameHLT->at(i).find(pathName) != std::string::npos)
+            {
+              triggerMask.push_back( indexHLT[i] ) ;
+              break;
+            }
+        }
+    }
+  m_requiredTriggersMuon = triggerMask;
+}
+
+bool Ntp1Analyzer_HWWlvjj::hasPassedHLT(int channel) {
+  Utils anaUtils;
+  if(channel==0) return anaUtils.getTriggersOR(m_requiredTriggersElectron, firedTrg);
+  else if(channel==1) {
+    bool required = anaUtils.getTriggersOR(m_requiredTriggersMuon, firedTrg);
+    //bool notRequired = anaUtils.getTriggersOR(m_notRequiredTriggersMuon, firedTrg);
+    return (required );//&& !notRequired);
+  //} else if(channel==em) {
+  //  bool required = anaUtils.getTriggersOR(m_requiredTriggersEM, firedTrg);
+   // bool notRequired = anaUtils.getTriggersOR(m_notRequiredTriggersEM, firedTrg);
+   // return (required && !notRequired);
+  }
+  return true;
+}
+
+std::string Ntp1Analyzer_HWWlvjj::getHLTPathForRun(int runN, std::string fullname) {
+  TString fullName = TString(fullname.c_str());
+  TObjArray* selectionTokens = fullName.Tokenize(":");
+  if (selectionTokens->GetEntries()!=2) {
+    std::cout << "Wrong trigger strings " << selectionTokens->GetEntries() << std::endl;
+    return std::string("NOPATH");
+  }
+  TString RunRange =((TObjString*)(*selectionTokens)[0])->GetString();
+  TString HLTPathName =((TObjString*)(*selectionTokens)[1])->GetString();
+  
+  TObjArray* runs = RunRange.Tokenize("-");
+  if (runs->GetEntries()!=2) {
+    std::cout << "Wrong trigger run range strings " << runs->GetEntries() << std::endl;
+    return std::string("NOPATH");    
+  }
+  
+  const char *minStr = (((TObjString*)(*runs)[0])->GetString()).Data();
+  const char *maxStr = (((TObjString*)(*runs)[1])->GetString()).Data();
+
+  int min = atoi(minStr);
+  int max = atoi(maxStr);
+
+  if(runN>=min && runN<=max) return std::string(HLTPathName.Data());
+  else return std::string("NOPATH");
+}
+
 
 void Ntp1Analyzer_HWWlvjj::CreateOutputFile() {
 
@@ -320,6 +404,18 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
    float Cont_inclusive=0., Cont_PV=0., Cont_MU=0., Cont_ELE=0., Cont_VetoMU=0., Cont_VetoELE=0., Cont_JetsELE=0., Cont_JetsMU=0.;
    Long64_t Jentry;
 
+// QUI ci metti il 18 di HiggsApp
+std::vector< std::string > requiredTriggerElectron;//sarebbe maskEE
+std::vector< std::string > requiredTriggerMuon;
+requiredTriggerElectron.push_back("1-164237:HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v");
+requiredTriggerElectron.push_back("165085-166967:HLT_Ele32_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v");
+requiredTriggerElectron.push_back("166968-999999:HLT_Ele52_CaloIdVT_TrkIdT_v");
+requiredTriggerMuon.push_back("1-163261:HLT_Mu15_v");
+requiredTriggerMuon.push_back("163262-164237:HLT_Mu24_v");
+requiredTriggerMuon.push_back("165085-166967:HLT_Mu30_v");
+requiredTriggerMuon.push_back("163262-166967:HLT_IsoMu17_v");
+requiredTriggerMuon.push_back("167039-999999:HLT_IsoMu20_eta2p1_v");
+
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
@@ -330,6 +426,7 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 
      if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      
+
      if( (jentry%100000) == 0 ) std::cout << "Event #" << jentry  << " of " << nentries << std::endl;
   
    //HLT_Mu11_ = this->PassedHLT("HLT_Mu11");
@@ -355,6 +452,14 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
 
      //trigger:
      // not yet
+     
+     if( !isMC_ ){
+     reloadTriggerMask(runNumber);
+     bool passedElectronTrigger=true, passedMuonTrigger=true;
+     if(dataset_=="SingleElectron"){ passedElectronTrigger = hasPassedHLT(0);}
+     if(dataset_=="SingleMuon"){ passedMuonTrigger = hasPassedHLT(1);}
+     if( !passedElectronTrigger || !passedMuonTrigger ) continue;
+    }
 
      ptHat_ = (isMC_) ? genPtHat : ptHat_;
 
@@ -1004,46 +1109,4 @@ h1_Cont_JetsMU->SetBinContent(1,Cont_JetsMU*proportion);
 } //loop
 
 
-/*
-Double_t Ntp1Analyzer_HWWlvjj::computeQGLikelihood(const Double_t jtpt, Int_t ncharged, Int_t nneutral, Double_t PtD, Double_t r) {
-
-//std::vector<variable*> vars;
-//  std::vector<variable*> spects;
-  TMVA::Reader *reader=new TMVA::Reader("Reader");
-    Double_t result;
-//AddVariables(vars);
-//  AddSpectators(spects);
-//  AddVariableAndSpectators(reader,vars,spects);
-  
-std::cout << "jtpt: " << jtpt << std::endl;
-  if(15.<jtpt&&jtpt<30.)reader->BookMVA("PDEFoam","Bins/15-30/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(30.<jtpt&&jtpt<50.)reader->BookMVA("PDEFoam","Bins/30-50/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(50.<jtpt&&jtpt<80.)reader->BookMVA("PDEFoam","Bins/50-80/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(80.<jtpt&&jtpt<120.){
-    std::cout << "in here" << std::endl;
-    reader->BookMVA("PDEFoam","Bins/80-120/weights/TMVA Analysis_PDEFoam.weights.xml"); 
-    std::cout << "done" << std::endl;
-    } else
-  if(120.<jtpt&&jtpt<170.)reader->BookMVA("PDEFoam","Bins/120-170/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(170.<jtpt&&jtpt<300.)reader->BookMVA("PDEFoam","Bins/170-300/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(300.<jtpt&&jtpt<470.)reader->BookMVA("PDEFoam","Bins/300-470/weights/TMVA Analysis_PDEFoam.weights.xml"); else
-  if(470.<jtpt&&jtpt<600.)reader->BookMVA("PDEFoam","Bins/470-6000/weights/TMVA Analysis_PDEFoam.weights.xml");else
-  return -1.0; //dentro l'else
-  
-//std::vector<variable*>::iterator it;
-//  for(it=vars.begin();it!=vars.end();it++)
-//          {
-//          if((*it)->name=="ncharged") (*it)->SetVar(&ncharged); else
-//          if((*it)->name=="nneutral") (*it)->SetVar(&nneutral); else
-//          if((*it)->name=="PtD") (*it)->SetVar(&PtD);else
-//          if((*it)->name== "r") (*it)->SetVar(&r);else
-//          {return -2.0;}
-//          
-//          }
-std::cout << "jaja" << std::endl;
-  result=reader->EvaluateMVA("PDEFoam");
-  return result;
-  
-}
-*/
 
