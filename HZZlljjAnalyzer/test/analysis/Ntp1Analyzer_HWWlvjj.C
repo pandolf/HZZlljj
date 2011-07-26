@@ -84,7 +84,8 @@ void Ntp1Analyzer_HWWlvjj::reloadTriggerMask(int runN){
           // nameHLT[i] has ..._vXXX
           if(nameHLT->at(i).find(pathName) != std::string::npos)
             {
-              triggerMask.push_back( indexHLT[i] ) ;
+
+             triggerMask.push_back( indexHLT[i] ) ;
               break;
             }
         }
@@ -93,7 +94,6 @@ void Ntp1Analyzer_HWWlvjj::reloadTriggerMask(int runN){
 
   // load the triggers required for M
   triggerMask.clear();
-std::cout<<requiredTriggerMuon.size()<<std::endl;
   for (std::vector< std::string >::const_iterator fIter=requiredTriggerMuon.begin();fIter!=requiredTriggerMuon.end();++fIter)
     {   
       //      std::cout << "For MM required: " << *fIter << std::endl;
@@ -101,7 +101,6 @@ std::cout<<requiredTriggerMuon.size()<<std::endl;
       for(unsigned int i=0; i<nameHLT->size(); i++)
         {
           if(nameHLT->at(i).find(pathName) != std::string::npos)
-std::cout<<pathName<<std::endl;
             {
               triggerMask.push_back( indexHLT[i] ) ;
               break;
@@ -113,17 +112,12 @@ std::cout<<pathName<<std::endl;
 
 bool Ntp1Analyzer_HWWlvjj::hasPassedHLT(int channel) {
   Utils anaUtils;
-  if(channel==0) return anaUtils.getTriggersOR(m_requiredTriggersElectron, firedTrg);
+  if( channel==0 ){
+    return anaUtils.getTriggersOR(m_requiredTriggersElectron, firedTrg); }
   else if(channel==1) {
     bool required = anaUtils.getTriggersOR(m_requiredTriggersMuon, firedTrg);
-    //bool notRequired = anaUtils.getTriggersOR(m_notRequiredTriggersMuon, firedTrg);
-    return (required );//&& !notRequired);
-  //} else if(channel==em) {
-  //  bool required = anaUtils.getTriggersOR(m_requiredTriggersEM, firedTrg);
-   // bool notRequired = anaUtils.getTriggersOR(m_notRequiredTriggersEM, firedTrg);
-   // return (required && !notRequired);
-  }
-  return true;
+    return (required ); }
+    return true;
 }
 
 std::string Ntp1Analyzer_HWWlvjj::getHLTPathForRun(int runN, std::string fullname) {
@@ -406,9 +400,6 @@ void Ntp1Analyzer_HWWlvjj::Loop(){
    float Cont_inclusive=0., Cont_PV=0., Cont_MU=0., Cont_ELE=0., Cont_VetoMU=0., Cont_VetoELE=0., Cont_JetsELE=0., Cont_JetsMU=0.;
    Long64_t Jentry;
 
-// QUI ci metti il 18 di HiggsApp
-std::vector< std::string > requiredTriggerElectron;//sarebbe maskEE
-std::vector< std::string > requiredTriggerMuon;
 requiredTriggerElectron.push_back("1-164237:HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v");
 requiredTriggerElectron.push_back("165085-166967:HLT_Ele32_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v");
 requiredTriggerElectron.push_back("166968-999999:HLT_Ele52_CaloIdVT_TrkIdT_v");
@@ -417,7 +408,6 @@ requiredTriggerMuon.push_back("163262-164237:HLT_Mu24_v");
 requiredTriggerMuon.push_back("165085-166967:HLT_Mu30_v");
 requiredTriggerMuon.push_back("163262-166967:HLT_IsoMu17_v");
 requiredTriggerMuon.push_back("167039-999999:HLT_IsoMu20_eta2p1_v");
-
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
@@ -454,20 +444,20 @@ requiredTriggerMuon.push_back("167039-999999:HLT_IsoMu20_eta2p1_v");
 
      //trigger:
      // not yet
-     
+
      if( !isMC_ ){
      reloadTriggerMask(runNumber);
      bool passedElectronTrigger=true, passedMuonTrigger=true;
-     std::string SingEle("SingleElectron");
-     std::string SingMuo("SingleMu");
+     std::string SingEle("SingleElectron_6july");//WW
+     std::string SingMuo("SingleMu_6july");
      int elect=dataset_.compare(SingEle), muo=dataset_.compare(SingMuo);
-     if( elect==0 ){ passedElectronTrigger = hasPassedHLT(0);}
-     if( muo==0 ){ passedMuonTrigger = hasPassedHLT(1);}
+     if( elect==0 ){ passedElectronTrigger = hasPassedHLT(0); }
+     if( muo==0 ){ passedMuonTrigger = hasPassedHLT(1); }
      if( elect!=0 && muo!=0  ){ std::cout<<"Trigger doesn't works; dataset wrong"<<std::endl; }
-     if( !passedElectronTrigger || !passedMuonTrigger ) continue;
+     if( !passedElectronTrigger && elect==0 ){ continue;}
+     if( !passedMuonTrigger && muo==0 ){ continue;}
      }
-
-     ptHat_ = (isMC_) ? genPtHat : ptHat_;
+         ptHat_ = (isMC_) ? genPtHat : ptHat_;
 
      //if( isMC_ ) 
      //  if( (ptHat_ > ptHatMax_) || (ptHat_ < ptHatMin_) ) continue;
@@ -1105,8 +1095,8 @@ if( muon.size() >= 1 ) { Cont_MU++;
                        // Other
 float proportion = 2061760. /*109989.*/ /Cont_inclusive;
 	if( Jentry == (nentries-1) ){
-  std::cout << std::fixed << std::setprecision(6) << "Inclusive: " << Cont_inclusive*proportion << " PV: " << Cont_PV*proportion << " MU: " << Cont_MU*proportion << " ELE: " << Cont_ELE*proportion << " VetoMU: " << Cont_VetoMU*proportion 
-  << " VetoELE: " << Cont_VetoELE*proportion << " JetsELE: " << Cont_JetsELE*proportion << " JetsMU: " << Cont_JetsMU*proportion << std::endl;
+  //std::cout << std::fixed << std::setprecision(6) << "Inclusive: " << Cont_inclusive*proportion << " PV: " << Cont_PV*proportion << " MU: " << Cont_MU*proportion << " ELE: " << Cont_ELE*proportion << " VetoMU: " << Cont_VetoMU*proportion 
+ // << " VetoELE: " << Cont_VetoELE*proportion << " JetsELE: " << Cont_JetsELE*proportion << " JetsMU: " << Cont_JetsMU*proportion << std::endl;
 
 h1_Cont_inclusive->SetBinContent(1,Cont_inclusive*proportion);
 h1_Cont_PV->SetBinContent(1,Cont_PV*proportion);
