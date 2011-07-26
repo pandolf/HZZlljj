@@ -1713,8 +1713,8 @@ if(leptType==1){
       h1_mWW_hely->Fill((lept1+LastNeu+bestWDiJet).M(),eventWeight);
 
 
-      //         diLepton=LastNeu+lept1;
-                 diLepton=Neu_MetFitted+lept1;
+         diLepton=LastNeu+lept1;
+         diLepton=Neu_MetFitted+lept1;
 
           // Reso KinFit on Jets  
         
@@ -1802,8 +1802,8 @@ if(leptType==1) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
  else                          hangles = computeHelicityAngles(lept2, lept1, jet1, jet2);
  
  HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinfit;
-   if( chargeLept<0. ) hangles_kinfit = computeHelicityAngles(lept1, LastNeu, jet1_kinfit, jet2_kinfit);
-   else                hangles_kinfit = computeHelicityAngles(LastNeu, lept1, jet1_kinfit, jet2_kinfit);
+   if( chargeLept<0. ) hangles_kinfit = computeHelicityAngles(lept1, /*LastNeu*/Neu_MetFitted, jet1_kinfit, jet2_kinfit);
+   else                hangles_kinfit = computeHelicityAngles(Neu_MetFitted/*LastNeu*/, lept1, jet1_kinfit, jet2_kinfit);
 
       HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
                  
