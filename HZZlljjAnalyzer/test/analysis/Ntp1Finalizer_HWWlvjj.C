@@ -304,11 +304,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   std::vector<TH1D*> vh1_nChargedJet1 = getHistoVector(nPtBins, ptBins, "nChargedJet1", 51, -0.5, 50.5);
   std::vector<TH1D*> vh1_nNeutralJet1 = getHistoVector(nPtBins, ptBins, "nNeutralJet1", 51, -0.5, 50.5);
   std::vector<TH1D*> vh1_QGLikelihoodJet1 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet1", 60, 0., 1.);
-  TH1D* h1_QGLikelihoodJet1 = new TH1D("QGLikelihoodJet1", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodJet1 = new TH1D("QGLikelihoodJet1", "", 30, 0., 1.0001);
   h1_QGLikelihoodJet1->Sumw2();
-  TH1D* h1_QGLikelihoodJet1_e = new TH1D("QGLikelihoodJet1_e", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodJet1_e = new TH1D("QGLikelihoodJet1_e", "", 30, 0., 1.0001);
   h1_QGLikelihoodJet1_e->Sumw2();
-  TH1D* h1_QGLikelihoodJet1_mu = new TH1D("QGLikelihoodJet1_mu", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodJet1_mu = new TH1D("QGLikelihoodJet1_mu", "", 30, 0., 1.0001);
   h1_QGLikelihoodJet1_mu->Sumw2();
   //@ TH1D* h1_QGLikelihoodJet1_antiBtag_SSVhighEff = new TH1D("QGLikelihoodJet1_antiBtag_SSVhighEff", "", 60, 0., 1.0001);
   // h1_QGLikelihoodJet1_antiBtag_SSVhighEff->Sumw2();
@@ -346,11 +346,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   std::vector<TH1D*> vh1_nChargedJet2 = getHistoVector(nPtBins, ptBins, "nChargedJet2", 51, -0.5, 50.5);
   std::vector<TH1D*> vh1_nNeutralJet2 = getHistoVector(nPtBins, ptBins, "nNeutralJet2", 51, -0.5, 50.5);
   std::vector<TH1D*> vh1_QGLikelihoodJet2 = getHistoVector(nPtBins, ptBins, "QGLikelihoodJet2", 60, 0., 1.);
-  TH1D* h1_QGLikelihoodJet2 = new TH1D("QGLikelihoodJet2", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodJet2 = new TH1D("QGLikelihoodJet2", "", 30, 0., 1.0001);
   h1_QGLikelihoodJet2->Sumw2();
-  TH1D* h1_QGLikelihoodJet2_e = new TH1D("QGLikelihoodJet2_e", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodJet2_e = new TH1D("QGLikelihoodJet2_e", "", 30, 0., 1.0001);
   h1_QGLikelihoodJet2_e->Sumw2();
-  TH1D* h1_QGLikelihoodJet2_mu = new TH1D("QGLikelihoodJet2_mu", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodJet2_mu = new TH1D("QGLikelihoodJet2_mu", "", 30, 0., 1.0001);
   h1_QGLikelihoodJet2_mu->Sumw2();
   //  TH1D* h1_QGLikelihoodJet2_antiBtag_SSVhighEff = new TH1D("QGLikelihoodJet2_antiBtag_SSVhighEff", "", 60, 0., 1.0001);
   // h1_QGLikelihoodJet2_antiBtag_SSVhighEff->Sumw2();
@@ -376,11 +376,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_jetProbabilityBJetTagJet2 = new TH1D("jetProbabilityBJetTagJet2", "", 50, 0., 2.5);
   h1_jetProbabilityBJetTagJet2->Sumw2();
 
-  TH1D* h1_QGLikelihoodProd = new TH1D("QGLikelihoodProd", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodProd = new TH1D("QGLikelihoodProd", "", 30, 0., 1.0001);
   h1_QGLikelihoodProd->Sumw2();
-  TH1D* h1_QGLikelihoodProd_e = new TH1D("QGLikelihoodProd_e", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodProd_e = new TH1D("QGLikelihoodProd_e", "", 30, 0., 1.0001);
   h1_QGLikelihoodProd_e->Sumw2();
-  TH1D* h1_QGLikelihoodProd_mu = new TH1D("QGLikelihoodProd_mu", "", 60, 0., 1.0001);
+  TH1D* h1_QGLikelihoodProd_mu = new TH1D("QGLikelihoodProd_mu", "", 30, 0., 1.0001);
   h1_QGLikelihoodProd_mu->Sumw2();
 
   // TH1D* h1_QGLikelihoodProd_antiBtag = new TH1D("QGLikelihoodProd_antiBtag", "", 60, 0., 1.0001);
@@ -1818,8 +1818,8 @@ if(leptType==1) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
       double bProb_kinfit=LD->getBkgdProbability();
              helicityLD_kinfit=sProb_kinfit/(sProb_kinfit+bProb_kinfit);
       h1_helicityLD_kinfit->Fill(helicityLD_kinfit, eventWeight);      
-      if(leptType_==1) h1_helicityLD_kinfit_e->Fill(helicityLD_kinfit, eventWeight);      
-      if(leptType_==0) h1_helicityLD_kinfit_mu->Fill(helicityLD_kinfit, eventWeight);      
+      if(leptType==1) h1_helicityLD_kinfit_e->Fill(helicityLD_kinfit, eventWeight);      
+      if(leptType==0) h1_helicityLD_kinfit_mu->Fill(helicityLD_kinfit, eventWeight);      
       
       //
       // QG LIKELIHOOD   ***BEGIN***
