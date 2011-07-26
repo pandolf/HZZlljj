@@ -93,6 +93,7 @@ void Ntp1Analyzer_HWWlvjj::reloadTriggerMask(int runN){
 
   // load the triggers required for M
   triggerMask.clear();
+std::cout<<requiredTriggerMuon.size()<<std::endl;
   for (std::vector< std::string >::const_iterator fIter=requiredTriggerMuon.begin();fIter!=requiredTriggerMuon.end();++fIter)
     {   
       //      std::cout << "For MM required: " << *fIter << std::endl;
@@ -100,6 +101,7 @@ void Ntp1Analyzer_HWWlvjj::reloadTriggerMask(int runN){
       for(unsigned int i=0; i<nameHLT->size(); i++)
         {
           if(nameHLT->at(i).find(pathName) != std::string::npos)
+std::cout<<pathName<<std::endl;
             {
               triggerMask.push_back( indexHLT[i] ) ;
               break;
