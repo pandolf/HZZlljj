@@ -490,11 +490,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   h1_mWW_kinfit_mu->Sumw2();
   TH1D* h1_mWW_kinfit = new TH1D("mWW_kinfit", "", 100, 150., HiggsMass_+200.);
   h1_mWW_kinfit->Sumw2();
-  TH1D* h1_mWW_kinfitCUT_e = new TH1D("mWW_kinfitCUT_e", "", 100, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfitCUT_e = new TH1D("mWW_kinfitCUT_e", "", 50, 150., HiggsMass_+200.);
   h1_mWW_kinfitCUT_e->Sumw2();
-  TH1D* h1_mWW_kinfitCUT_mu = new TH1D("mWW_kinfitCUT_mu", "", 100, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfitCUT_mu = new TH1D("mWW_kinfitCUT_mu", "", 50, 150., HiggsMass_+200.);
   h1_mWW_kinfitCUT_mu->Sumw2();
-  TH1D* h1_mWW_kinfitCUT = new TH1D("mWW_kinfitCUT", "", 100, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfitCUT = new TH1D("mWW_kinfitCUT", "", 50, 150., HiggsMass_+200.);
   h1_mWW_kinfitCUT->Sumw2();
 
 
