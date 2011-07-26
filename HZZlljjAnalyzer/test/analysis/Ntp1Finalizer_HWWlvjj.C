@@ -455,11 +455,11 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 
   TH1D* h1_helicityLD = new TH1D("helicityLD", "", 60, 0., 1.);
   h1_helicityLD->Sumw2();
-  TH1D* h1_helicityLD_kinfit = new TH1D("helicityLD_kinfit", "", 60, 0., 1.);
+  TH1D* h1_helicityLD_kinfit = new TH1D("helicityLD_kinfit", "", 30, 0., 1.);
   h1_helicityLD_kinfit->Sumw2();
-  TH1D* h1_helicityLD_kinfit_e = new TH1D("helicityLD_kinfit_e", "", 60, 0., 1.);
+  TH1D* h1_helicityLD_kinfit_e = new TH1D("helicityLD_kinfit_e", "", 30, 0., 1.);
   h1_helicityLD_kinfit_e->Sumw2();
-  TH1D* h1_helicityLD_kinfit_mu = new TH1D("helicityLD_kinfit_mu", "", 60, 0., 1.);
+  TH1D* h1_helicityLD_kinfit_mu = new TH1D("helicityLD_kinfit_mu", "", 30, 0., 1.);
   h1_helicityLD_kinfit_mu->Sumw2();
   TH1D* h1_helicityLDRight = new TH1D("helicityLDRight", "", 60, 0., 1.);
   h1_helicityLDRight->Sumw2();
