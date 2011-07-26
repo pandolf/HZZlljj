@@ -6,6 +6,9 @@ ROOTFLAG = `${ROOTSYS}/bin/root-config --cflags --libs`
 merge_and_setWeights: merge_and_setWeights.cpp
 	$(CC) -Wall -o merge_and_setWeights merge_and_setWeights.cpp $(ROOTFLAG)
 
+merge_and_setWeights_HWWlvjj: merge_and_setWeights_HWWlvjj.cpp
+	$(CC) -Wall -o merge_and_setWeights_HWWlvjj merge_and_setWeights_HWWlvjj.cpp $(ROOTFLAG)
+
 #do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o QGLikelihoodCalculator.o do2ndLevel_HZZlljj.cpp
 #	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o QGLikelihoodCalculator.o $(ROOTFLAG) -lCore -lTMVA
 
@@ -76,6 +79,9 @@ do2ndLevel_DiJet: Ntp1Analyzer.o Ntp1Analyzer_DiJet.o do2ndLevel_DiJet.cpp
 
 drawHWWlvjj: DrawBase.o fitTools.o drawHWWlvjj.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawHWWlvjj drawHWWlvjj.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+
+drawHWWlvjj_DATA: DrawBase.o fitTools.o drawHWWlvjj_DATA.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawHWWlvjj_DATA drawHWWlvjj_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 drawHZZlljj_DATA: DrawBase.o fitTools.o drawHZZlljj_DATA.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawHZZlljj_DATA drawHZZlljj_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
