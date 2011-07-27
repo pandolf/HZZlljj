@@ -438,19 +438,19 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   
   TH1D* h1_kinfit_chiSquare = new TH1D("kinfit_chiSquare", "", 60, 0., 10.);
   h1_kinfit_chiSquare->Sumw2();
-  TH1D* h1_kinfit_chiSquareProb = new TH1D("kinfit_chiSquareProb", "", 60, -0.1, 1.1);
+  TH1D* h1_kinfit_chiSquareProb = new TH1D("kinfit_chiSquareProb", "", 30, -0.1, 1.1);
   h1_kinfit_chiSquareProb->Sumw2();
-  TH1D* h1_kinfit_chiSquareProb_e = new TH1D("kinfit_chiSquareProb_e", "", 60, -0.1, 1.1);
+  TH1D* h1_kinfit_chiSquareProb_e = new TH1D("kinfit_chiSquareProb_e", "", 30, -0.1, 1.1);
   h1_kinfit_chiSquareProb_e->Sumw2();
-  TH1D* h1_kinfit_chiSquareProb_mu = new TH1D("kinfit_chiSquareProb_mu", "", 60, -0.1, 1.1);
+  TH1D* h1_kinfit_chiSquareProb_mu = new TH1D("kinfit_chiSquareProb_mu", "", 30, -0.1, 1.1);
   h1_kinfit_chiSquareProb_mu->Sumw2();
   TH1D* h1_kinfit2_chiSquare = new TH1D("kinfit2_chiSquare", "", 60, 0., 10.);
   h1_kinfit2_chiSquare->Sumw2();
-  TH1D* h1_kinfit2_chiSquareProb = new TH1D("kinfit2_chiSquareProb", "", 60, -0.1, 1.1);
+  TH1D* h1_kinfit2_chiSquareProb = new TH1D("kinfit2_chiSquareProb", "", 30, -0.1, 1.1);
   h1_kinfit2_chiSquareProb->Sumw2();
-  TH1D* h1_kinfit2_chiSquareProb_e = new TH1D("kinfit2_chiSquareProb_e", "", 60, -0.1, 1.1);
+  TH1D* h1_kinfit2_chiSquareProb_e = new TH1D("kinfit2_chiSquareProb_e", "", 30, -0.1, 1.1);
   h1_kinfit2_chiSquareProb_e->Sumw2();
-  TH1D* h1_kinfit2_chiSquareProb_mu = new TH1D("kinfit2_chiSquareProb_mu", "", 60, -0.1, 1.1);
+  TH1D* h1_kinfit2_chiSquareProb_mu = new TH1D("kinfit2_chiSquareProb_mu", "", 30, -0.1, 1.1);
   h1_kinfit2_chiSquareProb_mu->Sumw2();
 
   TH1D* h1_helicityLD = new TH1D("helicityLD", "", 60, 0., 1.);
@@ -482,19 +482,19 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_mWW_kinLept = new TH1D("mWW_kinLept", "", 100, HiggsMass_-200., HiggsMass_+200.);
   h1_mWW_kinLept->Sumw2();
 
-  TH1D* h1_mWW_nokinfit = new TH1D("mWW_nokinfit", "", 100, 200., 700.);
+  TH1D* h1_mWW_nokinfit = new TH1D("mWW_nokinfit", "", 40, 200., 700.);
   h1_mWW_nokinfit->Sumw2();
-  TH1D* h1_mWW_kinfit_e = new TH1D("mWW_kinfit_e", "", 100, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfit_e = new TH1D("mWW_kinfit_e", "", 40, 150., HiggsMass_+200.);
   h1_mWW_kinfit_e->Sumw2();
-  TH1D* h1_mWW_kinfit_mu = new TH1D("mWW_kinfit_mu", "", 100, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfit_mu = new TH1D("mWW_kinfit_mu", "", 40, 150., HiggsMass_+200.);
   h1_mWW_kinfit_mu->Sumw2();
-  TH1D* h1_mWW_kinfit = new TH1D("mWW_kinfit", "", 100, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfit = new TH1D("mWW_kinfit", "", 40, 150., HiggsMass_+200.);
   h1_mWW_kinfit->Sumw2();
-  TH1D* h1_mWW_kinfitCUT_e = new TH1D("mWW_kinfitCUT_e", "", 50, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfitCUT_e = new TH1D("mWW_kinfitCUT_e", "", 40, 150., HiggsMass_+200.);
   h1_mWW_kinfitCUT_e->Sumw2();
-  TH1D* h1_mWW_kinfitCUT_mu = new TH1D("mWW_kinfitCUT_mu", "", 50, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfitCUT_mu = new TH1D("mWW_kinfitCUT_mu", "", 40, 150., HiggsMass_+200.);
   h1_mWW_kinfitCUT_mu->Sumw2();
-  TH1D* h1_mWW_kinfitCUT = new TH1D("mWW_kinfitCUT", "", 50, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfitCUT = new TH1D("mWW_kinfitCUT", "", 40, 150., HiggsMass_+200.);
   h1_mWW_kinfitCUT->Sumw2();
 
 
@@ -1254,7 +1254,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     BothPzNeu=getBothPz(lept1, pxPFMet, pyPFMet);
     lept2.SetPxPyPzE( pxPFMet, pyPFMet, pn, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pn,2)) );
     pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
-    if( leptType==1 && ptLept<57. ) continue; //PROV TRIGGER
+    if( leptType==1 && ptLept<55. ) continue; //PROV TRIGGER
     // DATA-MC (MET)
     h1_energyMet->Fill( energyPFMet,eventWeight );
     if(leptType==0) h1_energyMet_mu->Fill( energyPFMet,eventWeight );
