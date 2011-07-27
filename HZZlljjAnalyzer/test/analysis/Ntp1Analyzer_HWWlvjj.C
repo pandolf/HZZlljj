@@ -738,7 +738,7 @@ requiredTriggerMuon.push_back("167039-999999:HLT_IsoMu20_eta2p1_v");
        thisEle.convDcot = convDcotEle[iEle];
 
        bool passed_VBTF95 = thisEle.passedVBTF95();
-       bool passed_VBTF80 = thisEle.passedVBTF80();
+       bool passed_VBTF80 = thisEle.passedTrigger80();//thisEle.passedVBTF80();
 
        if( !passed_VBTF80 && passed_VBTF95 ) looseEle=true; //Other
        if( !passed_VBTF80 ) continue; 
@@ -1095,8 +1095,8 @@ if( muon.size() >= 1 ) { Cont_MU++;
                        // Other
 float proportion = 2061760. /*109989.*/ /Cont_inclusive;
 	if( Jentry == (nentries-1) ){
-  //std::cout << std::fixed << std::setprecision(6) << "Inclusive: " << Cont_inclusive*proportion << " PV: " << Cont_PV*proportion << " MU: " << Cont_MU*proportion << " ELE: " << Cont_ELE*proportion << " VetoMU: " << Cont_VetoMU*proportion 
- // << " VetoELE: " << Cont_VetoELE*proportion << " JetsELE: " << Cont_JetsELE*proportion << " JetsMU: " << Cont_JetsMU*proportion << std::endl;
+//  std::cout << std::fixed << std::setprecision(6) << "Inclusive: " << Cont_inclusive*proportion << " PV: " << Cont_PV*proportion << " MU: " << Cont_MU*proportion << " ELE: " << Cont_ELE*proportion << " VetoMU: " << Cont_VetoMU*proportion 
+  //<< " VetoELE: " << Cont_VetoELE*proportion << " JetsELE: " << Cont_JetsELE*proportion << " JetsMU: " << Cont_JetsMU*proportion << std::endl;
 
 h1_Cont_inclusive->SetBinContent(1,Cont_inclusive*proportion);
 h1_Cont_PV->SetBinContent(1,Cont_PV*proportion);
