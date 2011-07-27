@@ -49,7 +49,7 @@ bool AnalysisElectron::electronIDVBTF80() {
     hOverE_thresh80 = 0.04;
   } else {
     sigmaIetaIeta_thresh80 = 0.03;
-    deltaPhiAtVtx_thresh80 = 0.7;
+    deltaPhiAtVtx_thresh80 = 0.03;
     deltaEtaAtVtx_thresh80 = 0.007;
     hOverE_thresh80 = 0.15;
   }
@@ -63,6 +63,37 @@ bool AnalysisElectron::electronIDVBTF80() {
   return eleID_VBTF80;
 
 }
+
+bool AnalysisElectron::separatedIDVBTF80() {
+
+  double sigmaIetaIeta_thresh80;
+  double deltaPhiAtVtx_thresh80;
+  double deltaEtaAtVtx_thresh80;
+  double hOverE_thresh80;
+
+  if( fabs(this->Eta())<1.4442 ) {
+    sigmaIetaIeta_thresh80 = 0.01;
+    deltaPhiAtVtx_thresh80 = 0.06;
+    deltaEtaAtVtx_thresh80 = 0.004;
+    hOverE_thresh80 = 0.04;
+  } else {
+    sigmaIetaIeta_thresh80 = 0.03;
+    deltaPhiAtVtx_thresh80 = 0.03;//
+    deltaEtaAtVtx_thresh80 = 0.007;
+    hOverE_thresh80 = 0.05;//
+  }
+
+  bool eleID_VBTF80 = (sigmaIetaIeta < sigmaIetaIeta_thresh80) &&
+                      (fabs(deltaPhiAtVtx) < deltaPhiAtVtx_thresh80) &&
+                      (fabs(deltaEtaAtVtx) < deltaEtaAtVtx_thresh80) &&
+                      (hOverE < hOverE_thresh80);
+
+  return eleID_VBTF80;
+
+}
+
+
+
 
 bool AnalysisElectron::electronIDVBTF95() {
 
@@ -122,6 +153,18 @@ bool AnalysisElectron::passedVBTF80() {
 
 }
 
+bool AnalysisElectron::passedTrigger80() {
+
+  bool isIsolated = this->separatedIsoRel();
+  bool electronID = this->separatedIDVBTF80();
+  bool conversionRejection = this->conversionRejectionVBTF80();
+
+  bool passed = ( isIsolated && electronID && conversionRejection );
+
+  return passed;
+
+}
+
 bool AnalysisElectron::passedVBTF95() {
 
   bool isIsolated = this->isIsolatedVBTF95();
@@ -148,3 +191,18 @@ double AnalysisElectron::combinedIsoRel() {
   return combinedIsoRel;
 
 }
+
+bool AnalysisElectron::separatedIsoRel() {
+
+  bool separedIsoRel=false;
+
+  if( fabs(this->Eta())<1.4442 ){
+   if ( dr03TkSumPt/this->Pt()<0.15 && dr03EcalRecHitSumEt/this->Pt()<0.15 && dr03HcalTowerSumEt/this->Pt()<0.15 ) separedIsoRel=true; }
+  else{
+   if ( dr03TkSumPt/this->Pt()<0.075 && dr03EcalRecHitSumEt/this->Pt()<0.075 && dr03HcalTowerSumEt/this->Pt()<0.075 ) separedIsoRel=true; }
+
+  return separedIsoRel;
+
+}
+
+

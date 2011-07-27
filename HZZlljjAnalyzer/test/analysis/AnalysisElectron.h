@@ -24,19 +24,20 @@ class AnalysisElectron : public AnalysisLepton {
 
   bool isIsolatedVBTF80();
   bool isIsolatedVBTF95();
+  bool separatedIsoRel();//
 
   bool electronIDVBTF80();
   bool electronIDVBTF95();
+  bool separatedIDVBTF80();//
 
   bool conversionRejectionVBTF80();
   bool conversionRejectionVBTF95();
 
   bool passedVBTF80();
   bool passedVBTF95();
+  bool passedTrigger80();//
 
   double combinedIsoRel();
-
-
 
 
   // public data members:
