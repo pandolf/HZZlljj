@@ -1255,6 +1255,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
     lept2.SetPxPyPzE( pxPFMet, pyPFMet, pn, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pn,2)) );
     pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
     if( leptType==1 && ptLept<55. ) continue; //PROV TRIGGER
+    if( leptType==0 && ptLept<32. ) continue; //PROV TRIGGER
     // DATA-MC (MET)
     h1_energyMet->Fill( energyPFMet,eventWeight );
     if(leptType==0) h1_energyMet_mu->Fill( energyPFMet,eventWeight );
