@@ -893,6 +893,8 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   // int nEventsPassed_kinfit_antiBtag=0;
   int nEventsPassed_nokinfit=0;
   float nEvents_presel=0;
+  float nEvents_met=0;
+  float nEvents_btag_W_pt3=0;
 
   int nEntries = tree_->GetEntries();
   std::map< int, std::map<int, std::vector<int> > > run_lumi_ev_map;
@@ -1201,9 +1203,8 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
  //bestPair = iPair;
  }
       } //for pairs
-/* //Other
-AnalysisJet thirdJet;
-//Other Btag
+  //Other btag
+  AnalysisJet thirdJet;
   if(jetPairs_selected[0].first.Pt() != jetPairs_selected[bestPair].first.Pt() ) thirdJet=jetPairs_selected[0].first;
   else if(jetPairs_selected[0].second.Pt() != jetPairs_selected[bestPair].second.Pt() ) thirdJet=jetPairs_selected[0].second;
   else if(jetPairs_selected[1].first.Pt() != jetPairs_selected[bestPair].first.Pt() ) thirdJet=jetPairs_selected[1].first;
@@ -1215,7 +1216,7 @@ AnalysisJet thirdJet;
     if( btag[0]>btag[2] && btag[1]>btag[2] ) { if( btag[0]>3.3 || btag[1]>3.3 ) hibtagOthers=true; }
     if( btag[0]>btag[1] && btag[2]>btag[1] ) { if( btag[0]>3.3 || btag[2]>3.3 ) hibtagOthers=true;}
     if( btag[1]>btag[0] && btag[2]>btag[0] ) { if( btag[1]>3.3 || btag[2]>3.3 ) hibtagOthers=true;} 
-*/
+
       // now look for leading jet who is not coming from a W from H
  if( jetPairs_selected.size() > 1 ){
    	 float PtJet=0.;
@@ -1280,6 +1281,12 @@ AnalysisJet thirdJet;
     if(leptType==1) h1_energyMet_e->Fill( energyPFMet,eventWeight );
 
     if( energyPFMet < 25./* Othermine 50.*/ ) continue;
+   
+    //Other
+    //if( leptType==0 && (fabs(lept1.Eta()) > 2.1 || lept1.Pt()<20 ) ) continue;
+    //if( leptType==1 && lept1.Pt()<30  ) continue;
+    nEvents_met+=eventWeight;
+
 /*
      h1_FindPz_EtaR->Fill(lept1.Eta()-neuR.Eta(),eventWeight);     h1_FindPz_EtaW->Fill(lept1.Eta()-neuW.Eta(),eventWeight);
      h1_FindPz_EtaWnR->Fill((neuR+lept1).Eta()-neuR.Eta(),eventWeight);  h1_FindPz_EtaWnW->Fill((neuW+lept1).Eta()-neuW.Eta(),eventWeight); 
@@ -1522,8 +1529,7 @@ if(leptType==1){
 	      if( diLepton.M() /*Other sqrt(2*lept1.Pt()*lept2.Pt()*(1-cos(delta_phi(lept1.Phi(),lept2.Phi())))) */ > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
 		nEvent_mtW++;
 		if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
-		  nEvent_DrLeptLept++;
-                  //  if( nPairs < 4 ){ // Veto su altri Jet //Other
+		  nEvent_DrLeptLept++;         
               // if( (delta_phi(diLepton.Phi(),bestWDiJet      h1_ResomH_heli->Fill( (isMC) ? ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );      .Phi()) >1.) && (delta_phi(lept1.Phi(),lept2.Phi()) > 1.) && (delta_phi(jet1.Phi(),jet2.Phi()) >1.) ){
 		  // event has passed kinematic selection
 		  
@@ -1764,9 +1770,12 @@ if(leptType==1){
         }
         // TAGLI Others (No Mte, btag, veto 4jet)
 /*
-
-        if( leptType==0 && (fabs(lept1.Eta()) > 2.1 || lept1.Pt()<20 ) ) continue;
-        if( leptType==1 && lept1.Pt()<30  ) continue;
+        if( thirdJet.Pt()>jet1.Pt() ){ std::cout<<thirdJet<<" "<<jet1<<" "<<jet2<<std::endl; if( (lept1+thirdJet).Pt()<100 || (lept1+jet1).Pt()<60 || (lept1+jet2).Pt()<30 ) continue; }
+        else if( thirdJet.Pt()>jet2.Pt() && thirdJet.Pt()<jet1.Pt() ){ std::cout<<jet1<<" "<<thirdJet<<" "<<jet2<<std::endl; if( (lept1+jet1).Pt()<100 || (lept1+thirdJet).Pt()<60 || (lept1+jet2).Pt()<30 ) continue; }
+        else{ std::cout<<jet1<<" "<<jet2<<" "<<thirdJet<<std::endl; if( (lept1+jet1).Pt()<100 || (lept1+jet2).Pt()<60 || (lept1+thirdJet).Pt()<30 ) continue; }
+ */       nEvents_btag_W_pt3+=eventWeight;
+/*
+        if( nPairs < 4 ) continue; //vet 4 jet
 
         if( delta_phi(lept1.Phi(),lept2.Phi())>1.5 ) continue;
         if( delta_phi(jet1_kinfit.Phi(),jet2_kinfit.Phi())>1.25 ) continue; 
@@ -1812,8 +1821,8 @@ if( bestWDiJet.M()>75. && bestWDiJet.M()<105. ) {
 }
 
 h1_mWW_kinfit->Fill( WW_kinfit.M(), eventWeight );
-if(leptType==0) h1_mWW_kinfit_e->Fill( WW_kinfit.M(), eventWeight );
-if(leptType==1) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
+if(leptType==1) h1_mWW_kinfit_e->Fill( WW_kinfit.M(), eventWeight );
+if(leptType==0) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
 
       //GET HELICITY ANGLES:
  HelicityLikelihoodDiscriminant::HelicityAngles hangles;
@@ -1940,8 +1949,8 @@ if(leptType==1) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
       if( helicityLD_kinfit < helicityLD_thresh_ ) continue;
 
       h1_mWW_kinfitCUT->Fill( WW_kinfit.M(), eventWeight );
-      if(leptType==0) h1_mWW_kinfitCUT_e->Fill( WW_kinfit.M(), eventWeight );
-      if(leptType==1) h1_mWW_kinfitCUT_mu->Fill( WW_kinfit.M(), eventWeight );
+      if(leptType==1) h1_mWW_kinfitCUT_e->Fill( WW_kinfit.M(), eventWeight );
+      if(leptType==0) h1_mWW_kinfitCUT_mu->Fill( WW_kinfit.M(), eventWeight );
 
       // *****************************************
       // *****  PASSED ANALYSIS SELECTION ********
@@ -2059,7 +2068,7 @@ if(leptType==1) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
         h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
         h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
 	
-	}}}}} }/*btag*/  //} /*if you use VETO on second (fourth for Others) jet*/
+	}}}}} }/*btag*/  
 //}//Other DPhi WW
       } //if passed selection
 
@@ -2099,7 +2108,7 @@ if(leptType==1) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
 	   <<nEvent_EtaLept<<" Ev(mtW)="<<nEvent_mtW<<" Ev(DrLept)="<<nEvent_DrLeptLept<<std::endl;
 
   std::cout << std::endl << std::endl;
-  std::cout << "----> PASSED preSELECTION: " << 1000.*nEvents_presel<<" ev/fb-1"<<std::endl;
+  std::cout << "----> PASSED preSELECTION: " << 1000.*nEvents_presel<<"  PASSED 2nd step: "<<1000*nEvents_met<<"  PASSED 3rd step: "<<1000*nEvents_btag_W_pt3<<" ev/fb-1"<<std::endl;
 
   std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1(" << nEventsPassed_kinfit << " events)"<< std::endl;
   std::cout << "----> PASSED SELECTION (no kinfit): " << 1000.*nEventsPassed_fb_nokinfit << " ev/fb-1 (" << nEventsPassed_nokinfit << " events)" << std::endl;
