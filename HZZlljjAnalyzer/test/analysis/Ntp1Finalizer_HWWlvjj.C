@@ -82,6 +82,7 @@ Ntp1Finalizer_HWWlvjj::Ntp1Finalizer_HWWlvjj( const std::string& dataset, const 
 
   leptType_ = leptType;
   HiggsMass_ = HiggsMass;
+  std::string dataset_=dataset;
 
   setSelectionType(selectionType);
 
@@ -938,9 +939,17 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       if( leptType_=="ELE" && leptType==0 ) continue;
       if( leptType_=="MU" && leptType==1 ) continue;
     }
-
+    //if (run<166968) continue; //to check only the last run
    bool isMC = (run<5);
-
+   // BKG only for muon or ele
+   std::string QCD_MuEnriched("QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6");
+   std::string QCD_EMEnriched("QCD_EMEnriched_TuneZ2_7TeV-pythia6_3");
+   std::string QCD_BCtoE("QCD_BCtoE_TuneZ2_7TeV-pythia6");
+   int Muenr=dataset_.compare(QCD_MuEnriched);
+   int EMenr=dataset_.compare(QCD_EMEnriched);
+   int BCtoE=dataset_.compare(QCD_BCtoE);
+   if( leptType==0 && (BCtoE==0 || EMenr==0 ) ) continue;
+   if( leptType==1 && Muenr==0 ) continue;
     if( !isMC ) { 
 
       // remove duplicate events:
@@ -1192,7 +1201,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
  //bestPair = iPair;
  }
       } //for pairs
-/*
+/* //Other
 AnalysisJet thirdJet;
 //Other Btag
   if(jetPairs_selected[0].first.Pt() != jetPairs_selected[bestPair].first.Pt() ) thirdJet=jetPairs_selected[0].first;
@@ -1263,7 +1272,7 @@ AnalysisJet thirdJet;
     BothPzNeu=getBothPz(lept1, pxPFMet, pyPFMet);
     lept2.SetPxPyPzE( pxPFMet, pyPFMet, pn, sqrt(pow( pxPFMet,2)+pow(pyPFMet,2)+pow(pn,2)) );
     pnMH=getPzMH(lept1, pxPFMet, pyPFMet, jet1, jet2);
-    if( leptType==1 && ptLept<55. ) continue; //PROV TRIGGER
+    if( leptType==1 && ptLept<65. ) continue; //PROV TRIGGER
     if( leptType==0 && ptLept<32. ) continue; //PROV TRIGGER
     // DATA-MC (MET)
     h1_energyMet->Fill( energyPFMet,eventWeight );
