@@ -1091,10 +1091,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 
       if( !ripet_Presel ){ nEvent_Presel++; ripet_Presel = true;}
 
-      if( jet1.Pt/*Other E*/()>ptJet1_thresh_ ){
+      if( jet1.Pt()>ptJet1_thresh_ ){
        if( !ripet_LeadJetPt ){ nEvent_LeadJetPt++; ripet_LeadJetPt = true;}
       
-       if( jet2.Pt/*Other E*/()> ptJet2_thresh_ ){
+       if( jet2.Pt()> ptJet2_thresh_ ){
 	 if( !ripet_SubleadJetPt ){  nEvent_SubleadJetPt++; ripet_SubleadJetPt = true;}
 	
 	 if(  fabs(jet1.Eta())<etaJet1_thresh_ && fabs(jet2.Eta())<etaJet1_thresh_  ){
@@ -1176,28 +1176,37 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       float Wmass = 80.399;
       float bestMass = 0.;
       int bestPair=-1;
-      //float bestEta=10.;//Other
+ //     float bestEta=10.;//Other
 
       for( unsigned iPair=0; iPair<jetPairs_selected.size(); ++iPair ) {
        TLorentzVector dijet = jetPairs_selected[iPair].first + jetPairs_selected[iPair].second;
         float invMass = dijet.M();
+
        //mine
         if( bestPair==-1 || ( fabs(invMass-Wmass) < fabs(bestMass-Wmass) ) ) {
           bestMass = invMass;
           bestPair = iPair;
  //Other
-// if( bestPair==-1 || ( fabs(jetPairs_selected[iPair].first.Eta()-jetPairs_selected[iPair].second.Eta()) < bestEta ) ){
-// bestEta = fabs(jetPairs_selected[iPair].first.Eta()-jetPairs_selected[iPair].second.Eta());        
-// bestPair = iPair;
+ //if( bestPair==-1 || ( fabs(jetPairs_selected[iPair].first.Eta()-jetPairs_selected[iPair].second.Eta()) < bestEta ) ){
+ //bestEta = fabs(jetPairs_selected[iPair].first.Eta()-jetPairs_selected[iPair].second.Eta());        
+ //bestPair = iPair;
  }
       } //for pairs
-
+/*
+AnalysisJet thirdJet;
 //Other Btag
+  if(jetPairs_selected[0].first.Pt() != jetPairs_selected[bestPair].first.Pt() ) thirdJet=jetPairs_selected[0].first;
+  else if(jetPairs_selected[0].second.Pt() != jetPairs_selected[bestPair].second.Pt() ) thirdJet=jetPairs_selected[0].second;
+  else if(jetPairs_selected[1].first.Pt() != jetPairs_selected[bestPair].first.Pt() ) thirdJet=jetPairs_selected[1].first;
+  else if(jetPairs_selected[1].second.Pt() != jetPairs_selected[bestPair].second.Pt() ) thirdJet=jetPairs_selected[1].second;
+  else thirdJet=jetPairs_selected[0].first;
     bool hibtagOthers=false;
-     if( (trackCountingHighEffBJetTagJet1[bestPair] > 3.3 || trackCountingHighEffBJetTagJet2[bestPair] > 3.3) ){
-        hibtagOthers=true;
-    }
+    double btag[3]={trackCountingHighEffBJetTagJet1[bestPair],trackCountingHighEffBJetTagJet2[bestPair],thirdJet.trackCountingHighEffBJetTag};
 
+    if( btag[0]>btag[2] && btag[1]>btag[2] ) { if( btag[0]>3.3 || btag[1]>3.3 ) hibtagOthers=true; }
+    if( btag[0]>btag[1] && btag[2]>btag[1] ) { if( btag[0]>3.3 || btag[2]>3.3 ) hibtagOthers=true;}
+    if( btag[1]>btag[0] && btag[2]>btag[0] ) { if( btag[1]>3.3 || btag[2]>3.3 ) hibtagOthers=true;} 
+*/
       // now look for leading jet who is not coming from a W from H
  if( jetPairs_selected.size() > 1 ){
    	 float PtJet=0.;
@@ -1492,7 +1501,7 @@ if(leptType==1){
               h1_Mdilept->Fill((lept1+lept2).M(),eventWeight);
               }}}}}}}
 
-   if( !hibtag /* !hibtagOthers*/ ){ nEvent_btag++;
+   if( !hibtag/*  !hibtagOthers*/ ){ nEvent_btag++;
       if( diLepton.Pt() > ptWll_thresh_ ){
 	nEvent_DileptPt++;
 	if(  lept1.Pt() > ptLept1_thresh_ ){
@@ -1505,7 +1514,7 @@ if(leptType==1){
 		nEvent_mtW++;
 		if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
 		  nEvent_DrLeptLept++;
-                    //if( nPairs < 4 ){ // Veto su altri Jet //Other
+                  //  if( nPairs < 4 ){ // Veto su altri Jet //Other
               // if( (delta_phi(diLepton.Phi(),bestWDiJet      h1_ResomH_heli->Fill( (isMC) ? ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );      .Phi()) >1.) && (delta_phi(lept1.Phi(),lept2.Phi()) > 1.) && (delta_phi(jet1.Phi(),jet2.Phi()) >1.) ){
 		  // event has passed kinematic selection
 		  
@@ -2041,7 +2050,7 @@ if(leptType==1) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
         h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
         h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
 	
-	}}}}} }/*btag*/  //} /*if you use (veto on second (fourth for Others) jet*/
+	}}}}} }/*btag*/  //} /*if you use VETO on second (fourth for Others) jet*/
 //}//Other DPhi WW
       } //if passed selection
 
