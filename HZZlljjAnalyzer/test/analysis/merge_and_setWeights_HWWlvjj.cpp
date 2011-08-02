@@ -403,6 +403,12 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 0.341;//##
   } else if( dataset=="WW500" ) {//##
     xSection = 0.13372;//##
+  } else if( dataset=="SMHiggsToZZTo2L2Q_M-250_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1" ) {//##
+    xSection = 0.668653;//##
+  } else if( dataset=="SMHiggsToZZTo2L2Q_M-350_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1" ) {//##
+    xSection = 0.44895;//##
+  } else if( dataset=="SMHiggsToZZTo2L2Q_M-450_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1" ) {//##
+    xSection = 0.288;//##
   } else if( dataset=="GluGlu170" ) {//##
     xSection = 2.148;//## Other
   } else if( dataset=="TT_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3" ) {//## t tbar
@@ -429,6 +435,8 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 3457./3.;//##
   } else if( dataset=="DYToMuMu_M-20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. MUMU >20
     xSection = 4819.6/3.;//##
+  } else if( dataset=="QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6" ) {//## QCD_MUEnriched Pt20
+    xSection =  296600000.*0.0002855 ;//##
   } else if( dataset=="QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6_3" ) {//## QCD_EMEnriched Pt20to30
     xSection = 236000000. * 0.0104;//##
   } else if( dataset=="QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia6_3" ) {//## QCD_EMEnriched Pt30to80
