@@ -1187,7 +1187,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       float Wmass = 80.399;
       float bestMass = 0.;
       int bestPair=-1;
- //     float bestEta=10.;//Other
+      //float bestEta=10.;//Other
 
       for( unsigned iPair=0; iPair<jetPairs_selected.size(); ++iPair ) {
        TLorentzVector dijet = jetPairs_selected[iPair].first + jetPairs_selected[iPair].second;
@@ -1205,17 +1205,21 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
       } //for pairs
   //Other btag
   AnalysisJet thirdJet;
-  if(jetPairs_selected[0].first.Pt() != jetPairs_selected[bestPair].first.Pt() ) thirdJet=jetPairs_selected[0].first;
-  else if(jetPairs_selected[0].second.Pt() != jetPairs_selected[bestPair].second.Pt() ) thirdJet=jetPairs_selected[0].second;
-  else if(jetPairs_selected[1].first.Pt() != jetPairs_selected[bestPair].first.Pt() ) thirdJet=jetPairs_selected[1].first;
-  else if(jetPairs_selected[1].second.Pt() != jetPairs_selected[bestPair].second.Pt() ) thirdJet=jetPairs_selected[1].second;
-  else thirdJet=jetPairs_selected[0].first;
+if( jetPairs_selected.size()>1 ){
+  double ptProof=0.;
+  for(int i=0; i<jetPairs_selected.size();i++){
+   if( jetPairs_selected[i].first.Pt() > ptProof && i != bestPair ){ ptProof=jetPairs_selected[i].first.Pt(); thirdJet=jetPairs_selected[i].first.Pt(); } 
+  }
+}
     bool hibtagOthers=false;
-    double btag[3]={trackCountingHighEffBJetTagJet1[bestPair],trackCountingHighEffBJetTagJet2[bestPair],thirdJet.trackCountingHighEffBJetTag};
+    double btag[3];
+    if( jetPairs_selected.size()>1 ) { btag[0]=trackCountingHighEffBJetTagJet1[bestPair]; btag[1]=trackCountingHighEffBJetTagJet2[bestPair]; btag[2]=thirdJet.trackCountingHighEffBJetTag;}
+    if( jetPairs_selected.size()<=1 ){ btag[0]=trackCountingHighEffBJetTagJet1[bestPair]; btag[1]=trackCountingHighEffBJetTagJet2[bestPair]; btag[2]=0.;}
+  
+    if( btag[0]>btag[2] && btag[0]>btag[1] ) { if( btag[0]>3.3 && ( btag[1]>3.3 || btag[2]>3.3 ) ) hibtagOthers=true; }
+    if( btag[1]>btag[0] && btag[1]>btag[2] ) { if( btag[1]>3.3 && ( btag[0]>3.3 || btag[2]>3.3 ) ) hibtagOthers=true;}
+    if( btag[2]>btag[0] && btag[2]>btag[1] ) { if( btag[2]>3.3 && ( btag[1]>3.3 || btag[0]>3.3 ) ) hibtagOthers=true;} 
 
-    if( btag[0]>btag[2] && btag[1]>btag[2] ) { if( btag[0]>3.3 || btag[1]>3.3 ) hibtagOthers=true; }
-    if( btag[0]>btag[1] && btag[2]>btag[1] ) { if( btag[0]>3.3 || btag[2]>3.3 ) hibtagOthers=true;}
-    if( btag[1]>btag[0] && btag[2]>btag[0] ) { if( btag[1]>3.3 || btag[2]>3.3 ) hibtagOthers=true;} 
 
       // now look for leading jet who is not coming from a W from H
  if( jetPairs_selected.size() > 1 ){
@@ -1526,12 +1530,12 @@ if(leptType==1){
 	    nEvent_SubleadLeptPt++;
 	    if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
 	      nEvent_EtaLept++;
-	      if( diLepton.M() /*Other sqrt(2*lept1.Pt()*lept2.Pt()*(1-cos(delta_phi(lept1.Phi(),lept2.Phi())))) */ > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
+	      if( diLepton.M() /*Other sqrt(2*lept1.Pt()*lept2.Pt()*(1-cos(delta_phi(lept1.Phi(),lept2.Phi()))))*/ > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
 		nEvent_mtW++;
 		if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
 		  nEvent_DrLeptLept++;         
-              // if( (delta_phi(diLepton.Phi(),bestWDiJet      h1_ResomH_heli->Fill( (isMC) ? ((lept1+NeuRW.first+jet1+jet2).M()-HiggsMC.M())/HiggsMC.M() : 0 );      .Phi()) >1.) && (delta_phi(lept1.Phi(),lept2.Phi()) > 1.) && (delta_phi(jet1.Phi(),jet2.Phi()) >1.) ){
-		  // event has passed kinematic selection
+        
+          	  // event has passed kinematic selection
 		  
 		  //  M(Higgs) prima.
                   h1_mWW_GetPz->Fill( (bestWDiJet+ diLepton).M() ,eventWeight);
@@ -1769,23 +1773,45 @@ if(leptType==1){
           }
         }
         // TAGLI Others (No Mte, btag, veto 4jet)
-/*
-        if( thirdJet.Pt()>jet1.Pt() ){ std::cout<<thirdJet<<" "<<jet1<<" "<<jet2<<std::endl; if( (lept1+thirdJet).Pt()<100 || (lept1+jet1).Pt()<60 || (lept1+jet2).Pt()<30 ) continue; }
-        else if( thirdJet.Pt()>jet2.Pt() && thirdJet.Pt()<jet1.Pt() ){ std::cout<<jet1<<" "<<thirdJet<<" "<<jet2<<std::endl; if( (lept1+jet1).Pt()<100 || (lept1+thirdJet).Pt()<60 || (lept1+jet2).Pt()<30 ) continue; }
-        else{ std::cout<<jet1<<" "<<jet2<<" "<<thirdJet<<std::endl; if( (lept1+jet1).Pt()<100 || (lept1+jet2).Pt()<60 || (lept1+thirdJet).Pt()<30 ) continue; }
- */       nEvents_btag_W_pt3+=eventWeight;
-/*
-        if( nPairs < 4 ) continue; //vet 4 jet
+
+/*	TLorentzVector W1=jet1+jet2, W2=jet1+thirdJet, W3=thirdJet+jet2;
+     if(thirdJet.Pt()>0.){
+        if( W1.Pt()>W2.Pt() && W1.Pt()>W3.Pt() ){
+           if( W2.Pt()>W3.Pt() ){ if( (W1+lept1).Pt()<100. || (W2+lept1).Pt()<60. || (W3+lept1).Pt()<30. ) continue; }  
+           else                 { if( (W1+lept1).Pt()<100. || (W3+lept1).Pt()<60. || (W2+lept1).Pt()<30. ) continue; }
+        }
+        else if( W2.Pt()>W1.Pt() && W2.Pt()>W3.Pt() ){
+           if( W1.Pt()>W3.Pt() ){ if( (W2+lept1).Pt()<100. || (W1+lept1).Pt()<60. || (W3+lept1).Pt()<30. ) continue; }
+           else                 { if( (W2+lept1).Pt()<100. || (W3+lept1).Pt()<60. || (W1+lept1).Pt()<30. ) continue; }
+        }
+        else if( W3.Pt()>W2.Pt() && W3.Pt()>W1.Pt() ){ 
+           if( W1.Pt()>W2.Pt() ){ if( (W3+lept1).Pt()<100. || (W1+lept1).Pt()<60. || (W2+lept1).Pt()<30. ) continue; }
+           else                 { if( (W3+lept1).Pt()<100. || (W1+lept1).Pt()<60. || (W2+lept1).Pt()<30. ) continue; }
+        }
+    }
+    else{ if( (jet1+lept1).Pt()<60. || (jet2+lept1).Pt()<30. ) continue;}
+*/
+ /*     if(thirdJet.Pt()>1.){
+        if( thirdJet.Pt()>jet1.Pt() ){ if( (lept1+thirdJet).Pt()<100 || (lept1+jet1).Pt()<60 || (lept1+jet2).Pt()<30 ) continue; }
+        else if( thirdJet.Pt()>jet2.Pt() && thirdJet.Pt()<jet1.Pt() ){ if( (lept1+jet1).Pt()<100 || (lept1+thirdJet).Pt()<60 || (lept1+jet2).Pt()<30 ) continue; }
+        else{ if( (lept1+jet1).Pt()<100 || (lept1+jet2).Pt()<60 || (lept1+thirdJet).Pt()<30 ) continue; }
+      }
+      else{
+        if( (lept1+jet1_kinfit).Pt()<60. || (lept1+jet2_kinfit).Pt()<30. ) continue;
+        //if( (jet1_kinfit+jet2_kinfit+lept1).Pt()<100. ) continue;
+      }
+        nEvents_btag_W_pt3+=eventWeight;
+        if( nPairs > 4 ) continue; //vet 4 jet
 
         if( delta_phi(lept1.Phi(),lept2.Phi())>1.5 ) continue;
         if( delta_phi(jet1_kinfit.Phi(),jet2_kinfit.Phi())>1.25 ) continue; 
         if( fabs(jet1_kinfit.Eta()-jet2_kinfit.Eta())>1.5 ) continue;
 
         if( delta_phi(lept1.Phi(),(jet1_kinfit+jet2_kinfit).Phi())>3.15 ) continue;
-        if( (jet1_kinfit+jet2_kinfit+lept1).Pt()<100. ) continue;
+        //if( (jet1_kinfit+jet2_kinfit+lept1).Pt()<100. ) continue;
      
         diLepton =lept1+lept2;
-  */      
+   */     
         float ptWreso_before = (isMC) ? ( bestWDiJet.Pt()-matchedW.Pt() )/matchedW.Pt() : 0.;
         float ptWreso_after  = (isMC) ? ( Wjj_kinfit.Pt()-matchedW.Pt() )/matchedW.Pt() : 0.;
         h1_ptWreso_beforeKin->Fill( ptWreso_before, eventWeight);
@@ -2069,7 +2095,6 @@ if(leptType==0) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
         h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
 	
 	}}}}} }/*btag*/  
-//}//Other DPhi WW
       } //if passed selection
 
     } //if selected jet pairs
