@@ -197,12 +197,11 @@ bool AnalysisElectron::separatedIsoRel() {
   bool separedIsoRel=false;
 
   if( fabs(this->Eta())<1.4442 ){
-   if ( dr03TkSumPt/this->Pt()<0.15 && dr03EcalRecHitSumEt/this->Pt()<0.15 && dr03HcalTowerSumEt/this->Pt()<0.15 ) separedIsoRel=true; }
+   if ( dr03TkSumPt/this->Pt()<0.09 && dr03EcalRecHitSumEt/this->Pt()<0.07 && dr03HcalTowerSumEt/this->Pt()<0.10 ) separedIsoRel=true; }
   else{
-   if ( dr03TkSumPt/this->Pt()<0.075 && dr03EcalRecHitSumEt/this->Pt()<0.075 && dr03HcalTowerSumEt/this->Pt()<0.075 ) separedIsoRel=true; }
+   if ( dr03TkSumPt/this->Pt()<0.04 && dr03EcalRecHitSumEt/this->Pt()<0.05 && dr03HcalTowerSumEt/this->Pt()<0.025 ) separedIsoRel=true; }
 
   return separedIsoRel;
 
 }
-
 
