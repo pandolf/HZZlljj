@@ -113,10 +113,11 @@ void Ntp1Analyzer_HWWlvjj::reloadTriggerMask(int runN){
 bool Ntp1Analyzer_HWWlvjj::hasPassedHLT(int channel) {
   Utils anaUtils;
   if( channel==0 ){
-    return anaUtils.getTriggersOR(m_requiredTriggersElectron, firedTrg); }
+    bool required0 = anaUtils.getTriggersOR(m_requiredTriggersElectron, firedTrg); 
+    return required0 ;}
   else if(channel==1) {
-    bool required = anaUtils.getTriggersOR(m_requiredTriggersMuon, firedTrg);
-    return (required ); }
+    bool required1 = anaUtils.getTriggersOR(m_requiredTriggersMuon, firedTrg);
+    return required1 ; }
     return true;
 }
 
