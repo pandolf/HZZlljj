@@ -403,12 +403,14 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 0.341;//##
   } else if( dataset=="WW500" ) {//##
     xSection = 0.13372;//##
-  } else if( dataset=="SMHiggsToZZTo2L2Q_M-250_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1" ) {//##
+  } else if( dataset=="GluGluToHToWWToLNuQQ_M-250_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1" ) {//##
     xSection = 0.668653;//##
-  } else if( dataset=="SMHiggsToZZTo2L2Q_M-350_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1" ) {//##
+  } else if( dataset=="GluGluToHToWWToLNuQQ_M-350_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1" ) {//##
     xSection = 0.44895;//##
-  } else if( dataset=="SMHiggsToZZTo2L2Q_M-450_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1" ) {//##
+  } else if( dataset=="GluGluToHToWWToLNuQQ_M-450_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1" ) {//##
     xSection = 0.288;//##
+  } else if( dataset=="GluGluToHToWWToLNuQQ_M-550_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1" ) {//##
+    xSection = 0.07673;//##
   } else if( dataset=="GluGlu170" ) {//##
     xSection = 2.148;//## Other
   } else if( dataset=="TT_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3" ) {//## t tbar
