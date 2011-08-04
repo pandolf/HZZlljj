@@ -22,9 +22,9 @@ int main( int argc, char* argv[]) {
   }
 
 
-  na->AddRequiredTrigger( "HLT_DoubleMu7" );
-  na->AddRequiredTrigger( "HLT_Mu13_Mu8" );
-  na->AddRequiredTrigger( "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL" );
+ // na->AddRequiredTrigger( "HLT_DoubleMu7" );
+ // na->AddRequiredTrigger( "HLT_Mu13_Mu8" );
+ // na->AddRequiredTrigger( "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL" );
 
 
   if( argc==2 ) {
