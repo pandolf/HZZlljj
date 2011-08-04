@@ -1264,14 +1264,14 @@ public :
    virtual void SetRequiredTriggers( const std::vector<std::string>& reqTrigz ) { requiredTriggers_ = reqTrigz; };
    virtual void AddRequiredTrigger( const std::string& trigger ) { requiredTriggers_.push_back(trigger); };
    virtual void AddRequiredTriggerNOT( const std::string& trigger ) { notTriggers_.push_back(trigger); };
-   virtual bool PassedHLT( const std::string& HLTName="" );
+   virtual bool PassedHLT( int iEntry, const std::string& HLTName="" );
 
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     LoadInput();
    virtual void     LoadInputFromFile( const std::string& fileName );
-   virtual void     LoadTrigger( int iEntry, TFile* condFile=0 );
+   virtual void     LoadTrigger( int iEntry, bool verbose=true, TFile* condFile=0 );
    virtual void     CreateOutputFile();
    virtual void     Init(TTree *tree);
    virtual void     Loop()=0;
