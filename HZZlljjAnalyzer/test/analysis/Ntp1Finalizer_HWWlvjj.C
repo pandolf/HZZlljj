@@ -643,10 +643,10 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_Mdijet_e = new TH1D("Mdijet_e", "", 20, 60., 100.);
 
   // To try
-  TH1D* h1_Studio1 = new TH1D("Studio1", "", 50, -2, 2.);
-  TH1D* h1_Studio2 = new TH1D("Studio2", "", 50, -2, 2.);
-  TH1D* h1_Studio3 = new TH1D("Studio3", "", 50, -2, 2.);
-  TH1D* h1_Studio4 = new TH1D("Studio4", "", 50, -2, 2.);
+  TH1D* h1_Studio1 = new TH1D("Studio1", "", 50, -2., 2.);
+  TH1D* h1_Studio2 = new TH1D("Studio2", "", 50, -2., 2.);
+  TH1D* h1_Studio3 = new TH1D("Studio3", "", 50, -2., 2.);
+  TH1D* h1_Studio4 = new TH1D("Studio4", "", 50, -2., 2.);
 
 //Double_t ptBins[16];
 //fitTools::getBins_int( 16, ptBins, 20., 500.);
@@ -1521,7 +1521,7 @@ if(leptType==1){
               h1_Mdilept->Fill((lept1+lept2).M(),eventWeight);
               }}}}}}}
 
-   if( !hibtag/*  !hibtagOthers*/ ){ nEvent_btag++;
+   if( !hibtag /*  !hibtagOthers*/ ){ nEvent_btag++;
       if( diLepton.Pt() > ptWll_thresh_ ){
 	nEvent_DileptPt++;
 	if(  lept1.Pt() > ptLept1_thresh_ ){
@@ -1973,6 +1973,7 @@ if(leptType==0) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
 
       if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
       if( helicityLD_kinfit < helicityLD_thresh_ ) continue;
+nEvents_btag_W_pt3+=eventWeight; //@@@
 
       h1_mWW_kinfitCUT->Fill( WW_kinfit.M(), eventWeight );
       if(leptType==1) h1_mWW_kinfitCUT_e->Fill( WW_kinfit.M(), eventWeight );
@@ -2534,7 +2535,7 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 999.;
     ptWll_thresh_ = 0.;
     ptWjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.74;
+    helicityLD_thresh_ = 0.62;
     QGLikelihoodProd_thresh_ = 0.2;
     mWW_threshLo_ = HiggsMass_-((HiggsMass_*10.)/100.);
     mWW_threshHi_ = HiggsMass_+((HiggsMass_*12.)/100.);
