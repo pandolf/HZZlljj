@@ -40,6 +40,7 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Bool_t passed_HLT_TripleMu5_;
 
    Bool_t passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_;
+   Bool_t passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_;
 
 
    int leptType_; //0: muon; 1: electron
