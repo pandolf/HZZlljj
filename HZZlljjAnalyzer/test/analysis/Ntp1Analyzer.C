@@ -138,7 +138,7 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
 
 
 
-void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
+void Ntp1Analyzer::LoadTrigger( int iEntry, bool verbose, TFile* condFile ) {
 
   
   TTree* treeCond = (condFile==0) ? 0 : (TTree*)(condFile->Get("Conditions"));
@@ -172,7 +172,7 @@ void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
                 break;
               }
           }
-          if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+          if( !foundThisTrigger && verbose ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
       }
     index_requiredTriggers_ = triggerMask_required;
 
@@ -195,7 +195,7 @@ void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
                 break;
               }
           }
-          if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+          if( !foundThisTrigger && verbose ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
       }
     index_notTriggers_ = triggerMask_NOT;
 
@@ -229,21 +229,21 @@ void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
                 break;
               }
           }
-          if( !foundThisTrigger ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+          if( !foundThisTrigger && verbose ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
       }
     index_requiredTriggers_ = triggerMask;
 
   }
 
 
-  if( requiredTriggers_.size()==0 && notTriggers_.size()==0 )
+  if( requiredTriggers_.size()==0 && notTriggers_.size()==0 && verbose )
     std::cout << "-> No trigger selection required." << std::endl;
 
   for (int i=0;i<index_requiredTriggers_.size();++i)
-    std::cout << "[ReloadTriggerMask]::Requiring bit " << index_requiredTriggers_[i] << " " << foundTriggers[i] << std::endl;
+    if( verbose ) std::cout << "[ReloadTriggerMask]::Requiring bit " << index_requiredTriggers_[i] << " " << foundTriggers[i] << std::endl;
 
   for (int i=0;i<index_notTriggers_.size();++i)
-    std::cout << "[ReloadTriggerMask]::Vetoing bit " << index_notTriggers_[i] << " " << foundTriggersNOT[i] << std::endl;
+    if( verbose ) std::cout << "[ReloadTriggerMask]::Vetoing bit " << index_notTriggers_[i] << " " << foundTriggersNOT[i] << std::endl;
 
 
 } // LoadTrigger
@@ -251,10 +251,23 @@ void Ntp1Analyzer::LoadTrigger( int iEntry, TFile* condFile ) {
 
 
 
-bool Ntp1Analyzer::PassedHLT( const std::string& HLTName ) { //default is OR of all required triggers (HLTName=="")
+bool Ntp1Analyzer::PassedHLT( int iEntry, const std::string& HLTName ) { //default is OR of all required triggers (HLTName=="")
 
 
-  if ( index_requiredTriggers_.size()==0 && index_notTriggers_.size()==0 ) return true;
+  if ( index_requiredTriggers_.size()==0 && index_notTriggers_.size()==0 && HLTName=="" ) return true;
+
+
+  bool rememberToReset = false;
+  std::vector<int> index_requiredTriggers_tmp = index_requiredTriggers_;
+  std::vector<std::string> requiredTriggers_tmp = requiredTriggers_;
+  if( HLTName!="" ) {
+    index_requiredTriggers_.clear();
+    requiredTriggers_.clear();
+    requiredTriggers_.push_back(HLTName);
+    this->LoadTrigger(iEntry, false);
+    rememberToReset = true;
+  }
+
 
 
   // first NOT triggers:
@@ -264,7 +277,13 @@ bool Ntp1Analyzer::PassedHLT( const std::string& HLTName ) { //default is OR of 
     int pos_veto = index_notTriggers_[i]%30;
     int word_veto = firedTrg[block_veto];
     
-    if( (word_veto >> pos_veto)%2 ) return false;
+    if( (word_veto >> pos_veto)%2 ) {
+      if( rememberToReset ) {
+        index_requiredTriggers_ = index_requiredTriggers_tmp;
+        requiredTriggers_ = requiredTriggers_tmp;
+      }
+      return false;
+    }
 
   } // for not triggers
   
@@ -278,11 +297,23 @@ bool Ntp1Analyzer::PassedHLT( const std::string& HLTName ) { //default is OR of 
       int pos_required = index_requiredTriggers_[i]%30;
       int word_required = firedTrg[block_required];
 
-      if ( (word_required >> pos_required)%2 ) return true;
+      if( (word_required >> pos_required)%2 ) {
+        if( rememberToReset ) {
+          index_requiredTriggers_ = index_requiredTriggers_tmp;
+          requiredTriggers_ = requiredTriggers_tmp;
+        }
+        return true;
+      }
 
     } // if required
 
   } // required trigger loop
+
+
+  if( rememberToReset ) {
+    index_requiredTriggers_ = index_requiredTriggers_tmp;
+    requiredTriggers_ = requiredTriggers_tmp;
+  }
 
 
   return false;
@@ -1046,7 +1077,7 @@ bool Ntp1Analyzer::isGoodEvent( int iEntry ) {
        this->LoadTrigger( iEntry );
      }
 
-     okForHLT = this->PassedHLT();
+     okForHLT = this->PassedHLT(iEntry);
 
   // if( okForJSON && okForHLT ) { //will take lumi, so (once per LS) increment luminosity
   
