@@ -454,7 +454,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_kinfit2_chiSquareProb_mu = new TH1D("kinfit2_chiSquareProb_mu", "", 20, -0.1, 1.1);
   h1_kinfit2_chiSquareProb_mu->Sumw2();
 
-  TH1D* h1_helicityLD = new TH1D("helicityLD", "", 60, 0., 1.);
+  TH1D* h1_helicityLD = new TH1D("helicityLD", "", 20, 0., 1.);
   h1_helicityLD->Sumw2();
   TH1D* h1_helicityLD_kinfit = new TH1D("helicityLD_kinfit", "", 20, 0., 1.);
   h1_helicityLD_kinfit->Sumw2();
@@ -485,17 +485,17 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 
   TH1D* h1_mWW_nokinfit = new TH1D("mWW_nokinfit", "", 40, 200., 700.);
   h1_mWW_nokinfit->Sumw2();
-  TH1D* h1_mWW_kinfit_e = new TH1D("mWW_kinfit_e", "", 40, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfit_e = new TH1D("mWW_kinfit_e", "", 40, 150., HiggsMass_+300.);
   h1_mWW_kinfit_e->Sumw2();
-  TH1D* h1_mWW_kinfit_mu = new TH1D("mWW_kinfit_mu", "", 40, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfit_mu = new TH1D("mWW_kinfit_mu", "", 40, 150., HiggsMass_+300.);
   h1_mWW_kinfit_mu->Sumw2();
-  TH1D* h1_mWW_kinfit = new TH1D("mWW_kinfit", "", 40, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfit = new TH1D("mWW_kinfit", "", 40, 150., HiggsMass_+300.);
   h1_mWW_kinfit->Sumw2();
-  TH1D* h1_mWW_kinfitCUT_e = new TH1D("mWW_kinfitCUT_e", "", 40, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfitCUT_e = new TH1D("mWW_kinfitCUT_e", "", 40, 150., HiggsMass_+300.);
   h1_mWW_kinfitCUT_e->Sumw2();
-  TH1D* h1_mWW_kinfitCUT_mu = new TH1D("mWW_kinfitCUT_mu", "", 40, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfitCUT_mu = new TH1D("mWW_kinfitCUT_mu", "", 40, 150., HiggsMass_+300.);
   h1_mWW_kinfitCUT_mu->Sumw2();
-  TH1D* h1_mWW_kinfitCUT = new TH1D("mWW_kinfitCUT", "", 40, 150., HiggsMass_+200.);
+  TH1D* h1_mWW_kinfitCUT = new TH1D("mWW_kinfitCUT", "", 40, 150., HiggsMass_+300.);
   h1_mWW_kinfitCUT->Sumw2();
 
 
@@ -618,7 +618,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_Jet2Pt = new TH1D("Jet2Pt", "", 30, 20., 140.);
   TH1D* h1_Jet1Eta = new TH1D("Jet1Eta", "", 20, -2.7, 2.7);
   TH1D* h1_Jet2Eta = new TH1D("Jet2Eta", "", 20, -2.7, 2.7);
-  TH1D* h1_Mdijet = new TH1D("Mdijet", "", 20, 60., 100.);
+  TH1D* h1_Mdijet = new TH1D("Mdijet", "", 80, 40., 200.);
 
   TH1D* h1_lept1Eta_mu = new TH1D("lept1Eta_mu", "", 20, -2.7, 2.7);
   TH1D* h1_lept2Eta_mu = new TH1D("lept2Eta_mu", "", 20, -2.7, 2.7);
@@ -629,7 +629,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_Jet2Pt_mu = new TH1D("Jet2Pt_mu", "", 30, 20., 140.);
   TH1D* h1_Jet1Eta_mu = new TH1D("Jet1Eta_mu", "", 20, -2.7, 2.7);
   TH1D* h1_Jet2Eta_mu = new TH1D("Jet2Eta_mu", "", 20, -2.7, 2.7);
-  TH1D* h1_Mdijet_mu = new TH1D("Mdijet_mu", "", 20, 60., 100.);
+  TH1D* h1_Mdijet_mu = new TH1D("Mdijet_mu", "", 80, 40., 200.);
 
   TH1D* h1_lept1Eta_e = new TH1D("lept1Eta_e", "", 20, -2.7, 2.7);
   TH1D* h1_lept2Eta_e = new TH1D("lept2Eta_e", "", 20, -2.7, 2.7);
@@ -640,7 +640,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_Jet2Pt_e = new TH1D("Jet2Pt_e", "", 30, 20., 140.);
   TH1D* h1_Jet1Eta_e = new TH1D("Jet1Eta_e", "", 20, -2.7, 2.7);
   TH1D* h1_Jet2Eta_e = new TH1D("Jet2Eta_e", "", 20, -2.7, 2.7);
-  TH1D* h1_Mdijet_e = new TH1D("Mdijet_e", "", 20, 60., 100.);
+  TH1D* h1_Mdijet_e = new TH1D("Mdijet_e", "", 80, 40., 200.);
 
   // To try
   TH1D* h1_Studio1 = new TH1D("Studio1", "", 50, -2., 2.);
@@ -1204,7 +1204,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
  }
       } //for pairs
   //Other btag
-  AnalysisJet thirdJet;
+ /* AnalysisJet thirdJet;
 if( jetPairs_selected.size()>1 ){
   double ptProof=0.;
   for(int i=0; i<jetPairs_selected.size();i++){
@@ -1219,7 +1219,7 @@ if( jetPairs_selected.size()>1 ){
     if( btag[0]>btag[2] && btag[0]>btag[1] ) { if( btag[0]>3.3 && ( btag[1]>3.3 || btag[2]>3.3 ) ) hibtagOthers=true; }
     if( btag[1]>btag[0] && btag[1]>btag[2] ) { if( btag[1]>3.3 && ( btag[0]>3.3 || btag[2]>3.3 ) ) hibtagOthers=true;}
     if( btag[2]>btag[0] && btag[2]>btag[1] ) { if( btag[2]>3.3 && ( btag[1]>3.3 || btag[0]>3.3 ) ) hibtagOthers=true;} 
-
+*/
 
       // now look for leading jet who is not coming from a W from H
  if( jetPairs_selected.size() > 1 ){
@@ -1973,7 +1973,6 @@ if(leptType==0) h1_mWW_kinfit_mu->Fill( WW_kinfit.M(), eventWeight );
 
       if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
       if( helicityLD_kinfit < helicityLD_thresh_ ) continue;
-nEvents_btag_W_pt3+=eventWeight; //@@@
 
       h1_mWW_kinfitCUT->Fill( WW_kinfit.M(), eventWeight );
       if(leptType==1) h1_mWW_kinfitCUT_e->Fill( WW_kinfit.M(), eventWeight );
