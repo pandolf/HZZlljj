@@ -2534,7 +2534,7 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     deltaRjj_thresh_ = 999.;
     ptWll_thresh_ = 0.;
     ptWjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.62;
+    helicityLD_thresh_ = 0.0010666*HiggsMass_+0.19667;
     QGLikelihoodProd_thresh_ = 0.2;
     mWW_threshLo_ = HiggsMass_-((HiggsMass_*10.)/100.);
     mWW_threshHi_ = HiggsMass_+((HiggsMass_*12.)/100.);
