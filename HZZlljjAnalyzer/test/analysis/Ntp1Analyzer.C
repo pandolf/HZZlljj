@@ -7,6 +7,8 @@
 
 
 
+
+
 Ntp1Analyzer::Ntp1Analyzer(const std::string& analyzerType, const std::string& dataset, const std::string& flags, TTree* tree)
 {
 
@@ -39,6 +41,7 @@ Ntp1Analyzer::~Ntp1Analyzer()
    delete fChain->GetCurrentFile();
    outfile_->cd();
    h1_nCounter_->Write();
+   h1_nCounterPU_->Write();
    reducedTree_->Write();
    outfile_->Write();
    outfile_->Close();
@@ -346,6 +349,7 @@ void Ntp1Analyzer::CreateOutputFile() {
    reducedTree_->SetMaxTreeSize(100000000000ULL); //setting max tree size to 100 GB
 
    h1_nCounter_ = new TH1F("nCounter", "", 1, 0., 1.);
+   h1_nCounterPU_ = new TH1F("nCounterPU", "", 1, 0., 1.);
 
 }
 
@@ -403,6 +407,7 @@ void Ntp1Analyzer::Init(TTree *tree)
    sprintf( cutOnPtHat, "genPtHat>%lf && genPtHat<%lf", (Double_t)ptHatMin_, (Double_t)ptHatMax_);
    Int_t nEntries_cut = (isMC_) ? fChain->GetEntries(cutOnPtHat) : fChain->GetEntries();
    h1_nCounter_->SetBinContent( 1, nEntries_cut );
+
 
 
    std::string branchName;
@@ -1290,3 +1295,6 @@ double Ntp1Analyzer::trackDxyPV(float PVx, float PVy, float PVz, float eleVx, fl
   float elePt = sqrt(elePx*elePx + elePy*elePy);
   return ( - (eleVx-PVx)*elePy + (eleVy-PVy)*elePx ) / elePt;
 }
+
+
+

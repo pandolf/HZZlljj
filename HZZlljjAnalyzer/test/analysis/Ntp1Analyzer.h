@@ -636,6 +636,8 @@ public :
    // this histogram saves total number of analyzed events in file:
    // (needed for event weight determination in last step)
    TH1F* h1_nCounter_;
+   // this one considers also PU reweighting:
+   TH1F* h1_nCounterPU_;
 
    Int_t run_;
    Int_t oldrun_;

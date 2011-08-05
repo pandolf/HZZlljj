@@ -11,11 +11,13 @@
 #include "AnalysisElectron.h"
 #include "AnalysisMuon.h"
 
+#include "include/PUWeight.h"
 
 //#include "fitTools.h"
 
 
 double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
+float getWeightPU(Int_t nPU);
 
 
 class AnalysisJet : public TLorentzVector {
@@ -395,6 +397,16 @@ void Ntp1Analyzer_HZZlljj::Loop()
 
    TRandom3 rand;
 
+   // count number of events with PU reweighting:
+   std::string puType = "Spring11_Flat10";
+   TString dataset_tstr(dataset_);
+   if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") ) {
+     puType = "Summer11_S4";
+   }
+   PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
+   float nCounterPU=0.;
+
+
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
@@ -422,6 +434,18 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      for( unsigned iBX=0; iBX<nBX; ++iBX ) {
        if( bxPU[iBX]==0 ) nPU_ = nPU[iBX]; 
      }
+
+
+     float eventWeight=1.;
+     
+     if( isMC_ ) {
+       // PU reweighting:
+       if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") )
+         eventWeight = getWeightPU(nPU_);
+       else
+         eventWeight = fPUWeight->GetWeight(nPU_);
+     }
+     nCounterPU += eventWeight;
 
    //nPU_ = 0;
    //for( unsigned iBX=0; iBX<nBX; ++iBX ) {
@@ -1210,6 +1234,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
    } //for entries
 
+   h1_nCounterPU_->SetBinContent( 1, nCounterPU );
 
 } //loop
 
@@ -1220,3 +1245,39 @@ double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, flo
   return ( - (eleVx-PVx)*elePy + (eleVy-PVy)*elePx ) / elePt;
 }
 
+float getWeightPU(int nPU) {
+
+  float weights[] = {0.110043,
+                     0.457365,
+                     0.98622,
+                     1.60429,
+                     2.06065,
+                     2.22437,
+                     2.1078,
+                     1.76987,
+                     1.37698,
+                     0.99556,
+                     0.693361,
+                     0.458662,
+                     0.295982,
+                     0.185586,
+                     0.113966,
+                     0.068645,
+                     0.041019,
+                     0.0239427,
+                     0.0139931,
+                     0.00810005,
+                     0.00473432,
+                     0.0026347,
+                     0.00152847,
+                     0.000864942,
+                     0.000756823};
+
+  float returnWeight;
+
+  if( nPU <=24 ) returnWeight = weights[nPU];
+  else returnWeight = 0.;
+
+  return returnWeight;
+
+}
