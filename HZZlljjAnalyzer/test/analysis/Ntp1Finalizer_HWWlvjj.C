@@ -1270,8 +1270,8 @@ if( jetPairs_selected.size()>1 ){
 //if( (jet1.DeltaR(Quark1MC)<0.5 && jet2.DeltaR(Quark2MC)<0.5) || ((jet1.DeltaR(Quark2MC)<0.5 && jet2.DeltaR(Quark1MC)<0.5)) ) rightMatch++; 
 //}
 
-    bool peakZone=true;
-    if( (jet1+jet2).M() < mWjj_threshLo_ || (jet1+jet2).M() > mWjj_threshHi_ ) peakZone=false;
+    bool peakZone=false;
+    if( (jet1+jet2).M() > mWjj_threshLo_ && (jet1+jet2).M() < mWjj_threshHi_ ) peakZone=true;
 
      // LEPTONS
     TLorentzVector lept1, lept2, lept2MC;
