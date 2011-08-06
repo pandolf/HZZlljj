@@ -1295,10 +1295,11 @@ if( jetPairs_selected.size()>1 ){
     if( leptType==0 && ptLept<32. ) continue; //PROV TRIGGER
 
     // DATA-MC (MET)
-    h1_energyMet->Fill( energyPFMet,eventWeight );
+  if( peakZone ){
+                    h1_energyMet->Fill( energyPFMet,eventWeight );
     if(leptType==0) h1_energyMet_mu->Fill( energyPFMet,eventWeight );
     if(leptType==1) h1_energyMet_e->Fill( energyPFMet,eventWeight );
-
+  }
     if( energyPFMet < 25./* Othermine 50.*/ ) continue;
   
     //Other
@@ -2000,7 +2001,7 @@ if( peakZone ){
 
       if( QGLikelihoodJet1>0.8 || QGLikelihoodJet2>0.8 ) h1_QGLikelihoodProd_hi->Fill(QGLikelihoodProd, eventWeight); 
 
-      // Optimizing Cuts
+      // Optimizing Helicity Cut
       if( WW_kinfit.M() > mWW_threshLo_  && WW_kinfit.M() < mWW_threshHi_ && QGLikelihoodProd > 0.2  ){
         Tree_optim_hely->Fill(); 
         }
@@ -2015,11 +2016,14 @@ if( peakZone ){
       if( (jet1+jet2).M() < mWjj_threshLo_) {Tree_side_sx->Fill();}
       if( (jet1+jet2).M() > mWjj_threshHi_ ) {Tree_side_dx->Fill();}
 
-      if( !peakZone ) continue;
-
-      h1_mWW_kinfitCUT->Fill( WW_kinfit.M(), eventWeight );
+   if( peakZone ){
+                      h1_mWW_kinfitCUT->Fill( WW_kinfit.M(), eventWeight );
       if(leptType==1) h1_mWW_kinfitCUT_e->Fill( WW_kinfit.M(), eventWeight );
       if(leptType==0) h1_mWW_kinfitCUT_mu->Fill( WW_kinfit.M(), eventWeight );
+   }
+
+      if( !peakZone ) continue;
+
 
       // *****************************************
       // *****  PASSED ANALYSIS SELECTION ********
