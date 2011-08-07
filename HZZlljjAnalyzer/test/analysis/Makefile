@@ -12,8 +12,11 @@ merge_and_setWeights_HWWlvjj: merge_and_setWeights_HWWlvjj.cpp
 #do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o QGLikelihoodCalculator.o do2ndLevel_HZZlljj.cpp
 #	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o QGLikelihoodCalculator.o $(ROOTFLAG) -lCore -lTMVA
 
-do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o do2ndLevel_HZZlljj.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o $(ROOTFLAG) 
+do2ndLevel_HZZlljj: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o PUWeight.o do2ndLevel_HZZlljj.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj do2ndLevel_HZZlljj.cpp Ntp1Analyzer.o PUWeight.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o $(ROOTFLAG) 
+
+do2ndLevel_DumpNvertex: Ntp1Analyzer.o Ntp1Analyzer_DumpNvertex.o AnalysisElectron.o AnalysisMuon.o PUWeight.o do2ndLevel_DumpNvertex.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_DumpNvertex do2ndLevel_DumpNvertex.cpp Ntp1Analyzer.o PUWeight.o Ntp1Analyzer_DumpNvertex.o AnalysisElectron.o AnalysisMuon.o $(ROOTFLAG) 
 
 do2ndLevel_HWWlvjj: Ntp1Analyzer.o Ntp1Analyzer_HWWlvjj.o AnalysisElectron.o AnalysisMuon.o Utils.o do2ndLevel_HWWlvjj.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HWWlvjj do2ndLevel_HWWlvjj.cpp Ntp1Analyzer.o Ntp1Analyzer_HWWlvjj.o AnalysisElectron.o AnalysisMuon.o Utils.o $(ROOTFLAG)
@@ -24,8 +27,13 @@ do2ndLevel_WZ: Ntp1Analyzer.o Ntp1Analyzer_WZ.o do2ndLevel_WZ.cpp
 do2ndLevel_WZ_DATA: Ntp1Analyzer.o Ntp1Analyzer_WZ.o do2ndLevel_WZ_DATA.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_WZ_DATA do2ndLevel_WZ_DATA.cpp Ntp1Analyzer.o Ntp1Analyzer_WZ.o $(ROOTFLAG) 
 
-do2ndLevel_HZZlljj_DATA: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o do2ndLevel_HZZlljj_DATA.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj_DATA do2ndLevel_HZZlljj_DATA.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o $(ROOTFLAG)
+do2ndLevel_HZZlljj_DATA: Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o PUWeight.o do2ndLevel_HZZlljj_DATA.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HZZlljj_DATA do2ndLevel_HZZlljj_DATA.cpp Ntp1Analyzer.o Ntp1Analyzer_HZZlljj.o AnalysisElectron.o AnalysisMuon.o PUWeight.o $(ROOTFLAG)
+
+do2ndLevel_LeptIsoStudies: Ntp1Analyzer.o Ntp1Analyzer_LeptIsoStudies.o AnalysisElectron.o AnalysisMuon.o do2ndLevel_LeptIsoStudies.cpp
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_LeptIsoStudies do2ndLevel_LeptIsoStudies.cpp Ntp1Analyzer.o Ntp1Analyzer_LeptIsoStudies.o AnalysisElectron.o AnalysisMuon.o $(ROOTFLAG) 
+
+
 
 do2ndLevel_HWWlvjj_DATA: Ntp1Analyzer.o Ntp1Analyzer_HWWlvjj.o AnalysisElectron.o AnalysisMuon.o Utils.o do2ndLevel_HWWlvjj_DATA.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o do2ndLevel_HWWlvjj_DATA do2ndLevel_HWWlvjj_DATA.cpp Ntp1Analyzer.o Ntp1Analyzer_HWWlvjj.o AnalysisElectron.o AnalysisMuon.o Utils.o $(ROOTFLAG)
@@ -128,7 +136,10 @@ Ntp1Analyzer.o: Ntp1Analyzer.C
 	$(CC) $(CFLAGS) Ntp1Analyzer.C $(ROOTFLAG)
 
 Ntp1Analyzer_HZZlljj.o: Ntp1Analyzer_HZZlljj.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_HZZlljj.C $(ROOTFLAG)
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -I$(CMSSW_BASE)/src/UserCode/emanuele/CommonTools Ntp1Analyzer_HZZlljj.C $(ROOTFLAG)
+
+Ntp1Analyzer_DumpNvertex.o: Ntp1Analyzer_DumpNvertex.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -I$(CMSSW_BASE)/src/UserCode/emanuele/CommonTools Ntp1Analyzer_DumpNvertex.C $(ROOTFLAG)
 
 Ntp1Analyzer_HWWlvjj.o: Ntp1Analyzer_HWWlvjj.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_HWWlvjj.C $(ROOTFLAG)
@@ -259,6 +270,15 @@ RooSpinZero5DV2.o: $(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscrimi
 RooBkgd2L2JV2.o: $(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscriminant/PDFs/RooBkgd2L2JV2.cc 
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscriminant/PDFs $(CMSSW_BASE)/src/UserCode/pandolf/HelicityLikelihoodDiscriminant/PDFs/RooBkgd2L2JV2.cc $(ROOTFLAG)
 
+BTagSFUtil.o: $(CMSSW_BASE)/src/UserCode/pandolf/BTagSFUtil/BTagSFUtil.cc
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/BTagSFUtil/ $(CMSSW_BASE)/src/UserCode/pandolf/BTagSFUtil/BTagSFUtil.cc $(ROOTFLAG)
+
+PUWeight.o: $(CMSSW_BASE)/src/UserCode/emanuele/CommonTools/src/PUWeight.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/emanuele/CommonTools $(CMSSW_BASE)/src/UserCode/emanuele/CommonTools/src/PUWeight.C $(ROOTFLAG)
+
+
+AnalysisJet.o: AnalysisJet.cc 
+	$(CC) $(CFLAGS) AnalysisJet.cc $(ROOTFLAG)
 
 AnalysisElectron.o: AnalysisElectron.cc AnalysisLepton.o
 	$(CC) $(CFLAGS) AnalysisElectron.cc $(ROOTFLAG)
@@ -266,11 +286,12 @@ AnalysisElectron.o: AnalysisElectron.cc AnalysisLepton.o
 AnalysisMuon.o: AnalysisMuon.cc AnalysisLepton.o
 	$(CC) $(CFLAGS) AnalysisMuon.cc $(ROOTFLAG)
 
+AnalysisLepton.o: AnalysisLepton.cc
+	$(CC) $(CFLAGS) AnalysisLepton.cc $(ROOTFLAG)
+
 AnalysisNeutrino.o: AnalysisNeutrino.h
 	$(CC) $(CFLAGS) AnalysisNeutrino.h $(ROOTFLAG)
 
-AnalysisLepton.o: AnalysisLepton.h
-	$(CC) $(CFLAGS) AnalysisLepton.h $(ROOTFLAG)
 
 
 clean:
