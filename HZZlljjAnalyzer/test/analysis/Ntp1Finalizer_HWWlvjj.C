@@ -98,9 +98,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TTree * Tree_optim_hely = new TTree("Tree_optim_hely","Tree to optimize the helicity cut");
 
   // TO FIT mWW AND FIND UL
-  TTree * Tree_side_sx = new TTree("Tree_side_sx","Tree for the events at the left sideband");
-  TTree * Tree_side_dx = new TTree("Tree_side_dx","Tree for the events at the right sideband");
-  TTree * Tree_peak = new TTree("Tree_peak","Tree for the events on the peak");
+  TTree * Tree_FITUL = new TTree("Tree_FITUL","Tree for the events on the peak");
 
   TH1D* h1_Ev_Presel = new TH1D("Ev_Presel","",1,0.,1.);
   TH1D* h1_Ev_Jet1 = new TH1D("Ev_Jet1","",1,0.,1.);
@@ -891,6 +889,14 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   Float_t SumEt;
   tree_->SetBranchAddress("SumEt", &SumEt);
 
+  float nEvents250_fb_kinfit=0., nEvents250_kinfit=0.;
+  float nEvents300_fb_kinfit=0., nEvents300_kinfit=0.;
+  float nEvents350_fb_kinfit=0., nEvents350_kinfit=0.;
+  float nEvents400_fb_kinfit=0., nEvents400_kinfit=0.;
+  float nEvents450_fb_kinfit=0., nEvents450_kinfit=0.;
+  float nEvents500_fb_kinfit=0., nEvents500_kinfit=0.;
+  float nEvents550_fb_kinfit=0., nEvents550_kinfit=0.;
+
   float nEventsPassed_fb_kinfit=0.;
   float nEventsPassed_fb_nokinfit=0.;
   int nEventsPassed_kinfit=0;
@@ -932,12 +938,12 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   Tree_optim_hely->Branch("helicityLD_kinfit", &helicityLD_kinfit, "helicityLD_kinfit/F");
   Tree_optim_hely->Branch("eventWeight", &eventWeight, "eventWeight/F");
 
-  TLorentzVector *WW_kinfit = 0;
-  Tree_peak->Branch("WW_kinfit", "TLorentzVector", &WW_kinfit);  
-  Tree_side_sx->Branch("WW_kinfit", "TLorentzVector", &WW_kinfit);  
-  Tree_side_dx->Branch("WW_kinfit", "TLorentzVector", &WW_kinfit);  
+  Float_t mJJ, mWW ;
+  Tree_FITUL->Branch("eventWeight", &eventWeight, "eventWeight/F");
+  Tree_FITUL->Branch("mJJ", &mJJ, "mJJ/F");
+  Tree_FITUL->Branch("mWW", &mWW, "mWW/F");
 
-  // FOR iEntry
+   // FOR iEntry
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
     
     if( (iEntry % 50000)==0 ) std::cout << "Entry: " << iEntry << " /" << nEntries << std::endl;
@@ -1105,6 +1111,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
      h1_btag->Fill(trackCountingHighEffBJetTagJet2[iJetPair]);
 
       TLorentzVector diJet = jet1 + jet2;
+      mJJ = (jet1+jet2).M(); // For the tree to calculate UL
 
       // Push jet after preselection
       jetPairs_JustPresel_selected.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
@@ -1673,7 +1680,7 @@ if(leptType==1){
 //}
         TLorentzVector Neu_MetFitted;     
         Neu_MetFitted.SetPxPyPzE(/*NeuMC.Px(),NeuMC.Py(),NeuMC.Pz(),NeuMC.E());*/lept2_kinfit.Px(),lept2_kinfit.Py(),pn,sqrt(pow(lept2_kinfit.Px(),2)+pow(lept2_kinfit.Py(),2)+pow(pn,2)) );
-        // Reso
+       // Reso
       if(isMC){
         h1_pzResoNeut_KinFit->Fill( (Neu_MetFitted.Pz()-NeuMC.Pz())/NeuMC.Pz() ,eventWeight);
         h1_ptResoNeut_KinFit->Fill( (Neu_MetFitted.Pt()-NeuMC.Pt())/NeuMC.Pt() ,eventWeight);
@@ -2009,12 +2016,12 @@ if( peakZone ){
       // last step of selection: QG and helicity LD's
 
       if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
-      if( helicityLD_kinfit < helicityLD_thresh_ ) continue;
+      //if( helicityLD_kinfit < helicityLD_thresh_ ) continue;
+      if( helicityLD_kinfit < 0.0010666*WW_kinfit.M()+0.1966667 ) continue; // To have only one analysis
 
       // TO FIT FOR THE UL
-      if( peakZone ) {Tree_peak->Fill();}
-      if( (jet1+jet2).M() < mWjj_threshLo_) {Tree_side_sx->Fill();}
-      if( (jet1+jet2).M() > mWjj_threshHi_ ) {Tree_side_dx->Fill();}
+      mWW=WW_kinfit.M(); // In orderd to extrapolate UL
+      Tree_FITUL->Fill();
 
    if( peakZone ){
                       h1_mWW_kinfitCUT->Fill( WW_kinfit.M(), eventWeight );
@@ -2028,7 +2035,7 @@ if( peakZone ){
       // *****************************************
       // *****  PASSED ANALYSIS SELECTION ********
       // *****************************************
-      
+/*
       //if( WW_kinfit.M() > mWW_threshLo_ && WW_kinfit.M() < mWW_threshHi_ ) {
         if( WW_kinfit.M() > mWW_threshLo_  && WW_kinfit.M() < mWW_threshHi_ ){
         nEventsPassed_fb_kinfit += eventWeight;
@@ -2041,7 +2048,36 @@ if( peakZone ){
         nEventsPassed_fb_nokinfit += eventWeight;
         nEventsPassed_nokinfit++;
       }
-
+*/
+        if( WW_kinfit.M() > 250-((HiggsMass_*10.)/100.)  && WW_kinfit.M() < 250+((HiggsMass_*12.)/100.) ){
+          nEvents250_fb_kinfit += eventWeight;
+          nEvents250_kinfit++;
+        }
+        if( WW_kinfit.M() > 300-((HiggsMass_*10.)/100.)  && WW_kinfit.M() < 300+((HiggsMass_*12.)/100.) ){
+          nEvents300_fb_kinfit += eventWeight;
+          nEvents300_kinfit++;
+        }
+        if( WW_kinfit.M() > 350-((HiggsMass_*10.)/100.)  && WW_kinfit.M() < 350+((HiggsMass_*12.)/100.) ){
+          nEvents350_fb_kinfit += eventWeight;
+          nEvents350_kinfit++;
+        }
+        if( WW_kinfit.M() > 400-((HiggsMass_*10.)/100.)  && WW_kinfit.M() < 400+((HiggsMass_*12.)/100.) ){
+          nEvents400_fb_kinfit += eventWeight;
+          nEvents400_kinfit++;
+        }
+        if( WW_kinfit.M() > 450-((HiggsMass_*10.)/100.)  && WW_kinfit.M() < 450+((HiggsMass_*12.)/100.) ){
+          nEvents450_fb_kinfit += eventWeight;
+          nEvents450_kinfit++;
+        }
+        if( WW_kinfit.M() > 500-((HiggsMass_*10.)/100.)  && WW_kinfit.M() < 500+((HiggsMass_*12.)/100.) ){
+          nEvents500_fb_kinfit += eventWeight;
+          nEvents500_kinfit++;
+        }
+        if( WW_kinfit.M() > 550-((HiggsMass_*10.)/100.)  && WW_kinfit.M() < 550+((HiggsMass_*12.)/100.) ){
+          nEvents550_fb_kinfit += eventWeight;
+          nEvents550_kinfit++;
+        }
+ 
 
         // fill histograms:
 
@@ -2182,9 +2218,18 @@ if( peakZone ){
   std::cout << std::endl << std::endl;
   std::cout << "----> PASSED preSELECTION: " << 1000.*nEvents_presel<<"  PASSED 2nd step: "<<1000*nEvents_met<<"  PASSED 3rd step: "<<1000*nEvents_btag_W_pt3<<" ev/fb-1"<<std::endl;
 
-  std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1(" << nEventsPassed_kinfit << " events)"<< std::endl;
-  std::cout << "----> PASSED SELECTION (no kinfit): " << 1000.*nEventsPassed_fb_nokinfit << " ev/fb-1 (" << nEventsPassed_nokinfit << " events)" << std::endl;
+//  std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1(" << nEventsPassed_kinfit << " events)"<< std::endl;
+//  std::cout << "----> PASSED SELECTION (no kinfit): " << 1000.*nEventsPassed_fb_nokinfit << " ev/fb-1 (" << nEventsPassed_nokinfit << " events)" << std::endl;
+//  std::cout << std::endl;
+  std::cout << "----> PASSED SELECTION (250): " << 1000.*nEvents250_fb_kinfit << " ev/fb-1(" << nEvents250_kinfit << " events)"<< std::endl;
+  std::cout << "----> PASSED SELECTION (300): " << 1000.*nEvents300_fb_kinfit << " ev/fb-1(" << nEvents300_kinfit << " events)"<< std::endl;
+  std::cout << "----> PASSED SELECTION (350): " << 1000.*nEvents350_fb_kinfit << " ev/fb-1(" << nEvents350_kinfit << " events)"<< std::endl;
+  std::cout << "----> PASSED SELECTION (400): " << 1000.*nEvents400_fb_kinfit << " ev/fb-1(" << nEvents400_kinfit << " events)"<< std::endl;
+  std::cout << "----> PASSED SELECTION (450): " << 1000.*nEvents450_fb_kinfit << " ev/fb-1(" << nEvents450_kinfit << " events)"<< std::endl;
+  std::cout << "----> PASSED SELECTION (500): " << 1000.*nEvents500_fb_kinfit << " ev/fb-1(" << nEvents500_kinfit << " events)"<< std::endl;
+  std::cout << "----> PASSED SELECTION (550): " << 1000.*nEvents550_fb_kinfit << " ev/fb-1(" << nEvents550_kinfit << " events)"<< std::endl;
   std::cout << std::endl;
+
   std::cout<<"Eff(Tot)" <<  nEventsPassed_kinfit/nCounter_ <<std::endl;
   std::cout<<"Eff(Tot)" <<  nEventsPassed_fb_kinfit/nCounterW_ <<std::endl;
   std::cout<<"One solution: "<<(double)oneSol/totSol<<"  One solution MC: "<<(double)oneSolMC/totSol<<std::endl;
@@ -2194,6 +2239,7 @@ if( peakZone ){
 
   outFile_->cd();
   Tree_optim_hely->Write();
+  Tree_FITUL->Write();
 
   h2_correlation->Write();
 
