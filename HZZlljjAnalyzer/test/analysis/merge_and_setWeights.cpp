@@ -400,12 +400,12 @@ float getWeight( const std::string& dataset, int nEvents ) {
     if( dataset_tstr.Contains("powheg") ) xSection *= 1.5; // has also taus
 
   // 525:
-  } else if( dataset=="JHUgen_HiggsSM500_2l2j"|| dataset=="JHUgen_HiggsSM500_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-500_7TeV-jhu-pythia6") || dataset_tstr.Contains("GluGluToHToZZTo2L2Q_M-500") ) {
+  } else if( dataset=="JHUgen_HiggsSM525_2l2j"|| dataset=="JHUgen_HiggsSM525_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-525_7TeV-jhu-pythia6") || dataset_tstr.Contains("GluGluToHToZZTo2L2Q_M-525") ) {
     xSection = (0.8497+0.083625)*0.2602*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
     if( dataset_tstr.Contains("powheg") ) xSection *= 1.5; // has also taus
 
   // 550:
-  } else if( dataset=="JHUgen_HiggsSM550_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-550_7TeV-jhu-pythia6") ) {
+  } else if( dataset=="JHUgen_HiggsSM550_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-550_7TeV-jhu-pythia6") || dataset_tstr.Contains("GluGluToHToZZTo2L2Q_M-550") ) {
     xSection = (0.52765+0.07378)*0.266*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
     if( dataset_tstr.Contains("powheg") ) xSection *= 1.5; // has also taus
 
