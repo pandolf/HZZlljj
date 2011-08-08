@@ -14,7 +14,7 @@
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
 #include "KinematicFit/DiJetKinFitter.h"
 
-#include "/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/emanuele/CommonTools/include/PUWeight.h"
+//#include "/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/emanuele/CommonTools/include/PUWeight.h"
 
 
 
@@ -801,6 +801,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_->SetBranchAddress("event", &event);
   Float_t eventWeight;
   tree_->SetBranchAddress("eventWeight", &eventWeight);
+  Float_t eventWeightPU;
+  tree_->SetBranchAddress("eventWeightPU", &eventWeightPU);
   Float_t eventWeight_Zee;
   tree_->SetBranchAddress("eventWeight_Zee", &eventWeight_Zee);
   Float_t eventWeight_Zmm;
@@ -978,6 +980,30 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_->SetBranchAddress("pdgIdPart", pdgIdPart);
 
 
+  // HLT:
+  Bool_t passed_HLT_DoubleMu6;
+  tree_->SetBranchAddress("passed_HLT_DoubleMu6", &passed_HLT_DoubleMu6);
+  Bool_t passed_HLT_DoubleMu7;
+  tree_->SetBranchAddress("passed_HLT_DoubleMu7", &passed_HLT_DoubleMu7);
+  Bool_t passed_HLT_Mu13_Mu8;
+  tree_->SetBranchAddress("passed_HLT_Mu13_Mu8", &passed_HLT_Mu13_Mu8);
+  Bool_t passed_HLT_IsoMu17;
+  tree_->SetBranchAddress("passed_HLT_IsoMu17", &passed_HLT_IsoMu17);
+  Bool_t passed_HLT_IsoMu24;
+  tree_->SetBranchAddress("passed_HLT_IsoMu24", &passed_HLT_IsoMu24);
+  Bool_t passed_HLT_Mu8_Jet40;
+  tree_->SetBranchAddress("passed_HLT_Mu8_Jet40", &passed_HLT_Mu8_Jet40);
+  Bool_t passed_HLT_L2DoubleMu23_NoVertex;
+  tree_->SetBranchAddress("passed_HLT_L2DoubleMu23_NoVertex", &passed_HLT_L2DoubleMu23_NoVertex);
+  Bool_t passed_HLT_L2DoubleMu30_NoVertex;
+  tree_->SetBranchAddress("passed_HLT_L2DoubleMu30_NoVertex", &passed_HLT_L2DoubleMu30_NoVertex);
+  Bool_t passed_HLT_TripleMu5;
+  tree_->SetBranchAddress("passed_HLT_TripleMu5", &passed_HLT_TripleMu5);
+
+  Bool_t passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL;
+  tree_->SetBranchAddress("passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL", &passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL);
+  Bool_t passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
+  tree_->SetBranchAddress("passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL", &passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL);
   
 
 
@@ -1189,12 +1215,17 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   HelicityLikelihoodDiscriminant::HelicityAngles hangles_selected;
 
   BTagSFUtil* btsfutil = new BTagSFUtil(13);
+  TFile* file_loose = TFile::Open("BTagPayloads_TCHEL.root");
+  TFile* file_medium = TFile::Open("BTagPayloads_TCHEM.root");
+  btsfutil->set_fileLoose(file_loose);
+  btsfutil->set_fileMedium(file_medium);
+
   std::string puType = "Spring11_Flat10";
   TString dataset_tstr(dataset_);
   if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") ) {
     puType = "Summer11_S4";
   }
-  PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
+//PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
 //TString dataset_tstr(dataset_);
 //if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") ) {
 //  TFile* filePUMC = TFile::Open("PUWeight_Summer11-PU_S4_START42_V11.root");
@@ -1214,6 +1245,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_passedEvents->Branch( "mZZ", &mZZ, "mZZ/F" );
   tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
   tree_passedEvents->Branch( "HLTSF", &HLTSF, "HLTSF/F" );
+  tree_passedEvents->Branch( "PUWeight", &eventWeightPU, "eventWeightPU/F" );
   tree_passedEvents->Branch( "nBTags", &maxBTag_found, "maxBTag_found/I" );
   tree_passedEvents->Branch( "isSidebands", &isSidebands, "isSidebands/O" );
 
@@ -1264,11 +1296,11 @@ ofstream ofs("run_event.txt");
 
     if( isMC ) {
 
-      // PU reweighting:
-      if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") )
-        eventWeight *= getWeight_adish(nPU);
-      else
-        eventWeight *= fPUWeight->GetWeight(nPU);
+    //// PU reweighting:
+    //if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") )
+    //  eventWeight *= getWeight_adish(nPU);
+    //else
+    //  eventWeight *= fPUWeight->GetWeight(nPU);
      
       // scale factor for double mu triggers:
       if( leptType==0 ) {
@@ -1287,6 +1319,9 @@ ofstream ofs("run_event.txt");
 
     } // if is MC
 
+
+    // PU reweighting:
+    eventWeight *= eventWeightPU;
 
     h1_nvertex_PUW->Fill(nvertex, eventWeight);
 
@@ -1343,6 +1378,30 @@ ofstream ofs("run_event.txt");
 
 
       h1_run->Fill( run, eventWeight );
+
+
+      // HLT requirement:
+  
+    //if( dataset_tstr.BeginsWith("SingleMu") ) {
+
+    //  bool passedHLT = passed_HLT_IsoMu24
+    //                && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8
+    //                && !passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL && !passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
+
+    //  if( !passedHLT ) continue;
+
+    //}
+
+    //if( dataset_tstr.BeginsWith("DoubleMu") ) {
+
+    //  bool passedHLT = !passed_HLT_IsoMu24
+    //                && passed_HLT_DoubleMu7 && passed_HLT_Mu13_Mu8
+    //                && !passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL && !passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
+
+    //  if( !passedHLT ) continue;
+
+    //}
+
     
     } //if is not mc
 
