@@ -16,7 +16,7 @@ std::string flags_;
 
 
 
-float addInput( const std::string& dataset );
+std::pair<float,float> addInput( const std::string& dataset );
 float getWeight( const std::string& dataset, int nEvents );
 
 
@@ -44,7 +44,9 @@ int main( int argc, char* argv[] ) {
 
   tree = new TChain("reducedTree");
 
-  float nTotalEvents = addInput( dataset );
+  std::pair<float,float> totalEventsPair = addInput( dataset );
+  float nTotalEvents = totalEventsPair.first;
+  float nTotalEventsPU = totalEventsPair.second;
 
   std::cout << std::endl << "-> Finished adding. Total entries: " << tree->GetEntries() << std::endl;
 
@@ -65,6 +67,8 @@ int main( int argc, char* argv[] ) {
   h1_nCounter->SetBinContent(1, nTotalEvents);
   TH1F* h1_nCounterW = new TH1F("nCounterW", "", 1, 0., 1.);
   h1_nCounterW->SetBinContent(1, nTotalEventsW);
+  TH1F* h1_nCounterPU = new TH1F("nCounterPU", "", 1, 0., 1.);
+  h1_nCounterPU->SetBinContent(1, nTotalEventsPU);
 
   TTree* newTree = tree->CloneTree(0);
   Float_t newWeight;
@@ -87,6 +91,7 @@ int main( int argc, char* argv[] ) {
 
   h1_nCounter->Write();
   h1_nCounterW->Write();
+  h1_nCounterPU->Write();
   newTree->Write();
   outfile->Write();
   outfile->Close();
@@ -96,16 +101,18 @@ int main( int argc, char* argv[] ) {
 }
 
 
-float addInput( const std::string& dataset ) {
+std::pair<float,float> addInput( const std::string& dataset ) {
 
   std::string infileName = "files_"+analysisType_+"_2ndLevel_" + dataset;
   if( flags_!="" ) infileName += "_" + flags_;
   infileName += ".txt";
   TH1F* h1_nCounter;
+  TH1F* h1_nCounterPU;
   TH1F* h1_nCounter_Zee;
   TH1F* h1_nCounter_Zmumu;
 
   float totalEvents = 0;
+  float totalEventsPU = 0;
   // these are needed to fix the Spring11 ZJets Zee BR bug:
   int totalEvents_Zee = 0;
   int totalEvents_Zmumu = 0;
@@ -121,16 +128,30 @@ float addInput( const std::string& dataset ) {
     tree->Add(treeName.c_str());
     std::cout << "-> Added " << treeName << ". Tree has " << tree->GetEntries() << " entries." << std::endl;
     TFile* infile = TFile::Open(infileName.c_str(), "READ");
+    
+    // nCounter:
     h1_nCounter = (TH1F*)infile->Get("nCounter");
     if( h1_nCounter!=0 ) {
       totalEvents += h1_nCounter->GetBinContent(1);
     } else {
-      std::cout << " WARNING! File '" << infileName << "' has no nCounter information. Skipping." << std::endl;
+      std::cout << std::endl << std::endl << " WARNING! File '" << infileName << "' has no nCounter information. Skipping." << std::endl;
     }
+
+    // nCounterPU:
+    h1_nCounterPU = (TH1F*)infile->Get("nCounterPU");
+    if( h1_nCounterPU!=0 ) {
+      totalEventsPU += h1_nCounterPU->GetBinContent(1);
+    } else {
+      std::cout << std::endl << std::endl << " WARNING! File '" << infileName << "' has no nCounterPU information. Skipping." << std::endl;
+    }
+
+    // nCounter_Zee
     h1_nCounter_Zee = (TH1F*)infile->Get("nCounter_Zee");
     if( h1_nCounter_Zee!=0 ) {
       totalEvents_Zee += h1_nCounter_Zee->GetBinContent(1);
     }
+
+    // nCounter_Zmumu
     h1_nCounter_Zmumu = (TH1F*)infile->Get("nCounter_Zmumu");
     if( h1_nCounter_Zmumu!=0 ) {
       totalEvents_Zmumu += h1_nCounter_Zmumu->GetBinContent(1);
@@ -150,16 +171,30 @@ float addInput( const std::string& dataset ) {
       std::cout << "-> Added " << treename;
       tree->Add(treename.c_str());
       TFile* infile = TFile::Open(rootfilename.c_str(), "READ");
+
+      // nCounter:
       h1_nCounter = (TH1F*)infile->Get("nCounter");
       if( h1_nCounter!=0 ) {
         totalEvents += h1_nCounter->GetBinContent(1);
       } else {
-        std::cout << std::endl << " WARNING! File '" << rootfilename << "' has no nCounter information. Skipping." << std::endl;
+        std::cout << std::endl << std::endl << " WARNING! File '" << infileName << "' has no nCounter information. Skipping." << std::endl;
       }
+
+      // nCounterPU:
+      h1_nCounterPU = (TH1F*)infile->Get("nCounterPU");
+      if( h1_nCounterPU!=0 ) {
+        totalEventsPU += h1_nCounterPU->GetBinContent(1);
+      } else {
+        std::cout << std::endl << std::endl << " WARNING! File '" << infileName << "' has no nCounterPU information. Skipping." << std::endl;
+      }
+
+      // nCounter_Zee
       h1_nCounter_Zee = (TH1F*)infile->Get("nCounter_Zee");
       if( h1_nCounter_Zee!=0 ) {
         totalEvents_Zee += h1_nCounter_Zee->GetBinContent(1);
       }
+
+      // nCounter_Zmumu
       h1_nCounter_Zmumu = (TH1F*)infile->Get("nCounter_Zmumu");
       if( h1_nCounter_Zmumu!=0 ) {
         totalEvents_Zmumu += h1_nCounter_Zmumu->GetBinContent(1);
@@ -188,7 +223,11 @@ float addInput( const std::string& dataset ) {
 
   }
 
-  return totalEvents;
+  std::pair<float,float> eventPair;
+  eventPair.first = totalEvents;
+  eventPair.second = totalEventsPU;
+
+  return eventPair;
 
 } //addinput
 
@@ -201,7 +240,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
   bool isAlpgenZJets = false;
 
   // all cross sections in pb-1:
-  if( dataset=="ZJets_madgraph" || dataset=="DYJetsToLL_TuneZ2_M-50_madgraph_Fall10" ) {
+  if( dataset=="ZJets_madgraph" || dataset_tstr.Contains("DYJetsToLL_TuneZ2_M-50_7TeV-madgraph") ) {
     xSection = 3048.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="Z0Jets_Pt0to100-alpgen_Spring10" ) {
     xSection = 2350.*0.853 ; // sigma x filter efficiency taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/ProductionReProcessingSpring10#ALPGEN
@@ -385,7 +424,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
     if( dataset_tstr.Contains("powheg") ) xSection *= 1.5; // has also taus
 
   // 425:
-  } else if( dataset=="JHUgen_HiggsSM400_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-400_7TeV-jhu-pythia6") ) {
+  } else if( dataset=="JHUgen_HiggsSM425_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-425_7TeV-jhu-pythia6") ||  ) {
     xSection = (1.72175+0.141425)*0.2675*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
     if( dataset_tstr.Contains("powheg") ) xSection *= 1.5; // has also taus
 
@@ -486,7 +525,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
   } else if( dataset=="DYToMuMu_M-20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. MUMU >20
     xSection = 4819.6/3.;//##
   } else {
-    std::cout << std::endl;
+    std::cout << std::endl << std::endl;
     std::cout << "-> WARNING!! Dataset: '" << dataset << "' not present in database. Cross section unknown." << std::endl;
     std::cout << "-> Will set unitary weights." << std::endl;
     return 1.;
