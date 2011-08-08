@@ -2,6 +2,7 @@
 import os
 import sys
 import time
+import re
 # set parameters to use cmst3 batch 
 #######################################
 ### usage  cmst3_submit_manyfilesperjob.py dataset njobs applicationName queue 
@@ -15,8 +16,8 @@ inputlist = "files_"+dataset+".txt"
 # choose among cmt3 8nm 1nh 8nh 1nd 1nw 
 #queue = "cmst3"
 #queue = "cms8nht3"
-#queue = "8nh"
-queue = "2nd"
+queue = "8nh"
+#queue = "2nd"
 #ijobmax = 40
 ijobmax = int(sys.argv[2])
 #application = "VecbosApp"
@@ -41,6 +42,8 @@ afsdir = "/afs/cern.ch/user/p/pandolf/scratch0/NTUPLES/"+dataset
 ################################################
 #diskoutputdir = "/cmsrm/pc21_2/pandolf/MC/"+dataset
 diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Summer11/"+dataset
+match_Spring11 = re.search( r'Spring11', dataset, re.M|re.I)
+    diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Spring11/"+dataset
 #diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Summer11/"+dataset
 #diskoutputmain2 = castordir
 #diskoutputmain2 = pnfsdir
