@@ -424,7 +424,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
     if( dataset_tstr.Contains("powheg") ) xSection *= 1.5; // has also taus
 
   // 425:
-  } else if( dataset=="JHUgen_HiggsSM425_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-425_7TeV-jhu-pythia6") ||  ) {
+  } else if( dataset=="JHUgen_HiggsSM425_2l2j_FASTSIM" || dataset_tstr.Contains("SMHiggsToZZTo2L2Q_M-425_7TeV-jhu-pythia6") || dataset_tstr.Contains("GluGluToHToZZTo2L2Q_M-425") ) {
     xSection = (1.72175+0.141425)*0.2675*0.067316*0.7*2.; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->jj) x 2
     if( dataset_tstr.Contains("powheg") ) xSection *= 1.5; // has also taus
 
