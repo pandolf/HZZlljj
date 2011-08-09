@@ -30,7 +30,8 @@ bool USE_MC_MASS=false;
 
 int getNJets( int nPairs );
 float getWeight_adish( int nPU );
-float getMuonHLTSF( float eta );
+//float getMuonHLTSF( float eta );
+float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger );
 
 std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string histoName, int nBins, float xMin, float xMax );
 
@@ -67,6 +68,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_nCounter->Sumw2();
   TH1D* h1_nCounterW = new TH1D("nCounterW", "", 1, 0., 1.);
   h1_nCounterW->Sumw2();
+  TH1D* h1_nCounterPU = new TH1D("nCounterPU", "", 1, 0., 1.);
+  h1_nCounterPU->Sumw2();
 
   TH1D* h1_nEventsCategories_presel = new TH1D("nEventsCategories_presel", "", 4, -1.5, 2.5);
   h1_nEventsCategories_presel->Sumw2();
@@ -1240,6 +1243,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   bool foundSignalRegionMjj=false;
   bool atLeastOneInSignalRegionMjj=false;
 
+  tree_passedEvents->Branch( "run", &run, "run/I" );
+  tree_passedEvents->Branch( "event", &event, "event/I" );
   tree_passedEvents->Branch( "leptType", &leptType, "leptType/I" );
   tree_passedEvents->Branch( "mZjj", &mZjj, "mZjj/F" );
   tree_passedEvents->Branch( "mZZ", &mZZ, "mZZ/F" );
@@ -1305,10 +1310,25 @@ ofstream ofs("run_event.txt");
       // scale factor for double mu triggers:
       if( leptType==0 ) {
 
-        float eff1 = getMuonHLTSF( etaLept1 );
-        float eff2 = getMuonHLTSF( etaLept2 );
+        //float eff1 = getMuonHLTSF( etaLept1 );
+        //float eff2 = getMuonHLTSF( etaLept2 );
 
-        HLTSF = eff1*eff2;
+        //HLTSF = eff1*eff2;
+
+        float effDouble1 = getMuonHLTSF( ptLept1, etaLept1, true );
+        float effDouble2 = getMuonHLTSF( ptLept2, etaLept2, true );
+        float effSingle1 = getMuonHLTSF( ptLept1, etaLept1, false );
+        float effSingle2 = getMuonHLTSF( ptLept2, etaLept2, false );
+
+        HLTSF= effDouble1 * effDouble2 +
+               effSingle2 * (1. - effDouble1 ) +
+               effSingle1 * (1. - effDouble2 );
+
+//      HLTSF= getMuonHLTSF( ptLept1, etaLept1, true)  *       getMuonHLTSF( ptLept2, etaLept2, true) +
+//             getMuonHLTSF( ptLept2, etaLept2, false) * (1. - getMuonHLTSF( ptLept1, etaLept1, true)) +
+//             getMuonHLTSF( ptLept1, etaLept1, false) * (1. - getMuonHLTSF( ptLept2, etaLept2, true));
+
+
         eventWeight *= HLTSF;
 
       } else { //electrons
@@ -1382,15 +1402,15 @@ ofstream ofs("run_event.txt");
 
       // HLT requirement:
   
-    //if( dataset_tstr.BeginsWith("SingleMu") ) {
+      if( dataset_tstr.BeginsWith("SingleMu") ) {
 
-    //  bool passedHLT = passed_HLT_IsoMu24
-    //                && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8
-    //                && !passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL && !passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
+        bool passedHLT = passed_HLT_IsoMu24
+                      && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8
+                      && !passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL && !passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
 
-    //  if( !passedHLT ) continue;
+        if( !passedHLT ) continue;
 
-    //}
+      }
 
     //if( dataset_tstr.BeginsWith("DoubleMu") ) {
 
@@ -2827,6 +2847,7 @@ ofs << run << " " << event << std::endl;
 
   h1_nCounter->SetBinContent(1, nCounter_);
   h1_nCounterW->SetBinContent(1, nCounterW_);
+  h1_nCounterPU->SetBinContent(1, nCounterPU_);
 
   float eff_gluetag_250 = nEventsPassed_fb_gluetag_250/nCounterW_;
   float eff_0btag_250 = nEventsPassed_fb_0btag_250/nCounterW_;
@@ -3199,6 +3220,7 @@ ofs << run << " " << event << std::endl;
 
   h1_nCounter->Write();
   h1_nCounterW->Write();
+  h1_nCounterPU->Write();
 
   h1_nEventsCategories_presel->Write();
 
@@ -4216,14 +4238,39 @@ float getWeight_adish( int nPU ) {
 
 
 
-float getMuonHLTSF( float eta ) {
+float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger ) {
 
-  float eff;
+//float eff;
 
-  if( fabs(eta)<0.9 ) eff = 0.97;
-  else if( fabs(eta)<2.1 ) eff = 0.95;
-  else eff = 0.91;
+//if( fabs(eta)<0.9 ) eff = 0.97;
+//else if( fabs(eta)<2.1 ) eff = 0.95;
+//else eff = 0.91;
 
-  return eff;
+//return eff;
+
+
+  double eff_Double[1][3]={{0.975, 0.957, 0.915}};
+  double eff_Single[1][4]={{0.980, 0.947, 0.943,0.886}};
+  
+  double w(1.);
+  int y_bin=-1;
+  
+  if (TMath::Abs(eta)<=0.8) {
+    y_bin=0;
+  } else if (TMath::Abs(eta)>0.8 && TMath::Abs(eta)<=1.2) {   
+    y_bin=1;
+  } else if (TMath::Abs(eta)>1.2 && TMath::Abs(eta)<=1.48) {
+    y_bin=2;
+  } else if (TMath::Abs(eta)>1.48 && TMath::Abs(eta)<=2.1) {
+    y_bin=3;
+  }else if(TMath::Abs(eta)>2.1 && TMath::Abs(eta)<=2.4) {
+    y_bin=4;
+  }
+  
+  if (y_bin>=0) {     
+    w =  eff_Double[0][y_bin];
+  }
+
+  return w;
 
 }
