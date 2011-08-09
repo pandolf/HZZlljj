@@ -145,21 +145,9 @@ public :
    Float_t         covIPhiIPhiSC[200];   //[nSC]
    Float_t         hOverESC[200];   //[nSC]
    Int_t           recoFlagSC[200];   //[nSC]
-   Int_t           channelStatusSC[200];   //[nSC]
    Float_t         timeSC[200];   //[nSC]
    Float_t         chi2SC[200];   //[nSC]
    Float_t         seedEnergySC[200];   //[nSC]
-   Int_t           idClosProblSC[200];   //[nSC]
-   Int_t           sevClosProblSC[200];   //[nSC]
-   Float_t         fracClosProblSC[200];   //[nSC]
-   Float_t         scBasedEcalSum03SC[200];   //[nSC]
-   Float_t         scBasedEcalSum04SC[200];   //[nSC]
-   Float_t         ecalRecHitSumEtConeDR03SC[200];   //[nSC]
-   Float_t         hcalTowerSumEtConeDR03SC[200];   //[nSC]
-   Float_t         trkSumPtSolidConeDR03SC[200];   //[nSC]
-   Float_t         ecalRecHitSumEtConeDR04SC[200];   //[nSC]
-   Float_t         hcalTowerSumEtConeDR04SC[200];   //[nSC]
-   Float_t         trkSumPtSolidConeDR04SC[200];   //[nSC]
    Float_t         sMajSC[200];   //[nSC]
    Float_t         sMinSC[200];   //[nSC]
    Float_t         alphaSC[200];   //[nSC]
@@ -774,21 +762,9 @@ public :
    TBranch        *b_covIPhiIPhiSC;   //!
    TBranch        *b_hOverESC;   //!
    TBranch        *b_recoFlagSC;   //!
-   TBranch        *b_channelStatusSC;   //!
    TBranch        *b_timeSC;   //!
    TBranch        *b_chi2SC;   //!
    TBranch        *b_seedEnergySC;   //!
-   TBranch        *b_idClosProblSC;   //!
-   TBranch        *b_sevClosProblSC;   //!
-   TBranch        *b_fracClosProblSC;   //!
-   TBranch        *b_scBasedEcalSum03SC;   //!
-   TBranch        *b_scBasedEcalSum04SC;   //!
-   TBranch        *b_ecalRecHitSumEtConeDR03SC;   //!
-   TBranch        *b_hcalTowerSumEtConeDR03SC;   //!
-   TBranch        *b_trkSumPtSolidConeDR03SC;   //!
-   TBranch        *b_ecalRecHitSumEtConeDR04SC;   //!
-   TBranch        *b_hcalTowerSumEtConeDR04SC;   //!
-   TBranch        *b_trkSumPtSolidConeDR04SC;   //!
    TBranch        *b_sMajSC;   //!
    TBranch        *b_sMinSC;   //!
    TBranch        *b_alphaSC;   //!
