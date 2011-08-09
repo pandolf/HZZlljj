@@ -56,6 +56,16 @@ int main( int argc, char* argv[] ) {
 
   // and now set the weights
   tree->SetBranchStatus( "eventWeight", 0 );
+  Bool_t passed_HLT_DoubleMu7;
+  tree->SetBranchAddress("passed_HLT_DoubleMu7", &passed_HLT_DoubleMu7);
+  Bool_t passed_HLT_Mu13_Mu8;
+  tree->SetBranchAddress("passed_HLT_Mu13_Mu8", &passed_HLT_Mu13_Mu8);
+  Bool_t passed_HLT_IsoMu24;
+  tree->SetBranchAddress("passed_HLT_IsoMu24", &passed_HLT_IsoMu24);
+  Bool_t passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL;
+  tree->SetBranchAddress("passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL", &passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL);
+  Bool_t passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
+  tree->SetBranchAddress("passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL", &passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL);
   
   std::string outfilename = analysisType_ + "_2ndLevelTreeW_"+dataset;
   if( flags_!="" ) outfilename += "_" + flags_;
@@ -74,6 +84,8 @@ int main( int argc, char* argv[] ) {
   Float_t newWeight;
   newTree->Branch( "eventWeight", &newWeight, "newWeight/F" );
 
+  TString dataset_tstr(dataset);
+
   int nentries = tree->GetEntries();
   for( unsigned ientry = 0; ientry<nentries; ++ientry ) {
 
@@ -84,6 +96,16 @@ int main( int argc, char* argv[] ) {
     newWeight = weight;
 
     if( dataset=="MU_Run2010B_PromptReco_v2_runs146240_146733" ) newWeight = 0.5;
+    if( dataset_tstr.BeginsWith("SingleMu") ) {
+
+      bool passedHLT = passed_HLT_IsoMu24
+                    && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8
+                    && !passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL && !passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
+
+      if( !passedHLT ) continue;
+
+    }
+    
 
     newTree->Fill();
 
@@ -177,7 +199,7 @@ std::pair<float,float> addInput( const std::string& dataset ) {
       if( h1_nCounter!=0 ) {
         totalEvents += h1_nCounter->GetBinContent(1);
       } else {
-        std::cout << std::endl << std::endl << " WARNING! File '" << infileName << "' has no nCounter information. Skipping." << std::endl;
+        std::cout << std::endl << std::endl << " WARNING! File '" << rootfilename << "' has no nCounter information. Skipping." << std::endl;
       }
 
       // nCounterPU:
@@ -185,7 +207,7 @@ std::pair<float,float> addInput( const std::string& dataset ) {
       if( h1_nCounterPU!=0 ) {
         totalEventsPU += h1_nCounterPU->GetBinContent(1);
       } else {
-        std::cout << std::endl << std::endl << " WARNING! File '" << infileName << "' has no nCounterPU information. Skipping." << std::endl;
+        std::cout << std::endl << std::endl << " WARNING! File '" << rootfilename << "' has no nCounterPU information. Skipping." << std::endl;
       }
 
       // nCounter_Zee
@@ -510,9 +532,9 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 62.8;//##
   } else if( dataset=="TToBLNu_TuneZ2_tW-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## single top, tW-channel
     xSection = 10.56;//##
-  } else if( dataset=="WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2" ) {//##  WW
+  } else if( dataset_tstr.BeginsWith("WWtoAnything") ) {
     xSection = 42.9;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
-  } else if( dataset=="WZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2" ) {//##  WZ
+  } else if( dataset_tstr.BeginsWith("WZtoAnything") ) {
     xSection = 18.3;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
   } else if( dataset=="WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## W+Jets
     xSection = 3*9679.9/*31314*/;//##
