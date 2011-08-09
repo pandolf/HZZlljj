@@ -4248,29 +4248,38 @@ float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger ) {
 
 //return eff;
 
+  if( !isDoubleTrigger && pt<25. ) return 0.;
 
   double eff_Double[1][3]={{0.975, 0.957, 0.915}};
   double eff_Single[1][4]={{0.980, 0.947, 0.943,0.886}};
   
-  double w(1.);
-  int y_bin=-1;
+  double w(1);
+  int y_D=-1;
+  int y_S=-1;
+  
   
   if (TMath::Abs(eta)<=0.8) {
-    y_bin=0;
+    if(isDouble) y_D=0;
+    else y_S=0;
   } else if (TMath::Abs(eta)>0.8 && TMath::Abs(eta)<=1.2) {   
-    y_bin=1;
+    if(isDouble) y_D=1;
+    else y_S=1;
   } else if (TMath::Abs(eta)>1.2 && TMath::Abs(eta)<=1.48) {
-    y_bin=2;
+    if(isDouble) y_D=2;
+    else y_S=1;
   } else if (TMath::Abs(eta)>1.48 && TMath::Abs(eta)<=2.1) {
-    y_bin=3;
+    if(isDouble) y_D=2;
+    else y_S=2;
   }else if(TMath::Abs(eta)>2.1 && TMath::Abs(eta)<=2.4) {
-    y_bin=4;
+    if(isDouble) y_D=2;
+    else y_S=3;  
   }
   
-  if (y_bin>=0) {     
-    w =  eff_Double[0][y_bin];
+  if (y_D>=0 || y_S>=0) {     
+    if(isDouble) w =  eff_Double[0][y_D];
+    else w= eff_Single[0][y_S];		 	
   }
-
   return w;
+}
 
 }
