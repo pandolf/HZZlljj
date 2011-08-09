@@ -488,6 +488,10 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 157.4; //NLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset_tstr.BeginsWith("ZZtoAnything") ) {
     xSection = 5.9*1.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt plus factor 1.3 to account for glu-glu
+  } else if( dataset_tstr.BeginsWith("WWtoAnything") ) {
+    xSection = 42.9;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
+  } else if( dataset_tstr.BeginsWith("WZtoAnything") ) {
+    xSection = 18.3;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
   } else if( dataset=="Zmumu_Pythia" ) {
     xSection = 3048./3.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="PhotonJet_Summer1036X_Pt5to15_pfakt5" ) {
@@ -524,18 +528,14 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 0.13372;//##
   } else if( dataset=="GluGlu170" ) {//##
     xSection = 2.148;//## Other
-  } else if( dataset=="TT_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3" ) {//## t tbar
-    xSection = 157.5;//## //TTbar To All
-  } else if( dataset=="TToBLNu_TuneZ2_s-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## single top, s-channel
-    xSection = 4.6;//##
-  } else if( dataset=="TToBLNu_TuneZ2_t-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## single top, t-channel
-    xSection = 62.8;//##
-  } else if( dataset=="TToBLNu_TuneZ2_tW-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## single top, tW-channel
-    xSection = 10.56;//##
-  } else if( dataset_tstr.BeginsWith("WWtoAnything") ) {
-    xSection = 42.9;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
-  } else if( dataset_tstr.BeginsWith("WZtoAnything") ) {
-    xSection = 18.3;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
+  } else if( dataset_tstr.BeginsWith("TTTo2L2Nu2B_") ) { 	 
+    xSection = 157.4*0.1080*0.1080*3.*3.; //TTbar cross section x BR(W->lnu) x BR(W->lnu) x 9 combinations (3 leptons) 	 
+  } else if( dataset_tstr.BeginsWith("TToBLNu") && dataset_tstr.Contains("s-channel") ) { 	 
+    xSection = 4.6; 	 
+  } else if( dataset_tstr.BeginsWith("TToBLNu") && dataset_tstr.Contains("t-channel") ) { 	 
+    xSection = 62.8; 	 
+  } else if( dataset_tstr.BeginsWith("TToBLNu") && dataset_tstr.Contains("tW-channel") ) { 	 
+    xSection = 10.56;
   } else if( dataset=="WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## W+Jets
     xSection = 3*9679.9/*31314*/;//##
   } else if( dataset=="DYToEE_M-10To20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. EE 10to20
