@@ -119,7 +119,6 @@ public :
    Float_t         dr04HcalTowerSumEtEle[150];   //[nEle]
    Float_t         scBasedEcalSum03Ele[150];   //[nEle]
    Float_t         scBasedEcalSum04Ele[150];   //[nEle]
-   Int_t           eleIdCutsEle[150];   //[nEle]
    Float_t         eleIdLikelihoodEle[150];   //[nEle]
    Float_t         pflowMVAEle[150];   //[nEle]
    Int_t           nSC;
@@ -694,7 +693,6 @@ public :
    TBranch        *b_dr04HcalTowerSumEtEle;   //!
    TBranch        *b_scBasedEcalSum03Ele;   //!
    TBranch        *b_scBasedEcalSum04Ele;   //!
-   TBranch        *b_eleIdCutsEle;   //!
    TBranch        *b_eleIdLikelihoodEle;   //!
    TBranch        *b_pflowMVAEle;   //!
    TBranch        *b_nPFEle;   //!
