@@ -1131,7 +1131,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
 	     if( !ripet_DrJetJet ){  nEvent_DrJetJet++; ripet_DrJetJet = true;}
 	    
 	     //if(  diJet.M() > mWjj_threshLo_ && diJet.M() < mWjj_threshHi_  ){ 
-	      // if( !ripet_DijetMass ){  nEvent_DijetMass++; ripet_DijetMass = true;} TO FIT FOR THE UL
+	       //if( !ripet_DijetMass ){  nEvent_DijetMass++; ripet_DijetMass = true;} //TO FIT FOR THE UL
 	      
 	       if(  diJet.Pt() > ptWjj_thresh_){
 	         if( !ripet_DijetPt ){ nEvent_DijetPt++; ripet_DijetPt = true;}
@@ -2023,6 +2023,17 @@ if( peakZone ){
       mWW=WW_kinfit.M(); // In orderd to extrapolate UL
       Tree_FITUL->Fill();
 
+/*  // Removing mjj cut at the beginning sometimes mWW<0. These events are removed later with the mjj cuts, but before you can find mWW<0 
+
+    if( WW_kinfit.M()<0. ){ std::cout<<"ALLARME   WW.M()= "<<  WW_kinfit.M()<<"  WW.E()= "<< WW_kinfit.E()<<"  WW.P()= "<<WW_kinfit.P()<<std::endl; std::cout<<std::endl;
+    if(jet1_kinfit.M()<0){ std::cout<<"JET1:  "<<"Massa: "<<jet1_kinfit.M()<<"  jet1_E: "<< jet1_kinfit.E()<< "  jet1_P:  "<<jet1_kinfit.P()<< std::endl; }
+    if(jet2_kinfit.M()<0){ std::cout<<"JET2:  "<<"Massa: "<<jet2_kinfit.M()<<"  jet2_E: "<< jet2_kinfit.E()<< "  jet2_P:  "<<jet2_kinfit.P()<< std::endl; }
+    if(lept1.M()<0){ std::cout<<"LEPT:  "<<"Massa: "<<lept1.M()<<"  lept_E: "<< lept1.E()<< "  lept_P:  "<<lept1.P()<< std::endl; }
+    if(lept2.M()<0){ std::cout<<"NEU:  "<<"Massa: "<<lept2.M()<<"  NEU_E: "<< lept2.E()<< "  NEU_P:  "<<lept2.P()<< std::endl; }
+    if(Neu_MetFitted.M()<0){ std::cout<<"NEU2:  "<<"Massa: "<<Neu_MetFitted.M()<<"  NEU@_E: "<< Neu_MetFitted.E()<< "  NEU2_P:  "<<Neu_MetFitted.P()<< std::endl;  }
+    }*/
+
+
    if( peakZone ){
                       h1_mWW_kinfitCUT->Fill( WW_kinfit.M(), eventWeight );
       if(leptType==1) h1_mWW_kinfitCUT_e->Fill( WW_kinfit.M(), eventWeight );
@@ -2035,20 +2046,16 @@ if( peakZone ){
       // *****************************************
       // *****  PASSED ANALYSIS SELECTION ********
       // *****************************************
-/*
-      //if( WW_kinfit.M() > mWW_threshLo_ && WW_kinfit.M() < mWW_threshHi_ ) {
+
         if( WW_kinfit.M() > mWW_threshLo_  && WW_kinfit.M() < mWW_threshHi_ ){
         nEventsPassed_fb_kinfit += eventWeight;
         nEventsPassed_kinfit++;
-
-	 //if( !btag_SSVhighEff ) nEventsPassed_kinfit_antiBtag++;
-      }
-      //if( WW.M() > mWW_threshLo_ && WW.M() < mWW_threshHi_ ) {
-      if( WW.M() > mWW_threshLo_ && WW.M() < mWW_threshHi_ ) {
+        }
+        if( WW.M() > mWW_threshLo_ && WW.M() < mWW_threshHi_ ) {
         nEventsPassed_fb_nokinfit += eventWeight;
         nEventsPassed_nokinfit++;
-      }
-*/
+        }
+
         if( WW_kinfit.M() > 250-((HiggsMass_*10.)/100.)  && WW_kinfit.M() < 250+((HiggsMass_*12.)/100.) ){
           nEvents250_fb_kinfit += eventWeight;
           nEvents250_kinfit++;
@@ -2217,10 +2224,20 @@ if( peakZone ){
 
   std::cout << std::endl << std::endl;
   std::cout << "----> PASSED preSELECTION: " << 1000.*nEvents_presel<<"  PASSED 2nd step: "<<1000*nEvents_met<<"  PASSED 3rd step: "<<1000*nEvents_btag_W_pt3<<" ev/fb-1"<<std::endl;
+ 
+  bool isBKG = true;
+  std::string WW200("WW200");
+  std::string WW300("WW300");
+  std::string WW400("WW400");
+  std::string WW500("WW500");
+  std::string WW250("GluGluToHToWWToLNuQQ_M-250_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1");
+  std::string WW350("GluGluToHToWWToLNuQQ_M-350_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1");
+  std::string WW450("GluGluToHToWWToLNuQQ_M-450_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1");
+  std::string WW550("GluGluToHToWWToLNuQQ_M-550_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1");
+  if( (dataset_.compare(WW200)==0) || (dataset_.compare(WW250)==0) || (dataset_.compare(WW300)==0) || (dataset_.compare(WW350)==0) || (dataset_.compare(WW400)==0) || (dataset_.compare(WW450)==0) ||
+      (dataset_.compare(WW500)==0) || (dataset_.compare(WW550)==0) ) isBKG=false;
 
-//  std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1(" << nEventsPassed_kinfit << " events)"<< std::endl;
-//  std::cout << "----> PASSED SELECTION (no kinfit): " << 1000.*nEventsPassed_fb_nokinfit << " ev/fb-1 (" << nEventsPassed_nokinfit << " events)" << std::endl;
-//  std::cout << std::endl;
+  if( isBKG ){
   std::cout << "----> PASSED SELECTION (250): " << 1000.*nEvents250_fb_kinfit << " ev/fb-1(" << nEvents250_kinfit << " events)"<< std::endl;
   std::cout << "----> PASSED SELECTION (300): " << 1000.*nEvents300_fb_kinfit << " ev/fb-1(" << nEvents300_kinfit << " events)"<< std::endl;
   std::cout << "----> PASSED SELECTION (350): " << 1000.*nEvents350_fb_kinfit << " ev/fb-1(" << nEvents350_kinfit << " events)"<< std::endl;
@@ -2229,6 +2246,13 @@ if( peakZone ){
   std::cout << "----> PASSED SELECTION (500): " << 1000.*nEvents500_fb_kinfit << " ev/fb-1(" << nEvents500_kinfit << " events)"<< std::endl;
   std::cout << "----> PASSED SELECTION (550): " << 1000.*nEvents550_fb_kinfit << " ev/fb-1(" << nEvents550_kinfit << " events)"<< std::endl;
   std::cout << std::endl;
+}
+  else{
+  std::cout << "----> PASSED SELECTION: " << 1000.*nEventsPassed_fb_kinfit << " ev/fb-1(" << nEventsPassed_kinfit << " events)"<< std::endl;
+  std::cout << "----> PASSED SELECTION (no kinfit): " << 1000.*nEventsPassed_fb_nokinfit << " ev/fb-1 (" << nEventsPassed_nokinfit << " events)" << std::endl;
+  std::cout << std::endl;
+  }
+
 
   std::cout<<"Eff(Tot)" <<  nEventsPassed_kinfit/nCounter_ <<std::endl;
   std::cout<<"Eff(Tot)" <<  nEventsPassed_fb_kinfit/nCounterW_ <<std::endl;
