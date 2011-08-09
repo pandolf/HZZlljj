@@ -493,29 +493,6 @@ public :
    Float_t         vertexZPFCand[600];   //[nPFCand]
    Int_t           particleTypePFCand[600];   //[nPFCand]
    Int_t           iPFJetPFCand[600];   //[nPFCand]
-   Int_t           nAK5Jet;
-   Int_t           chargeAK5Jet[300];   //[nAK5Jet]
-   Float_t         energyAK5Jet[300];   //[nAK5Jet]
-   Float_t         thetaAK5Jet[300];   //[nAK5Jet]
-   Float_t         etaAK5Jet[300];   //[nAK5Jet]
-   Float_t         phiAK5Jet[300];   //[nAK5Jet]
-   Float_t         pxAK5Jet[300];   //[nAK5Jet]
-   Float_t         pyAK5Jet[300];   //[nAK5Jet]
-   Float_t         pzAK5Jet[300];   //[nAK5Jet]
-   Float_t         vertexXAK5Jet[300];   //[nAK5Jet]
-   Float_t         vertexYAK5Jet[300];   //[nAK5Jet]
-   Float_t         vertexZAK5Jet[300];   //[nAK5Jet]
-   Float_t         emFracAK5Jet[300];   //[nAK5Jet]
-   Float_t         hadFracAK5Jet[300];   //[nAK5Jet]
-   Float_t         combinedSecondaryVertexBJetTagsAK5Jet[300];   //[nAK5Jet]
-   Float_t         combinedSecondaryVertexMVABJetTagsAK5Jet[300];   //[nAK5Jet]
-   Float_t         jetBProbabilityBJetTagsAK5Jet[300];   //[nAK5Jet]
-   Float_t         jetProbabilityBJetTagsAK5Jet[300];   //[nAK5Jet]
-   Float_t         simpleSecondaryVertexBJetTagsAK5Jet[300];   //[nAK5Jet]
-   Float_t         softMuonBJetTagsAK5Jet[300];   //[nAK5Jet]
-   Float_t         trackCountingHighPurBJetTagsAK5Jet[300];   //[nAK5Jet]
-   Float_t         trackCountingHighEffBJetTagsAK5Jet[300];   //[nAK5Jet]
-   Float_t         uncorrEnergyAK5Jet[300];   //[nAK5Jet]
    Int_t           nAK5PFPUcorrJet;
    Int_t           chargeAK5PFPUcorrJet[300];   //[nAK5PFPUcorrJet]
    Float_t         energyAK5PFPUcorrJet[300];   //[nAK5PFPUcorrJet]
@@ -652,6 +629,7 @@ public :
    Float_t ptHatMin_;
    Float_t ptHatMax_;
    Float_t eventWeight_;
+   Float_t eventWeightPU_;
   
 
    bool DEBUG_;
@@ -1150,29 +1128,6 @@ public :
    TBranch        *b_vertexZPFCand;   //!
    TBranch        *b_particleTypePFCand;   //!
    TBranch        *b_iPFJetPFCand;   //!
-   TBranch        *b_nAK5Jet;   //!
-   TBranch        *b_chargeAK5Jet;   //!
-   TBranch        *b_energyAK5Jet;   //!
-   TBranch        *b_thetaAK5Jet;   //!
-   TBranch        *b_etaAK5Jet;   //!
-   TBranch        *b_phiAK5Jet;   //!
-   TBranch        *b_pxAK5Jet;   //!
-   TBranch        *b_pyAK5Jet;   //!
-   TBranch        *b_pzAK5Jet;   //!
-   TBranch        *b_vertexXAK5Jet;   //!
-   TBranch        *b_vertexYAK5Jet;   //!
-   TBranch        *b_vertexZAK5Jet;   //!
-   TBranch        *b_emFracAK5Jet;   //!
-   TBranch        *b_hadFracAK5Jet;   //!
-   TBranch        *b_combinedSecondaryVertexBJetTagsAK5Jet;   //!
-   TBranch        *b_combinedSecondaryVertexMVABJetTagsAK5Jet;   //!
-   TBranch        *b_jetBProbabilityBJetTagsAK5Jet;   //!
-   TBranch        *b_jetProbabilityBJetTagsAK5Jet;   //!
-   TBranch        *b_simpleSecondaryVertexBJetTagsAK5Jet;   //!
-   TBranch        *b_softMuonBJetTagsAK5Jet;   //!
-   TBranch        *b_trackCountingHighPurBJetTagsAK5Jet;   //!
-   TBranch        *b_trackCountingHighEffBJetTagsAK5Jet;   //!
-   TBranch        *b_uncorrEnergyAK5Jet;   //!
    TBranch        *b_nAK5PFPUcorrJet;   //!
    TBranch        *b_chargeAK5PFPUcorrJet;   //!
    TBranch        *b_energyAK5PFPUcorrJet;   //!
