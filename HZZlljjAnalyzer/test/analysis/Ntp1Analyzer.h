@@ -186,15 +186,9 @@ public :
    Float_t         covIPhiIPhiPFSC[200];   //[nPFSC]
    Float_t         hOverEPFSC[200];   //[nPFSC]
    Int_t           recoFlagPFSC[200];   //[nPFSC]
-   Int_t           channelStatusPFSC[200];   //[nPFSC]
    Float_t         timePFSC[200];   //[nPFSC]
    Float_t         chi2PFSC[200];   //[nPFSC]
    Float_t         seedEnergyPFSC[200];   //[nPFSC]
-   Int_t           idClosProblPFSC[200];   //[nPFSC]
-   Int_t           sevClosProblPFSC[200];   //[nPFSC]
-   Float_t         fracClosProblPFSC[200];   //[nPFSC]
-   Float_t         scBasedEcalSum03PFSC[200];   //[nPFSC]
-   Float_t         scBasedEcalSum04PFSC[200];   //[nPFSC]
    Int_t           nBC;
    Int_t           nCrystalsBC[200];   //[nBC]
    Float_t         energyBC[200];   //[nBC]
@@ -821,15 +815,9 @@ public :
    TBranch        *b_covIPhiIPhiPFSC;   //!
    TBranch        *b_hOverEPFSC;   //!
    TBranch        *b_recoFlagPFSC;   //!
-   TBranch        *b_channelStatusPFSC;   //!
    TBranch        *b_timePFSC;   //!
    TBranch        *b_chi2PFSC;   //!
    TBranch        *b_seedEnergyPFSC;   //!
-   TBranch        *b_idClosProblPFSC;   //!
-   TBranch        *b_sevClosProblPFSC;   //!
-   TBranch        *b_fracClosProblPFSC;   //!
-   TBranch        *b_scBasedEcalSum03PFSC;   //!
-   TBranch        *b_scBasedEcalSum04PFSC;   //!
    TBranch        *b_nBC;   //!
    TBranch        *b_nCrystalsBC;   //!
    TBranch        *b_energyBC;   //!

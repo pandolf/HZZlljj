@@ -556,15 +556,9 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->SetBranchAddress("covIPhiIPhiPFSC", covIPhiIPhiPFSC, &b_covIPhiIPhiPFSC);
    fChain->SetBranchAddress("hOverEPFSC", hOverEPFSC, &b_hOverEPFSC);
    fChain->SetBranchAddress("recoFlagPFSC", recoFlagPFSC, &b_recoFlagPFSC);
-   fChain->SetBranchAddress("channelStatusPFSC", channelStatusPFSC, &b_channelStatusPFSC);
    fChain->SetBranchAddress("timePFSC", timePFSC, &b_timePFSC);
    fChain->SetBranchAddress("chi2PFSC", chi2PFSC, &b_chi2PFSC);
    fChain->SetBranchAddress("seedEnergyPFSC", seedEnergyPFSC, &b_seedEnergyPFSC);
-   fChain->SetBranchAddress("idClosProblPFSC", idClosProblPFSC, &b_idClosProblPFSC);
-   fChain->SetBranchAddress("sevClosProblPFSC", sevClosProblPFSC, &b_sevClosProblPFSC);
-   fChain->SetBranchAddress("fracClosProblPFSC", fracClosProblPFSC, &b_fracClosProblPFSC);
-   fChain->SetBranchAddress("scBasedEcalSum03PFSC", scBasedEcalSum03PFSC, &b_scBasedEcalSum03PFSC);
-   fChain->SetBranchAddress("scBasedEcalSum04PFSC", scBasedEcalSum04PFSC, &b_scBasedEcalSum04PFSC);
    //fChain->SetBranchAddress("nBC", &nBC, &b_nBC);
    //fChain->SetBranchAddress("nCrystalsBC", nCrystalsBC, &b_nCrystalsBC);
    //fChain->SetBranchAddress("energyBC", energyBC, &b_energyBC);
