@@ -49,7 +49,7 @@ bool AnalysisElectron::electronIDVBTF80() {
     hOverE_thresh80 = 0.04;
   } else {
     sigmaIetaIeta_thresh80 = 0.03;
-    deltaPhiAtVtx_thresh80 = 0.03;
+    deltaPhiAtVtx_thresh80 = 0.03; 
     deltaEtaAtVtx_thresh80 = 0.007;
     hOverE_thresh80 = 0.15;
   }
@@ -104,14 +104,14 @@ bool AnalysisElectron::electronIDVBTF95() {
 
   if( fabs(this->Eta())<1.4442 ) {
     sigmaIetaIeta_thresh95 = 0.01;
-    deltaPhiAtVtx_thresh95 = 0.8;
+    deltaPhiAtVtx_thresh95 = 0.8; 
     deltaEtaAtVtx_thresh95 = 0.007;
-    hOverE_thresh95 = 0.15;
+    hOverE_thresh95 = 0.15; 
   } else {
     sigmaIetaIeta_thresh95 = 0.03;
-    deltaPhiAtVtx_thresh95 = 0.7;
+    deltaPhiAtVtx_thresh95 = 0.7; 
     deltaEtaAtVtx_thresh95 = 0.01; 
-    hOverE_thresh95 = 0.07;
+    hOverE_thresh95 = 0.15;
   }
 
 
