@@ -95,12 +95,23 @@ int main( int argc, char* argv[] ) {
 
     newWeight = weight;
 
-    if( dataset=="MU_Run2010B_PromptReco_v2_runs146240_146733" ) newWeight = 0.5;
     if( dataset_tstr.BeginsWith("SingleMu") ) {
 
       bool passedHLT = passed_HLT_IsoMu24
                     && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8
                     && !passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL && !passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
+
+      if( !passedHLT ) continue;
+
+    } else if( dataset_tstr.BeginsWith("DoubleMu") ) {
+
+      bool passedHLT = passed_HLT_DoubleMu7 || passed_HLT_Mu13_Mu8;
+
+      if( !passedHLT ) continue;
+
+    } else if( dataset_tstr.BeginsWith("DoubleElectron") ) {
+
+      bool passedHLT = passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL || passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
 
       if( !passedHLT ) continue;
 
