@@ -239,6 +239,9 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_Glob_ptResoJet2_KinFit = new TH1D("Glob_ptResoJet2_KinFit", "", 100, -1., 1.);
   h1_Glob_ptResoJet2_KinFit->Sumw2();
 
+  TH1D* h1_FinalHreso_mu = new TH1D("FinalHreso_mu","",100, -1.,1.);
+  TH1D* h1_FinalHreso_ele = new TH1D("FinalHreso_ele","",100, -1.,1.);
+
 //TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 27, 30., 400.);
 //h1_ptJetRecoil->Sumw2();
 //TH1D* h1_ptDJetRecoil = new TH1D("ptDJetRecoil", "", 60, 0., 1.);
@@ -942,6 +945,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   Tree_FITUL->Branch("eventWeight", &eventWeight, "eventWeight/F");
   Tree_FITUL->Branch("mJJ", &mJJ, "mJJ/F");
   Tree_FITUL->Branch("mWW", &mWW, "mWW/F");
+  Tree_FITUL->Branch("leptType", &leptType, "leptType/I");
 
    // FOR iEntry
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
@@ -2046,6 +2050,9 @@ if( peakZone ){
       // *****************************************
       // *****  PASSED ANALYSIS SELECTION ********
       // *****************************************
+         
+        if( leptType==1 && isMC ){h1_FinalHreso_ele->Fill( (WW_kinfit.M()-HiggsMC.M())/HiggsMC.M() ); }
+        if( leptType==0 && isMC ){ h1_FinalHreso_mu->Fill( (WW_kinfit.M()-HiggsMC.M())/HiggsMC.M() ); }
 
         if( WW_kinfit.M() > mWW_threshLo_  && WW_kinfit.M() < mWW_threshHi_ ){
         nEventsPassed_fb_kinfit += eventWeight;
@@ -2308,6 +2315,9 @@ if( peakZone ){
   // Reso Kinfit Glob
   h1_Glob_ptResoJet1_KinFit->Write();
   h1_Glob_ptResoJet2_KinFit->Write();
+  h1_FinalHreso_mu->Write();
+  h1_FinalHreso_ele->Write();
+
   // Reso helicity
   h1_pzResoNeut_heli->Write();
 
