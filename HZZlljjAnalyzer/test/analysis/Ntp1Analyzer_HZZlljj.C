@@ -127,6 +127,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
   reducedTree_->Branch("rhoPF",&rhoPF_,"rhoPF_/F");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
+  reducedTree_->Branch("eventWeightPU",&eventWeightPU_,"eventWeightPU_/F");
   reducedTree_->Branch("leptTypeMC",&leptTypeMC_,"leptTypeMC_/I");
 
 //// triggers:
@@ -425,6 +426,18 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      leptTypeMC_ = -1;
 
 
+     // PU reweighting:
+     eventWeightPU_=1.;
+     if( isMC_ ) {
+       if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") )
+         eventWeightPU_ = getWeightPU(nPU_);
+       else
+         eventWeightPU_ = fPUWeight->GetWeight(nPU_);
+     }
+     nCounterPU += eventWeightPU_;
+
+
+
      if( !isGoodEvent(jentry) ) continue; //this takes care also of trigger
 
      if( nPV==0 ) continue;
@@ -436,16 +449,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      }
 
 
-     float eventWeight=1.;
-     
-     if( isMC_ ) {
-       // PU reweighting:
-       if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") )
-         eventWeight = getWeightPU(nPU_);
-       else
-         eventWeight = fPUWeight->GetWeight(nPU_);
-     }
-     nCounterPU += eventWeight;
 
    //nPU_ = 0;
    //for( unsigned iBX=0; iBX<nBX; ++iBX ) {
@@ -718,12 +721,14 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        AnalysisElectron thisEle( pxEle[iEle], pyEle[iEle], pzEle[iEle], energyEle[iEle] );
        thisEle.charge = chargeEle[iEle];
 
+       float scEta = (superClusterIndexEle[iEle]>=0) ? etaSC[superClusterIndexEle[iEle]] : etaPFSC[PFsuperClusterIndexEle[iEle]];
 
        // --------------
        // kinematics:
        // --------------
        if( thisEle.Pt() < 20. ) continue;
-       if( (fabs(thisEle.Eta()) > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) continue;
+       if( (fabs(scEta) > 2.5) || ( fabs(scEta)>1.4442 && fabs(scEta)<1.566) ) continue;
+       //if( (fabs(thisEle.Eta()) > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) continue;
 
        // isolation
        thisEle.dr03TkSumPt = dr03TkSumPtEle[iEle];
@@ -731,7 +736,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisEle.dr03HcalTowerSumEt = dr03HcalTowerSumEtEle[iEle];
 
        // electron ID
-       thisEle.sigmaIetaIeta = (superClusterIndexEle[iEle]>=0) ? sqrt(covIEtaIEtaSC[superClusterIndexEle[iEle]]) : sqrt(covIEtaIEtaSC[PFsuperClusterIndexEle[iEle]]);
+       thisEle.sigmaIetaIeta = (superClusterIndexEle[iEle]>=0) ? sqrt(covIEtaIEtaSC[superClusterIndexEle[iEle]]) : sqrt(covIEtaIEtaPFSC[PFsuperClusterIndexEle[iEle]]);
        thisEle.deltaPhiAtVtx = deltaPhiAtVtxEle[iEle];
        thisEle.deltaEtaAtVtx = deltaEtaAtVtxEle[iEle];
        thisEle.hOverE = hOverEEle[iEle];
@@ -747,6 +752,11 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        if( !passed_VBTF95 ) continue;
        //if( !passed_VBTF80 ) continue;
+
+       // additional ID to be as tight as trigger (HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL):
+       //if( 
+
+
 
        // check that not matched to muon (clean electrons faked by muon MIP):
        bool matchedtomuon=false;
