@@ -754,8 +754,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        //if( !passed_VBTF80 ) continue;
 
        // additional ID to be as tight as trigger (HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL):
-       //if( 
-
+       if( fabs(scEta)<1.4442 ) { //barrel
+         if( fabs(thisEle.deltaPhiAtVtx) > 0.15 ) continue;
+       } else { //endcaps
+         if( fabs(thisEle.deltaPhiAtVtx) > 0.1 ) continue;
+         if( thisEle.hOverE > 0.1 ) continue;
+       }
 
 
        // check that not matched to muon (clean electrons faked by muon MIP):
@@ -766,13 +770,14 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( matchedtomuon ) continue;
 
 
-       // for now simple selection, will have to optimize this (T&P?)
-       // one electron required to pass VBTF80, the other VBTF95
+       // OLD: one electron required to pass VBTF80, the other VBTF95
+       // NOW: both required to pass VBTF95 only (with tighter cuts above)
        if( electrons.size()==0 ) {
          electrons.push_back( thisEle );
          chargeFirstEle = chargeEle[iEle];
          if( passed_VBTF80 ) firstPassedVBTF80 = true;
-       } else if( chargeEle[iEle] != chargeFirstEle && ( firstPassedVBTF80||passed_VBTF80 ) ) {
+       //} else if( chargeEle[iEle] != chargeFirstEle && ( firstPassedVBTF80||passed_VBTF80 ) ) {
+       } else if( chargeEle[iEle] != chargeFirstEle ) {
          electrons.push_back( thisEle );
        }
 
