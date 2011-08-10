@@ -1244,6 +1244,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   bool atLeastOneInSignalRegionMjj=false;
 
   tree_passedEvents->Branch( "run", &run, "run/I" );
+  tree_passedEvents->Branch( "LS", &LS, "LS/I" );
   tree_passedEvents->Branch( "event", &event, "event/I" );
   tree_passedEvents->Branch( "leptType", &leptType, "leptType/I" );
   tree_passedEvents->Branch( "mZjj", &mZjj, "mZjj/F" );
