@@ -405,6 +405,10 @@ void Ntp1Analyzer_HZZlljj::Loop()
      puType = "Summer11_S4";
    }
    PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
+   //TFile* filePU = TFile::Open("Pileup_2011_to_172802_LP_LumiScale.root");
+   //TH1F* h1_nPU_data = (TH1F*)filePU->Get("pileup");
+   //fPUWeight->SetDataHistogram(h1_nPU_data);
+
    float nCounterPU=0.;
 
 
@@ -426,15 +430,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      leptTypeMC_ = -1;
 
 
-     // PU reweighting:
-     eventWeightPU_=1.;
-     if( isMC_ ) {
-       if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") )
-         eventWeightPU_ = getWeightPU(nPU_);
-       else
-         eventWeightPU_ = fPUWeight->GetWeight(nPU_);
-     }
-     nCounterPU += eventWeightPU_;
 
 
 
@@ -448,6 +443,15 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( bxPU[iBX]==0 ) nPU_ = nPU[iBX]; 
      }
 
+     // PU reweighting:
+     eventWeightPU_=1.;
+     if( isMC_ ) {
+       if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") )
+         eventWeightPU_ = getWeightPU(nPU_);
+       else
+         eventWeightPU_ = fPUWeight->GetWeight(nPU_);
+     }
+     nCounterPU += eventWeightPU_;
 
 
    //nPU_ = 0;
