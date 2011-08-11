@@ -1347,11 +1347,12 @@ ofstream ofs("run_event.txt");
 
       }
 
+      // PU reweighting:
+      eventWeight *= eventWeightPU;
+
     } // if is MC
 
 
-    // PU reweighting:
-    eventWeight *= eventWeightPU;
 
     h1_nvertex_PUW->Fill(nvertex, eventWeight);
 
@@ -4263,23 +4264,25 @@ float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger, const std::string
   double eff_Double[1][3]={{0.977, 0.958, 0.910}};
 
   double eff_Single[1][4];
-  if( runPeriod=="Run2010A1" ) { //up to may10 technical stop
-    eff_Single[0][0] = 0.980;
-    eff_Single[0][1] = 0.925;
-    eff_Single[0][2] = 0.890;
-    eff_Single[0][3] = 0.758;
-  } else if( runPeriod=="Run2010A2" ) { //from may10 to EPS
-    eff_Single[0][0] = 0.979;
-    eff_Single[0][1] = 0.945;
-    eff_Single[0][2] = 0.941;
-    eff_Single[0][3] = 0.883;
-  } else if( runPeriod=="Run2010A3" ) { //from EPS to LP
-    eff_Single[0][0] = 0.970;
-    eff_Single[0][1] = 0.942;
-    eff_Single[0][2] = 0.923;
-    eff_Single[0][3] = 0.814;
-  } else {
-    std::cout << "----> WARNING!!! Unknown run period: '" << runPeriod << "'. Exiting. " << std::endl;
+  if( !isDoubleTrigger ) {
+    if( runPeriod=="Run2011A1" ) { //up to may10 technical stop
+      eff_Single[0][0] = 0.980;
+      eff_Single[0][1] = 0.925;
+      eff_Single[0][2] = 0.890;
+      eff_Single[0][3] = 0.758;
+    } else if( runPeriod=="Run2011A2" ) { //from may10 to EPS
+      eff_Single[0][0] = 0.979;
+      eff_Single[0][1] = 0.945;
+      eff_Single[0][2] = 0.941;
+      eff_Single[0][3] = 0.883;
+    } else if( runPeriod=="Run2011A3" ) { //from EPS to LP
+      eff_Single[0][0] = 0.970;
+      eff_Single[0][1] = 0.942;
+      eff_Single[0][2] = 0.923;
+      eff_Single[0][3] = 0.814;
+    } else {
+      std::cout << "----> WARNING!!! Unknown run period: '" << runPeriod << "'. Exiting. " << std::endl;
+    }
   }
   
   double w(1.);
