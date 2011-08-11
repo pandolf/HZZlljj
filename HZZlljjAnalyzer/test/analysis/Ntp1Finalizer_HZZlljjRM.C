@@ -31,7 +31,7 @@ bool USE_MC_MASS=false;
 int getNJets( int nPairs );
 float getWeight_adish( int nPU );
 //float getMuonHLTSF( float eta );
-float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger );
+float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger, const std::string& runPeriod="" );
 
 std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string histoName, int nBins, float xMin, float xMax );
 
@@ -1311,24 +1311,33 @@ ofstream ofs("run_event.txt");
       // scale factor for double mu triggers:
       if( leptType==0 ) {
 
-        //float eff1 = getMuonHLTSF( etaLept1 );
-        //float eff2 = getMuonHLTSF( etaLept2 );
-
-        //HLTSF = eff1*eff2;
-
         float effDouble1 = getMuonHLTSF( ptLept1, etaLept1, true );
         float effDouble2 = getMuonHLTSF( ptLept2, etaLept2, true );
-        float effSingle1 = getMuonHLTSF( ptLept1, etaLept1, false );
-        float effSingle2 = getMuonHLTSF( ptLept2, etaLept2, false );
 
-        HLTSF= effDouble1 * effDouble2 +
-               effSingle2 * (1. - effDouble1 ) +
-               effSingle1 * (1. - effDouble2 );
+        float effSingle1_Run2011A1 = getMuonHLTSF( ptLept1, etaLept1, false, "Run2011A1");
+        float effSingle2_Run2011A1 = getMuonHLTSF( ptLept2, etaLept2, false, "Run2011A1");
 
-//      HLTSF= getMuonHLTSF( ptLept1, etaLept1, true)  *       getMuonHLTSF( ptLept2, etaLept2, true) +
-//             getMuonHLTSF( ptLept2, etaLept2, false) * (1. - getMuonHLTSF( ptLept1, etaLept1, true)) +
-//             getMuonHLTSF( ptLept1, etaLept1, false) * (1. - getMuonHLTSF( ptLept2, etaLept2, true));
+        float effSingle1_Run2011A2 = getMuonHLTSF( ptLept1, etaLept1, false, "Run2011A2");
+        float effSingle2_Run2011A2 = getMuonHLTSF( ptLept2, etaLept2, false, "Run2011A2");
 
+        float effSingle1_Run2011A3 = getMuonHLTSF( ptLept1, etaLept1, false, "Run2011A3");
+        float effSingle2_Run2011A3 = getMuonHLTSF( ptLept2, etaLept2, false, "Run2011A3");
+
+        float HLTSF_Run2011A1 = effDouble1 * effDouble2 +
+                                effSingle2_Run2011A1 * (1. - effDouble1 ) +
+                                effSingle1_Run2011A1 * (1. - effDouble2 );
+
+        float HLTSF_Run2011A2 = effDouble1 * effDouble2 +
+                                effSingle2_Run2011A2 * (1. - effDouble1 ) +
+                                effSingle1_Run2011A2 * (1. - effDouble2 );
+
+        float HLTSF_Run2011A3 = effDouble1 * effDouble2 +
+                                effSingle2_Run2011A3 * (1. - effDouble1 ) +
+                                effSingle1_Run2011A3 * (1. - effDouble2 );
+
+
+        // weighted average over full run (weighted with lumi):
+        HLTSF = (217.*HLTSF_Run2011A1 + 920.*HLTSF_Run2011A2 + 478.*HLTSF_Run2011A3)/(217.+920.+478.);
 
         eventWeight *= HLTSF;
 
@@ -4239,7 +4248,7 @@ float getWeight_adish( int nPU ) {
 
 
 
-float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger ) {
+float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger, const std::string& runPeriod ) {
 
 //float eff;
 
@@ -4251,36 +4260,55 @@ float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger ) {
 
   if( !isDoubleTrigger && pt<25. ) return 0.;
 
-  double eff_Double[1][3]={{0.975, 0.957, 0.915}};
-  double eff_Single[1][4]={{0.980, 0.947, 0.943,0.886}};
+  double eff_Double[1][3]={{0.977, 0.958, 0.910}};
+
+  double eff_Single[1][4];
+  if( runPeriod=="Run2010A1" ) { //up to may10 technical stop
+    eff_Single[0][0] = 0.980;
+    eff_Single[0][1] = 0.925;
+    eff_Single[0][2] = 0.890;
+    eff_Single[0][3] = 0.758;
+  } else if( runPeriod=="Run2010A2" ) { //from may10 to EPS
+    eff_Single[0][0] = 0.979;
+    eff_Single[0][1] = 0.945;
+    eff_Single[0][2] = 0.941;
+    eff_Single[0][3] = 0.883;
+  } else if( runPeriod=="Run2010A3" ) { //from EPS to LP
+    eff_Single[0][0] = 0.970;
+    eff_Single[0][1] = 0.942;
+    eff_Single[0][2] = 0.923;
+    eff_Single[0][3] = 0.814;
+  } else {
+    std::cout << "----> WARNING!!! Unknown run period: '" << runPeriod << "'. Exiting. " << std::endl;
+  }
   
-  double w(1);
+  double w(1.);
   int y_D=-1;
   int y_S=-1;
   
   
   if (TMath::Abs(eta)<=0.8) {
-    if(isDouble) y_D=0;
+    if(isDoubleTrigger) y_D=0;
     else y_S=0;
   } else if (TMath::Abs(eta)>0.8 && TMath::Abs(eta)<=1.2) {   
-    if(isDouble) y_D=1;
+    if(isDoubleTrigger) y_D=1;
     else y_S=1;
   } else if (TMath::Abs(eta)>1.2 && TMath::Abs(eta)<=1.48) {
-    if(isDouble) y_D=2;
+    if(isDoubleTrigger) y_D=2;
     else y_S=1;
   } else if (TMath::Abs(eta)>1.48 && TMath::Abs(eta)<=2.1) {
-    if(isDouble) y_D=2;
+    if(isDoubleTrigger) y_D=2;
     else y_S=2;
   }else if(TMath::Abs(eta)>2.1 && TMath::Abs(eta)<=2.4) {
-    if(isDouble) y_D=2;
+    if(isDoubleTrigger) y_D=2;
     else y_S=3;  
   }
   
   if (y_D>=0 || y_S>=0) {     
-    if(isDouble) w =  eff_Double[0][y_D];
-    else w= eff_Single[0][y_S];		 	
+    if(isDoubleTrigger) w =  eff_Double[0][y_D];
+    else w= eff_Single[0][y_S];
   }
   return w;
-}
 
 }
+
