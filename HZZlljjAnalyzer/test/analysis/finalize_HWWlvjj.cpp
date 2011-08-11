@@ -129,6 +129,12 @@ int main( int argc, char* argv[] ) {
     nf->addFile( "WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2" );
     nf->addFile( "ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1" );
 
+  } else if( dataset=="VVtoAnything_TuneZ2_7TeV-pythia6-tauola" ) {
+
+    nf->addFile( "WWtoAnything_TuneZ2_7TeV-pythia6-tauola" );
+    nf->addFile( "WZtoAnything_TuneZ2_7TeV-pythia6-tauola" );
+    nf->addFile( "ZZtoAnything_TuneZ2_7TeV-pythia6-tauola" );
+
   } else if( dataset=="DY_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {
 
     nf->addFile( "DYToEE_M-10To20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" );
@@ -136,11 +142,24 @@ int main( int argc, char* argv[] ) {
     nf->addFile( "DYToEE_M-20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" );
     nf->addFile( "DYToMuMu_M-20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" );
 
+  } else if( dataset=="DY_TuneZ2_7TeV-pythia6" ) {
+
+    nf->addFile( "DYToEE_M-10To20_TuneZ2_7TeV-pythia6" );
+    nf->addFile( "DYToEE_M-20_TuneZ2_7TeV-pythia6" );
+    nf->addFile( "DYToMuMu_M-10To20_TuneZ2_7TeV-pythia6" );
+    nf->addFile( "DYToMuMu_M-20_TuneZ2_7TeV-pythia6" );
+
   } else if( dataset=="TToBLNu_TuneZ2_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" ) {
 
     nf->addFile( "TToBLNu_TuneZ2_s-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" );
     nf->addFile( "TToBLNu_TuneZ2_t-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" );
     nf->addFile( "TToBLNu_TuneZ2_tW-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" );
+
+  } else if( dataset=="TToBLNu_TuneZ2_7TeV-madgraph" ) {
+
+     nf->addFile( "TToBLNu_TuneZ2_s-channel_7TeV-madgraph" );
+     nf->addFile( "TToBLNu_TuneZ2_t-channel_7TeV-madgraph" ); 
+     nf->addFile( "TToBLNu_TuneZ2_tW-channel_7TeV-madgraph" );
 
   } else if( dataset=="QCD_EMEnriched_TuneZ2_7TeV-pythia6_3" ) {
 

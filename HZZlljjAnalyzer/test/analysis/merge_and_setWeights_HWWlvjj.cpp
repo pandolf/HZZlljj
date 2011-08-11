@@ -413,29 +413,29 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 0.07673;//##
   } else if( dataset=="GluGlu170" ) {//##
     xSection = 2.148;//## Other
-  } else if( dataset=="TT_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3" ) {//## t tbar
+  } else if( (dataset=="TT_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_3") || (dataset=="TTJets_TuneZ2_7TeV-madgraph-tauola") ) {//## t tbar
     xSection = 157.5;//## //TTbar To All
-  } else if( dataset=="TToBLNu_TuneZ2_s-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## single top, s-channel
+  } else if( (dataset=="TToBLNu_TuneZ2_s-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2") || (dataset=="TToBLNu_TuneZ2_s-channel_7TeV-madgraph") ) {//## single top, s-channel
     xSection = 4.6;//##
-  } else if( dataset=="TToBLNu_TuneZ2_t-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## single top, t-channel
+  } else if( (dataset=="TToBLNu_TuneZ2_t-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2") || (dataset=="TToBLNu_TuneZ2_t-channel_7TeV-madgraph") ) {//## single top, t-channel
     xSection = 62.8;//##
-  } else if( dataset=="TToBLNu_TuneZ2_tW-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## single top, tW-channel
+  } else if( (dataset=="TToBLNu_TuneZ2_tW-channel_7TeV-madgraph_Spring11-PU_S1_START311_V1G1-v1_2") || (dataset=="TToBLNu_TuneZ2_tW-channel_7TeV-madgraph") ) {//## single top, tW-channel
     xSection = 10.56;//##
-  } else if( dataset=="WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2" ) {//##  WW
+  } else if( (dataset=="WWtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2") || (dataset=="WWtoAnything_TuneZ2_7TeV-pythia6-tauola") ) {//##  WW
     xSection = 42.9;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
-  } else if( dataset=="WZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2" ) {//##  WZ
+  } else if( (dataset=="WZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1_2") || (dataset=="WZtoAnything_TuneZ2_7TeV-pythia6-tauola") ) {//##  WZ
     xSection = 18.3;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
-  } else if( dataset=="ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1" ) {//##  ZZ
+  } else if( (dataset=="ZZtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11-PU_S1_START311_V1G1-v1" ) || (dataset=="ZZtoAnything_TuneZ2_7TeV-pythia6-tauola") ) {//##  ZZ
     xSection = 5.9;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
-  } else if( dataset=="WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## W+Jets
+  } else if( (dataset=="WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_Spring11-PU_S1_START311_V1G1-v1_2") || ( dataset=="WJetsToLNu_TuneZ2_7TeV-madgraph-tauola" ) ) {//## W+Jets
     xSection = 31314;//##
-  } else if( dataset=="DYToEE_M-10To20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. EE 10to20
+  } else if( (dataset=="DYToEE_M-10To20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2") || (dataset=="DYToEE_M-10To20_TuneZ2_7TeV-pythia6") ) {//## DY. EE 10to20
     xSection = 3457./3.;//##
-  } else if( dataset=="DYToEE_M-20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. EE >20
+  } else if( (dataset=="DYToEE_M-20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2") || (dataset=="DYToEE_M-20_TuneZ2_7TeV-pythia6") ) {//## DY. EE >20
     xSection = 4819.6/3.;//##
-  } else if( dataset=="DYToMuMu_M-10To20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. MUMU 10to20
+  } else if( (dataset=="DYToMuMu_M-10To20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2") || (dataset=="DYToMuMu_M-10To20_TuneZ2_7TeV-pythia6") ) {//## DY. MUMU 10to20
     xSection = 3457./3.;//##
-  } else if( dataset=="DYToMuMu_M-20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. MUMU >20
+  } else if( (dataset=="DYToMuMu_M-20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2") || (dataset=="DYToMuMu_M-20_TuneZ2_7TeV-pythia6") ) {//## DY. MUMU >20
     xSection = 4819.6/3.;//##
   } else if( dataset=="QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6" ) {//## QCD_MUEnriched Pt20
     xSection =  296600000.*0.0002855 ;//##
