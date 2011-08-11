@@ -43,7 +43,11 @@ int main(int argc, char* argv[]) {
 
   //std::string data_dataset = "DATA_Run2011A_v2_Sub2";
   //std::string data_dataset = "DATA_1fb";
-  std::string data_dataset = "DATA_EPS";
+  //std::string data_dataset = "DATA_EPS_FINAL";
+  //std::string data_dataset = "DATA_EPS_FINAL_FULL";
+  std::string data_dataset = "DATA_LP11";
+  //std::string data_dataset = "DoubleElectron_Aug05ReReco";
+  //std::string data_dataset = "DoubleMu_Aug05ReReco";
 
   std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset + "_" + ZJetsMC + "_" + selType + "_" + leptType;
   if( normType=="SHAPE" ) outputdir_str += "_SHAPE";
@@ -88,14 +92,14 @@ int main(int argc, char* argv[]) {
     mcZBBFileName += "_" + leptType;
     mcZBBFileName += ".root";
     TFile* mcZBBFile = TFile::Open(mcZBBFileName.c_str());
-    db->add_mcFile( mcZBBFile, "ZBB_alpgen_TuneZ2_Spring11", "Z + bb", 39, 3003);
+    db->add_mcFile( mcZBBFile, "ZBB_alpgen_TuneZ2_Spring11", "Z + bb", 40, 3003);
 
-    std::string mcZCCFileName = "HZZlljjRM_ZCC_alpgen_TuneZ2_Spring11_v2";
-    mcZCCFileName += "_" + selType;
-    mcZCCFileName += "_" + leptType;
-    mcZCCFileName += ".root";
-    TFile* mcZCCFile = TFile::Open(mcZCCFileName.c_str());
-    db->add_mcFile( mcZCCFile, "ZCC_alpgen_TuneZ2_Spring11", "Z + cc", 40, 3003);
+  //std::string mcZCCFileName = "HZZlljjRM_ZCC_alpgen_TuneZ2_Spring11_v2";
+  //mcZCCFileName += "_" + selType;
+  //mcZCCFileName += "_" + leptType;
+  //mcZCCFileName += ".root";
+  //TFile* mcZCCFile = TFile::Open(mcZCCFileName.c_str());
+  //db->add_mcFile( mcZCCFile, "ZCC_alpgen_TuneZ2_Spring11", "Z + cc", 40, 3003);
   }
 
   std::string mcVVFileName = "HZZlljjRM_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2";
@@ -120,7 +124,8 @@ int main(int argc, char* argv[]) {
   signalFileName += ".root";
   TFile* signalFile = TFile::Open(signalFileName.c_str());
   if( selType=="presel" )
-    db->add_mcFile_superimp( signalFile, "H400", "H(400) #times 100", 100., kRed+3);
+    db->add_mcFile_superimp( signalFile, "H400", "H(400) #times 100", 100., kRed-1);
+    //db->add_mcFile_superimp( signalFile, "H400", "H(400) #times 100", 100., kRed+3);
 
 
   if( normType=="LUMI" ) {
@@ -129,10 +134,33 @@ int main(int argc, char* argv[]) {
       db->set_lumiNormalization(175.);
     else if( data_dataset=="DATA_1fb" )
       db->set_lumiNormalization(859.);
-    else 
-      db->set_lumiNormalization(960.); //"EPS" data
+    else if( data_dataset=="DATA_EPS" )
+      db->set_lumiNormalization(960.); 
+    else if( data_dataset=="DATA_EPS_FINAL" )
+      db->set_lumiNormalization(1000.); 
+    else if( data_dataset=="DATA_EPS_FINAL_FULL" )
+      db->set_lumiNormalization(1091.); 
+    else if( data_dataset=="DATA_EPS_FINAL_FULL_plusSingleMu" )
+      db->set_lumiNormalization(1143.); 
+    else if( data_dataset=="DoubleElectron_Aug05ReReco" )
+      db->set_lumiNormalization(227.); 
+    else if( data_dataset=="DoubleMu_Aug05ReReco" )
+      db->set_lumiNormalization(285.); 
+    else if( data_dataset=="DATA_EPS_FINAL_plusSingleMu" )
+      db->set_lumiNormalization(1143.);
+    else if( data_dataset=="DATA_LP11" )
+      db->set_lumiNormalization(1580.);
 
   } else { //shape
+
+    if( data_dataset=="DATA_Run2011A_v2_Sub2" )
+      db->set_lumi(175.);
+    else if( data_dataset=="DATA_1fb" )
+      db->set_lumi(859.);
+    else if( data_dataset=="DATA_EPS" )
+      db->set_lumi(960.); 
+    else if( data_dataset=="DATA_EPS_FINAL" )
+      db->set_lumi(1000.); 
   
     db->set_shapeNormalization();
 
@@ -147,7 +175,9 @@ int main(int argc, char* argv[]) {
   db->drawHisto("nvertex_PUW", "Number of Reconstructed Vertexes", "", "Events", log);
 
   db->set_getBinLabels(true);
+  db->set_yAxisMaxScaleLog(50.);
   db->drawHisto("nEventsCategories_presel", "", "", "Events", log);
+  db->set_yAxisMaxScaleLog(5.);
   db->set_getBinLabels(false);
   db->set_xAxisMin();
 
@@ -156,9 +186,12 @@ int main(int argc, char* argv[]) {
   db->drawHisto("nJets_presel", "Jet Multiplicity (p_{T} > 30 GeV)", "", "Events", log);
   db->set_rebin(4);
   db->drawHisto("ptJet_all_presel", "Jet Transverse Momentum", "GeV", "Jets", log);
-  db->set_rebin(2);
+
+  db->set_rebin(10);
   db->drawHisto("mZjj_all_presel", "DiJet Invariant Mass", "GeV", "Jet Pairs", log);
 
+  db->set_rebin(2);
+  db->drawHisto("deltaRjj", "#DeltaR Between Jets (p_{T} > 30 GeV)", "", "Jet Pairs");
   db->set_rebin(1);
   db->drawHisto("deltaRjj_all_presel", "#DeltaR Between Jets (p_{T} > 30 GeV)", "", "Jet Pairs");
   db->drawHisto("deltaRll_presel", "#DeltaR Between Leptons", "", "Lepton Pairs");
@@ -186,13 +219,8 @@ int main(int argc, char* argv[]) {
   db->set_yAxisMaxScale( 1.6 );
   db->drawHisto("etaJet1", "Lead Jet Pseudorapidity", "", "Events", log);
   db->drawHisto("etaJet2", "Sublead Jet Pseudorapidity", "", "Events", log);
-
-  db->set_rebin(2);
-  db->drawHisto("mZll_presel", "M(ll)", "GeV", "Events", log);
-  if( leptType=="ALL" || leptType=="MU" )
-    db->drawHisto("mZmumu_presel", "M(#mu#mu)", "GeV", "Events", log);
-  if( leptType=="ALL" || leptType=="ELE" )
-    db->drawHisto("mZee_presel", "M(ee)", "GeV", "Events", log);
+  db->drawHisto("tcheJet1", "Lead Jet TCHE", "", "Events", log);
+  db->drawHisto("tcheJet2", "Sublead Jet TCHE", "", "Events", log);
 
   db->set_rebin(10);
   db->drawHisto("ptZll_presel", "Dilepton Transverse Momentum", "GeV", "Events", log);
@@ -201,15 +229,40 @@ int main(int argc, char* argv[]) {
   db->drawHisto("ptZjj", "Dijet Transverse Momentum", "GeV", "Events", log);
 
   db->set_rebin(5);
-  db->drawHisto("mZll", "M(ll)", "GeV", "Events", log);
+  db->drawHisto("mZll", "m_{ll}", "GeV", "Events", log);
   db->set_yAxisMaxScale( 1.3 );
   db->set_rebin(10);
-  db->drawHisto("mZjj", "M(jj)", "GeV", "Events", log);
-  db->set_legendTitle("Dielectron channel");
-  db->drawHisto("mZjj_ELE", "M(jj)", "GeV", "Events", log);
-  db->set_legendTitle("Dimuon channel");
-  db->drawHisto("mZjj_MU", "M(jj)", "GeV", "Events", log);
-  db->set_legendTitle("");
+  db->drawHisto("mZjj", "m_{jj}", "GeV", "Events", log);
+  db->set_legendTitle("0 b-tag Category");
+  db->drawHisto("mZjj_0btag", "m_{jj}", "GeV", "Events", log);
+  db->set_legendTitle("1 b-tag Category");
+  db->drawHisto("mZjj_1btag", "m_{jj}", "GeV", "Events", log);
+  db->set_legendTitle("2 b-tag Category");
+  db->drawHisto("mZjj_2btag", "m_{jj}", "GeV", "Events", log);
+  db->set_legendTitle("150 < m_{lljj} < 250 GeV");
+  db->drawHisto("mZjj_loMass", "m_{jj}", "GeV", "Events", log);
+  db->set_legendTitle("250 < m_{lljj} < 400 GeV");
+  db->drawHisto("mZjj_medMass", "m_{jj}", "GeV", "Events", log);
+  db->set_legendTitle("m_{lljj} > 400 GeV");
+  db->drawHisto("mZjj_hiMass", "m_{jj}", "GeV", "Events", log);
+
+  db->set_rebin(1);
+  db->drawHisto("mZll_presel", "m_{ll}", "GeV", "Events", log);
+
+  db->set_rebin(20);
+  db->set_legendTitle("0 b-tag Category");
+  db->drawHisto("mZZ_kinfit_hiMass_0btag", "m_{lljj}", "GeV", "Events", log);
+  db->set_legendTitle("1 b-tag Category");
+  db->drawHisto("mZZ_kinfit_hiMass_1btag", "m_{lljj}", "GeV", "Events", log);
+  db->set_legendTitle("2 b-tag Category");
+  db->drawHisto("mZZ_kinfit_hiMass_2btag", "m_{lljj}", "GeV", "Events", log);
+
+  db->set_legendTitle("0 b-tag Sidebands");
+  db->drawHisto("mZZ_kinfit_hiMass_sidebands_0btag", "m_{lljj}", "GeV", "Events", log);
+  db->set_legendTitle("1 b-tag Sidebands");
+  db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag", "m_{lljj}", "GeV", "Events", log);
+  db->set_legendTitle("2 b-tag Sidebands");
+  db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag", "m_{lljj}", "GeV", "Events", log);
 
   db->set_rebin(1);
   db->drawHisto("pfMet", "Particle Flow Missing E_{T}", "GeV", "Events", log);
@@ -217,9 +270,6 @@ int main(int argc, char* argv[]) {
   db->drawHisto("metSignificance", "ME_{T} Significance", "", "Events", log);
   db->drawHisto("metSignificance_2btag", "ME_{T} Significance", "", "Events", log);
 
-//db->drawHisto("deltaRjj", "#Delta R Between Jets", "", "Events", log);
-//db->set_rebin(4);
-//db->set_yAxisMaxScale( 1.6 );
   db->set_rebin(1);
   db->drawHisto("nChargedJet1", "Leading Jet Charged Multiplicity", "", "Events");
   db->drawHisto("nNeutralJet1", "Leading Jet Neutral Multiplicity", "", "Events");
@@ -248,43 +298,84 @@ int main(int argc, char* argv[]) {
   db->drawHisto("phi1", "#phi_{1}", "rad", "Events");
   db->set_yAxisMaxScale( 1.6 );
   db->drawHisto("helicityLD", "Angular Likelihood Discriminant", "", "Events");
+  db->set_yAxisMaxScale();
 
-  db->set_yAxisMaxScale(1.4);
+  db->set_rebin(1);
+  db->set_legendTitle("");
 
+
+  //------------
+  // MUON PLOTS:
+  //------------
+
+  if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1615.);
+
+  db->set_yAxisMaxScale( 1.6 );
+  if( leptType=="ALL" || leptType=="MU" )
+    db->drawHisto("mZmumu_presel", "m_{#mu#mu}", "GeV", "Events", log);
+  db->set_yAxisMaxScale();
+
+  db->set_rebin(10);
+  db->set_legendTitle("Dimuon channel");
+  db->drawHisto("mZjj_MU", "m_{jj}", "GeV", "Events", log);
 
   db->set_rebin(20);
-  db->drawHisto("mZZ_kinfit_hiMass_all", "2l2j Invariant Mass", "GeV", "Events", log);
-  //db->drawHisto("mZZ_kinfit_hiMass_all_ELE", "2e2j Invariant Mass", "GeV", "Events", log);
-  //db->drawHisto("mZZ_kinfit_hiMass_all_MU", "2#mu2j Invariant Mass", "GeV", "Events", log);
   db->set_legendTitle("Gluon-tag Category");
-  db->drawHisto("mZZ_kinfit_hiMass_gluetag", "M(lljj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_gluetag_ELE", "M(eejj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_gluetag_MU", "M(#mu#mujj)", "GeV", "Events", log);
+  db->drawHisto("mZZ_kinfit_hiMass_gluetag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
   db->set_legendTitle("0 b-tag Category");
-  db->drawHisto("mZZ_kinfit_hiMass_0btag", "M(lljj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_0btag_ELE", "M(eejj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_0btag_MU", "M(#mu#mujj)", "GeV", "Events", log);
+  db->drawHisto("mZZ_kinfit_hiMass_0btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
   db->set_legendTitle("1 b-tag Category");
-  db->drawHisto("mZZ_kinfit_hiMass_1btag", "M(lljj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_1btag_ELE", "M(eejj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_1btag_MU", "M(#mu#mujj)", "GeV", "Events", log);
+  db->drawHisto("mZZ_kinfit_hiMass_1btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
   db->set_legendTitle("2 b-tag Category");
-  db->drawHisto("mZZ_kinfit_hiMass_2btag", "M(lljj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_2btag_ELE", "M(eejj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_2btag_MU", "M(#mu#mujj)", "GeV", "Events", log);
+  db->drawHisto("mZZ_kinfit_hiMass_2btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
 
   db->set_legendTitle("0 b-tag Sidebands");
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_0btag", "M(lljj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_0btag_ELE", "M(eejj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_0btag_MU", "M(#mu#mujj)", "GeV", "Events", log);
+  db->drawHisto("mZZ_kinfit_hiMass_sidebands_0btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
   db->set_legendTitle("1 b-tag Sidebands");
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag", "M(lljj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag_ELE", "M(eejj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag_MU", "M(#mu#mujj)", "GeV", "Events", log);
+  db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
   db->set_legendTitle("2 b-tag Sidebands");
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag", "M(lljj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag_ELE", "M(eejj)", "GeV", "Events", log);
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag_MU", "M(#mu#mujj)", "GeV", "Events", log);
+  db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
+
+  db->set_rebin(1);
+  db->set_legendTitle("");
+
+
+
+  //----------------
+  // ELECTRON PLOTS:
+  //----------------
+
+  if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1556.);
+
+  
+  db->set_yAxisMaxScale( 1.6 );
+  if( leptType=="ALL" || leptType=="ELE" )
+    db->drawHisto("mZee_presel", "m_{ee}", "GeV", "Events", log);
+  db->set_yAxisMaxScale( );
+
+  db->set_rebin(10);
+  db->set_legendTitle("Dielectron channel");
+  db->drawHisto("mZjj_ELE", "m_{jj}", "GeV", "Events", log);
+
+  db->set_rebin(20);
+  db->set_legendTitle("Gluon-tag Category");
+  db->drawHisto("mZZ_kinfit_hiMass_gluetag_ELE", "m_{eejj}", "GeV", "Events", log);
+  db->set_legendTitle("0 b-tag Category");
+  db->drawHisto("mZZ_kinfit_hiMass_0btag_ELE", "m_{eejj}", "GeV", "Events", log);
+  db->set_legendTitle("1 b-tag Category");
+  db->drawHisto("mZZ_kinfit_hiMass_1btag_ELE", "m_{eejj}", "GeV", "Events", log);
+  db->set_legendTitle("2 b-tag Category");
+  db->drawHisto("mZZ_kinfit_hiMass_2btag_ELE", "m_{eejj}", "GeV", "Events", log);
+
+  db->set_legendTitle("0 b-tag Sidebands");
+  db->drawHisto("mZZ_kinfit_hiMass_sidebands_0btag_ELE", "m_{eejj}", "GeV", "Events", log);
+  db->set_legendTitle("1 b-tag Sidebands");
+  db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag_ELE", "m_{eejj}", "GeV", "Events", log);
+  db->set_legendTitle("2 b-tag Sidebands");
+  db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag_ELE", "m_{eejj}", "GeV", "Events", log);
+
+
+
 
   delete db;
   db = 0;
