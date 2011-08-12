@@ -250,6 +250,8 @@ int main(int argc, char* argv[]) {
   db->drawHisto("mZll_presel", "m_{ll}", "GeV", "Events", log);
 
   db->set_rebin(20);
+  db->set_legendTitle("Gluon-tag Category");
+  db->drawHisto("mZZ_kinfit_hiMass_gluetag", "m_{lljj}", "GeV", "Events", log);
   db->set_legendTitle("0 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_0btag", "m_{lljj}", "GeV", "Events", log);
   db->set_legendTitle("1 b-tag Category");
@@ -263,6 +265,7 @@ int main(int argc, char* argv[]) {
   db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag", "m_{lljj}", "GeV", "Events", log);
   db->set_legendTitle("2 b-tag Sidebands");
   db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag", "m_{lljj}", "GeV", "Events", log);
+  db->set_legendTitle("");
 
   db->set_rebin(1);
   db->drawHisto("pfMet", "Particle Flow Missing E_{T}", "GeV", "Events", log);
@@ -283,6 +286,9 @@ int main(int argc, char* argv[]) {
   db->drawHisto("QGLikelihoodJet1", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodJet2", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodProd", "Q-G Likelihood Product", "", "Events");
+  db->drawHisto("QGLikelihoodJet1_MW300", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
+  db->drawHisto("QGLikelihoodJet2_MW300", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
+  db->drawHisto("QGLikelihoodProd_MW300", "Q-G Likelihood Product", "", "Events");
   db->drawHisto("QGLikelihoodNoPUJet1", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodNoPUJet2", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodNoPUProd", "Q-G Likelihood Product", "", "Events");
