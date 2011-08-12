@@ -208,6 +208,9 @@ Ntp1Finalizer.o: Ntp1Finalizer.C
 Ntp1Finalizer_HZZlljj.o: Ntp1Finalizer_HZZlljj.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ -I$(CMSSW_BASE)/src/UserCode/pandolf/QGLikelihood Ntp1Finalizer_HZZlljj.C $(ROOTFLAG)
 
+Ntp1Finalizer_HZZlljjRM.o: Ntp1Finalizer_HZZlljjRM.C
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ -I$(CMSSW_BASE)/src/UserCode/pandolf/QGLikelihood Ntp1Finalizer_HZZlljjRM.C $(ROOTFLAG)
+
 Ntp1Finalizer_HWWlvjj.o: Ntp1Finalizer_HWWlvjj.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ -I$(CMSSW_BASE)/src/UserCode/pandolf/QGLikelihood Ntp1Finalizer_HWWlvjj.C $(ROOTFLAG)
 
