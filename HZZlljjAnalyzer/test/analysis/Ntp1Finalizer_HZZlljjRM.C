@@ -3861,17 +3861,30 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
 
 int getNJets( int nPairs ) {
 
-  int nJets = 0;
+  // fast and easy
+  if( nPairs==0 ) return 0;
+  else if( nPairs==1 ) return 2;
+  else if( nPairs==3 ) return 3;
+  else if( nPairs==6 ) return 4;
+  else if( nPairs==10 ) return 5;
+  else if( nPairs==15 ) return 6;
+  else if( nPairs==21 ) return 7;
+  else if( nPairs>21 ) 
+    std::cout << "Careful!! Impossible number of pairs!!" << std::endl;
 
-  int i=1;
-  bool found=false;
-  while( !found) {
-    nJets += i;
-    i++;
-    if( nJets== nPairs ) found=true;
-  }
+  return 0;
 
-  return i;
+//int nJets = 0;
+
+//int i=1;
+//bool found=false;
+//while( !found) {
+//  nJets += i;
+//  i++;
+//  if( nJets== nPairs ) found=true;
+//}
+
+//return i;
 
 }
 
