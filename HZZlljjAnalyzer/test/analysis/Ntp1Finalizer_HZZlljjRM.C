@@ -3863,16 +3863,31 @@ int getNJets( int nPairs ) {
 
   // fast and easy
   if( nPairs==0 ) return 0;
-  else if( nPairs==1 ) return 2;
-  else if( nPairs==3 ) return 3;
-  else if( nPairs==6 ) return 4;
-  else if( nPairs==10 ) return 5;
-  else if( nPairs==15 ) return 6;
-  else if( nPairs==21 ) return 7;
-  else if( nPairs>21 ) 
-    std::cout << "Careful!! Impossible number of pairs!!" << std::endl;
+
+
+  int nJets=1;
+  while(nJets<50) {
+    int trial = nJets*(nJets-1)/2;
+    if(trial==nPairs) return nJets;
+    nJets++;
+  }
 
   return 0;
+
+}
+
+//else if( nPairs==1 ) return 2;
+//else if( nPairs==3 ) return 3;
+//else if( nPairs==6 ) return 4;
+//else if( nPairs==10 ) return 5;
+//else if( nPairs==15 ) return 6;
+//else if( nPairs==21 ) return 7;
+//else if( nPairs==28 ) return 8;
+//else if( nPairs==28 ) return 8;
+//else if( nPairs>21 ) 
+//  std::cout << "Careful!! Impossible number of pairs!!" << std::endl;
+
+//return 0;
 
 //int nJets = 0;
 
@@ -3886,7 +3901,7 @@ int getNJets( int nPairs ) {
 
 //return i;
 
-}
+//}
 
 
 std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string histoName, int nBins, float xMin, float xMax ) {
