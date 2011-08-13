@@ -203,7 +203,7 @@ Ntp1Analyzer_Zbb.o: Ntp1Analyzer_Zbb.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_Zbb.C $(ROOTFLAG)
 
 Ntp1Finalizer.o: Ntp1Finalizer.C
-	$(CC) $(CFLAGS) Ntp1Finalizer.C $(ROOTFLAG)
+	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ Ntp1Finalizer.C $(ROOTFLAG)
 
 Ntp1Finalizer_HZZlljj.o: Ntp1Finalizer_HZZlljj.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ -I$(CMSSW_BASE)/src/UserCode/pandolf/QGLikelihood Ntp1Finalizer_HZZlljj.C $(ROOTFLAG)
