@@ -1481,10 +1481,6 @@ ofstream ofs("run_event.txt");
       h1_etaLept1_presel->Fill( etaLept1, eventWeight );
       h1_etaLept2_presel->Fill( etaLept2, eventWeight );
 
-      int nJets = getNJets(nPairs);
-      h1_nJets_presel->Fill( nJets , eventWeight );
-      h1_nPairs_presel->Fill( nPairs , eventWeight );
-
     } else {
 
       h1_mZll_presel_0jets->Fill( diLepton.M(), eventWeight );
@@ -1517,6 +1513,11 @@ ofstream ofs("run_event.txt");
     if( diLepton.M() < mZll_threshLo_ || diLepton.M() > mZll_threshHi_ ) continue;
 
     nEvents_presel_mZll += eventWeight;
+
+
+    int nJets = getNJets(nPairs);
+    h1_nJets_presel->Fill( nJets , eventWeight );
+    h1_nPairs_presel->Fill( nPairs , eventWeight );
 
 
     float cached_jetpt = 0.;
