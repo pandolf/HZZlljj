@@ -212,8 +212,6 @@ TH1F* PUWeight::LoadDataHistogram(float luminosity, const char* year) {
 
 TH1F* PUWeight::CalculateWeight() {
   if (fData && fMC) {
-std::cout << "MC bins: " << fMC->GetNbinsX() << std::endl;
-std::cout << "data bins: " << fData->GetNbinsX() << std::endl;
     unsigned int nbins = fData->GetXaxis()->GetNbins();
     float xmin  = fData->GetXaxis()->GetXmin();
     float xmax  = fData->GetXaxis()->GetXmax();
