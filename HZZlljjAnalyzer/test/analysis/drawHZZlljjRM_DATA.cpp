@@ -51,6 +51,7 @@ int main(int argc, char* argv[]) {
 
   std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset + "_" + ZJetsMC + "_" + selType + "_" + leptType;
   if( normType=="SHAPE" ) outputdir_str += "_SHAPE";
+  outputdir_str += "_OLDPU";
   db->set_outputdir(outputdir_str);
 
 
@@ -73,7 +74,8 @@ int main(int argc, char* argv[]) {
   if( ZJetsMC=="alpgen" )
     mcZJetsFileName = "HZZlljjRM_ZJets_alpgen_TuneZ2_Spring11_v2";
   else if( ZJetsMC=="madgraph" )
-    mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1";
+    //mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1";
+    mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1_OLDPU";
   else {
     std::cout << "Unknown ZJetsMC '" << ZJetsMC << "'. Exiting." << std::endl;
     exit(13);
@@ -102,6 +104,7 @@ int main(int argc, char* argv[]) {
   //db->add_mcFile( mcZCCFile, "ZCC_alpgen_TuneZ2_Spring11", "Z + cc", 40, 3003);
   }
 
+  //std::string mcVVFileName = "HZZlljjRM_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2_OLDPU";
   std::string mcVVFileName = "HZZlljjRM_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2";
   mcVVFileName += "_" + selType;
   mcVVFileName += "_" + leptType;
@@ -110,6 +113,7 @@ int main(int argc, char* argv[]) {
   //db->add_mcFile( mcVVFile, "VVtoAnything_TuneZ2", "ZZ/WZ/WW", kCyan+1, 3003);
   db->add_mcFile( mcVVFile, "VVtoAnything_TuneZ2", "ZZ/WZ/WW", 38, 3003);
 
+  //std::string mcTTbarFileName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11_v2_OLDPU";
   std::string mcTTbarFileName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11_v2";
   mcTTbarFileName += "_" + selType;
   mcTTbarFileName += "_" + leptType;
@@ -139,7 +143,7 @@ int main(int argc, char* argv[]) {
     else if( data_dataset=="DATA_EPS_FINAL" )
       db->set_lumiNormalization(1000.); 
     else if( data_dataset=="DATA_EPS_FINAL_FULL" )
-      db->set_lumiNormalization(1091.); 
+      db->set_lumiNormalization(1143.); 
     else if( data_dataset=="DATA_EPS_FINAL_FULL_plusSingleMu" )
       db->set_lumiNormalization(1143.); 
     else if( data_dataset=="DoubleElectron_Aug05ReReco" )
@@ -149,7 +153,8 @@ int main(int argc, char* argv[]) {
     else if( data_dataset=="DATA_EPS_FINAL_plusSingleMu" )
       db->set_lumiNormalization(1143.);
     else if( data_dataset=="DATA_LP11" )
-      db->set_lumiNormalization(1580.);
+      db->set_lumiNormalization(1500.);
+      //db->set_lumiNormalization(1580.);
 
   } else { //shape
 
@@ -233,6 +238,7 @@ int main(int argc, char* argv[]) {
   db->set_yAxisMaxScale( 1.3 );
   db->set_rebin(10);
   db->drawHisto("mZjj", "m_{jj}", "GeV", "Events", log);
+  //db->drawHisto("mZjj_nogluetag", "m_{jj}", "GeV", "Events", log);
   db->set_legendTitle("0 b-tag Category");
   db->drawHisto("mZjj_0btag", "m_{jj}", "GeV", "Events", log);
   db->set_legendTitle("1 b-tag Category");
@@ -245,11 +251,13 @@ int main(int argc, char* argv[]) {
   db->drawHisto("mZjj_medMass", "m_{jj}", "GeV", "Events", log);
   db->set_legendTitle("m_{lljj} > 400 GeV");
   db->drawHisto("mZjj_hiMass", "m_{jj}", "GeV", "Events", log);
+  db->set_legendTitle("");
 
   db->set_rebin(1);
   db->drawHisto("mZll_presel", "m_{ll}", "GeV", "Events", log);
 
   db->set_rebin(20);
+  db->drawHisto("mZZ_kinfit_hiMass_all", "m_{lljj}", "GeV", "Events", log);
   db->set_legendTitle("Gluon-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_gluetag", "m_{lljj}", "GeV", "Events", log);
   db->set_legendTitle("0 b-tag Category");
@@ -286,9 +294,15 @@ int main(int argc, char* argv[]) {
   db->drawHisto("QGLikelihoodJet1", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodJet2", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodProd", "Q-G Likelihood Product", "", "Events");
+  db->set_legendTitle("282 < m_{lljj} < 330 GeV");
   db->drawHisto("QGLikelihoodJet1_MW300", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodJet2_MW300", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodProd_MW300", "Q-G Likelihood Product", "", "Events");
+  db->set_legendTitle("376 < m_{lljj} < 440 GeV");
+  db->drawHisto("QGLikelihoodJet1_MW400", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
+  db->drawHisto("QGLikelihoodJet2_MW400", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
+  db->drawHisto("QGLikelihoodProd_MW400", "Q-G Likelihood Product", "", "Events");
+  db->set_legendTitle("");
   db->drawHisto("QGLikelihoodNoPUJet1", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodNoPUJet2", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodNoPUProd", "Q-G Likelihood Product", "", "Events");
@@ -304,6 +318,7 @@ int main(int argc, char* argv[]) {
   db->drawHisto("phi1", "#phi_{1}", "rad", "Events");
   db->set_yAxisMaxScale( 1.6 );
   db->drawHisto("helicityLD", "Angular Likelihood Discriminant", "", "Events");
+  //db->drawHisto("helicityLD_nogluetag", "Angular Likelihood Discriminant", "", "Events");
   db->set_yAxisMaxScale();
 
   db->set_rebin(1);
@@ -314,7 +329,8 @@ int main(int argc, char* argv[]) {
   // MUON PLOTS:
   //------------
 
-  if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1615.);
+  if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1530.);
+  //if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1615.);
 
   db->set_yAxisMaxScale( 1.6 );
   if( leptType=="ALL" || leptType=="MU" )
@@ -324,6 +340,7 @@ int main(int argc, char* argv[]) {
   db->set_rebin(10);
   db->set_legendTitle("Dimuon channel");
   db->drawHisto("mZjj_MU", "m_{jj}", "GeV", "Events", log);
+  //db->drawHisto("mZjj_nogluetag_MU", "m_{jj}", "GeV", "Events", log);
 
   db->set_rebin(20);
   db->set_legendTitle("Gluon-tag Category");
@@ -351,7 +368,8 @@ int main(int argc, char* argv[]) {
   // ELECTRON PLOTS:
   //----------------
 
-  if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1556.);
+  //if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1556.);
+  if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1480.);
 
   
   db->set_yAxisMaxScale( 1.6 );
@@ -362,6 +380,7 @@ int main(int argc, char* argv[]) {
   db->set_rebin(10);
   db->set_legendTitle("Dielectron channel");
   db->drawHisto("mZjj_ELE", "m_{jj}", "GeV", "Events", log);
+  //db->drawHisto("mZjj_nogluetag_ELE", "m_{jj}", "GeV", "Events", log);
 
   db->set_rebin(20);
   db->set_legendTitle("Gluon-tag Category");
