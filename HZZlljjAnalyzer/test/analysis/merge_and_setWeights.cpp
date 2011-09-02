@@ -497,12 +497,16 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = (2.0608)*0.2724*0.100974*0.100974; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->ll) (l=e,m,t)
   } else if( dataset_tstr.BeginsWith("TTJets") || dataset_tstr.BeginsWith("TT_") ) {
     xSection = 157.4; //NLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
-  } else if( dataset_tstr.BeginsWith("ZZtoAnything") ) {
+  } else if( dataset_tstr.BeginsWith("ZZtoAnything") || dataset_tstr.BeginsWith("ZZ_") ) {
     xSection = 5.9*1.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt plus factor 1.3 to account for glu-glu
   } else if( dataset_tstr.BeginsWith("WWtoAnything") ) {
     xSection = 42.9;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
+  } else if( dataset_tstr.BeginsWith("WWTo2L2Nu") ) {
+    xSection = 42.9*0.108*2.*0.108*2.;
   } else if( dataset_tstr.BeginsWith("WZtoAnything") ) {
     xSection = 18.3;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
+  } else if( dataset_tstr.BeginsWith("WZTo3LNu") ) {
+    xSection = 18.3*0.108*2.*0.0337*2.;
   } else if( dataset=="Zmumu_Pythia" ) {
     xSection = 3048./3.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="PhotonJet_Summer1036X_Pt5to15_pfakt5" ) {
@@ -547,6 +551,10 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 62.8; 	 
   } else if( dataset_tstr.BeginsWith("TToBLNu") && dataset_tstr.Contains("tW-channel") ) { 	 
     xSection = 10.56;
+  } else if( dataset_tstr.BeginsWith("T_") && dataset_tstr.Contains("tW-channel") ) { 	 
+    xSection = 7.46;
+  } else if( dataset_tstr.BeginsWith("Tbar_") && dataset_tstr.Contains("tW-channel") ) { 	 
+    xSection = 7.466;
   } else if( dataset=="WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## W+Jets
     xSection = 3*9679.9/*31314*/;//##
   } else if( dataset=="DYToEE_M-10To20_TuneZ2_7TeV-pythia6_Spring11-PU_S1_START311_V1G1-v1_2" ) {//## DY. EE 10to20
