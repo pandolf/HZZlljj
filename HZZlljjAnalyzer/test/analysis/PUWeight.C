@@ -190,10 +190,18 @@ TH1F* PUWeight::LoadDataHistogram(float luminosity, const char* year) {
   }
   
   //Read data histogram...
-  fData = (TH1F*) fdt->Get("pileup")->Clone("PU_Data");
-  if (!fData) {
+  TH1F* fData_tmp = (TH1F*) fdt->Get("pileup")->Clone("PU_Data_tmp");
+  if (!fData_tmp) {
     cerr << "ERROR [PUWeight]: Could not find histogram for data!" << endl;
     return 0;
+  }
+
+  if( fData_tmp->GetXaxis()->GetNbins()==26 ) {
+    fData = new TH1F("PU_Data", "", 25, -0.5, 24.5);
+    for( unsigned iBin=1; iBin<26; ++iBin ) 
+      fData->SetBinContent( iBin, fData_tmp->GetBinContent(iBin) );
+  } else {
+    fData = (TH1F*)fData_tmp->Clone("PU_Data");
   }
   
   fData->SetDirectory(0);
