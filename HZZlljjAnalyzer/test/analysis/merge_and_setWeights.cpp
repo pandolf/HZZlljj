@@ -499,11 +499,11 @@ float getWeight( const std::string& dataset, int nEvents ) {
     xSection = 157.4; //NLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset_tstr.BeginsWith("ZZtoAnything") || dataset_tstr.BeginsWith("ZZ_") ) {
     xSection = 5.9*1.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt plus factor 1.3 to account for glu-glu
-  } else if( dataset_tstr.BeginsWith("WWtoAnything") ) {
+  } else if( dataset_tstr.BeginsWith("WWtoAnything")||dataset_tstr.BeginsWith("WW_") ) {
     xSection = 42.9;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
   } else if( dataset_tstr.BeginsWith("WWTo2L2Nu") ) {
     xSection = 42.9*0.108*2.*0.108*2.;
-  } else if( dataset_tstr.BeginsWith("WZtoAnything") ) {
+  } else if( dataset_tstr.BeginsWith("WZtoAnything")||dataset_tstr.BeginsWith("WZ_") ) {
     xSection = 18.3;//## //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt
   } else if( dataset_tstr.BeginsWith("WZTo3LNu") ) {
     xSection = 18.3*0.108*2.*0.0337*2.;
