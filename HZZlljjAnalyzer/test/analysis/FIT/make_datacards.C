@@ -188,7 +188,7 @@ int make_datacards(){
 	string beffLine=make_btagunc(mH,ibtag,ich);
   	string str_id=str_ch[ich]+str_btag[ibtag];
 
-	ifstream tpl_file(("./hzz2l2q_"+ str_id+".tpl.XsBr.EPS11").c_str(),ios::in);
+      ifstream tpl_file(("./hzz2l2q_"+ str_id+".tpl").c_str(),ios::in);
 	std::ostringstream mass_str;
 	mass_str<<mH;
 
