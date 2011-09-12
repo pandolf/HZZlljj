@@ -28,11 +28,11 @@ setTDRStyle() ;
  float mass_points[nMass]={200.0,250.0,300.0,350.0,400.0,450.0,500.0, 600.0, 700.0, 800.0};
 
   vector<string> bkg_filenames;
-  bkg_filenames.push_back("../HZZlljjRM_TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11_v2_optLD_looseBTags_v2_ALL.root");	      
-  bkg_filenames.push_back("../HZZlljjRM_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2_optLD_looseBTags_v2_ALL.root");
+  bkg_filenames.push_back("HZZlljjRM_TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11_v2_optLD_looseBTags_v2_ALL.root");	      
+  bkg_filenames.push_back("HZZlljjRM_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2_optLD_looseBTags_v2_ALL.root");
   //bkg_filenames.push_back("../HZZlljjRM_ZBB_alpgen_TuneZ2_Spring11_v2_optLD_looseBTags_v2_ALL.root");
   //bkg_filenames.push_back("../HZZlljjRM_ZJets_alpgen_TuneZ2_Spring11_v2_optLD_looseBTags_v2_ALL.root");
-  bkg_filenames.push_back("../HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root");
+  bkg_filenames.push_back("HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root");
   string MCname="MADGRAPH";
   //  filenames.push_back(""); 
   const int nBkg=bkg_filenames.size();
@@ -179,7 +179,7 @@ setTDRStyle() ;
 
   //return;
   //take data
-  TFile *fdata=new TFile( "../HZZlljjRM_DATA_LP11_optLD_looseBTags_v2_ALL.root","READ")  ;
+  TFile *fdata=new TFile( "HZZlljjRM_DATA_LP11_optLD_looseBTags_v2_ALL.root","READ")  ;
   TTree *tdata=(TTree*)fdata->Get("tree_passedEvents");
   bool isSB=true;
   int nbtags;
