@@ -395,7 +395,7 @@ void Ntp1Finalizer_QG::finalize() {
 
 
 
-      if( abs(partFlavor)< 7 ) { //quark
+      if( abs(partFlavor)< 5 ) { //light quark
         //h1_ptJet_quark[thisPtBin]->Fill( ptJet[iJet], eventWeight );
         vh1_nCharged_quark[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
         vh1_nNeutral_quark[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
