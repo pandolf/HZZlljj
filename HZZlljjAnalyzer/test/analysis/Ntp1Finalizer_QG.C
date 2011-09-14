@@ -60,6 +60,21 @@ void Ntp1Finalizer_QG::finalize() {
   TH1D* h1_nPtD_gluon_nvert1 = new TH1D("nNPtD_gluon_nvert1", "", 50, 0., 1.);
   TH1D* h1_rmsCand_gluon_nvert1 = new TH1D("rmsCand_gluon_nvert1", "", 50, 0., 0.1);
 
+  TH1D* h1_nCharged_nvert10 = new TH1D("nCharged_nvert10", "", 51, -0.5, 50.5);
+  TH1D* h1_nNeutral_nvert10 = new TH1D("nNeutral_nvert10", "", 51, -0.5, 50.5);
+  TH1D* h1_nPtD_nvert10 = new TH1D("nNPtD_nvert10", "", 50, 0., 1.);
+  TH1D* h1_rmsCand_nvert10 = new TH1D("rmsCand_nvert10", "", 50, 0., 0.1);
+
+  TH1D* h1_nCharged_quark_nvert10 = new TH1D("nCharged_quark_nvert10", "", 51, -0.5, 50.5);
+  TH1D* h1_nNeutral_quark_nvert10 = new TH1D("nNeutral_quark_nvert10", "", 51, -0.5, 50.5);
+  TH1D* h1_nPtD_quark_nvert10 = new TH1D("nNPtD_quark_nvert10", "", 50, 0., 1.);
+  TH1D* h1_rmsCand_quark_nvert10 = new TH1D("rmsCand_quark_nvert10", "", 50, 0., 0.1);
+
+  TH1D* h1_nCharged_gluon_nvert10 = new TH1D("nCharged_gluon_nvert10", "", 51, -0.5, 50.5);
+  TH1D* h1_nNeutral_gluon_nvert10 = new TH1D("nNeutral_gluon_nvert10", "", 51, -0.5, 50.5);
+  TH1D* h1_nPtD_gluon_nvert10 = new TH1D("nNPtD_gluon_nvert10", "", 50, 0., 1.);
+  TH1D* h1_rmsCand_gluon_nvert10 = new TH1D("rmsCand_gluon_nvert10", "", 50, 0., 0.1);
+
   std::vector<TProfile*> vhp_nCharged_vs_rhoPF;
   std::vector<TProfile*> vhp_nNeutral_vs_rhoPF;
   std::vector<TProfile*> vhp_ptD_vs_rhoPF;
@@ -367,6 +382,12 @@ void Ntp1Finalizer_QG::finalize() {
         h1_nPtD_nvert1->Fill( ptDJet[iJet], eventWeight );
         h1_rmsCand_nvert1->Fill( rmsCandJet[iJet], eventWeight );
       }
+      if( nvertex==10 ) {
+        h1_nCharged_nvert10->Fill( nChargedJet[iJet], eventWeight );
+        h1_nNeutral_nvert10->Fill( nNeutralJet[iJet], eventWeight );
+        h1_nPtD_nvert10->Fill( ptDJet[iJet], eventWeight );
+        h1_rmsCand_nvert10->Fill( rmsCandJet[iJet], eventWeight );
+      }
 
 
       // then match to parton:
@@ -418,6 +439,12 @@ void Ntp1Finalizer_QG::finalize() {
           h1_nPtD_quark_nvert1->Fill( ptDJet[iJet], eventWeight );
           h1_rmsCand_quark_nvert1->Fill( rmsCandJet[iJet], eventWeight );
         }
+        if( nvertex==10 ) {
+          h1_nCharged_quark_nvert10->Fill( nChargedJet[iJet], eventWeight );
+          h1_nNeutral_quark_nvert10->Fill( nNeutralJet[iJet], eventWeight );
+          h1_nPtD_quark_nvert10->Fill( ptDJet[iJet], eventWeight );
+          h1_rmsCand_quark_nvert10->Fill( rmsCandJet[iJet], eventWeight );
+        }
 
       } else if( partFlavor==21 ) { //gluon
         //h1_ptJet_gluon[thisPtBin]->Fill( ptJet[iJet], eventWeight );
@@ -441,6 +468,12 @@ void Ntp1Finalizer_QG::finalize() {
           h1_nNeutral_gluon_nvert1->Fill( nNeutralJet[iJet], eventWeight );
           h1_nPtD_gluon_nvert1->Fill( ptDJet[iJet], eventWeight );
           h1_rmsCand_gluon_nvert1->Fill( rmsCandJet[iJet], eventWeight );
+        }
+        if( nvertex==10 ) {
+          h1_nCharged_gluon_nvert10->Fill( nChargedJet[iJet], eventWeight );
+          h1_nNeutral_gluon_nvert10->Fill( nNeutralJet[iJet], eventWeight );
+          h1_nPtD_gluon_nvert10->Fill( ptDJet[iJet], eventWeight );
+          h1_rmsCand_gluon_nvert10->Fill( rmsCandJet[iJet], eventWeight );
         }
       }
 
@@ -539,15 +572,30 @@ void Ntp1Finalizer_QG::finalize() {
   h1_nPtD_nvert1->Write();
   h1_rmsCand_nvert1->Write();
 
+  h1_nCharged_nvert10->Write();
+  h1_nNeutral_nvert10->Write();
+  h1_nPtD_nvert10->Write();
+  h1_rmsCand_nvert10->Write();
+
   h1_nCharged_gluon_nvert1->Write();
   h1_nNeutral_gluon_nvert1->Write();
   h1_nPtD_gluon_nvert1->Write();
   h1_rmsCand_gluon_nvert1->Write();
 
+  h1_nCharged_gluon_nvert10->Write();
+  h1_nNeutral_gluon_nvert10->Write();
+  h1_nPtD_gluon_nvert10->Write();
+  h1_rmsCand_gluon_nvert10->Write();
+
   h1_nCharged_quark_nvert1->Write();
   h1_nNeutral_quark_nvert1->Write();
   h1_nPtD_quark_nvert1->Write();
   h1_rmsCand_quark_nvert1->Write();
+
+  h1_nCharged_quark_nvert10->Write();
+  h1_nNeutral_quark_nvert10->Write();
+  h1_nPtD_quark_nvert10->Write();
+  h1_rmsCand_quark_nvert10->Write();
 
   h1_nCharged_corr->Write();
   h1_nNeutral_corr->Write();
