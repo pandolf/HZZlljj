@@ -135,7 +135,7 @@ drawKinFitBias: DrawBase.o fitTools.o drawKinFitBias.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawKinFitBias drawKinFitBias.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
 drawQG: DrawBase.o fitTools.o drawQG.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawQG drawQG.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawQG drawQG.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS)
 
 drawRej_vs_Eff: DrawBase.o fitTools.o drawRej_vs_Eff.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawRej_vs_Eff drawRej_vs_Eff.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
