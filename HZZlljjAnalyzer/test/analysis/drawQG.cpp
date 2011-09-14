@@ -72,9 +72,10 @@ int main(int argc, char* argv[]) {
 //drawCompareHZZ_vs_pt( db2, file_HZZlljj, "quark", "QGLikelihood", "Likelihood" );
   drawCompareHZZ_vs_pt( db2, file_HZZlljj, "quark", "QGLikelihood_norms", "Likelihood" );
 //  drawCompareHZZ_vs_pt( db2, file_HZZlljj, "quark", "QGLikelihood_norms_noptD", "Likelihood" );
+*/
 
   drawEffRej_vs_pt( db2 );
-*/
+
 
   delete db;
   db = 0;
@@ -264,6 +265,10 @@ void drawEffRej_vs_pt( DrawBase* db ) {
 
   TFile* file = db->get_mcFile(0);
 
+  TPaveText* label_cms = db->get_labelCMS();
+  TPaveText* label_sqrt = db->get_labelSqrt();
+
+
   const int nBins = 20;
   Double_t ptBins[nBins+1];
   fitTools::getBins_int( nBins+1, ptBins, 15., 1000. );
@@ -300,8 +305,6 @@ void drawEffRej_vs_pt( DrawBase* db ) {
     TH2D* h2_axes = new TH2D("axes", "", 10, 0., 1.00001, 10, 0., 1.00001);
     h2_axes->SetXTitle("Quark Jet Efficiency");
     h2_axes->SetYTitle("Gluon Jet Rejection");
-    h2_axes->GetXaxis()->SetTitleOffset(1.1);
-    h2_axes->GetYaxis()->SetTitleOffset(1.5);
  
     gr_eff_vs_rej->SetMarkerSize(1.8);
     gr_eff_vs_rej->SetMarkerColor(kRed+3);
@@ -345,9 +348,6 @@ void drawEffRej_vs_pt( DrawBase* db ) {
     }
 
 
-    TPaveText* label_cms = db->get_labelCMS(3);
-    TPaveText* label_sqrt = db->get_labelSqrt(3);
-
     char ptLabel[200];
     sprintf( ptLabel, "%.0f < p_{T} < %.0f GeV/c", ptMin, ptMax);
     TPaveText* label_pt = new TPaveText(0.55, 0.8, 0.88, 0.88, "brNDC");
@@ -358,8 +358,6 @@ void drawEffRej_vs_pt( DrawBase* db ) {
     TLine* diagonal = new TLine(0., 1., 1., 0.);
 
     TCanvas* c1 = new TCanvas("c1", "c1", 600, 600);
-    c1->SetLeftMargin(0.12);
-    c1->SetBottomMargin(0.12);
 
     h2_axes->Draw();
     label_cms->Draw("same");
@@ -397,14 +395,10 @@ void drawEffRej_vs_pt( DrawBase* db ) {
 
 
   TCanvas* c_pt = new TCanvas("c_pt", "c1", 600, 600);
-  c_pt->SetLeftMargin(0.12);
-  c_pt->SetBottomMargin(0.12);
 
   TH2D* h2_pt = new TH2D("axes", "", 10, 15., 1000., 10, 0., 1.00001);
   h2_pt->SetXTitle("Jet Transverse Momentum [GeV/c]");
   h2_pt->SetYTitle("Gluon Jet Rejection");
-  h2_pt->GetXaxis()->SetTitleOffset(1.1);
-  h2_pt->GetYaxis()->SetTitleOffset(1.5);
 
   TLegend* legend = new TLegend(0.55, 0.15, 0.88, 0.45);
   legend->SetFillColor(0);
@@ -433,6 +427,8 @@ void drawEffRej_vs_pt( DrawBase* db ) {
   c_pt->cd();
   h2_pt->Draw();
   legend->Draw("same"); 
+  label_cms->Draw("same");
+  label_sqrt->Draw("same");
   gr_rej_vs_pt_eff70->Draw("p same"); 
   gr_rej_vs_pt_eff80->Draw("p same"); 
   gr_rej_vs_pt_eff90->Draw("p same"); 
