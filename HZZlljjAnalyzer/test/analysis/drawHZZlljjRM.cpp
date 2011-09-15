@@ -37,6 +37,29 @@ int main(int argc, char* argv[]) {
   db->set_outputdir(outputdir_str);
 
 
+  //signal 300
+  std::string signalFileName300 = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-300_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1";
+  signalFileName300 += "_" + selType;
+  signalFileName300 += "_" + leptType;
+  signalFileName300 += ".root";
+  TFile* signalFile300 = TFile::Open(signalFileName300.c_str());
+  db->add_mcFile( signalFile300, "H300", "H (300)", kYellow+1, 3004);
+
+  //signal 400
+  std::string signalFileName400 = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-400_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1";
+  signalFileName400 += "_" + selType;
+  signalFileName400 += "_" + leptType;
+  signalFileName400 += ".root";
+  TFile* signalFile400 = TFile::Open(signalFileName400.c_str());
+  db->add_mcFile( signalFile400, "H400", "H (400)", kRed+1, 3005);
+
+  //signal 500
+  std::string signalFileName500 = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-500_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1";
+  signalFileName500 += "_" + selType;
+  signalFileName500 += "_" + leptType;
+  signalFileName500 += ".root";
+  TFile* signalFile500 = TFile::Open(signalFileName500.c_str());
+  db->add_mcFile( signalFile500, "H500", "H (500)", kRed+3, 3006);
 
 
   std::string mcZJetsFileName;
@@ -92,29 +115,6 @@ int main(int argc, char* argv[]) {
   db->add_mcFile( mcTTbarFile, "TTtW", "tt/tW", 39, 3002);
 
 
-  //signal 300
-  std::string signalFileName300 = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-300_7TeV-jhu-pythia6_Summer11-PU_S4_START42_V11-v1";
-  signalFileName300 += "_" + selType;
-  signalFileName300 += "_" + leptType;
-  signalFileName300 += ".root";
-  TFile* signalFile300 = TFile::Open(signalFileName300.c_str());
-  db->add_mcFile( signalFile300, "H300", "H(300)", kOrange+1, 3004);
-
-  //signal 400
-  std::string signalFileName400 = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-400_7TeV-jhu-pythia6_Summer11-PU_S4_START42_V11-v1";
-  signalFileName400 += "_" + selType;
-  signalFileName400 += "_" + leptType;
-  signalFileName400 += ".root";
-  TFile* signalFile400 = TFile::Open(signalFileName400.c_str());
-  db->add_mcFile( signalFile400, "H400", "H(400)", kRed+1, 3005);
-
-  //signal 500
-  std::string signalFileName500 = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-500_7TeV-jhu-pythia6_Summer11-PU_S4_START42_V11-v1";
-  signalFileName500 += "_" + selType;
-  signalFileName500 += "_" + leptType;
-  signalFileName500 += ".root";
-  TFile* signalFile500 = TFile::Open(signalFileName500.c_str());
-  db->add_mcFile( signalFile500, "H500", "H(500)", kRed+3, 3006);
 
 
   db->set_shapeNormalization();
