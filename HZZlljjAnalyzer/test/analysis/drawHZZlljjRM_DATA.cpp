@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 
   std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset + "_" + ZJetsMC + "_" + selType + "_" + leptType;
   if( normType=="SHAPE" ) outputdir_str += "_SHAPE";
-  outputdir_str += "_OLDPU";
+  //outputdir_str += "_OLDPU";
   db->set_outputdir(outputdir_str);
 
 
@@ -74,8 +74,8 @@ int main(int argc, char* argv[]) {
   if( ZJetsMC=="alpgen" )
     mcZJetsFileName = "HZZlljjRM_ZJets_alpgen_TuneZ2_Spring11_v2";
   else if( ZJetsMC=="madgraph" )
-    //mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1";
-    mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1_OLDPU";
+    mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1";
+    //mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1_OLDPU";
   else {
     std::cout << "Unknown ZJetsMC '" << ZJetsMC << "'. Exiting." << std::endl;
     exit(13);
@@ -105,7 +105,8 @@ int main(int argc, char* argv[]) {
   }
 
   //std::string mcVVFileName = "HZZlljjRM_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2_OLDPU";
-  std::string mcVVFileName = "HZZlljjRM_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2";
+  //std::string mcVVFileName = "HZZlljjRM_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2";
+  std::string mcVVFileName = "HZZlljjRM_VV_TuneZ2_7TeV-pythia6-tauola_Summer11-PU_S4_START42_V11-v1";
   mcVVFileName += "_" + selType;
   mcVVFileName += "_" + leptType;
   mcVVFileName += ".root";
@@ -114,7 +115,8 @@ int main(int argc, char* argv[]) {
   db->add_mcFile( mcVVFile, "VVtoAnything_TuneZ2", "ZZ/WZ/WW", 38, 3003);
 
   //std::string mcTTbarFileName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11_v2_OLDPU";
-  std::string mcTTbarFileName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11_v2";
+  //std::string mcTTbarFileName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11_v2";
+  std::string mcTTbarFileName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-powheg-tauola_Summer11-PU_S4_START42_V11-v1";
   mcTTbarFileName += "_" + selType;
   mcTTbarFileName += "_" + leptType;
   mcTTbarFileName += ".root";
@@ -122,7 +124,7 @@ int main(int argc, char* argv[]) {
   //db->add_mcFile( mcTTbarFile, "TTtW", "tt/tW", 30, 3002);
   db->add_mcFile( mcTTbarFile, "TTtW", "tt/tW", 39, 3002);
 
-  std::string signalFileName = "HZZlljjRM_SMHiggsToZZTo2L2Q_M-400_7TeV-jhu-pythia6_Spring11-PU_S1_START311_V1G1-v1_Spring11_v2";
+  std::string signalFileName = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-400_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1";
   signalFileName += "_" + selType;
   signalFileName += "_" + leptType;
   signalFileName += ".root";
@@ -153,8 +155,8 @@ int main(int argc, char* argv[]) {
     else if( data_dataset=="DATA_EPS_FINAL_plusSingleMu" )
       db->set_lumiNormalization(1143.);
     else if( data_dataset=="DATA_LP11" )
-      db->set_lumiNormalization(1500.);
-      //db->set_lumiNormalization(1580.);
+      //db->set_lumiNormalization(1500.);
+      db->set_lumiNormalization(1580.);
 
   } else { //shape
 
