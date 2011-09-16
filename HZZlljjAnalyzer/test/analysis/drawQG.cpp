@@ -8,6 +8,7 @@
 
 void drawEffRej_vs_pt( DrawBase* db );
 void drawCompare_vs_pt( DrawBase* db, const std::string& name, const std::string& axisName );
+void drawVar_vs_PU( DrawBase* db, const std::string& varName, const std::string& axisName );
 void drawCompareHZZ_vs_pt( DrawBase* db, TFile* file_HZZlljj, const std::string& quark_gluon, const std::string& name, const std::string& axisName, bool log=false );
 
 
@@ -44,6 +45,13 @@ int main(int argc, char* argv[]) {
   drawCompare_vs_pt( db, "rmsCand", "PFCandidate p_{T}-Weighted Spread");
   drawCompare_vs_pt( db, "nCharged", "Jet Charged Multiplicity");
   drawCompare_vs_pt( db, "nNeutral", "Jet Neutral Multiplicity");
+
+  drawVar_vs_PU( db, "ptD", "p_{T} Distribution" );
+  drawVar_vs_PU( db, "rmsCand", "PFCandidate p_{T}-Weighted Spread");
+  drawVar_vs_PU( db, "nCharged", "Jet Charged Multiplicity");
+  drawVar_vs_PU( db, "nNeutral", "Jet Neutral Multiplicity");
+
+
 
 
   DrawBase* db2 = new DrawBase("QG");
@@ -283,8 +291,8 @@ void drawEffRej_vs_pt( DrawBase* db ) {
 
   for( unsigned iBin=0; iBin<nBins; ++iBin ) {
 
-    float ptMin = ptBins[iBin];
-    float ptMax = ptBins[iBin+1];
+    double ptMin = ptBins[iBin];
+    double ptMax = ptBins[iBin+1];
 
     char name_ptbin[200];
     sprintf( name_ptbin, "eff_vs_rej_pt%.0f_%.0f", ptMin, ptMax );
@@ -326,33 +334,45 @@ void drawEffRej_vs_pt( DrawBase* db ) {
     gr_eff_vs_rej_onlyNch->SetMarkerColor(38);
     gr_eff_vs_rej_onlyNch->SetMarkerStyle(20);
 
+    bool found70=false;
+    bool found80=false;
+    bool found90=false;
+    bool found95=false;
+
     for( unsigned iPoint=0; iPoint<gr_eff_vs_rej->GetN()-1; ++iPoint ) {
 
       Double_t eff_q, rej_g;
       gr_eff_vs_rej->GetPoint( iPoint, eff_q, rej_g );
-      Double_t eff_q2, rej_g2;
-      gr_eff_vs_rej->GetPoint( iPoint+1, eff_q2, rej_g2 );
 
-      if( eff_q<0.7 && eff_q2>0.7 )
-        gr_rej_vs_pt_eff70->SetPoint( iPoint, 0.5*(ptMax+ptMin), 0.5*(rej_g+rej_g2) );
 
-      if( eff_q<0.8 && eff_q2>0.8 )
-        gr_rej_vs_pt_eff80->SetPoint( iPoint, 0.5*(ptMax+ptMin), 0.5*(rej_g+rej_g2) );
+      if( eff_q<0.7 && !found70 ) {
+        gr_rej_vs_pt_eff70->SetPoint( iBin, 0.5*(ptMin+ptMax), 1.-rej_g );
+        found70 = true;
+      }
 
-      if( eff_q<0.9 && eff_q2>0.9 )
-        gr_rej_vs_pt_eff90->SetPoint( iPoint, 0.5*(ptMax+ptMin), 0.5*(rej_g+rej_g2) );
+      if( eff_q<0.8 && !found80 ) {
+        gr_rej_vs_pt_eff80->SetPoint( iBin, 0.5*(ptMin+ptMax), 1.-rej_g );
+        found80 = true;
+      }
 
-      if( eff_q<0.95 && eff_q2>0.95 )
-        gr_rej_vs_pt_eff95->SetPoint( iPoint, 0.5*(ptMax+ptMin), 0.5*(rej_g+rej_g2) );
+      if( eff_q<0.9 && !found90 ) {
+        gr_rej_vs_pt_eff90->SetPoint( iBin, 0.5*(ptMin+ptMax), 1.-rej_g );
+        found90 = true;
+      }
+
+      if( eff_q<0.95 && !found95 ) {
+        gr_rej_vs_pt_eff95->SetPoint( iBin, 0.5*(ptMin+ptMax), 1.-rej_g );
+        found95 = true;
+      }
 
     }
 
 
     char ptLabel[200];
     sprintf( ptLabel, "%.0f < p_{T} < %.0f GeV/c", ptMin, ptMax);
-    TPaveText* label_pt = new TPaveText(0.55, 0.8, 0.88, 0.88, "brNDC");
+    TPaveText* label_pt = new TPaveText(0.3, 0.2, 0.45, 0.25, "brNDC");
     label_pt->SetFillColor(0);
-    label_pt->SetTextSize(0.035);
+    label_pt->SetTextSize(0.038);
     label_pt->AddText(ptLabel);
 
     TLine* diagonal = new TLine(0., 1., 1., 0.);
@@ -395,24 +415,31 @@ void drawEffRej_vs_pt( DrawBase* db ) {
 
 
   TCanvas* c_pt = new TCanvas("c_pt", "c1", 600, 600);
+  c_pt->SetLogx();
 
   TH2D* h2_pt = new TH2D("axes", "", 10, 15., 1000., 10, 0., 1.00001);
   h2_pt->SetXTitle("Jet Transverse Momentum [GeV/c]");
-  h2_pt->SetYTitle("Gluon Jet Rejection");
+  h2_pt->SetYTitle("Gluon Jet Efficiency");
+  h2_pt->GetXaxis()->SetMoreLogLabels();
+  h2_pt->GetXaxis()->SetNoExponent();
 
-  TLegend* legend = new TLegend(0.55, 0.15, 0.88, 0.45);
-  legend->SetFillColor(0);
-  legend->SetTextSize(0.035);
-  legend->AddEntry( gr_rej_vs_pt_eff70, "70% Quark Eff.", "P");
-  legend->AddEntry( gr_rej_vs_pt_eff80, "80% Quark Eff.", "P");
-  legend->AddEntry( gr_rej_vs_pt_eff90, "90% Quark Eff.", "P");
-  legend->AddEntry( gr_rej_vs_pt_eff95, "95% Quark Eff.", "P");
+  TLegend* legend_left = new TLegend(0.2, 0.2, 0.45, 0.3);
+  legend_left->SetFillColor(0);
+  legend_left->SetTextSize(0.035);
+  legend_left->AddEntry( gr_rej_vs_pt_eff70, "70% Quark Eff.", "P");
+  legend_left->AddEntry( gr_rej_vs_pt_eff80, "80% Quark Eff.", "P");
+
+  TLegend* legend_right = new TLegend(0.55, 0.2, 0.8, 0.3);
+  legend_right->SetFillColor(0);
+  legend_right->SetTextSize(0.035);
+  legend_right->AddEntry( gr_rej_vs_pt_eff90, "90% Quark Eff.", "P");
+  legend_right->AddEntry( gr_rej_vs_pt_eff95, "95% Quark Eff.", "P");
   
   gr_rej_vs_pt_eff70->SetMarkerSize(1.6);
   gr_rej_vs_pt_eff80->SetMarkerSize(1.6);
   gr_rej_vs_pt_eff90->SetMarkerSize(1.6);
   gr_rej_vs_pt_eff95->SetMarkerSize(1.6);
-  
+
   gr_rej_vs_pt_eff70->SetMarkerStyle(20);
   gr_rej_vs_pt_eff80->SetMarkerStyle(21);
   gr_rej_vs_pt_eff90->SetMarkerStyle(22);
@@ -426,7 +453,8 @@ void drawEffRej_vs_pt( DrawBase* db ) {
 
   c_pt->cd();
   h2_pt->Draw();
-  legend->Draw("same"); 
+  legend_left->Draw("same"); 
+  legend_right->Draw("same"); 
   label_cms->Draw("same");
   label_sqrt->Draw("same");
   gr_rej_vs_pt_eff70->Draw("p same"); 
@@ -434,10 +462,120 @@ void drawEffRej_vs_pt( DrawBase* db ) {
   gr_rej_vs_pt_eff90->Draw("p same"); 
   gr_rej_vs_pt_eff95->Draw("p same"); 
   
+  gPad->RedrawAxis();
 
-  c_pt->SaveAs("rej_vs_pt.eps");
+
+  char canvasName_vs_pt[500];
+  sprintf( canvasName_vs_pt, "%s/rej_vs_pt.eps", (db->get_outputdir()).c_str());
+
+  c_pt->SaveAs(canvasName_vs_pt);
 
   gStyle->SetPadTickX(0);
   gStyle->SetPadTickY(0);
+
+}
+
+
+
+
+void drawVar_vs_PU( DrawBase* db, const std::string& varName, const std::string& axisName ) {
+
+
+  TFile* file = db->get_mcFile(0);
+
+  TPaveText* label_cms = db->get_labelCMS();
+  TPaveText* label_sqrt = db->get_labelSqrt();
+
+
+  const int nBins = 20;
+  Double_t ptBins[nBins+1];
+  fitTools::getBins_int( nBins+1, ptBins, 15., 1000. );
+
+
+  for( unsigned iBin=0; iBin<nBins; ++iBin ) {
+
+    float ptMin = ptBins[iBin];
+    float ptMax = ptBins[iBin+1];
+
+    char name_ptbin[300];
+
+    sprintf( name_ptbin, "%s_quark_nvert1_pt%.0f_%.0f", varName.c_str(), ptMin, ptMax );
+    TH1D* h1_quark_nvert1 = (TH1D*)file->Get(name_ptbin);
+  
+    sprintf( name_ptbin, "%s_quark_nvert10_pt%.0f_%.0f", varName.c_str(), ptMin, ptMax );
+    TH1D* h1_quark_nvert10 = (TH1D*)file->Get(name_ptbin);
+  
+    sprintf( name_ptbin, "%s_gluon_nvert1_pt%.0f_%.0f", varName.c_str(), ptMin, ptMax );
+    TH1D* h1_gluon_nvert1 = (TH1D*)file->Get(name_ptbin);
+  
+    sprintf( name_ptbin, "%s_gluon_nvert10_pt%.0f_%.0f", varName.c_str(), ptMin, ptMax );
+    TH1D* h1_gluon_nvert10 = (TH1D*)file->Get(name_ptbin);
+  
+
+    h1_quark_nvert1->SetLineWidth(2);
+    h1_quark_nvert1->SetLineColor(38);
+    h1_quark_nvert1->SetFillColor(38);
+    h1_quark_nvert1->SetFillStyle(3004);
+    h1_gluon_nvert1->SetLineWidth(2);
+    h1_gluon_nvert1->SetLineColor(46);
+    h1_gluon_nvert1->SetFillColor(46);
+    h1_gluon_nvert1->SetFillStyle(3005);
+    h1_quark_nvert10->SetMarkerColor(kBlue+3);
+    h1_quark_nvert10->SetMarkerStyle(20);
+    h1_gluon_nvert10->SetMarkerColor(kRed+2);
+    h1_gluon_nvert10->SetMarkerStyle(21);
+
+    char legendTitle[200];
+    sprintf( legendTitle, "%.0f < p_{T} < %.0f GeV/c", ptMin, ptMax);
+
+    TLegend* legend = new TLegend(0.58, 0.6, 0.93, 0.9, legendTitle);
+    legend->SetFillColor(0);
+    legend->SetTextSize(0.038);
+    legend->AddEntry(h1_quark_nvert1, "Quark (1 PV)", "F");
+    legend->AddEntry(h1_gluon_nvert1, "Gluon (1 PV)", "F");
+    legend->AddEntry(h1_quark_nvert10, "Quark (10 PV)", "P");
+    legend->AddEntry(h1_gluon_nvert10, "Gluon (10 PV)", "P");
+
+
+    float xmin = h1_quark_nvert1->GetXaxis()->GetXmin();
+    float xmax = h1_quark_nvert1->GetXaxis()->GetXmax();
+    float ymin = 0.;
+    float ymax_quark = h1_quark_nvert1->GetMaximum()/h1_quark_nvert1->Integral();
+    float ymax_gluon = h1_gluon_nvert1->GetMaximum()/h1_gluon_nvert1->Integral();
+    float ymax = (ymax_quark>ymax_gluon) ? ymax_quark : ymax_gluon;
+    
+
+    TH2D* h2_axes = new TH2D("axes", "", 10, xmin, xmax, 10, ymin, 1.4*ymax);
+    h2_axes->SetXTitle(axisName.c_str());
+    h2_axes->SetYTitle("Normalized to Unity");
+
+
+    TCanvas* c1 = new TCanvas("c1", "", 600, 600);
+    c1->cd();
+
+    h2_axes->Draw();
+    h1_quark_nvert1->DrawNormalized("histo same");
+    h1_gluon_nvert1->DrawNormalized("histo same");
+    h1_quark_nvert10->DrawNormalized("p same");
+    h1_gluon_nvert10->DrawNormalized("p same");
+
+    legend->Draw("same");
+
+    label_cms->Draw("same");
+    label_sqrt->Draw("same");
+
+    char canvasName[500];
+    sprintf( canvasName, "%s/%s_vs_PU_pt%.0f_%.0f", (db->get_outputdir()).c_str(), varName.c_str(), ptMin, ptMax);
+
+    std::string canvasName_str(canvasName);
+    std::string canvasName_eps = canvasName_str + ".eps";
+    std::string canvasName_png = canvasName_str + ".png";
+
+    c1->SaveAs(canvasName_eps.c_str());
+    c1->SaveAs(canvasName_png.c_str());
+
+    delete c1;
+    
+  } //for pt bins
 
 }
