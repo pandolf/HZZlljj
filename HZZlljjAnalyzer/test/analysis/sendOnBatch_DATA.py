@@ -7,7 +7,7 @@ import time
 ### usage  cmst3_submit_manyfilesperjob.py dataset njobs applicationName queue 
 #######################################
 if (len(sys.argv) != 4) and (len(sys.argv) != 5) and (len(sys.argv) != 6):
-    print "usage sendOnBatch.py PDname SDname filesPerJobs analyzerType=\"HWWlvjj\" flags=\"\""
+    print "usage sendOnBatch.py PDname SDname filesPerJobs analyzerType=\"HZZlljj\" flags=\"\""
     sys.exit(1)
 PDname = sys.argv[1]
 SDname = sys.argv[2]
@@ -18,6 +18,7 @@ inputlist = "files_"+dataset+".txt"
 # choose among cmt3 8nm 1nh 8nh 1nd 1nw 
 #queue = "cmst3"
 #queue = "cms8nht3"
+#queue = "2nd"
 queue = "8nh"
 #ijobmax = 40
 ijobmax = int(sys.argv[3])
@@ -55,7 +56,7 @@ os.system("mkdir -p "+dir+"/src/")
 #else: os.system("mkdir -p "+outputroot)
 
 if diskoutputdir != "none": 
-    os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm22 mkdir -p "+diskoutputmain)
+    os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm23 mkdir -p "+diskoutputmain)
 
 #look for the current directory
 #######################################
@@ -85,7 +86,6 @@ while (len(inputfiles) > 0):
     outputfile = open(outputname,'w')
     outputfile.write('#!/bin/bash\n')
     outputfile.write('export STAGE_HOST=castorcms\n')
-    outputfile.write('export STAGE_SVCCLASS=cmst3\n')
     outputfile.write('export SCRAM_ARCH=slc5_amd64_gcc434\n')
     outputfile.write('cd /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_4_2_3_patch5/ ; eval `scramv1 runtime -sh` ; cd -\n')
     #    outputfile.write('cd '+pwd)
@@ -94,10 +94,10 @@ while (len(inputfiles) > 0):
     outputfile.write('cd $WORKDIR\n')
     #outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" _"+str(ijob)+"\n")
     outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" "+str(ijob)+"\n")
-    outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm22:'+diskoutputmain+'/{}\n') 
+    outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm23:'+diskoutputmain+'/{}\n') 
     outputfile.close
     os.system("echo bsub -q "+queue+" -o "+pwd+"/"+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
     os.system("bsub -q "+queue+" -o "+pwd+"/"+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname+" -copyInput="+dataset+"_"+str(ijob))
     ijob = ijob+1
-    time.sleep(2.5)
+    time.sleep(2)
     continue
