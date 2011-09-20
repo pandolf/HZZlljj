@@ -662,78 +662,83 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_mZZ_mZjj_notcut = new TH1D("mZZ_mZjj_notcut", "", 200, 100., 700.);
   h1_mZZ_mZjj_notcut->Sumw2();
 
-  TH1D* h1_mZZ_nokinfit_hiMass_all = new TH1D("mZZ_nokinfit_hiMass_all", "", 600, 150., 750.);
+
+  TH1D* h1_mZZ_nokinfit_hiMass_all = new TH1D("mZZ_nokinfit_hiMass_all", "", 1250, 150., 1400.);
   h1_mZZ_nokinfit_hiMass_all->Sumw2();
 
-  TH1D* h1_mZZ_kinfit_hiMass_all = new TH1D("mZZ_kinfit_hiMass_all", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_all = new TH1D("mZZ_kinfit_hiMass_all", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_all->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_nogluetag = new TH1D("mZZ_kinfit_hiMass_nogluetag", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_hiPU = new TH1D("mZZ_kinfit_hiMass_hiPU", "", 1250, 150., 1400.);
+  h1_mZZ_kinfit_hiMass_hiPU->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_loPU = new TH1D("mZZ_kinfit_hiMass_loPU", "", 1250, 150., 1400.);
+  h1_mZZ_kinfit_hiMass_loPU->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_nogluetag = new TH1D("mZZ_kinfit_hiMass_nogluetag", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_nogluetag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_gluetag= new TH1D("mZZ_kinfit_hiMass_gluetag", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_gluetag= new TH1D("mZZ_kinfit_hiMass_gluetag", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_gluetag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_0btag= new TH1D("mZZ_kinfit_hiMass_0btag", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_0btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_1btag= new TH1D("mZZ_kinfit_hiMass_1btag", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_1btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_2btag= new TH1D("mZZ_kinfit_hiMass_2btag", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_2btag->Sumw2();
 
-  TH1D* h1_mZZ_kinfit_hiMass_gluetag_ELE = new TH1D("mZZ_kinfit_hiMass_gluetag_ELE ", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_gluetag_ELE = new TH1D("mZZ_kinfit_hiMass_gluetag_ELE ", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_gluetag_ELE ->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_0btag_ELE = new TH1D("mZZ_kinfit_hiMass_0btag_ELE ", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_0btag_ELE = new TH1D("mZZ_kinfit_hiMass_0btag_ELE ", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_0btag_ELE ->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_1btag_ELE = new TH1D("mZZ_kinfit_hiMass_1btag_ELE ", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_1btag_ELE = new TH1D("mZZ_kinfit_hiMass_1btag_ELE ", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_1btag_ELE ->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_2btag_ELE = new TH1D("mZZ_kinfit_hiMass_2btag_ELE ", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_2btag_ELE = new TH1D("mZZ_kinfit_hiMass_2btag_ELE ", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_2btag_ELE ->Sumw2();
 
-  TH1D* h1_mZZ_kinfit_hiMass_gluetag_MU = new TH1D("mZZ_kinfit_hiMass_gluetag_MU ", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_gluetag_MU = new TH1D("mZZ_kinfit_hiMass_gluetag_MU ", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_gluetag_MU ->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_0btag_MU = new TH1D("mZZ_kinfit_hiMass_0btag_MU ", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_0btag_MU = new TH1D("mZZ_kinfit_hiMass_0btag_MU ", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_0btag_MU ->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_1btag_MU = new TH1D("mZZ_kinfit_hiMass_1btag_MU ", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_1btag_MU = new TH1D("mZZ_kinfit_hiMass_1btag_MU ", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_1btag_MU ->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_2btag_MU = new TH1D("mZZ_kinfit_hiMass_2btag_MU ", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_2btag_MU = new TH1D("mZZ_kinfit_hiMass_2btag_MU ", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_2btag_MU ->Sumw2();
 
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_gluetag= new TH1D("mZZ_kinfit_hiMass_sidebands_gluetag", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_gluetag= new TH1D("mZZ_kinfit_hiMass_sidebands_gluetag", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_gluetag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_0btag= new TH1D("mZZ_kinfit_hiMass_sidebands_0btag", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_0btag= new TH1D("mZZ_kinfit_hiMass_sidebands_0btag", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_0btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_1btag= new TH1D("mZZ_kinfit_hiMass_sidebands_1btag", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_1btag= new TH1D("mZZ_kinfit_hiMass_sidebands_1btag", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_1btag->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_2btag= new TH1D("mZZ_kinfit_hiMass_sidebands_2btag", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_2btag= new TH1D("mZZ_kinfit_hiMass_sidebands_2btag", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_2btag->Sumw2();
 
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_gluetag_ELE", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_gluetag_ELE", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_0btag_ELE", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_0btag_ELE", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_1btag_ELE", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_1btag_ELE", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_2btag_ELE", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE= new TH1D("mZZ_kinfit_hiMass_sidebands_2btag_ELE", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE->Sumw2();
 
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_gluetag_MU", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_gluetag_MU", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_0btag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_0btag_MU", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_0btag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_0btag_MU", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_0btag_MU->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_1btag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_1btag_MU", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_1btag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_1btag_MU", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_1btag_MU->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_sidebands_2btag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_2btag_MU", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_sidebands_2btag_MU= new TH1D("mZZ_kinfit_hiMass_sidebands_2btag_MU", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_sidebands_2btag_MU->Sumw2();
 
 
-  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_hiQG= new TH1D("mZZ_kinfit_hiMass_hiQG", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_hiQG->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 600, 150., 750.);
+  TH1D* h1_mZZ_kinfit_hiMass_loQG= new TH1D("mZZ_kinfit_hiMass_loQG", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_loQG->Sumw2();
-  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 600, 150., 750.);
+  TH1D* h1_mZZ_ZjjMassConstr_hiMass  = new TH1D("mZZ_ZjjMassConstr_hiMass", "", 1250, 150., 1400.);
   h1_mZZ_ZjjMassConstr_hiMass->Sumw2();
 
   TH1D* h1_deltaRZmatching = new TH1D("deltaRZmatching", "", 50, 0., 1.0);
   h1_deltaRZmatching->Sumw2();
-  TH1D* h1_mZZ_kinfit_hiMass_0btag_matched = new TH1D("mZZ_kinfit_hiMass_0btag_matched", "", 110, 150., 700. );
+  TH1D* h1_mZZ_kinfit_hiMass_0btag_matched = new TH1D("mZZ_kinfit_hiMass_0btag_matched", "", 1250, 150., 1400.);
   h1_mZZ_kinfit_hiMass_0btag_matched->Sumw2();
 
   TH1D* h1_ptZZ  = new TH1D("ptZZ", "", 100, 0., 300.);
@@ -1219,7 +1224,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
 
   //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root");
-  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
+  //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
+  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root");
   float Zmass = 91.1876;
   DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", Zmass );
   HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
@@ -2524,6 +2530,8 @@ ofs << run << " " << event << std::endl;
     h1_mZZ_nokinfit_hiMass_all->Fill( ZZ_nokinfit.M(), eventWeight);
     h1_mZZ_ZjjMassConstr_hiMass->Fill(ZZ_constr.M(), eventWeight);
     h1_mZZ_kinfit_hiMass_all->Fill( ZZ_kinfit.M(), eventWeight);
+    if( nvertex>5 ) h1_mZZ_kinfit_hiMass_hiPU->Fill( ZZ_kinfit.M(), eventWeight);
+    else h1_mZZ_kinfit_hiMass_loPU->Fill( ZZ_kinfit.M(), eventWeight);
     if( maxBTag_found>=0 ) h1_mZZ_kinfit_hiMass_nogluetag->Fill( ZZ_kinfit.M(), eventWeight);
     if( maxBTag_found==0 ) {
       h1_mZZ_kinfit_hiMass_0btag->Fill( ZZ_kinfit.M(), eventWeight);
@@ -3326,6 +3334,8 @@ ofs << run << " " << event << std::endl;
   h1_mZZ_ZjjMassConstr_hiMass->Write();
   h1_mZZ_nokinfit_hiMass_all->Write();
   h1_mZZ_kinfit_hiMass_all->Write();
+  h1_mZZ_kinfit_hiMass_hiPU->Write();
+  h1_mZZ_kinfit_hiMass_loPU->Write();
   h1_mZZ_kinfit_hiMass_nogluetag->Write();
   h1_mZZ_kinfit_hiMass_gluetag->Write();
   h1_mZZ_kinfit_hiMass_gluetag_ELE->Write();
