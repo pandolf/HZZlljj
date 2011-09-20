@@ -132,7 +132,15 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      nvertex_ = nPV;
      rhoPF_ = rhoFastjet;
 
-     if( !isGoodEvent() ) continue; //this takes care also of integrated luminosity and trigger
+     if( !isGoodEvent(jentry) ) continue; //this takes care also of integrated luminosity and trigger
+
+     if( nPV==0 ) continue;
+     bool goodVertex = (ndofPV[0] >= 4.0 && sqrt(PVxPV[0]*PVxPV[0]+PVyPV[0]*PVyPV[0]) < 2. && fabs(PVzPV[0]) < 24. );
+     if( !goodVertex ) continue;
+  
+     for( unsigned iBX=0; iBX<nBX; ++iBX ) {
+       if( bxPU[iBX]==0 ) nPU_ = nPU[iBX]; 
+     }
 
 
      ptHat_ = (isMC_) ? genPtHat : ptHat_;
