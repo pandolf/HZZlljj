@@ -54,11 +54,11 @@ void readWriteTree(string fileName, string treeName){
       // 150 and 10 should not be hard coded... get from histograms!
 
       if(nBTags==0)
-	wght=alpha0->GetBinContent((int)((mZZ-150)/10+1));
+	wght=alpha0->GetBinContent(alpha0->FindBin(mZZ));
       else if(nBTags==1)
-	wght=alpha1->GetBinContent((int)((mZZ-150)/10+1));
+	wght=alpha1->GetBinContent(alpha1->FindBin(mZZ));
       else if(nBTags==2)
-	wght=alpha2->GetBinContent((int)((mZZ-150)/10+1));
+	wght=alpha2->GetBinContent(alpha2->FindBin(mZZ));
     }
 
     selectedEvents->Fill();
