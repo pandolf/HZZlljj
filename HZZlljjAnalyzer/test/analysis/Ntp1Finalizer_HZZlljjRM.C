@@ -1574,10 +1574,11 @@ ofstream ofs("run_event.txt");
     if( lept2.Pt() < ptLept2_thresh_ ) continue;
     if( fabs(lept1.Eta()) > etaLept1_thresh_ ) continue;
     if( fabs(lept2.Eta()) > etaLept2_thresh_ ) continue;
-    if( invert_mZll_ )
+    if( invert_mZll_ ) {
       if( diLepton.M() > mZll_threshLo_ && diLepton.M() < mZll_threshHi_ ) continue;
-    else
+    } else {
       if( diLepton.M() < mZll_threshLo_ || diLepton.M() > mZll_threshHi_ ) continue;
+    }
 
     nEvents_presel_mZll += eventWeight;
 
