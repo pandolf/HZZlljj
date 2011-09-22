@@ -1754,7 +1754,6 @@ ofstream ofs("run_event.txt");
       if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
   //if( event==13291 ) std::cout << "d" << std::endl;
 
-    //if( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) continue;
 
       // sideband logic:
       if( foundSignalRegionMjj && ( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) ) continue;
@@ -1980,115 +1979,8 @@ ofstream ofs("run_event.txt");
 
     if( foundJets==0 ) continue;
 
-    if( !foundSignalRegionMjj ) { //fill sideband plots
 
-      isSignalRegion = false;
-
-      TLorentzVector Zjj_kinfit = jet1_selected + jet2_selected;
-     
-      TLorentzVector jet1_nokinfit, jet2_nokinfit;
-      jet1_nokinfit.SetPtEtaPhiE( jet1_selected.pt_preKinFit, jet1_selected.eta_preKinFit, jet1_selected.phi_preKinFit, jet1_selected.e_preKinFit );
-      jet2_nokinfit.SetPtEtaPhiE( jet2_selected.pt_preKinFit, jet2_selected.eta_preKinFit, jet2_selected.phi_preKinFit, jet2_selected.e_preKinFit );
-     
-      TLorentzVector Zjj_nokinfit = jet1_nokinfit + jet2_nokinfit;
-     
-      TLorentzVector ZZ_nokinfit = Zjj_nokinfit + diLepton;
-      TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
-
-      mZZ = ZZ_kinfit.M();
-      mZZ_nokinfit = ZZ_nokinfit.M();
-
-      h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
-      if( maxBTag_found>=0 ) h1_mZjj_nogluetag->Fill( Zjj_nokinfit.M(), eventWeight);
-      if( leptType==0 ) {
-        h1_mZjj_MU->Fill( Zjj_nokinfit.M(), eventWeight);
-        if( maxBTag_found>=0 ) h1_mZjj_nogluetag_MU->Fill( Zjj_nokinfit.M(), eventWeight);
-      }
-      if( leptType==1 ) {
-        h1_mZjj_ELE->Fill( Zjj_nokinfit.M(), eventWeight);
-        if( maxBTag_found>=0 ) h1_mZjj_nogluetag_ELE->Fill( Zjj_nokinfit.M(), eventWeight);
-      }
-
-      if( mZZ>150. && mZZ<250. ) h1_mZjj_loMass->Fill( Zjj_nokinfit.M(), eventWeight);
-      else if( mZZ>250. && mZZ<400. ) h1_mZjj_medMass->Fill( Zjj_nokinfit.M(), eventWeight);
-      else if( mZZ>400. ) h1_mZjj_hiMass->Fill( Zjj_nokinfit.M(), eventWeight);
-
-      if( maxBTag_found==0 )  h1_mZjj_0btag->Fill( Zjj_nokinfit.M(), eventWeight);
-      else if( maxBTag_found==1 )  h1_mZjj_1btag->Fill( Zjj_nokinfit.M(), eventWeight);
-      else if( maxBTag_found==2 )  h1_mZjj_2btag->Fill( Zjj_nokinfit.M(), eventWeight);
-
-      //if( Zjj_nokinfit.M()<60. || Zjj_nokinfit.M()>130. ) continue;
-      isSidebands = ( (Zjj_nokinfit.M()>60. && Zjj_nokinfit.M()<75.) || (Zjj_nokinfit.M()<130. && Zjj_nokinfit.M()>105.) );
-      
-      if( isSidebands ) {
-   
-        //fill sideband plots:
-
-        h2_mZjj_vs_mZZ->Fill( mZZ, Zjj_nokinfit.M(), eventWeight );
-        h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M(), eventWeight );
-
-        h1_helicityLD_sidebands->Fill( helicityLD_selected, eventWeight );
-
-        if( maxBTag_found==0 ) {
-          h2_mZjj_vs_mZZ_0btag->Fill( mZZ, Zjj_nokinfit.M() );
-          h2_mZjj_vs_mZZ_kinfit_0btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
-          h1_mZZ_kinfit_hiMass_sidebands_0btag->Fill( ZZ_kinfit.M(), eventWeight );
-          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
-          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
-        } else if( maxBTag_found==1 ) {
-          h2_mZjj_vs_mZZ_1btag->Fill( mZZ, Zjj_nokinfit.M() );
-          h2_mZjj_vs_mZZ_kinfit_1btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
-          h1_mZZ_kinfit_hiMass_sidebands_1btag->Fill( ZZ_kinfit.M(), eventWeight );
-          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
-          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
-        } else if( maxBTag_found==2 ) {
-          h2_mZjj_vs_mZZ_2btag->Fill( mZZ, Zjj_nokinfit.M() );
-          h2_mZjj_vs_mZZ_kinfit_2btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
-          h1_mZZ_kinfit_hiMass_sidebands_2btag->Fill( ZZ_kinfit.M(), eventWeight );
-          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
-          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
-        } else if( maxBTag_found==-1 ) {
-          h2_mZjj_vs_mZZ_gluetag->Fill( mZZ, Zjj_nokinfit.M() );
-          h2_mZjj_vs_mZZ_kinfit_gluetag->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
-          h1_mZZ_kinfit_hiMass_sidebands_gluetag->Fill( ZZ_kinfit.M(), eventWeight );
-          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU->Fill( ZZ_kinfit.M(), eventWeight );
-          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
-        }
-
-      } //if sidebands
-
-      
-      mZjj = Zjj_nokinfit.M();
-      mZll = diLepton.M();
-
-
-      tree_passedEvents->Fill();
-
-      continue; //this was sidebands
-
-    } //if sidebands
-
-
-
-
-    if( maxBTag_found==0 ) nEvents_presel_mZll_mZjj_0btag += eventWeight;
-    if( maxBTag_found==1 ) nEvents_presel_mZll_mZjj_1btag += eventWeight;
-    if( maxBTag_found==2 ) nEvents_presel_mZll_mZjj_2btag += eventWeight;
-
-
-
-
-
-    if( helicityLD_selected < 0. ) 
-      std::cout << "helicityLD_selected is less than 0!!! THIS IS NOT POSSIBLE!!" << std::endl;
-
-
-ofs << run << " " << event << std::endl;
-
-
-
-    // still keeping all jet pairs (also outside mZjj signal region)
-    // for sideband estimation. so fill related histograms and then check
+    // event has passed selection (except mZjj cut). define all objects:
 
     TLorentzVector Zjj_kinfit = jet1_selected + jet2_selected;
 
@@ -2105,8 +1997,16 @@ ofs << run << " " << event << std::endl;
     mZll = diLepton.M();
     mZZ = ZZ_kinfit.M();
     mZZ_nokinfit = ZZ_nokinfit.M();
-    isSidebands = false;
-    isSignalRegion = true;
+
+    isSignalRegion = (Zjj_nokinfit.M()>75. && Zjj_nokinfit.M()<105.);
+    isSidebands = ( (Zjj_nokinfit.M()>60. && Zjj_nokinfit.M()<75.) || (Zjj_nokinfit.M()<130. && Zjj_nokinfit.M()>105.) );
+
+    // and fill tree:
+    tree_passedEvents->Fill();
+
+
+
+    // fill mZjj plots for all events:
 
     h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
  
@@ -2137,628 +2037,685 @@ ofs << run << " " << event << std::endl;
     else if( maxBTag_found==2 )  h2_mZjj_vs_mZZ_kinfit_2btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
     else if( maxBTag_found==-1 ) h2_mZjj_vs_mZZ_kinfit_gluetag->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
 
-    //if( Zjj_nokinfit.M() < mZjj_threshLo_ || Zjj_nokinfit.M() > mZjj_threshHi_ ) continue;
 
+    //if( Zjj_nokinfit.M()<60. || Zjj_nokinfit.M()>130. ) continue;
+
+
+    
+    if( isSidebands ) {
+ 
+      //fill sideband plots:
+
+      h2_mZjj_vs_mZZ->Fill( mZZ, Zjj_nokinfit.M(), eventWeight );
+      h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M(), eventWeight );
+
+      h1_helicityLD_sidebands->Fill( helicityLD_selected, eventWeight );
+
+      if( maxBTag_found==0 ) {
+        h2_mZjj_vs_mZZ_0btag->Fill( mZZ, Zjj_nokinfit.M() );
+        h2_mZjj_vs_mZZ_kinfit_0btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
+        h1_mZZ_kinfit_hiMass_sidebands_0btag->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+      } else if( maxBTag_found==1 ) {
+        h2_mZjj_vs_mZZ_1btag->Fill( mZZ, Zjj_nokinfit.M() );
+        h2_mZjj_vs_mZZ_kinfit_1btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
+        h1_mZZ_kinfit_hiMass_sidebands_1btag->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+      } else if( maxBTag_found==2 ) {
+        h2_mZjj_vs_mZZ_2btag->Fill( mZZ, Zjj_nokinfit.M() );
+        h2_mZjj_vs_mZZ_kinfit_2btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
+        h1_mZZ_kinfit_hiMass_sidebands_2btag->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+      } else if( maxBTag_found==-1 ) {
+        h2_mZjj_vs_mZZ_gluetag->Fill( mZZ, Zjj_nokinfit.M() );
+        h2_mZjj_vs_mZZ_kinfit_gluetag->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
+        h1_mZZ_kinfit_hiMass_sidebands_gluetag->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+      }
+
+      
+
+    } else if( isSignalRegion ) {
+    
+
+
+      if( maxBTag_found==0 ) nEvents_presel_mZll_mZjj_0btag += eventWeight;
+      if( maxBTag_found==1 ) nEvents_presel_mZll_mZjj_1btag += eventWeight;
+      if( maxBTag_found==2 ) nEvents_presel_mZll_mZjj_2btag += eventWeight;
+  
+  
+  
+      if( helicityLD_selected < 0. ) 
+        std::cout << "helicityLD_selected is less than 0!!! THIS IS NOT POSSIBLE!!" << std::endl;
+  
+  
+  ofs << run << " " << event << std::endl;
+  
+  
+  
+  
+  
+      //if( Zjj_nokinfit.M() < mZjj_threshLo_ || Zjj_nokinfit.M() > mZjj_threshHi_ ) continue;
+  
+    
+  
+      // percentages which define the cut and count windows:
+      float mZZ_minPerc = 0.94;  //settled on -6/+10%
+      float mZZ_maxPerc = 1.1;
+  
+      if( ZZ_kinfit.M() > 250.*mZZ_minPerc && ZZ_kinfit.M() < 250.*mZZ_maxPerc ) {
+        if( maxBTag_found==0 ) {
+          nEventsPassed_fb_0btag_250  += eventWeight;
+          nEventsPassed_0btag_250++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_0btag_250_MU  += eventWeight;
+            nEventsPassed_0btag_250_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_0btag_250_ELE  += eventWeight;
+            nEventsPassed_0btag_250_ELE++;
+          }
+        } else if( maxBTag_found==1 ) {
+          nEventsPassed_fb_1btag_250 += eventWeight;
+          nEventsPassed_1btag_250++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_1btag_250_MU  += eventWeight;
+            nEventsPassed_1btag_250_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_1btag_250_ELE  += eventWeight;
+            nEventsPassed_1btag_250_ELE++;
+          }
+        } else if( maxBTag_found==2 ) {
+          nEventsPassed_fb_2btag_250 += eventWeight;
+          nEventsPassed_2btag_250++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_2btag_250_MU  += eventWeight;
+            nEventsPassed_2btag_250_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_2btag_250_ELE  += eventWeight;
+            nEventsPassed_2btag_250_ELE++;
+          }
+        } else if( maxBTag_found==-1 ) {
+          nEventsPassed_fb_gluetag_250 += eventWeight;
+          nEventsPassed_gluetag_250++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_gluetag_250_MU  += eventWeight;
+            nEventsPassed_gluetag_250_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_gluetag_250_ELE  += eventWeight;
+            nEventsPassed_gluetag_250_ELE++;
+          }
+        }
+      } 
+      if( ZZ_kinfit.M() > 300.*mZZ_minPerc && ZZ_kinfit.M() < 300.*mZZ_maxPerc ) {
+        if( maxBTag_found==0 ) {
+          nEventsPassed_fb_0btag_300  += eventWeight;
+          nEventsPassed_0btag_300++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_0btag_300_MU  += eventWeight;
+            nEventsPassed_0btag_300_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_0btag_300_ELE  += eventWeight;
+            nEventsPassed_0btag_300_ELE++;
+          }
+        } else if( maxBTag_found==1 ) {
+          nEventsPassed_fb_1btag_300 += eventWeight;
+          nEventsPassed_1btag_300++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_1btag_300_MU  += eventWeight;
+            nEventsPassed_1btag_300_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_1btag_300_ELE  += eventWeight;
+            nEventsPassed_1btag_300_ELE++;
+          }
+        } else if( maxBTag_found==2 ) {
+          nEventsPassed_fb_2btag_300 += eventWeight;
+          nEventsPassed_2btag_300++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_2btag_300_MU  += eventWeight;
+            nEventsPassed_2btag_300_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_2btag_300_ELE  += eventWeight;
+            nEventsPassed_2btag_300_ELE++;
+          }
+        } else if( maxBTag_found==-1 ) {
+          nEventsPassed_fb_gluetag_300 += eventWeight;
+          nEventsPassed_gluetag_300++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_gluetag_300_MU  += eventWeight;
+            nEventsPassed_gluetag_300_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_gluetag_300_ELE  += eventWeight;
+            nEventsPassed_gluetag_300_ELE++;
+          }
+        }
+      } 
+      if( ZZ_kinfit.M() > 350.*mZZ_minPerc && ZZ_kinfit.M() < 350.*mZZ_maxPerc ) {
+        if( maxBTag_found==0 ) {
+          nEventsPassed_fb_0btag_350  += eventWeight;
+          nEventsPassed_0btag_350++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_0btag_350_MU  += eventWeight;
+            nEventsPassed_0btag_350_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_0btag_350_ELE  += eventWeight;
+            nEventsPassed_0btag_350_ELE++;
+          }
+        } else if( maxBTag_found==1 ) {
+          nEventsPassed_fb_1btag_350 += eventWeight;
+          nEventsPassed_1btag_350++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_1btag_350_MU  += eventWeight;
+            nEventsPassed_1btag_350_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_1btag_350_ELE  += eventWeight;
+            nEventsPassed_1btag_350_ELE++;
+          }
+        } else if( maxBTag_found==2 ) {
+          nEventsPassed_fb_2btag_350 += eventWeight;
+          nEventsPassed_2btag_350++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_2btag_350_MU  += eventWeight;
+            nEventsPassed_2btag_350_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_2btag_350_ELE  += eventWeight;
+            nEventsPassed_2btag_350_ELE++;
+          }
+        } else if( maxBTag_found==-1 ) {
+          nEventsPassed_fb_gluetag_350 += eventWeight;
+          nEventsPassed_gluetag_350++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_gluetag_350_MU  += eventWeight;
+            nEventsPassed_gluetag_350_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_gluetag_350_ELE  += eventWeight;
+            nEventsPassed_gluetag_350_ELE++;
+          }
+        }
+      } 
+      if( ZZ_kinfit.M() > 400.*mZZ_minPerc && ZZ_kinfit.M() < 400.*mZZ_maxPerc ) {
+        if( maxBTag_found==0 ) {
+          nEventsPassed_fb_0btag_400  += eventWeight;
+          nEventsPassed_0btag_400++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_0btag_400_MU  += eventWeight;
+            nEventsPassed_0btag_400_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_0btag_400_ELE  += eventWeight;
+            nEventsPassed_0btag_400_ELE++;
+          }
+        } else if( maxBTag_found==1 ) {
+          nEventsPassed_fb_1btag_400 += eventWeight;
+          nEventsPassed_1btag_400++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_1btag_400_MU  += eventWeight;
+            nEventsPassed_1btag_400_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_1btag_400_ELE  += eventWeight;
+            nEventsPassed_1btag_400_ELE++;
+          }
+        } else if( maxBTag_found==2 ) {
+          nEventsPassed_fb_2btag_400 += eventWeight;
+          nEventsPassed_2btag_400++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_2btag_400_MU  += eventWeight;
+            nEventsPassed_2btag_400_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_2btag_400_ELE  += eventWeight;
+            nEventsPassed_2btag_400_ELE++;
+          }
+        } else if( maxBTag_found==-1 ) {
+          nEventsPassed_fb_gluetag_400 += eventWeight;
+          nEventsPassed_gluetag_400++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_gluetag_400_MU  += eventWeight;
+            nEventsPassed_gluetag_400_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_gluetag_400_ELE  += eventWeight;
+            nEventsPassed_gluetag_400_ELE++;
+          }
+        }
+      } 
+      if( ZZ_kinfit.M() > 450.*mZZ_minPerc && ZZ_kinfit.M() < 450.*mZZ_maxPerc ) {
+        if( maxBTag_found==0 ) {
+          nEventsPassed_fb_0btag_450  += eventWeight;
+          nEventsPassed_0btag_450++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_0btag_450_MU  += eventWeight;
+            nEventsPassed_0btag_450_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_0btag_450_ELE  += eventWeight;
+            nEventsPassed_0btag_450_ELE++;
+          }
+        } else if( maxBTag_found==1 ) {
+          nEventsPassed_fb_1btag_450 += eventWeight;
+          nEventsPassed_1btag_450++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_1btag_450_MU  += eventWeight;
+            nEventsPassed_1btag_450_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_1btag_450_ELE  += eventWeight;
+            nEventsPassed_1btag_450_ELE++;
+          }
+        } else if( maxBTag_found==2 ) {
+          nEventsPassed_fb_2btag_450 += eventWeight;
+          nEventsPassed_2btag_450++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_2btag_450_MU  += eventWeight;
+            nEventsPassed_2btag_450_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_2btag_450_ELE  += eventWeight;
+            nEventsPassed_2btag_450_ELE++;
+          }
+        } else if( maxBTag_found==-1 ) {
+          nEventsPassed_fb_gluetag_450 += eventWeight;
+          nEventsPassed_gluetag_450++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_gluetag_450_MU  += eventWeight;
+            nEventsPassed_gluetag_450_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_gluetag_450_ELE  += eventWeight;
+            nEventsPassed_gluetag_450_ELE++;
+          }
+        }
+      } 
+      if( ZZ_kinfit.M() > 500.*mZZ_minPerc && ZZ_kinfit.M() < 500.*mZZ_maxPerc ) {
+        if( maxBTag_found==0 ) {
+          nEventsPassed_fb_0btag_500  += eventWeight;
+          nEventsPassed_0btag_500++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_0btag_500_MU  += eventWeight;
+            nEventsPassed_0btag_500_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_0btag_500_ELE  += eventWeight;
+            nEventsPassed_0btag_500_ELE++;
+          }
+        } else if( maxBTag_found==1 ) {
+          nEventsPassed_fb_1btag_500 += eventWeight;
+          nEventsPassed_1btag_500++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_1btag_500_MU  += eventWeight;
+            nEventsPassed_1btag_500_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_1btag_500_ELE  += eventWeight;
+            nEventsPassed_1btag_500_ELE++;
+          }
+        } else if( maxBTag_found==2 ) {
+          nEventsPassed_fb_2btag_500 += eventWeight;
+          nEventsPassed_2btag_500++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_2btag_500_MU  += eventWeight;
+            nEventsPassed_2btag_500_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_2btag_500_ELE  += eventWeight;
+            nEventsPassed_2btag_500_ELE++;
+          }
+        } else if( maxBTag_found==-1 ) {
+          nEventsPassed_fb_gluetag_500 += eventWeight;
+          nEventsPassed_gluetag_500++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_gluetag_500_MU  += eventWeight;
+            nEventsPassed_gluetag_500_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_gluetag_500_ELE  += eventWeight;
+            nEventsPassed_gluetag_500_ELE++;
+          }
+        }
+      } 
+      if( ZZ_kinfit.M() > 600.*mZZ_minPerc && ZZ_kinfit.M() < 600.*mZZ_maxPerc ) {
+        if( maxBTag_found==0 ) {
+          nEventsPassed_fb_0btag_600  += eventWeight;
+          nEventsPassed_0btag_600++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_0btag_600_MU  += eventWeight;
+            nEventsPassed_0btag_600_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_0btag_600_ELE  += eventWeight;
+            nEventsPassed_0btag_600_ELE++;
+          }
+        } else if( maxBTag_found==1 ) {
+          nEventsPassed_fb_1btag_600 += eventWeight;
+          nEventsPassed_1btag_600++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_1btag_600_MU  += eventWeight;
+            nEventsPassed_1btag_600_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_1btag_600_ELE  += eventWeight;
+            nEventsPassed_1btag_600_ELE++;
+          }
+        } else if( maxBTag_found==2 ) {
+          nEventsPassed_fb_2btag_600 += eventWeight;
+          nEventsPassed_2btag_600++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_2btag_600_MU  += eventWeight;
+            nEventsPassed_2btag_600_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_2btag_600_ELE  += eventWeight;
+            nEventsPassed_2btag_600_ELE++;
+          }
+        } else if( maxBTag_found==-1 ) {
+          nEventsPassed_fb_gluetag_600 += eventWeight;
+          nEventsPassed_gluetag_600++;
+          if( leptType==0 ) {
+            nEventsPassed_fb_gluetag_600_MU  += eventWeight;
+            nEventsPassed_gluetag_600_MU++;
+          } else if( leptType==1 ) {
+            nEventsPassed_fb_gluetag_600_ELE  += eventWeight;
+            nEventsPassed_gluetag_600_ELE++;
+          }
+        }
+      } 
+  
+  
+  
+      // match to partons:
+      TLorentzVector matchedPart1, matchedPart2;
+      float bestDeltaRPart1=999.;
+      float bestDeltaRPart2=999.;
+      for( unsigned iPart=0; iPart<nPart; ++iPart ) {
+        if( abs(pdgIdPart[iPart])>6 ) continue;
+        TLorentzVector thisPart;
+        thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+        if( jet1_selected.DeltaR(thisPart) < bestDeltaRPart1 ) {
+          bestDeltaRPart1 = jet1_selected.DeltaR(thisPart);
+          matchedPart1 = thisPart;
+        }
+        if( jet2_selected.DeltaR(thisPart) < bestDeltaRPart2 ) {
+          bestDeltaRPart2 = jet2_selected.DeltaR(thisPart);
+          matchedPart2 = thisPart;
+        }
+      }
+      float ptReso1_before = (isMC) ? ( jet1_nokinfit.Pt()-matchedPart1.Pt() )/matchedPart1.Pt() : 0.;
+      float ptReso2_before = (isMC) ? ( jet2_nokinfit.Pt()-matchedPart2.Pt() )/matchedPart2.Pt() : 0.;
+      h1_ptResoJet1_beforeKin->Fill( ptReso1_before, eventWeight );
+      h1_ptResoJet2_beforeKin->Fill( ptReso2_before, eventWeight );
+  
+      float ptReso1_after = (isMC) ? ( jet1_selected.Pt()-matchedPart1.Pt() )/matchedPart1.Pt() : 0.;
+      float ptReso2_after = (isMC) ? ( jet2_selected.Pt()-matchedPart2.Pt() )/matchedPart2.Pt() : 0.;
+      h1_ptResoJet1_afterKin->Fill( ptReso1_after, eventWeight );
+      h1_ptResoJet2_afterKin->Fill( ptReso2_after, eventWeight );
+  
+  
+  
+      TLorentzVector matchedZ;
+      float bestDeltaRZ=999.;
+      for( unsigned iPart=0; iPart<nPart; ++iPart ) {
+        if( pdgIdPart[iPart]!=23 ) continue;
+        TLorentzVector thisZ;
+        thisZ.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+        if( Zjj_kinfit.DeltaR(thisZ) < bestDeltaRZ ) {
+          bestDeltaRZ = Zjj_kinfit.DeltaR(thisZ);
+          matchedZ = thisZ;
+        }
+      }
+  
+      bool eventIsMatched = bestDeltaRZ<0.2;
+  
+      float ptZreso_before = (isMC) ? (Zjj_nokinfit.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
+      float ptZreso_after  = (isMC) ? (Zjj_kinfit.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
+      h1_ptZreso_beforeKin->Fill( ptZreso_before, eventWeight);
+      h1_ptZreso_afterKin->Fill( ptZreso_after, eventWeight);
+  
+  
+      TLorentzVector matchedH;
+      bool foundH=false;
+      for( unsigned iPart=0; iPart<nPart && !foundH; ++iPart ) {
+        if( pdgIdPart[iPart]!=25 && pdgIdPart[iPart]!=39 ) continue;
+        matchedH.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+        foundH=true;
+      }
+  
+      if( foundH ) {
+        float mHreso_beforeKin = (ZZ_nokinfit.M()-matchedH.M())/matchedH.M();
+        float mHreso_afterKin = (ZZ_kinfit.M()-matchedH.M())/matchedH.M();
+        h1_mHreso_beforeKin->Fill(mHreso_beforeKin, eventWeight);
+        h1_mHreso_afterKin->Fill(mHreso_afterKin, eventWeight);
+      }
+  
+      //compare kinfit to Zmass constraint
+      TLorentzVector Zjj_constr;
+      Zjj_constr.SetXYZM( Zjj_nokinfit.Px(), Zjj_nokinfit.Py(), Zjj_nokinfit.Pz(), Zmass);
+  
+      TLorentzVector ZZ_constr = diLepton + Zjj_constr;
+  
+  
+      float chiSquareProb = TMath::Prob(fitter_jets->getS(), fitter_jets->getNDF());
+      h1_kinfit_chiSquare->Fill( fitter_jets->getS()/fitter_jets->getNDF(), eventWeight ); 
+      h1_kinfit_chiSquareProb->Fill( chiSquareProb, eventWeight ); 
+  
+  
+  
+  
+  
+  
+      h1_pfMet->Fill( pfMet, eventWeight );
+      h1_pfMetOverMZZ->Fill( pfMet/ZZ_kinfit.M(), eventWeight );
+      h1_metSignificance->Fill( metSignificance, eventWeight );
+      h1_mEtSig->Fill( mEtSig, eventWeight );
+      if( maxBTag_found==2 ) {
+        h1_pfMet_2btag->Fill( pfMet, eventWeight );
+        h1_pfMetOverMZZ_2btag->Fill( pfMet/ZZ_kinfit.M(), eventWeight );
+        h1_metSignificance_2btag->Fill( metSignificance, eventWeight );
+        h1_mEtSig_2btag->Fill( mEtSig, eventWeight );
+      }
+  
+      h1_rhoPF->Fill( rhoPF, eventWeight );
+  
+      h2_helicityLD_vs_mZZ->Fill( ZZ_kinfit.M(), helicityLD_selected, eventWeight );
+  
+      if( jet1_selected.Pt()>jet2_selected.Pt() ) {
+        h1_ptJet1->Fill( jet1_selected.Pt(), eventWeight );
+        h1_ptJet2->Fill( jet2_selected.Pt(), eventWeight );
+        h1_ptJet1_prekin->Fill( jet1_nokinfit.Pt(), eventWeight );
+        h1_ptJet2_prekin->Fill( jet2_nokinfit.Pt(), eventWeight );
+        h1_etaJet1->Fill( jet1_selected.Eta(), eventWeight );
+        h1_etaJet2->Fill( jet2_selected.Eta(), eventWeight );
+        h1_tcheJet1->Fill( jet1_selected.trackCountingHighEffBJetTag, eventWeight );
+        h1_tcheJet2->Fill( jet2_selected.trackCountingHighEffBJetTag, eventWeight );
+      } else {
+        h1_ptJet1->Fill( jet2_selected.Pt(), eventWeight );
+        h1_ptJet2->Fill( jet1_selected.Pt(), eventWeight );
+        h1_ptJet1_prekin->Fill( jet2_nokinfit.Pt(), eventWeight );
+        h1_ptJet2_prekin->Fill( jet1_nokinfit.Pt(), eventWeight );
+        h1_etaJet1->Fill( jet2_selected.Eta(), eventWeight );
+        h1_etaJet2->Fill( jet1_selected.Eta(), eventWeight );
+        h1_tcheJet1->Fill( jet2_selected.trackCountingHighEffBJetTag, eventWeight );
+        h1_tcheJet2->Fill( jet1_selected.trackCountingHighEffBJetTag, eventWeight );
+      }
+      h1_eMuonsJet1->Fill( jet1_selected.muonEnergyFraction, eventWeight );
+      h1_eMuonsJet2->Fill( jet2_selected.muonEnergyFraction, eventWeight );
+      h1_eElectronsJet1->Fill( jet1_selected.electronEnergyFraction, eventWeight );
+      h1_eElectronsJet2->Fill( jet2_selected.electronEnergyFraction, eventWeight );
+  
+      h1_ptLept1->Fill( lept1.Pt(), eventWeight );
+      h1_ptLept2->Fill( lept2.Pt(), eventWeight );
+      h1_deltaRjj->Fill( jet1_selected.DeltaR(jet2_selected), eventWeight);
+      h1_deltaRjj_prekin->Fill( jet1_nokinfit.DeltaR(jet2_nokinfit), eventWeight);
+      h1_ptZll->Fill( diLepton.Pt(), eventWeight);
+      h1_ptZjj->Fill( Zjj_kinfit.Pt(), eventWeight);
+      if( leptType==0 )
+        h1_mZmumu->Fill( diLepton.M(), eventWeight );
+      else
+        h1_mZee->Fill( diLepton.M(), eventWeight );
+      h1_mZll->Fill( diLepton.M(), eventWeight);
+  
+  
+      // fill QG plots only for the 0- and glue-tag category:
+      if( maxBTag_found<=0 ) {
+  
+        h1_nChargedJet1->Fill(jet1_selected.nCharged, eventWeight);
+        h1_nNeutralJet1->Fill(jet1_selected.nNeutral, eventWeight);
+        h1_ptDJet1->Fill(jet1_selected.ptD, eventWeight);
+      
+        h1_nChargedJet2->Fill(jet2_selected.nCharged, eventWeight);
+        h1_nNeutralJet2->Fill(jet2_selected.nNeutral, eventWeight);
+        h1_ptDJet2->Fill(jet2_selected.ptD, eventWeight);
+      
+        h1_QGLikelihoodJet1->Fill( jet1_selected.QGLikelihood, eventWeight );
+        h1_QGLikelihoodJet2->Fill( jet2_selected.QGLikelihood, eventWeight );
+        h1_QGLikelihoodProd->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+  
+        h1_QGLikelihoodNoPUJet1->Fill( jet1_selected.QGLikelihoodNoPU, eventWeight );
+        h1_QGLikelihoodNoPUJet2->Fill( jet2_selected.QGLikelihoodNoPU, eventWeight );
+        h1_QGLikelihoodNoPUProd->Fill( jet1_selected.QGLikelihoodNoPU*jet2_selected.QGLikelihoodNoPU, eventWeight );
+  
+        if( jet1_selected.Pt()>100. && jet1_selected.Pt()<123. ) h1_QGLikelihood_100_123->Fill( jet1_selected.QGLikelihood, eventWeight );
+        if( jet2_selected.Pt()>100. && jet2_selected.Pt()<123. ) h1_QGLikelihood_100_123->Fill( jet2_selected.QGLikelihood, eventWeight );
+        if( jet1_selected.Pt()>66. && jet1_selected.Pt()<81. ) h1_QGLikelihood_66_81->Fill( jet1_selected.QGLikelihood, eventWeight );
+        if( jet2_selected.Pt()>66. && jet2_selected.Pt()<81. ) h1_QGLikelihood_66_81->Fill( jet2_selected.QGLikelihood, eventWeight );
+  
+  
+        if( ZZ_kinfit.M()>0.94*300. && ZZ_kinfit.M()<1.1*300. ) {
+          h1_QGLikelihoodJet1_MW300->Fill( jet1_selected.QGLikelihood, eventWeight );
+          h1_QGLikelihoodJet2_MW300->Fill( jet2_selected.QGLikelihood, eventWeight );
+          h1_QGLikelihoodProd_MW300->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+        }
+        if( ZZ_kinfit.M()>0.94*400. && ZZ_kinfit.M()<1.1*400. ) {
+          h1_QGLikelihoodJet1_MW400->Fill( jet1_selected.QGLikelihood, eventWeight );
+          h1_QGLikelihoodJet2_MW400->Fill( jet2_selected.QGLikelihood, eventWeight );
+          h1_QGLikelihoodProd_MW400->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+        }
+        if( ZZ_kinfit.M()>0.94*500. && ZZ_kinfit.M()<1.1*500. ) {
+          h1_QGLikelihoodJet1_MW500->Fill( jet1_selected.QGLikelihood, eventWeight );
+          h1_QGLikelihoodJet2_MW500->Fill( jet2_selected.QGLikelihood, eventWeight );
+          h1_QGLikelihoodProd_MW500->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+        }
+  
+  
+        if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood < 0.1 ) {
+          h1_mZZ_kinfit_hiMass_loQG->Fill(ZZ_kinfit.M(), eventWeight);
+        } else {
+          h1_mZZ_kinfit_hiMass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
+        }
+  
+      } // if 0/glue tags
+  
+      h1_mZZ_nokinfit_hiMass_all->Fill( ZZ_nokinfit.M(), eventWeight);
+      h1_mZZ_ZjjMassConstr_hiMass->Fill(ZZ_constr.M(), eventWeight);
+      h1_mZZ_kinfit_hiMass_all->Fill( ZZ_kinfit.M(), eventWeight);
+      if( nvertex>5 ) h1_mZZ_kinfit_hiMass_hiPU->Fill( ZZ_kinfit.M(), eventWeight);
+      else h1_mZZ_kinfit_hiMass_loPU->Fill( ZZ_kinfit.M(), eventWeight);
+      if( maxBTag_found>=0 ) h1_mZZ_kinfit_hiMass_nogluetag->Fill( ZZ_kinfit.M(), eventWeight);
+      if( maxBTag_found==0 ) {
+        h1_mZZ_kinfit_hiMass_0btag->Fill( ZZ_kinfit.M(), eventWeight);
+        if( leptType==0 )  h1_mZZ_kinfit_hiMass_0btag_MU->Fill( ZZ_kinfit.M(), eventWeight);
+        if( leptType==1 )  h1_mZZ_kinfit_hiMass_0btag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
+      } else if( maxBTag_found==1 ) {
+        h1_mZZ_kinfit_hiMass_1btag->Fill( ZZ_kinfit.M(), eventWeight);
+        if( leptType==0 )  h1_mZZ_kinfit_hiMass_1btag_MU->Fill( ZZ_kinfit.M(), eventWeight);
+        if( leptType==1 )  h1_mZZ_kinfit_hiMass_1btag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
+      } else if( maxBTag_found==2 ) {
+        h1_mZZ_kinfit_hiMass_2btag->Fill( ZZ_kinfit.M(), eventWeight);
+        if( leptType==0 )  h1_mZZ_kinfit_hiMass_2btag_MU->Fill( ZZ_kinfit.M(), eventWeight);
+        if( leptType==1 )  h1_mZZ_kinfit_hiMass_2btag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
+      } else if( maxBTag_found==-1 ) {
+        h1_mZZ_kinfit_hiMass_gluetag->Fill( ZZ_kinfit.M(), eventWeight);
+        if( leptType==0 )  h1_mZZ_kinfit_hiMass_gluetag_MU->Fill( ZZ_kinfit.M(), eventWeight);
+        if( leptType==1 )  h1_mZZ_kinfit_hiMass_gluetag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
+      }
+  
+      h1_deltaRZmatching->Fill( bestDeltaRZ, eventWeight );
+      if( maxBTag_found==0 && eventIsMatched ) h1_mZZ_kinfit_hiMass_0btag_matched->Fill( ZZ_kinfit.M(), eventWeight);
+  
+  
+      h1_deltaRZZ->Fill(Zjj_nokinfit.DeltaR(diLepton), eventWeight);
+  
+      h1_ptZZ->Fill( ZZ_nokinfit.Pt(), eventWeight );
+      h1_ptZZ_kinfit->Fill( ZZ_kinfit.Pt(), eventWeight );
+      h1_etaZZ->Fill( ZZ_nokinfit.Eta(), eventWeight );
+      h1_etaZZ_kinfit->Fill( ZZ_kinfit.Eta(), eventWeight );
+  
+      h1_helicityLD->Fill( helicityLD_selected, eventWeight );
+      if( maxBTag_found>=0 ) h1_helicityLD_nogluetag->Fill( helicityLD_selected, eventWeight );
+      h1_helicityLD_nokinfit->Fill( helicityLD_nokinfit_selected, eventWeight );
+  
+      h1_cosThetaStar->Fill(hangles_selected.helCosThetaStar, eventWeight);
+      h1_cosTheta1->Fill(hangles_selected.helCosTheta1, eventWeight);
+      h1_cosTheta2->Fill(hangles_selected.helCosTheta2, eventWeight);
+      h1_phi->Fill(hangles_selected.helPhi, eventWeight);
+      h1_phi1->Fill(hangles_selected.helPhi1, eventWeight);
+  
+  
+  
+      int partFlavor1=0;
+      float deltaRmin1=999.;
+      for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+        if( abs(pdgIdPart[iPart])>6 && pdgIdPart[iPart]!=21 ) continue;
+        TLorentzVector thisPart;
+        thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+        float thisDeltaR = jet1_selected.DeltaR(thisPart);
+        if( thisDeltaR<deltaRmin1 ) {
+          partFlavor1 = pdgIdPart[iPart];
+          deltaRmin1 = thisDeltaR;
+        }
+      }
+      h1_deltaR_part1->Fill(deltaRmin1, eventWeight);
+      h1_partFlavorJet1->Fill( partFlavor1, eventWeight );
+      if( deltaRmin1<0.5 ) h1_partFlavorJet1_matched->Fill( partFlavor1, eventWeight );
+      else h1_partFlavorJet1_notmatched->Fill( partFlavor1, eventWeight );
+  
+      if( maxBTag_found==0 ) h1_partFlavorJet1_0btag->Fill( partFlavor1, eventWeight );
+      else if( maxBTag_found==1 ) h1_partFlavorJet1_1btag->Fill( partFlavor1, eventWeight );
+      else if( maxBTag_found==2 ) h1_partFlavorJet1_2btag->Fill( partFlavor1, eventWeight );
+      else if( maxBTag_found==-1 ) h1_partFlavorJet1_gluetag->Fill( partFlavor1, eventWeight );
+      jet1_selected.pdgIdPart = partFlavor1;
+      if( partFlavor1==21 ) h1_QGLikelihoodJet1_gluonMatched->Fill( jet1_selected.QGLikelihood, eventWeight );
+      else if( abs(partFlavor1)<5 ) h1_QGLikelihoodJet1_quarkMatched->Fill( jet1_selected.QGLikelihood, eventWeight );
+  
+      float deltaRmin2=999.;
+      int partFlavor2=0;
+      for(unsigned iPart=0; iPart<nPart; ++iPart ) {
+        if( abs(pdgIdPart[iPart])>6 && pdgIdPart[iPart]!=21 ) continue;
+        TLorentzVector thisPart;
+        thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
+        float thisDeltaR = jet2_selected.DeltaR(thisPart);
+        if( thisDeltaR<deltaRmin2 ) {
+          partFlavor2 = pdgIdPart[iPart];
+          deltaRmin2 = thisDeltaR;
+        }
+      }
+      h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
+      h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
+      if( deltaRmin2<0.5 ) h1_partFlavorJet2_matched->Fill( partFlavor2, eventWeight );
+      else h1_partFlavorJet2_notmatched->Fill( partFlavor2, eventWeight );
+  
+      if( maxBTag_found==0 ) h1_partFlavorJet2_0btag->Fill( partFlavor2, eventWeight );
+      else if( maxBTag_found==1 ) h1_partFlavorJet2_1btag->Fill( partFlavor2, eventWeight );
+      else if( maxBTag_found==2 ) h1_partFlavorJet2_2btag->Fill( partFlavor2, eventWeight );
+      else if( maxBTag_found==-1 ) h1_partFlavorJet2_gluetag->Fill( partFlavor2, eventWeight );
+      jet2_selected.pdgIdPart = partFlavor2;
+      if( partFlavor2==21 ) h1_QGLikelihoodJet2_gluonMatched->Fill( jet2_selected.QGLikelihood, eventWeight );
+      else if( abs(partFlavor2)<5 ) h1_QGLikelihoodJet2_quarkMatched->Fill( jet2_selected.QGLikelihood, eventWeight );
+  
+  
+      if( partFlavor1==21 || partFlavor2==21 ) {
+        h1_QGLikelihoodProd_oneGluon->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+        h1_mZZ_kinfit_hiMass_oneGluon->Fill( mZZ, eventWeight );
+      }
+      if( partFlavor1==21 && partFlavor2==21 ) {
+        h1_QGLikelihoodProd_twoGluon->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+        h1_mZZ_kinfit_hiMass_twoGluon->Fill( mZZ, eventWeight );
+      }
+      if( abs(partFlavor1)<5 && abs(partFlavor2)<5 ) {
+        h1_QGLikelihoodProd_twoQuark->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+        h1_mZZ_kinfit_hiMass_twoQuark->Fill( mZZ, eventWeight );
+        if( maxBTag_found<=0 ) {
+          h1_nEvents_partFlavor_beforeQG->Fill( 0., eventWeight );
+          if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEvents_partFlavor_afterQG->Fill( 0., eventWeight );
+        }
+      } else { 
+        if( maxBTag_found<=0 ) {
+          h1_nEvents_partFlavor_beforeQG->Fill( 1., eventWeight );
+          if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEvents_partFlavor_afterQG->Fill( 1., eventWeight );
+        }
+      }
   
 
-    // percentages which define the cut and count windows:
-    float mZZ_minPerc = 0.94;  //settled on -6/+10%
-    float mZZ_maxPerc = 1.1;
-
-    if( ZZ_kinfit.M() > 250.*mZZ_minPerc && ZZ_kinfit.M() < 250.*mZZ_maxPerc ) {
-      if( maxBTag_found==0 ) {
-        nEventsPassed_fb_0btag_250  += eventWeight;
-        nEventsPassed_0btag_250++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_0btag_250_MU  += eventWeight;
-          nEventsPassed_0btag_250_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_0btag_250_ELE  += eventWeight;
-          nEventsPassed_0btag_250_ELE++;
-        }
-      } else if( maxBTag_found==1 ) {
-        nEventsPassed_fb_1btag_250 += eventWeight;
-        nEventsPassed_1btag_250++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_1btag_250_MU  += eventWeight;
-          nEventsPassed_1btag_250_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_1btag_250_ELE  += eventWeight;
-          nEventsPassed_1btag_250_ELE++;
-        }
-      } else if( maxBTag_found==2 ) {
-        nEventsPassed_fb_2btag_250 += eventWeight;
-        nEventsPassed_2btag_250++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_2btag_250_MU  += eventWeight;
-          nEventsPassed_2btag_250_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_2btag_250_ELE  += eventWeight;
-          nEventsPassed_2btag_250_ELE++;
-        }
-      } else if( maxBTag_found==-1 ) {
-        nEventsPassed_fb_gluetag_250 += eventWeight;
-        nEventsPassed_gluetag_250++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_gluetag_250_MU  += eventWeight;
-          nEventsPassed_gluetag_250_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_gluetag_250_ELE  += eventWeight;
-          nEventsPassed_gluetag_250_ELE++;
-        }
-      }
-    } 
-    if( ZZ_kinfit.M() > 300.*mZZ_minPerc && ZZ_kinfit.M() < 300.*mZZ_maxPerc ) {
-      if( maxBTag_found==0 ) {
-        nEventsPassed_fb_0btag_300  += eventWeight;
-        nEventsPassed_0btag_300++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_0btag_300_MU  += eventWeight;
-          nEventsPassed_0btag_300_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_0btag_300_ELE  += eventWeight;
-          nEventsPassed_0btag_300_ELE++;
-        }
-      } else if( maxBTag_found==1 ) {
-        nEventsPassed_fb_1btag_300 += eventWeight;
-        nEventsPassed_1btag_300++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_1btag_300_MU  += eventWeight;
-          nEventsPassed_1btag_300_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_1btag_300_ELE  += eventWeight;
-          nEventsPassed_1btag_300_ELE++;
-        }
-      } else if( maxBTag_found==2 ) {
-        nEventsPassed_fb_2btag_300 += eventWeight;
-        nEventsPassed_2btag_300++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_2btag_300_MU  += eventWeight;
-          nEventsPassed_2btag_300_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_2btag_300_ELE  += eventWeight;
-          nEventsPassed_2btag_300_ELE++;
-        }
-      } else if( maxBTag_found==-1 ) {
-        nEventsPassed_fb_gluetag_300 += eventWeight;
-        nEventsPassed_gluetag_300++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_gluetag_300_MU  += eventWeight;
-          nEventsPassed_gluetag_300_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_gluetag_300_ELE  += eventWeight;
-          nEventsPassed_gluetag_300_ELE++;
-        }
-      }
-    } 
-    if( ZZ_kinfit.M() > 350.*mZZ_minPerc && ZZ_kinfit.M() < 350.*mZZ_maxPerc ) {
-      if( maxBTag_found==0 ) {
-        nEventsPassed_fb_0btag_350  += eventWeight;
-        nEventsPassed_0btag_350++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_0btag_350_MU  += eventWeight;
-          nEventsPassed_0btag_350_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_0btag_350_ELE  += eventWeight;
-          nEventsPassed_0btag_350_ELE++;
-        }
-      } else if( maxBTag_found==1 ) {
-        nEventsPassed_fb_1btag_350 += eventWeight;
-        nEventsPassed_1btag_350++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_1btag_350_MU  += eventWeight;
-          nEventsPassed_1btag_350_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_1btag_350_ELE  += eventWeight;
-          nEventsPassed_1btag_350_ELE++;
-        }
-      } else if( maxBTag_found==2 ) {
-        nEventsPassed_fb_2btag_350 += eventWeight;
-        nEventsPassed_2btag_350++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_2btag_350_MU  += eventWeight;
-          nEventsPassed_2btag_350_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_2btag_350_ELE  += eventWeight;
-          nEventsPassed_2btag_350_ELE++;
-        }
-      } else if( maxBTag_found==-1 ) {
-        nEventsPassed_fb_gluetag_350 += eventWeight;
-        nEventsPassed_gluetag_350++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_gluetag_350_MU  += eventWeight;
-          nEventsPassed_gluetag_350_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_gluetag_350_ELE  += eventWeight;
-          nEventsPassed_gluetag_350_ELE++;
-        }
-      }
-    } 
-    if( ZZ_kinfit.M() > 400.*mZZ_minPerc && ZZ_kinfit.M() < 400.*mZZ_maxPerc ) {
-      if( maxBTag_found==0 ) {
-        nEventsPassed_fb_0btag_400  += eventWeight;
-        nEventsPassed_0btag_400++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_0btag_400_MU  += eventWeight;
-          nEventsPassed_0btag_400_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_0btag_400_ELE  += eventWeight;
-          nEventsPassed_0btag_400_ELE++;
-        }
-      } else if( maxBTag_found==1 ) {
-        nEventsPassed_fb_1btag_400 += eventWeight;
-        nEventsPassed_1btag_400++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_1btag_400_MU  += eventWeight;
-          nEventsPassed_1btag_400_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_1btag_400_ELE  += eventWeight;
-          nEventsPassed_1btag_400_ELE++;
-        }
-      } else if( maxBTag_found==2 ) {
-        nEventsPassed_fb_2btag_400 += eventWeight;
-        nEventsPassed_2btag_400++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_2btag_400_MU  += eventWeight;
-          nEventsPassed_2btag_400_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_2btag_400_ELE  += eventWeight;
-          nEventsPassed_2btag_400_ELE++;
-        }
-      } else if( maxBTag_found==-1 ) {
-        nEventsPassed_fb_gluetag_400 += eventWeight;
-        nEventsPassed_gluetag_400++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_gluetag_400_MU  += eventWeight;
-          nEventsPassed_gluetag_400_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_gluetag_400_ELE  += eventWeight;
-          nEventsPassed_gluetag_400_ELE++;
-        }
-      }
-    } 
-    if( ZZ_kinfit.M() > 450.*mZZ_minPerc && ZZ_kinfit.M() < 450.*mZZ_maxPerc ) {
-      if( maxBTag_found==0 ) {
-        nEventsPassed_fb_0btag_450  += eventWeight;
-        nEventsPassed_0btag_450++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_0btag_450_MU  += eventWeight;
-          nEventsPassed_0btag_450_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_0btag_450_ELE  += eventWeight;
-          nEventsPassed_0btag_450_ELE++;
-        }
-      } else if( maxBTag_found==1 ) {
-        nEventsPassed_fb_1btag_450 += eventWeight;
-        nEventsPassed_1btag_450++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_1btag_450_MU  += eventWeight;
-          nEventsPassed_1btag_450_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_1btag_450_ELE  += eventWeight;
-          nEventsPassed_1btag_450_ELE++;
-        }
-      } else if( maxBTag_found==2 ) {
-        nEventsPassed_fb_2btag_450 += eventWeight;
-        nEventsPassed_2btag_450++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_2btag_450_MU  += eventWeight;
-          nEventsPassed_2btag_450_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_2btag_450_ELE  += eventWeight;
-          nEventsPassed_2btag_450_ELE++;
-        }
-      } else if( maxBTag_found==-1 ) {
-        nEventsPassed_fb_gluetag_450 += eventWeight;
-        nEventsPassed_gluetag_450++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_gluetag_450_MU  += eventWeight;
-          nEventsPassed_gluetag_450_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_gluetag_450_ELE  += eventWeight;
-          nEventsPassed_gluetag_450_ELE++;
-        }
-      }
-    } 
-    if( ZZ_kinfit.M() > 500.*mZZ_minPerc && ZZ_kinfit.M() < 500.*mZZ_maxPerc ) {
-      if( maxBTag_found==0 ) {
-        nEventsPassed_fb_0btag_500  += eventWeight;
-        nEventsPassed_0btag_500++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_0btag_500_MU  += eventWeight;
-          nEventsPassed_0btag_500_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_0btag_500_ELE  += eventWeight;
-          nEventsPassed_0btag_500_ELE++;
-        }
-      } else if( maxBTag_found==1 ) {
-        nEventsPassed_fb_1btag_500 += eventWeight;
-        nEventsPassed_1btag_500++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_1btag_500_MU  += eventWeight;
-          nEventsPassed_1btag_500_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_1btag_500_ELE  += eventWeight;
-          nEventsPassed_1btag_500_ELE++;
-        }
-      } else if( maxBTag_found==2 ) {
-        nEventsPassed_fb_2btag_500 += eventWeight;
-        nEventsPassed_2btag_500++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_2btag_500_MU  += eventWeight;
-          nEventsPassed_2btag_500_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_2btag_500_ELE  += eventWeight;
-          nEventsPassed_2btag_500_ELE++;
-        }
-      } else if( maxBTag_found==-1 ) {
-        nEventsPassed_fb_gluetag_500 += eventWeight;
-        nEventsPassed_gluetag_500++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_gluetag_500_MU  += eventWeight;
-          nEventsPassed_gluetag_500_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_gluetag_500_ELE  += eventWeight;
-          nEventsPassed_gluetag_500_ELE++;
-        }
-      }
-    } 
-    if( ZZ_kinfit.M() > 600.*mZZ_minPerc && ZZ_kinfit.M() < 600.*mZZ_maxPerc ) {
-      if( maxBTag_found==0 ) {
-        nEventsPassed_fb_0btag_600  += eventWeight;
-        nEventsPassed_0btag_600++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_0btag_600_MU  += eventWeight;
-          nEventsPassed_0btag_600_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_0btag_600_ELE  += eventWeight;
-          nEventsPassed_0btag_600_ELE++;
-        }
-      } else if( maxBTag_found==1 ) {
-        nEventsPassed_fb_1btag_600 += eventWeight;
-        nEventsPassed_1btag_600++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_1btag_600_MU  += eventWeight;
-          nEventsPassed_1btag_600_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_1btag_600_ELE  += eventWeight;
-          nEventsPassed_1btag_600_ELE++;
-        }
-      } else if( maxBTag_found==2 ) {
-        nEventsPassed_fb_2btag_600 += eventWeight;
-        nEventsPassed_2btag_600++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_2btag_600_MU  += eventWeight;
-          nEventsPassed_2btag_600_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_2btag_600_ELE  += eventWeight;
-          nEventsPassed_2btag_600_ELE++;
-        }
-      } else if( maxBTag_found==-1 ) {
-        nEventsPassed_fb_gluetag_600 += eventWeight;
-        nEventsPassed_gluetag_600++;
-        if( leptType==0 ) {
-          nEventsPassed_fb_gluetag_600_MU  += eventWeight;
-          nEventsPassed_gluetag_600_MU++;
-        } else if( leptType==1 ) {
-          nEventsPassed_fb_gluetag_600_ELE  += eventWeight;
-          nEventsPassed_gluetag_600_ELE++;
-        }
-      }
-    } 
-
-
-
-    // match to partons:
-    TLorentzVector matchedPart1, matchedPart2;
-    float bestDeltaRPart1=999.;
-    float bestDeltaRPart2=999.;
-    for( unsigned iPart=0; iPart<nPart; ++iPart ) {
-      if( abs(pdgIdPart[iPart])>6 ) continue;
-      TLorentzVector thisPart;
-      thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
-      if( jet1_selected.DeltaR(thisPart) < bestDeltaRPart1 ) {
-        bestDeltaRPart1 = jet1_selected.DeltaR(thisPart);
-        matchedPart1 = thisPart;
-      }
-      if( jet2_selected.DeltaR(thisPart) < bestDeltaRPart2 ) {
-        bestDeltaRPart2 = jet2_selected.DeltaR(thisPart);
-        matchedPart2 = thisPart;
-      }
-    }
-    float ptReso1_before = (isMC) ? ( jet1_nokinfit.Pt()-matchedPart1.Pt() )/matchedPart1.Pt() : 0.;
-    float ptReso2_before = (isMC) ? ( jet2_nokinfit.Pt()-matchedPart2.Pt() )/matchedPart2.Pt() : 0.;
-    h1_ptResoJet1_beforeKin->Fill( ptReso1_before, eventWeight );
-    h1_ptResoJet2_beforeKin->Fill( ptReso2_before, eventWeight );
-
-    float ptReso1_after = (isMC) ? ( jet1_selected.Pt()-matchedPart1.Pt() )/matchedPart1.Pt() : 0.;
-    float ptReso2_after = (isMC) ? ( jet2_selected.Pt()-matchedPart2.Pt() )/matchedPart2.Pt() : 0.;
-    h1_ptResoJet1_afterKin->Fill( ptReso1_after, eventWeight );
-    h1_ptResoJet2_afterKin->Fill( ptReso2_after, eventWeight );
-
-
-
-    TLorentzVector matchedZ;
-    float bestDeltaRZ=999.;
-    for( unsigned iPart=0; iPart<nPart; ++iPart ) {
-      if( pdgIdPart[iPart]!=23 ) continue;
-      TLorentzVector thisZ;
-      thisZ.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
-      if( Zjj_kinfit.DeltaR(thisZ) < bestDeltaRZ ) {
-        bestDeltaRZ = Zjj_kinfit.DeltaR(thisZ);
-        matchedZ = thisZ;
-      }
-    }
-
-    bool eventIsMatched = bestDeltaRZ<0.2;
-
-    float ptZreso_before = (isMC) ? (Zjj_nokinfit.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
-    float ptZreso_after  = (isMC) ? (Zjj_kinfit.Pt()-matchedZ.Pt())/matchedZ.Pt() : 0.;
-    h1_ptZreso_beforeKin->Fill( ptZreso_before, eventWeight);
-    h1_ptZreso_afterKin->Fill( ptZreso_after, eventWeight);
-
-
-    TLorentzVector matchedH;
-    bool foundH=false;
-    for( unsigned iPart=0; iPart<nPart && !foundH; ++iPart ) {
-      if( pdgIdPart[iPart]!=25 && pdgIdPart[iPart]!=39 ) continue;
-      matchedH.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
-      foundH=true;
-    }
-
-    if( foundH ) {
-      float mHreso_beforeKin = (ZZ_nokinfit.M()-matchedH.M())/matchedH.M();
-      float mHreso_afterKin = (ZZ_kinfit.M()-matchedH.M())/matchedH.M();
-      h1_mHreso_beforeKin->Fill(mHreso_beforeKin, eventWeight);
-      h1_mHreso_afterKin->Fill(mHreso_afterKin, eventWeight);
-    }
-
-    //compare kinfit to Zmass constraint
-    TLorentzVector Zjj_constr;
-    Zjj_constr.SetXYZM( Zjj_nokinfit.Px(), Zjj_nokinfit.Py(), Zjj_nokinfit.Pz(), Zmass);
-
-    TLorentzVector ZZ_constr = diLepton + Zjj_constr;
-
-
-    float chiSquareProb = TMath::Prob(fitter_jets->getS(), fitter_jets->getNDF());
-    h1_kinfit_chiSquare->Fill( fitter_jets->getS()/fitter_jets->getNDF(), eventWeight ); 
-    h1_kinfit_chiSquareProb->Fill( chiSquareProb, eventWeight ); 
-
-
-
-
-
-    // ----------------
-    //
-    // FILL HISTOGRAMS
-    //
-    // ----------------
-
-    tree_passedEvents->Fill();
-
-    h1_pfMet->Fill( pfMet, eventWeight );
-    h1_pfMetOverMZZ->Fill( pfMet/ZZ_kinfit.M(), eventWeight );
-    h1_metSignificance->Fill( metSignificance, eventWeight );
-    h1_mEtSig->Fill( mEtSig, eventWeight );
-    if( maxBTag_found==2 ) {
-      h1_pfMet_2btag->Fill( pfMet, eventWeight );
-      h1_pfMetOverMZZ_2btag->Fill( pfMet/ZZ_kinfit.M(), eventWeight );
-      h1_metSignificance_2btag->Fill( metSignificance, eventWeight );
-      h1_mEtSig_2btag->Fill( mEtSig, eventWeight );
-    }
-
-    h1_rhoPF->Fill( rhoPF, eventWeight );
-
-    h2_helicityLD_vs_mZZ->Fill( ZZ_kinfit.M(), helicityLD_selected, eventWeight );
-
-    if( jet1_selected.Pt()>jet2_selected.Pt() ) {
-      h1_ptJet1->Fill( jet1_selected.Pt(), eventWeight );
-      h1_ptJet2->Fill( jet2_selected.Pt(), eventWeight );
-      h1_ptJet1_prekin->Fill( jet1_nokinfit.Pt(), eventWeight );
-      h1_ptJet2_prekin->Fill( jet2_nokinfit.Pt(), eventWeight );
-      h1_etaJet1->Fill( jet1_selected.Eta(), eventWeight );
-      h1_etaJet2->Fill( jet2_selected.Eta(), eventWeight );
-      h1_tcheJet1->Fill( jet1_selected.trackCountingHighEffBJetTag, eventWeight );
-      h1_tcheJet2->Fill( jet2_selected.trackCountingHighEffBJetTag, eventWeight );
-    } else {
-      h1_ptJet1->Fill( jet2_selected.Pt(), eventWeight );
-      h1_ptJet2->Fill( jet1_selected.Pt(), eventWeight );
-      h1_ptJet1_prekin->Fill( jet2_nokinfit.Pt(), eventWeight );
-      h1_ptJet2_prekin->Fill( jet1_nokinfit.Pt(), eventWeight );
-      h1_etaJet1->Fill( jet2_selected.Eta(), eventWeight );
-      h1_etaJet2->Fill( jet1_selected.Eta(), eventWeight );
-      h1_tcheJet1->Fill( jet2_selected.trackCountingHighEffBJetTag, eventWeight );
-      h1_tcheJet2->Fill( jet1_selected.trackCountingHighEffBJetTag, eventWeight );
-    }
-    h1_eMuonsJet1->Fill( jet1_selected.muonEnergyFraction, eventWeight );
-    h1_eMuonsJet2->Fill( jet2_selected.muonEnergyFraction, eventWeight );
-    h1_eElectronsJet1->Fill( jet1_selected.electronEnergyFraction, eventWeight );
-    h1_eElectronsJet2->Fill( jet2_selected.electronEnergyFraction, eventWeight );
-
-    h1_ptLept1->Fill( lept1.Pt(), eventWeight );
-    h1_ptLept2->Fill( lept2.Pt(), eventWeight );
-    h1_deltaRjj->Fill( jet1_selected.DeltaR(jet2_selected), eventWeight);
-    h1_deltaRjj_prekin->Fill( jet1_nokinfit.DeltaR(jet2_nokinfit), eventWeight);
-    h1_ptZll->Fill( diLepton.Pt(), eventWeight);
-    h1_ptZjj->Fill( Zjj_kinfit.Pt(), eventWeight);
-    if( leptType==0 )
-      h1_mZmumu->Fill( diLepton.M(), eventWeight );
-    else
-      h1_mZee->Fill( diLepton.M(), eventWeight );
-    h1_mZll->Fill( diLepton.M(), eventWeight);
-
-
-    // fill QG plots only for the 0- and glue-tag category:
-    if( maxBTag_found<=0 ) {
-
-      h1_nChargedJet1->Fill(jet1_selected.nCharged, eventWeight);
-      h1_nNeutralJet1->Fill(jet1_selected.nNeutral, eventWeight);
-      h1_ptDJet1->Fill(jet1_selected.ptD, eventWeight);
-    
-      h1_nChargedJet2->Fill(jet2_selected.nCharged, eventWeight);
-      h1_nNeutralJet2->Fill(jet2_selected.nNeutral, eventWeight);
-      h1_ptDJet2->Fill(jet2_selected.ptD, eventWeight);
-    
-      h1_QGLikelihoodJet1->Fill( jet1_selected.QGLikelihood, eventWeight );
-      h1_QGLikelihoodJet2->Fill( jet2_selected.QGLikelihood, eventWeight );
-      h1_QGLikelihoodProd->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-
-      h1_QGLikelihoodNoPUJet1->Fill( jet1_selected.QGLikelihoodNoPU, eventWeight );
-      h1_QGLikelihoodNoPUJet2->Fill( jet2_selected.QGLikelihoodNoPU, eventWeight );
-      h1_QGLikelihoodNoPUProd->Fill( jet1_selected.QGLikelihoodNoPU*jet2_selected.QGLikelihoodNoPU, eventWeight );
-
-      if( jet1_selected.Pt()>100. && jet1_selected.Pt()<123. ) h1_QGLikelihood_100_123->Fill( jet1_selected.QGLikelihood, eventWeight );
-      if( jet2_selected.Pt()>100. && jet2_selected.Pt()<123. ) h1_QGLikelihood_100_123->Fill( jet2_selected.QGLikelihood, eventWeight );
-      if( jet1_selected.Pt()>66. && jet1_selected.Pt()<81. ) h1_QGLikelihood_66_81->Fill( jet1_selected.QGLikelihood, eventWeight );
-      if( jet2_selected.Pt()>66. && jet2_selected.Pt()<81. ) h1_QGLikelihood_66_81->Fill( jet2_selected.QGLikelihood, eventWeight );
-
-
-      if( ZZ_kinfit.M()>0.94*300. && ZZ_kinfit.M()<1.1*300. ) {
-        h1_QGLikelihoodJet1_MW300->Fill( jet1_selected.QGLikelihood, eventWeight );
-        h1_QGLikelihoodJet2_MW300->Fill( jet2_selected.QGLikelihood, eventWeight );
-        h1_QGLikelihoodProd_MW300->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-      }
-      if( ZZ_kinfit.M()>0.94*400. && ZZ_kinfit.M()<1.1*400. ) {
-        h1_QGLikelihoodJet1_MW400->Fill( jet1_selected.QGLikelihood, eventWeight );
-        h1_QGLikelihoodJet2_MW400->Fill( jet2_selected.QGLikelihood, eventWeight );
-        h1_QGLikelihoodProd_MW400->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-      }
-      if( ZZ_kinfit.M()>0.94*500. && ZZ_kinfit.M()<1.1*500. ) {
-        h1_QGLikelihoodJet1_MW500->Fill( jet1_selected.QGLikelihood, eventWeight );
-        h1_QGLikelihoodJet2_MW500->Fill( jet2_selected.QGLikelihood, eventWeight );
-        h1_QGLikelihoodProd_MW500->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-      }
-
-
-      if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood < 0.1 ) {
-        h1_mZZ_kinfit_hiMass_loQG->Fill(ZZ_kinfit.M(), eventWeight);
-      } else {
-        h1_mZZ_kinfit_hiMass_hiQG->Fill(ZZ_kinfit.M(), eventWeight);
-      }
-
-    } // if 0/glue tags
-
-    h1_mZZ_nokinfit_hiMass_all->Fill( ZZ_nokinfit.M(), eventWeight);
-    h1_mZZ_ZjjMassConstr_hiMass->Fill(ZZ_constr.M(), eventWeight);
-    h1_mZZ_kinfit_hiMass_all->Fill( ZZ_kinfit.M(), eventWeight);
-    if( nvertex>5 ) h1_mZZ_kinfit_hiMass_hiPU->Fill( ZZ_kinfit.M(), eventWeight);
-    else h1_mZZ_kinfit_hiMass_loPU->Fill( ZZ_kinfit.M(), eventWeight);
-    if( maxBTag_found>=0 ) h1_mZZ_kinfit_hiMass_nogluetag->Fill( ZZ_kinfit.M(), eventWeight);
-    if( maxBTag_found==0 ) {
-      h1_mZZ_kinfit_hiMass_0btag->Fill( ZZ_kinfit.M(), eventWeight);
-      if( leptType==0 )  h1_mZZ_kinfit_hiMass_0btag_MU->Fill( ZZ_kinfit.M(), eventWeight);
-      if( leptType==1 )  h1_mZZ_kinfit_hiMass_0btag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
-    } else if( maxBTag_found==1 ) {
-      h1_mZZ_kinfit_hiMass_1btag->Fill( ZZ_kinfit.M(), eventWeight);
-      if( leptType==0 )  h1_mZZ_kinfit_hiMass_1btag_MU->Fill( ZZ_kinfit.M(), eventWeight);
-      if( leptType==1 )  h1_mZZ_kinfit_hiMass_1btag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
-    } else if( maxBTag_found==2 ) {
-      h1_mZZ_kinfit_hiMass_2btag->Fill( ZZ_kinfit.M(), eventWeight);
-      if( leptType==0 )  h1_mZZ_kinfit_hiMass_2btag_MU->Fill( ZZ_kinfit.M(), eventWeight);
-      if( leptType==1 )  h1_mZZ_kinfit_hiMass_2btag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
-    } else if( maxBTag_found==-1 ) {
-      h1_mZZ_kinfit_hiMass_gluetag->Fill( ZZ_kinfit.M(), eventWeight);
-      if( leptType==0 )  h1_mZZ_kinfit_hiMass_gluetag_MU->Fill( ZZ_kinfit.M(), eventWeight);
-      if( leptType==1 )  h1_mZZ_kinfit_hiMass_gluetag_ELE->Fill( ZZ_kinfit.M(), eventWeight);
-    }
-
-    h1_deltaRZmatching->Fill( bestDeltaRZ, eventWeight );
-    if( maxBTag_found==0 && eventIsMatched ) h1_mZZ_kinfit_hiMass_0btag_matched->Fill( ZZ_kinfit.M(), eventWeight);
-
-
-    h1_deltaRZZ->Fill(Zjj_nokinfit.DeltaR(diLepton), eventWeight);
-
-    h1_ptZZ->Fill( ZZ_nokinfit.Pt(), eventWeight );
-    h1_ptZZ_kinfit->Fill( ZZ_kinfit.Pt(), eventWeight );
-    h1_etaZZ->Fill( ZZ_nokinfit.Eta(), eventWeight );
-    h1_etaZZ_kinfit->Fill( ZZ_kinfit.Eta(), eventWeight );
-
-    h1_helicityLD->Fill( helicityLD_selected, eventWeight );
-    if( maxBTag_found>=0 ) h1_helicityLD_nogluetag->Fill( helicityLD_selected, eventWeight );
-    h1_helicityLD_nokinfit->Fill( helicityLD_nokinfit_selected, eventWeight );
-
-    h1_cosThetaStar->Fill(hangles_selected.helCosThetaStar, eventWeight);
-    h1_cosTheta1->Fill(hangles_selected.helCosTheta1, eventWeight);
-    h1_cosTheta2->Fill(hangles_selected.helCosTheta2, eventWeight);
-    h1_phi->Fill(hangles_selected.helPhi, eventWeight);
-    h1_phi1->Fill(hangles_selected.helPhi1, eventWeight);
-
-
-
-    int partFlavor1=0;
-    float deltaRmin1=999.;
-    for(unsigned iPart=0; iPart<nPart; ++iPart ) {
-      if( abs(pdgIdPart[iPart])>6 && pdgIdPart[iPart]!=21 ) continue;
-      TLorentzVector thisPart;
-      thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
-      float thisDeltaR = jet1_selected.DeltaR(thisPart);
-      if( thisDeltaR<deltaRmin1 ) {
-        partFlavor1 = pdgIdPart[iPart];
-        deltaRmin1 = thisDeltaR;
-      }
-    }
-    h1_deltaR_part1->Fill(deltaRmin1, eventWeight);
-    h1_partFlavorJet1->Fill( partFlavor1, eventWeight );
-    if( deltaRmin1<0.5 ) h1_partFlavorJet1_matched->Fill( partFlavor1, eventWeight );
-    else h1_partFlavorJet1_notmatched->Fill( partFlavor1, eventWeight );
-
-    if( maxBTag_found==0 ) h1_partFlavorJet1_0btag->Fill( partFlavor1, eventWeight );
-    else if( maxBTag_found==1 ) h1_partFlavorJet1_1btag->Fill( partFlavor1, eventWeight );
-    else if( maxBTag_found==2 ) h1_partFlavorJet1_2btag->Fill( partFlavor1, eventWeight );
-    else if( maxBTag_found==-1 ) h1_partFlavorJet1_gluetag->Fill( partFlavor1, eventWeight );
-    jet1_selected.pdgIdPart = partFlavor1;
-    if( partFlavor1==21 ) h1_QGLikelihoodJet1_gluonMatched->Fill( jet1_selected.QGLikelihood, eventWeight );
-    else if( abs(partFlavor1)<5 ) h1_QGLikelihoodJet1_quarkMatched->Fill( jet1_selected.QGLikelihood, eventWeight );
-
-    float deltaRmin2=999.;
-    int partFlavor2=0;
-    for(unsigned iPart=0; iPart<nPart; ++iPart ) {
-      if( abs(pdgIdPart[iPart])>6 && pdgIdPart[iPart]!=21 ) continue;
-      TLorentzVector thisPart;
-      thisPart.SetPtEtaPhiE( ptPart[iPart], etaPart[iPart], phiPart[iPart], ePart[iPart] );
-      float thisDeltaR = jet2_selected.DeltaR(thisPart);
-      if( thisDeltaR<deltaRmin2 ) {
-        partFlavor2 = pdgIdPart[iPart];
-        deltaRmin2 = thisDeltaR;
-      }
-    }
-    h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
-    h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
-    if( deltaRmin2<0.5 ) h1_partFlavorJet2_matched->Fill( partFlavor2, eventWeight );
-    else h1_partFlavorJet2_notmatched->Fill( partFlavor2, eventWeight );
-
-    if( maxBTag_found==0 ) h1_partFlavorJet2_0btag->Fill( partFlavor2, eventWeight );
-    else if( maxBTag_found==1 ) h1_partFlavorJet2_1btag->Fill( partFlavor2, eventWeight );
-    else if( maxBTag_found==2 ) h1_partFlavorJet2_2btag->Fill( partFlavor2, eventWeight );
-    else if( maxBTag_found==-1 ) h1_partFlavorJet2_gluetag->Fill( partFlavor2, eventWeight );
-    jet2_selected.pdgIdPart = partFlavor2;
-    if( partFlavor2==21 ) h1_QGLikelihoodJet2_gluonMatched->Fill( jet2_selected.QGLikelihood, eventWeight );
-    else if( abs(partFlavor2)<5 ) h1_QGLikelihoodJet2_quarkMatched->Fill( jet2_selected.QGLikelihood, eventWeight );
-
-
-    if( partFlavor1==21 || partFlavor2==21 ) {
-      h1_QGLikelihoodProd_oneGluon->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-      h1_mZZ_kinfit_hiMass_oneGluon->Fill( mZZ, eventWeight );
-    }
-    if( partFlavor1==21 && partFlavor2==21 ) {
-      h1_QGLikelihoodProd_twoGluon->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-      h1_mZZ_kinfit_hiMass_twoGluon->Fill( mZZ, eventWeight );
-    }
-    if( abs(partFlavor1)<5 && abs(partFlavor2)<5 ) {
-      h1_QGLikelihoodProd_twoQuark->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-      h1_mZZ_kinfit_hiMass_twoQuark->Fill( mZZ, eventWeight );
-      if( maxBTag_found<=0 ) {
-        h1_nEvents_partFlavor_beforeQG->Fill( 0., eventWeight );
-        if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEvents_partFlavor_afterQG->Fill( 0., eventWeight );
-      }
-    } else { 
-      if( maxBTag_found<=0 ) {
-        h1_nEvents_partFlavor_beforeQG->Fill( 1., eventWeight );
-        if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEvents_partFlavor_afterQG->Fill( 1., eventWeight );
-      }
-    }
-
-
+    } //if signal region
+  
   } //for entries
 
 
