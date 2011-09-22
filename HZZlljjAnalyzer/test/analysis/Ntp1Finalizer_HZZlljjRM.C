@@ -79,6 +79,19 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(3, "1 b-tag"); 
   h1_nEventsCategories_presel->GetXaxis()->SetBinLabel(4, "2 b-tag"); 
 
+  TH1D* h1_nEvents_partFlavor_beforeQG = new TH1D("nEvents_partFlavor_beforeQG", "", 2, -0.5, 1.5);
+  h1_nEvents_partFlavor_beforeQG->Sumw2();
+  h1_nEvents_partFlavor_beforeQG->GetXaxis()->SetLabelSize(0.1);
+  h1_nEvents_partFlavor_beforeQG->GetXaxis()->SetBinLabel(1, "2 Quarks");
+  h1_nEvents_partFlavor_beforeQG->GetXaxis()->SetBinLabel(1, "#geq 1 Gluon");
+
+  TH1D* h1_nEvents_partFlavor_afterQG = new TH1D("nEvents_partFlavor_afterQG", "", 2, -0.5, 1.5);
+  h1_nEvents_partFlavor_afterQG->Sumw2();
+  h1_nEvents_partFlavor_afterQG->GetXaxis()->SetLabelSize(0.1);
+  h1_nEvents_partFlavor_afterQG->GetXaxis()->SetBinLabel(1, "2 Quarks");
+  h1_nEvents_partFlavor_afterQG->GetXaxis()->SetBinLabel(1, "#geq 1 Gluon");
+
+
   // these histograms will save the final yields and efficiencies:
 
   TH1D* h1_nEvents_fb_gluetag_250 = new TH1D("nEvents_fb_gluetag_250", "", 1, 0., 1.);
@@ -434,7 +447,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_mZjj_all_presel = new TH1D("mZjj_all_presel", "", 400, 30., 430.);
   h1_mZjj_all_presel->Sumw2();
 
-  TH1D* h1_deltaRjj_all_presel = new TH1D("deltaRjj_all_presel", "", 50, 0.5, 5.);
+  TH1D* h1_deltaRjj_all_presel = new TH1D("deltaRjj_all_presel", "", 500, 0.5, 5.);
   h1_deltaRjj_all_presel->Sumw2();
   TH1D* h1_deltaRll_presel = new TH1D("deltaRll_presel", "", 20, 0., 5.);
   h1_deltaRll_presel->Sumw2();
@@ -465,6 +478,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   //TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 30, -7.5, 22.5);
   TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 38, -15.5, 22.5);
   h1_partFlavorJet1->Sumw2();
+  TH1D* h1_partFlavorJet1_matched= new TH1D("partFlavorJet1_matched", "", 38, -15.5, 22.5);
+  h1_partFlavorJet1_matched->Sumw2();
+  TH1D* h1_partFlavorJet1_notmatched= new TH1D("partFlavorJet1_notmatched", "", 38, -15.5, 22.5);
+  h1_partFlavorJet1_notmatched->Sumw2();
   TH1D* h1_partFlavorJet1_0btag= new TH1D("partFlavorJet1_0btag", "", 38, -15.5, 22.5);
   h1_partFlavorJet1_0btag->Sumw2();
   TH1D* h1_partFlavorJet1_1btag= new TH1D("partFlavorJet1_1btag", "", 38, -15.5, 22.5);
@@ -494,6 +511,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodJet1_MW400->Sumw2();
   TH1D* h1_QGLikelihoodJet1_MW500 = new TH1D("QGLikelihoodJet1_MW500", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet1_MW500->Sumw2();
+  TH1D* h1_QGLikelihoodJet1_gluonMatched = new TH1D("QGLikelihoodJet1_gluonMatched", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJet1_gluonMatched->Sumw2();
+  TH1D* h1_QGLikelihoodJet1_quarkMatched = new TH1D("QGLikelihoodJet1_quarkMatched", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJet1_quarkMatched->Sumw2();
 
   TH1D* h1_QGLikelihood_100_123 = new TH1D("QGLikelihood_100_123", "", 50, 0., 1.0001);
   h1_QGLikelihood_100_123->Sumw2();
@@ -506,6 +527,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   //TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 30, -7.5, 22.5);
   TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 38, -15.5, 22.5);
   h1_partFlavorJet2->Sumw2();
+  TH1D* h1_partFlavorJet2_matched= new TH1D("partFlavorJet2_matched", "", 38, -15.5, 22.5);
+  h1_partFlavorJet2_matched->Sumw2();
+  TH1D* h1_partFlavorJet2_notmatched= new TH1D("partFlavorJet2_notmatched", "", 38, -15.5, 22.5);
+  h1_partFlavorJet2_notmatched->Sumw2();
   TH1D* h1_partFlavorJet2_0btag= new TH1D("partFlavorJet2_0btag", "", 38, -15.5, 22.5);
   h1_partFlavorJet2_0btag->Sumw2();
   TH1D* h1_partFlavorJet2_1btag= new TH1D("partFlavorJet2_1btag", "", 38, -15.5, 22.5);
@@ -536,7 +561,17 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodJet2_MW400->Sumw2();
   TH1D* h1_QGLikelihoodJet2_MW500 = new TH1D("QGLikelihoodJet2_MW500", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet2_MW500->Sumw2();
+  TH1D* h1_QGLikelihoodJet2_gluonMatched = new TH1D("QGLikelihoodJet2_gluonMatched", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJet2_gluonMatched->Sumw2();
+  TH1D* h1_QGLikelihoodJet2_quarkMatched = new TH1D("QGLikelihoodJet2_quarkMatched", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJet2_quarkMatched->Sumw2();
 
+  TH1D* h1_QGLikelihoodProd_oneGluon = new TH1D("QGLikelihoodProd_oneGluon", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProd_oneGluon->Sumw2();
+  TH1D* h1_QGLikelihoodProd_twoGluon = new TH1D("QGLikelihoodProd_twoGluon", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProd_twoGluon->Sumw2();
+  TH1D* h1_QGLikelihoodProd_twoQuark = new TH1D("QGLikelihoodProd_twoQuark", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProd_twoQuark->Sumw2();
 
   TH1D* h1_QGLikelihoodNoPUProd = new TH1D("QGLikelihoodNoPUProd", "", 60, 0., 1.0001);
   h1_QGLikelihoodNoPUProd->Sumw2();
@@ -589,7 +624,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_ptZjj = new TH1D("ptZjj", "", 400, 0., 400.);
   h1_ptZjj->Sumw2();
 
-  TH1D* h1_deltaRjj= new TH1D("deltaRjj", "", 50, 0.5, 5.);
+  TH1D* h1_deltaRjj= new TH1D("deltaRjj", "", 500, 0.5, 5.);
   h1_deltaRjj->Sumw2();
   TH1D* h1_deltaRjj_prekin= new TH1D("deltaRjj_prekin", "", 50, 0.5, 5.);
   h1_deltaRjj_prekin->Sumw2();
@@ -674,6 +709,13 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mZZ_kinfit_hiMass_loPU->Sumw2();
   TH1D* h1_mZZ_kinfit_hiMass_nogluetag = new TH1D("mZZ_kinfit_hiMass_nogluetag", "", 1500, 150., 1650.);
   h1_mZZ_kinfit_hiMass_nogluetag->Sumw2();
+
+  TH1D* h1_mZZ_kinfit_hiMass_oneGluon = new TH1D("mZZ_kinfit_hiMass_oneGluon", "",1500, 150., 1650.);
+  h1_mZZ_kinfit_hiMass_oneGluon->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_twoGluon = new TH1D("mZZ_kinfit_hiMass_twoGluon", "",1500, 150., 1650.);
+  h1_mZZ_kinfit_hiMass_twoGluon->Sumw2();
+  TH1D* h1_mZZ_kinfit_hiMass_twoQuark = new TH1D("mZZ_kinfit_hiMass_twoQuark", "",1500, 150., 1650.);
+  h1_mZZ_kinfit_hiMass_twoQuark->Sumw2();
 
   TH1D* h1_mZZ_kinfit_hiMass_gluetag= new TH1D("mZZ_kinfit_hiMass_gluetag", "", 1500, 150., 1650.);
   h1_mZZ_kinfit_hiMass_gluetag->Sumw2();
@@ -1310,9 +1352,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 //}
 
   int maxBTag_found = -1;
-  float mZZ, mZZ_nokinfit, mZjj;
+  float mZZ, mZZ_nokinfit, mZjj, mZll;
   float HLTSF;
   bool isSidebands=false;
+  bool isSignalRegion=false;
   bool foundSignalRegionMjj=false;
   bool atLeastOneInSignalRegionMjj=false;
 
@@ -1321,6 +1364,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_passedEvents->Branch( "event", &event, "event/I" );
   tree_passedEvents->Branch( "leptType", &leptType, "leptType/I" );
   tree_passedEvents->Branch( "mZjj", &mZjj, "mZjj/F" );
+  tree_passedEvents->Branch( "mZll", &mZll, "mZll/F" );
   tree_passedEvents->Branch( "mZZ", &mZZ, "mZZ/F" );
   tree_passedEvents->Branch( "mZZ_nokinfit", &mZZ_nokinfit, "mZZ_nokinfit/F" );
   tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
@@ -1328,6 +1372,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_passedEvents->Branch( "PUWeight", &eventWeightPU, "eventWeightPU/F" );
   tree_passedEvents->Branch( "nBTags", &maxBTag_found, "maxBTag_found/I" );
   tree_passedEvents->Branch( "isSidebands", &isSidebands, "isSidebands/O" );
+  tree_passedEvents->Branch( "isSignalRegion", &isSignalRegion, "isSignalRegion/O" );
 
 
 
@@ -1350,8 +1395,6 @@ ofstream ofs("run_event.txt");
     if( (iEntry % 20000)==0 ) std::cout << "Entry: " << iEntry << " /" << nEntries << std::endl;
 
     tree_->GetEntry(iEntry);
-
-    if( dataset_=="DATA_175pb" && run>163869 ) continue;
 
 
     if( eventWeight <= 0. ) eventWeight = 1.;
@@ -1576,6 +1619,7 @@ ofstream ofs("run_event.txt");
     if( fabs(lept2.Eta()) > etaLept2_thresh_ ) continue;
     if( invert_mZll_ ) {
       if( diLepton.M() > mZll_threshLo_ && diLepton.M() < mZll_threshHi_ ) continue;
+      if( diLepton.M() < 50. ) continue; //quick fix for now: madgraph DY does not go under 50 gev
     } else {
       if( diLepton.M() < mZll_threshLo_ || diLepton.M() > mZll_threshHi_ ) continue;
     }
@@ -1716,7 +1760,7 @@ ofstream ofs("run_event.txt");
       if( foundSignalRegionMjj && ( diJet.M() < mZjj_threshLo_ || diJet.M() > mZjj_threshHi_ ) ) continue;
 
 
-      if( diJet.M() > mZjj_threshLo_ && diJet.M() < mZjj_threshHi_ ) {
+      if( diJet.M() >= mZjj_threshLo_ && diJet.M() <= mZjj_threshHi_ ) {
         if( !atLeastOneInSignalRegionMjj ) nEvents_presel_mZll_mZjj += eventWeight;
         atLeastOneInSignalRegionMjj = true;
         isSignalRegionMjj = true;
@@ -1938,6 +1982,8 @@ ofstream ofs("run_event.txt");
 
     if( !foundSignalRegionMjj ) { //fill sideband plots
 
+      isSignalRegion = false;
+
       TLorentzVector Zjj_kinfit = jet1_selected + jet2_selected;
      
       TLorentzVector jet1_nokinfit, jet2_nokinfit;
@@ -1971,41 +2017,49 @@ ofstream ofs("run_event.txt");
       else if( maxBTag_found==1 )  h1_mZjj_1btag->Fill( Zjj_nokinfit.M(), eventWeight);
       else if( maxBTag_found==2 )  h1_mZjj_2btag->Fill( Zjj_nokinfit.M(), eventWeight);
 
-      if( Zjj_nokinfit.M()<60. || Zjj_nokinfit.M()>130. ) continue;
+      //if( Zjj_nokinfit.M()<60. || Zjj_nokinfit.M()>130. ) continue;
+      isSidebands = ( (Zjj_nokinfit.M()>60. && Zjj_nokinfit.M()<75.) || (Zjj_nokinfit.M()<130. && Zjj_nokinfit.M()>105.) );
       
-      h2_mZjj_vs_mZZ->Fill( mZZ, Zjj_nokinfit.M(), eventWeight );
-      h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M(), eventWeight );
+      if( isSidebands ) {
+   
+        //fill sideband plots:
 
-      h1_helicityLD_sidebands->Fill( helicityLD_selected, eventWeight );
+        h2_mZjj_vs_mZZ->Fill( mZZ, Zjj_nokinfit.M(), eventWeight );
+        h2_mZjj_vs_mZZ_kinfit->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M(), eventWeight );
 
-      if( maxBTag_found==0 ) {
-        h2_mZjj_vs_mZZ_0btag->Fill( mZZ, Zjj_nokinfit.M() );
-        h2_mZjj_vs_mZZ_kinfit_0btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
-        h1_mZZ_kinfit_hiMass_sidebands_0btag->Fill( ZZ_kinfit.M(), eventWeight );
-        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
-        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
-      } else if( maxBTag_found==1 ) {
-        h2_mZjj_vs_mZZ_1btag->Fill( mZZ, Zjj_nokinfit.M() );
-        h2_mZjj_vs_mZZ_kinfit_1btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
-        h1_mZZ_kinfit_hiMass_sidebands_1btag->Fill( ZZ_kinfit.M(), eventWeight );
-        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
-        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
-      } else if( maxBTag_found==2 ) {
-        h2_mZjj_vs_mZZ_2btag->Fill( mZZ, Zjj_nokinfit.M() );
-        h2_mZjj_vs_mZZ_kinfit_2btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
-        h1_mZZ_kinfit_hiMass_sidebands_2btag->Fill( ZZ_kinfit.M(), eventWeight );
-        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
-        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
-      } else if( maxBTag_found==-1 ) {
-        h2_mZjj_vs_mZZ_gluetag->Fill( mZZ, Zjj_nokinfit.M() );
-        h2_mZjj_vs_mZZ_kinfit_gluetag->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
-        h1_mZZ_kinfit_hiMass_sidebands_gluetag->Fill( ZZ_kinfit.M(), eventWeight );
-        if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU->Fill( ZZ_kinfit.M(), eventWeight );
-        if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
-      }
+        h1_helicityLD_sidebands->Fill( helicityLD_selected, eventWeight );
+
+        if( maxBTag_found==0 ) {
+          h2_mZjj_vs_mZZ_0btag->Fill( mZZ, Zjj_nokinfit.M() );
+          h2_mZjj_vs_mZZ_kinfit_0btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
+          h1_mZZ_kinfit_hiMass_sidebands_0btag->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_0btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+        } else if( maxBTag_found==1 ) {
+          h2_mZjj_vs_mZZ_1btag->Fill( mZZ, Zjj_nokinfit.M() );
+          h2_mZjj_vs_mZZ_kinfit_1btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
+          h1_mZZ_kinfit_hiMass_sidebands_1btag->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_1btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+        } else if( maxBTag_found==2 ) {
+          h2_mZjj_vs_mZZ_2btag->Fill( mZZ, Zjj_nokinfit.M() );
+          h2_mZjj_vs_mZZ_kinfit_2btag->Fill(   ZZ_kinfit.M(), Zjj_nokinfit.M() );
+          h1_mZZ_kinfit_hiMass_sidebands_2btag->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_2btag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+        } else if( maxBTag_found==-1 ) {
+          h2_mZjj_vs_mZZ_gluetag->Fill( mZZ, Zjj_nokinfit.M() );
+          h2_mZjj_vs_mZZ_kinfit_gluetag->Fill( ZZ_kinfit.M(), Zjj_nokinfit.M() );
+          h1_mZZ_kinfit_hiMass_sidebands_gluetag->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==0 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_MU->Fill( ZZ_kinfit.M(), eventWeight );
+          if( leptType==1 ) h1_mZZ_kinfit_hiMass_sidebands_gluetag_ELE->Fill( ZZ_kinfit.M(), eventWeight );
+        }
+
+      } //if sidebands
+
       
       mZjj = Zjj_nokinfit.M();
-      isSidebands = true;
+      mZll = diLepton.M();
 
 
       tree_passedEvents->Fill();
@@ -2048,12 +2102,14 @@ ofs << run << " " << event << std::endl;
     TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
 
     mZjj = Zjj_nokinfit.M();
+    mZll = diLepton.M();
     mZZ = ZZ_kinfit.M();
     mZZ_nokinfit = ZZ_nokinfit.M();
     isSidebands = false;
+    isSignalRegion = true;
 
     h1_mZjj->Fill( Zjj_nokinfit.M(), eventWeight);
-    if( maxBTag_found>=0 ) h1_mZjj_nogluetag->Fill( Zjj_nokinfit.M(), eventWeight);
+ 
     if( leptType==0 ) {
       h1_mZjj_MU->Fill( Zjj_nokinfit.M(), eventWeight);
       if( maxBTag_found>=0 ) h1_mZjj_nogluetag_MU->Fill( Zjj_nokinfit.M(), eventWeight);
@@ -2643,11 +2699,16 @@ ofs << run << " " << event << std::endl;
     }
     h1_deltaR_part1->Fill(deltaRmin1, eventWeight);
     h1_partFlavorJet1->Fill( partFlavor1, eventWeight );
+    if( deltaRmin1<0.5 ) h1_partFlavorJet1_matched->Fill( partFlavor1, eventWeight );
+    else h1_partFlavorJet1_notmatched->Fill( partFlavor1, eventWeight );
+
     if( maxBTag_found==0 ) h1_partFlavorJet1_0btag->Fill( partFlavor1, eventWeight );
     else if( maxBTag_found==1 ) h1_partFlavorJet1_1btag->Fill( partFlavor1, eventWeight );
     else if( maxBTag_found==2 ) h1_partFlavorJet1_2btag->Fill( partFlavor1, eventWeight );
     else if( maxBTag_found==-1 ) h1_partFlavorJet1_gluetag->Fill( partFlavor1, eventWeight );
     jet1_selected.pdgIdPart = partFlavor1;
+    if( partFlavor1==21 ) h1_QGLikelihoodJet1_gluonMatched->Fill( jet1_selected.QGLikelihood, eventWeight );
+    else if( abs(partFlavor1)<5 ) h1_QGLikelihoodJet1_quarkMatched->Fill( jet1_selected.QGLikelihood, eventWeight );
 
     float deltaRmin2=999.;
     int partFlavor2=0;
@@ -2663,11 +2724,39 @@ ofs << run << " " << event << std::endl;
     }
     h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
     h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
+    if( deltaRmin2<0.5 ) h1_partFlavorJet2_matched->Fill( partFlavor2, eventWeight );
+    else h1_partFlavorJet2_notmatched->Fill( partFlavor2, eventWeight );
+
     if( maxBTag_found==0 ) h1_partFlavorJet2_0btag->Fill( partFlavor2, eventWeight );
     else if( maxBTag_found==1 ) h1_partFlavorJet2_1btag->Fill( partFlavor2, eventWeight );
     else if( maxBTag_found==2 ) h1_partFlavorJet2_2btag->Fill( partFlavor2, eventWeight );
     else if( maxBTag_found==-1 ) h1_partFlavorJet2_gluetag->Fill( partFlavor2, eventWeight );
     jet2_selected.pdgIdPart = partFlavor2;
+    if( partFlavor2==21 ) h1_QGLikelihoodJet2_gluonMatched->Fill( jet2_selected.QGLikelihood, eventWeight );
+    else if( abs(partFlavor2)<5 ) h1_QGLikelihoodJet2_quarkMatched->Fill( jet2_selected.QGLikelihood, eventWeight );
+
+
+    if( partFlavor1==21 || partFlavor2==21 ) {
+      h1_QGLikelihoodProd_oneGluon->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+      h1_mZZ_kinfit_hiMass_oneGluon->Fill( mZZ, eventWeight );
+    }
+    if( partFlavor1==21 && partFlavor2==21 ) {
+      h1_QGLikelihoodProd_twoGluon->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+      h1_mZZ_kinfit_hiMass_twoGluon->Fill( mZZ, eventWeight );
+    }
+    if( abs(partFlavor1)<5 && abs(partFlavor2)<5 ) {
+      h1_QGLikelihoodProd_twoQuark->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+      h1_mZZ_kinfit_hiMass_twoQuark->Fill( mZZ, eventWeight );
+      if( maxBTag_found<=0 ) {
+        h1_nEvents_partFlavor_beforeQG->Fill( 0., eventWeight );
+        if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEvents_partFlavor_afterQG->Fill( 0., eventWeight );
+      }
+    } else { 
+      if( maxBTag_found<=0 ) {
+        h1_nEvents_partFlavor_beforeQG->Fill( 1., eventWeight );
+        if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEvents_partFlavor_afterQG->Fill( 1., eventWeight );
+      }
+    }
 
 
   } //for entries
@@ -3444,10 +3533,14 @@ ofs << run << " " << event << std::endl;
   h1_eElectronsJet1->Write();
   h1_eMuonsJet1->Write();
   h1_partFlavorJet1->Write();
+  h1_partFlavorJet1_matched->Write();
+  h1_partFlavorJet1_notmatched->Write();
   h1_partFlavorJet1_0btag->Write();
   h1_partFlavorJet1_1btag->Write();
   h1_partFlavorJet1_2btag->Write();
   h1_partFlavorJet1_gluetag->Write();
+  h1_QGLikelihoodJet1_gluonMatched->Write();
+  h1_QGLikelihoodJet1_quarkMatched->Write();
   h1_tcheJet1->Write();
 
   h1_deltaR_part2->Write();
@@ -3457,11 +3550,26 @@ ofs << run << " " << event << std::endl;
   h1_eElectronsJet2->Write();
   h1_eMuonsJet2->Write();
   h1_partFlavorJet2->Write();
+  h1_partFlavorJet2_matched->Write();
+  h1_partFlavorJet2_notmatched->Write();
   h1_partFlavorJet2_0btag->Write();
   h1_partFlavorJet2_1btag->Write();
   h1_partFlavorJet2_2btag->Write();
   h1_partFlavorJet2_gluetag->Write();
+  h1_QGLikelihoodJet2_gluonMatched->Write();
+  h1_QGLikelihoodJet2_quarkMatched->Write();
   h1_tcheJet2->Write();
+
+  h1_QGLikelihoodProd_oneGluon->Write();
+  h1_mZZ_kinfit_hiMass_oneGluon->Write();
+  h1_QGLikelihoodProd_twoGluon->Write();
+  h1_mZZ_kinfit_hiMass_twoGluon->Write();
+  h1_QGLikelihoodProd_twoQuark->Write();
+  h1_mZZ_kinfit_hiMass_twoQuark->Write();
+
+  h1_nEvents_partFlavor_beforeQG->Write();
+  h1_nEvents_partFlavor_afterQG->Write();
+
 
   h1_deltaRZZ->Write();
 
