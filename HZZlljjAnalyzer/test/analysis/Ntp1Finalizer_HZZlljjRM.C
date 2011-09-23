@@ -22,6 +22,7 @@
 bool ANALYZE_SIDEBANDS_=true;
 bool USE_MC_MASS=false;
 
+int DEBUG_EVENTNUMBER = 3485;
 
 //HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
 
@@ -1601,12 +1602,14 @@ ofstream ofs("run_event.txt");
 
 
 
-//if( event==3624 ) {
-//  std::cout << "leptType: " << leptType << std::endl; 
-//  std::cout << "lept1.Pt(): " << lept1.Pt() << std::endl;
-//  std::cout << "lept2.Pt(): " << lept2.Pt() << std::endl;
-//  std::cout << "diLepton.M(): " << diLepton.M() << std::endl;
-//}
+    if( event==DEBUG_EVENTNUMBER ) {
+      std::cout << std::endl << std::endl << "----------------------------------" << std::endl;
+      std::cout << "** LOG FOR EVENT: " << DEBUG_EVENTNUMBER << std::endl << std::endl;
+      std::cout << "leptType: " << leptType << std::endl; 
+      std::cout << "lept1.Pt(): " << lept1.Pt() << std::endl;
+      std::cout << "lept2.Pt(): " << lept2.Pt() << std::endl;
+      std::cout << "diLepton.M(): " << diLepton.M() << std::endl;
+    }
 
 
     // ----------------------------
@@ -1692,12 +1695,12 @@ ofstream ofs("run_event.txt");
 
       TLorentzVector diJet = jet1 + jet2;
 
-//  if( event==3624 ) {
-//    std::cout << std::endl << "jet pair N.: " << iJetPair << std::endl; 
-//    std::cout << "jet1.Pt(): " << jet1.Pt() << std::endl;
-//    std::cout << "jet2.Pt(): " << jet2.Pt() << std::endl;
-//    std::cout << "diJet.M(): " << diJet.M() << std::endl;
-//  }
+      if( event==DEBUG_EVENTNUMBER ) {
+        std::cout << std::endl << "jet pair N.: " << iJetPair << std::endl; 
+        std::cout << "jet1.Pt(): " << jet1.Pt() << std::endl;
+        std::cout << "jet2.Pt(): " << jet2.Pt() << std::endl;
+        std::cout << "diJet.M(): " << diJet.M() << std::endl;
+      }
 
 
       // fill histos before selection
@@ -1747,13 +1750,13 @@ ofstream ofs("run_event.txt");
       // -------------------------
 
       if( jet1.Pt() < ptJet1_thresh_ ) continue;
- // if( event==3624 ) std::cout << "a" << std::endl;
-    if( jet2.Pt() < ptJet2_thresh_ ) continue;
- // if( event==3624 ) std::cout << "b" << std::endl;
-    if( fabs(jet1.Eta()) > etaJet1_thresh_ ) continue;
- // if( event==3624 ) std::cout << "c" << std::endl;
-    if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
- // if( event==3624 ) std::cout << "d" << std::endl;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "first jet pt OK" << std::endl;
+      if( jet2.Pt() < ptJet2_thresh_ ) continue;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "second jet pt OK" << std::endl;
+      if( fabs(jet1.Eta()) > etaJet1_thresh_ ) continue;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "first jet eta OK" << std::endl;
+      if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "second jet eta OK" << std::endl;
 
 
       // sideband logic:
@@ -1775,7 +1778,7 @@ ofstream ofs("run_event.txt");
 
 
       int nBTags = this->get_nBTags( jet1, jet2, btsfutil, use_looseBTags_ );
-//if( event==3624 ) std::cout << "nBTags: " << nBTags << std::endl;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "nBTags: " << nBTags << std::endl;
 
       if( (isSignalRegionMjj && foundSignalRegionMjj) ||
           (!isSignalRegionMjj && !foundSignalRegionMjj) ) {
@@ -1796,7 +1799,7 @@ ofstream ofs("run_event.txt");
       jet1.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
       jet2.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
       float QGLikelihoodProd = jet1.QGLikelihood*jet2.QGLikelihood;
-//if( event==3624 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
       if( nBTags==0 ) {
         //if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
         if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) nBTags=-1; //glue-tag category
@@ -1872,7 +1875,7 @@ ofstream ofs("run_event.txt");
       TLorentzVector diJet_kinfit = jet1_kinfit + jet2_kinfit;
       TLorentzVector ZZ_kinfit_tmp = diJet_kinfit + diLepton;
 
-//if( event==3624 ) std::cout << "ZZ_kinfit_tmp.M(): " << ZZ_kinfit_tmp.M() << std::endl;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "ZZ_kinfit_tmp.M(): " << ZZ_kinfit_tmp.M() << std::endl;
       if( ZZ_kinfit_tmp.M()<150. ) continue; //speed it up a little
 
 
@@ -1880,7 +1883,7 @@ ofstream ofs("run_event.txt");
       // FULL EVENT VARIABLES
       // --------------------
    
-//if( event==3624 ) std::cout << "metSignificance: " << metSignificance << std::endl;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "metSignificance: " << metSignificance << std::endl;
       if( nBTags==2 )  {
         if( metSignificance > 10. ) continue;
       }
@@ -1911,7 +1914,7 @@ ofstream ofs("run_event.txt");
     
       float helicityLD_thresh = (nBTags>=0) ? this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), nBTags) : this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), 0);
 
-//if( event==3624 ) std::cout << "helicityLD: " << helicityLD << std::endl;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "helicityLD: " << helicityLD << " (threshold: " << helicityLD_thresh << ")" << std::endl;
       if( helicityLD < helicityLD_thresh ) continue;
 
 
@@ -1919,6 +1922,7 @@ ofstream ofs("run_event.txt");
       // this pair has passed selections
       // if it is a signal region pair, dont consider any more sideband events:
       if( isSignalRegionMjj && !foundSignalRegionMjj) {
+        if( event==DEBUG_EVENTNUMBER ) std::cout << "updating maxBTag_found" << std::endl;
         maxBTag_found = nBTags; //reset maxbtag found
         foundSignalRegionMjj = true;
       }
@@ -1934,6 +1938,10 @@ ofstream ofs("run_event.txt");
 
       if( foundJets==0 || (foundJets_signalRegion==0 && isSignalRegionMjj) ) {
 
+        if( event==DEBUG_EVENTNUMBER ) {
+          if(foundJets_signalRegion==0 && isSignalRegionMjj)   std::cout << "first **SIGNAL REGION** jet pair passing selections" << std::endl;
+          else std::cout << "first jet pair passing selections" << std::endl;
+        }
         bestMass = invMass;
         jet1_selected = jet1;
         jet2_selected = jet2; 
@@ -1948,8 +1956,13 @@ ofstream ofs("run_event.txt");
 
         foundJets += 1;
 
+        if( event==DEBUG_EVENTNUMBER ) std::cout << "jet pair passed selections, going to fight for first place:" << std::endl;
+        if( event==DEBUG_EVENTNUMBER ) std::cout << "nBTags: " << nBTags << " > " << maxBTag_found << " ?" << std::endl;
+        if( event==DEBUG_EVENTNUMBER ) std::cout << "invMass: " << invMass << " better than " << bestMass << " ?" << std::endl;
+
         if( ( nBTags == maxBTag_found && (fabs(invMass-Zmass) < fabs(bestMass-Zmass)))
          || (nBTags > maxBTag_found)  ) {
+          if( event==DEBUG_EVENTNUMBER ) std::cout << "---> YES! this pair is now in pole position." << std::endl;
           bestMass = invMass;
           jet1_selected = jet1;
           jet2_selected = jet2;
@@ -1966,13 +1979,13 @@ ofstream ofs("run_event.txt");
     } //for on jet pairs
 
 
-//if( event==3624 ) std::cout << "xx" << std::endl;
-//if( event==3624 ) std::cout << "foundJets:" << foundJets << std::endl;
-//if( event==3624 ) std::cout << "maxBTag_found:" << maxBTag_found << std::endl;
-//if( event==3624 ) {
-//  if( foundSignalRegionMjj )  std::cout << "foundSignalRegionMjj is TRUE" << std::endl;
-//  else std::cout << "foundSignalRegionMjj is FALSE" << std::endl;
-//}
+    if( event==DEBUG_EVENTNUMBER ) std::cout << "----------------------------------" << std::endl;
+    if( event==DEBUG_EVENTNUMBER ) std::cout << "foundJets:" << foundJets << std::endl;
+    if( event==DEBUG_EVENTNUMBER ) std::cout << "maxBTag_found:" << maxBTag_found << std::endl;
+    if( event==DEBUG_EVENTNUMBER ) {
+      if( foundSignalRegionMjj )  std::cout << "foundSignalRegionMjj is TRUE" << std::endl;
+      else std::cout << "foundSignalRegionMjj is FALSE" << std::endl;
+    }
 
 
 
