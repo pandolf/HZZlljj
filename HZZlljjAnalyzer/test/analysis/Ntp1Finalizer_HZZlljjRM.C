@@ -1323,8 +1323,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
 
   //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root");
-  //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
-  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root");
+  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
+  //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root");
   float Zmass = 91.1876;
   DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", Zmass );
   HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
@@ -1601,7 +1601,7 @@ ofstream ofs("run_event.txt");
 
 
 
-//if( event==13291 ) {
+//if( event==3624 ) {
 //  std::cout << "leptType: " << leptType << std::endl; 
 //  std::cout << "lept1.Pt(): " << lept1.Pt() << std::endl;
 //  std::cout << "lept2.Pt(): " << lept2.Pt() << std::endl;
@@ -1636,6 +1636,7 @@ ofstream ofs("run_event.txt");
     AnalysisJet jet1_selected, jet2_selected;
     float bestMass = 0.;
     int  foundJets = 0;
+    int  foundJets_signalRegion = 0;
     bool foundJets_ZZmass = false;
     maxBTag_found = -1;
     foundSignalRegionMjj = false;
@@ -1691,12 +1692,12 @@ ofstream ofs("run_event.txt");
 
       TLorentzVector diJet = jet1 + jet2;
 
-  //if( event==13291 ) {
-  //  std::cout << std::endl << "jet pair N.: " << iJetPair << std::endl; 
-  //  std::cout << "jet1.Pt(): " << jet1.Pt() << std::endl;
-  //  std::cout << "jet2.Pt(): " << jet2.Pt() << std::endl;
-  //  std::cout << "diJet.M(): " << diJet.M() << std::endl;
-  //}
+//  if( event==3624 ) {
+//    std::cout << std::endl << "jet pair N.: " << iJetPair << std::endl; 
+//    std::cout << "jet1.Pt(): " << jet1.Pt() << std::endl;
+//    std::cout << "jet2.Pt(): " << jet2.Pt() << std::endl;
+//    std::cout << "diJet.M(): " << diJet.M() << std::endl;
+//  }
 
 
       // fill histos before selection
@@ -1746,13 +1747,13 @@ ofstream ofs("run_event.txt");
       // -------------------------
 
       if( jet1.Pt() < ptJet1_thresh_ ) continue;
-  //if( event==13291 ) std::cout << "a" << std::endl;
-      if( jet2.Pt() < ptJet2_thresh_ ) continue;
-  //if( event==13291 ) std::cout << "b" << std::endl;
-      if( fabs(jet1.Eta()) > etaJet1_thresh_ ) continue;
-  //if( event==13291 ) std::cout << "c" << std::endl;
-      if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
-  //if( event==13291 ) std::cout << "d" << std::endl;
+ // if( event==3624 ) std::cout << "a" << std::endl;
+    if( jet2.Pt() < ptJet2_thresh_ ) continue;
+ // if( event==3624 ) std::cout << "b" << std::endl;
+    if( fabs(jet1.Eta()) > etaJet1_thresh_ ) continue;
+ // if( event==3624 ) std::cout << "c" << std::endl;
+    if( fabs(jet2.Eta()) > etaJet2_thresh_ ) continue;
+ // if( event==3624 ) std::cout << "d" << std::endl;
 
 
       // sideband logic:
@@ -1774,12 +1775,12 @@ ofstream ofs("run_event.txt");
 
 
       int nBTags = this->get_nBTags( jet1, jet2, btsfutil, use_looseBTags_ );
+//if( event==3624 ) std::cout << "nBTags: " << nBTags << std::endl;
 
       if( (isSignalRegionMjj && foundSignalRegionMjj) ||
           (!isSignalRegionMjj && !foundSignalRegionMjj) ) {
         if( nBTags<maxBTag_found ) continue; //speed it up a little
       }
-//if( event==13291 ) std::cout << "nBTags: " << nBTags << std::endl;
 
 
 
@@ -1795,7 +1796,7 @@ ofstream ofs("run_event.txt");
       jet1.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
       jet2.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
       float QGLikelihoodProd = jet1.QGLikelihood*jet2.QGLikelihood;
-//if( event==13291 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
+//if( event==3624 ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
       if( nBTags==0 ) {
         //if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
         if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) nBTags=-1; //glue-tag category
@@ -1871,7 +1872,7 @@ ofstream ofs("run_event.txt");
       TLorentzVector diJet_kinfit = jet1_kinfit + jet2_kinfit;
       TLorentzVector ZZ_kinfit_tmp = diJet_kinfit + diLepton;
 
-//if( event==13291 ) std::cout << "ZZ_kinfit_tmp.M(): " << ZZ_kinfit_tmp.M() << std::endl;
+//if( event==3624 ) std::cout << "ZZ_kinfit_tmp.M(): " << ZZ_kinfit_tmp.M() << std::endl;
       if( ZZ_kinfit_tmp.M()<150. ) continue; //speed it up a little
 
 
@@ -1879,7 +1880,7 @@ ofstream ofs("run_event.txt");
       // FULL EVENT VARIABLES
       // --------------------
    
-//if( event==13291 ) std::cout << "metSignificance: " << metSignificance << std::endl;
+//if( event==3624 ) std::cout << "metSignificance: " << metSignificance << std::endl;
       if( nBTags==2 )  {
         if( metSignificance > 10. ) continue;
       }
@@ -1910,7 +1911,7 @@ ofstream ofs("run_event.txt");
     
       float helicityLD_thresh = (nBTags>=0) ? this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), nBTags) : this->get_helicityLD_thresh(ZZ_kinfit_tmp.M(), 0);
 
-//if( event==13291 ) std::cout << "helicityLD: " << helicityLD << std::endl;
+//if( event==3624 ) std::cout << "helicityLD: " << helicityLD << std::endl;
       if( helicityLD < helicityLD_thresh ) continue;
 
 
@@ -1931,7 +1932,7 @@ ofstream ofs("run_event.txt");
 
       float invMass = diJet.M();
 
-      if( foundJets==0 ) {
+      if( foundJets==0 || (foundJets_signalRegion==0 && isSignalRegionMjj) ) {
 
         bestMass = invMass;
         jet1_selected = jet1;
@@ -1940,6 +1941,7 @@ ofstream ofs("run_event.txt");
         helicityLD_selected = helicityLD;
         helicityLD_nokinfit_selected = helicityLD_nokinfit;
         foundJets += 1;
+        if( isSignalRegionMjj ) foundJets_signalRegion += 1;
         maxBTag_found = nBTags;
 
       } else { 
@@ -1964,10 +1966,10 @@ ofstream ofs("run_event.txt");
     } //for on jet pairs
 
 
-//if( event==13291 ) std::cout << "xx" << std::endl;
-//if( event==13291 ) std::cout << "foundJets:" << foundJets << std::endl;
-//if( event==13291 ) std::cout << "maxBTag_found:" << maxBTag_found << std::endl;
-//if( event==13291 ) {
+//if( event==3624 ) std::cout << "xx" << std::endl;
+//if( event==3624 ) std::cout << "foundJets:" << foundJets << std::endl;
+//if( event==3624 ) std::cout << "maxBTag_found:" << maxBTag_found << std::endl;
+//if( event==3624 ) {
 //  if( foundSignalRegionMjj )  std::cout << "foundSignalRegionMjj is TRUE" << std::endl;
 //  else std::cout << "foundSignalRegionMjj is FALSE" << std::endl;
 //}
