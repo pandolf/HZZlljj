@@ -404,10 +404,11 @@ void Ntp1Analyzer_HZZlljj::Loop()
    if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") ) {
      puType = "Summer11_S4";
    }
-   PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
-   TFile* filePU = TFile::Open("Pileup_2011_to_172802_LP_LumiScale.root");
-   TH1F* h1_nPU_data = (TH1F*)filePU->Get("pileup");
-   fPUWeight->SetDataHistogram(h1_nPU_data);
+   //PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
+   PUWeight* fPUWeight = new PUWeight(1089.2, "2011A", puType);
+   //TFile* filePU = TFile::Open("Pileup_2011_to_172802_LP_LumiScale.root");
+   //TH1F* h1_nPU_data = (TH1F*)filePU->Get("pileup");
+   //fPUWeight->SetDataHistogram(h1_nPU_data);
 
    float nCounterPU=0.;
 
@@ -631,6 +632,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      //      FROM NOW ON RECO
      // -----------------------------
 
+     float mZ = 91.1876;
 
      epfMet_ = energyPFMet[0];
      sumEtpfMet_ = sumEtPFMet[0];
@@ -643,11 +645,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // MUONS
      // ------------------
 
-     std::vector<AnalysisMuon> muons;
+     std::vector<AnalysisMuon> muonsPlus;
+     std::vector<AnalysisMuon> muonsMinus;
      int chargeFirstMuon;
 
 
-     for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
+     //for( unsigned int iMuon=0; iMuon<nMuon && (muons.size()<2); ++iMuon ) {
+     for( unsigned int iMuon=0; iMuon<nMuon; ++iMuon ) {
 
        AnalysisMuon thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
        thisMuon.charge = chargeMuon[iMuon];
@@ -698,17 +702,45 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( !thisMuon.passedVBTF() ) continue;
 
 
-       // for now simple selection, will have to optimize this (T&P?)
-       if( muons.size()==0 ) {
-         muons.push_back( thisMuon );
-         chargeFirstMuon = chargeMuon[iMuon];
-       } else {
-         if( chargeMuon[iMuon]==chargeFirstMuon ) continue;
-         //if( fabs(muons[0].Eta())>2.1 && fabs(thisMuon.Eta())>2.1 ) continue;
-         muons.push_back(thisMuon);
-       }
+       if( thisMuon.charge > 0 ) muonsPlus.push_back(thisMuon);
+       else muonsMinus.push_back(thisMuon);
+
+//     // for now simple selection, will have to optimize this (T&P?)
+//     if( muons.size()==0 ) {
+//       muons.push_back( thisMuon );
+//       chargeFirstMuon = chargeMuon[iMuon];
+//     } else {
+//       if( chargeMuon[iMuon]==chargeFirstMuon ) continue;
+//       //if( fabs(muons[0].Eta())>2.1 && fabs(thisMuon.Eta())>2.1 ) continue;
+//       muons.push_back(thisMuon);
+//     }
 
      } //for muons
+
+
+     std::vector<AnalysisMuon> muons;
+     float bestMZ_muons=999999999.;
+
+     // pick best-mZ, oppositely charged muon pair:
+     for( unsigned iMuonPlus=0; iMuonPlus<muonsPlus.size(); ++iMuonPlus ) {
+       for( unsigned iMuonMinus=0; iMuonMinus<muonsMinus.size(); ++iMuonMinus ) {
+         TLorentzVector m1( muonsPlus[iMuonPlus] );
+         TLorentzVector m2( muonsMinus[iMuonMinus] );
+         TLorentzVector dimuon = m1+m2;
+         if( muons.size()==0 ) {
+           muons.push_back(muonsPlus[iMuonPlus]);
+           muons.push_back(muonsMinus[iMuonMinus]);
+           bestMZ_muons = dimuon.M();
+         } else if( fabs(dimuon.M()-mZ) < fabs(bestMZ_muons-mZ) ) { //already found a pair
+           muons.clear();
+           muons.push_back(muonsPlus[iMuonPlus]);
+           muons.push_back(muonsMinus[iMuonMinus]);
+           bestMZ_muons = dimuon.M();
+         }
+       }  //for muons minus
+     }  //for muons plus
+
+
 
 
 
@@ -716,11 +748,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // ELECTRONS
      // ------------------
 
-     std::vector<AnalysisElectron> electrons;
+     std::vector<AnalysisElectron> electronsPlus;
+     std::vector<AnalysisElectron> electronsMinus;
      int chargeFirstEle = 0;
      bool firstPassedVBTF80 = false;
 
-     for( unsigned int iEle=0; (iEle<nEle) && (electrons.size()<2); ++iEle ) {
+     //for( unsigned int iEle=0; (iEle<nEle) && (electrons.size()<2); ++iEle ) {
+     for( unsigned int iEle=0; (iEle<nEle); ++iEle ) {
 
        AnalysisElectron thisEle( pxEle[iEle], pyEle[iEle], pzEle[iEle], energyEle[iEle] );
        thisEle.charge = chargeEle[iEle];
@@ -774,19 +808,46 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        if( matchedtomuon ) continue;
 
 
-       // OLD: one electron required to pass VBTF80, the other VBTF95
-       // NOW: both required to pass VBTF95 only (with tighter cuts above)
-       if( electrons.size()==0 ) {
-         electrons.push_back( thisEle );
-         chargeFirstEle = chargeEle[iEle];
-         if( passed_VBTF80 ) firstPassedVBTF80 = true;
-       //} else if( chargeEle[iEle] != chargeFirstEle && ( firstPassedVBTF80||passed_VBTF80 ) ) {
-       } else if( chargeEle[iEle] != chargeFirstEle ) {
-         electrons.push_back( thisEle );
-       }
+       if( thisEle.charge > 0 ) electronsPlus.push_back(thisEle);
+       else electronsMinus.push_back(thisEle);
+
+//     // OLD: one electron required to pass VBTF80, the other VBTF95
+//     // NOW: both required to pass VBTF95 only (with tighter cuts above)
+//     if( electrons.size()==0 ) {
+//       electrons.push_back( thisEle );
+//       chargeFirstEle = chargeEle[iEle];
+//       if( passed_VBTF80 ) firstPassedVBTF80 = true;
+//     //} else if( chargeEle[iEle] != chargeFirstEle && ( firstPassedVBTF80||passed_VBTF80 ) ) {
+//     } else if( chargeEle[iEle] != chargeFirstEle ) {
+//       electrons.push_back( thisEle );
+//     }
 
 
      } //for electrons
+
+
+
+     std::vector<AnalysisElectron> electrons;
+     float bestMZ_electrons=999999999.;
+
+     // pick best-mZ, oppositely charged muon pair:
+     for( unsigned iElePlus=0; iElePlus<electronsPlus.size(); ++iElePlus ) {
+       for( unsigned iEleMinus=0; iEleMinus<electronsMinus.size(); ++iEleMinus ) {
+         TLorentzVector e1( electronsPlus[iElePlus] );
+         TLorentzVector e2( electronsMinus[iEleMinus] );
+         TLorentzVector dielectron = e1+e2;
+         if( electrons.size()==0 ) {
+           electrons.push_back(electronsPlus [iElePlus]);
+           electrons.push_back(electronsMinus[iEleMinus]);
+           bestMZ_electrons = dielectron.M();
+         } else if( fabs(dielectron.M()-mZ) < fabs(bestMZ_electrons-mZ) ) { //already found a pair
+           electrons.clear();
+           electrons.push_back(electronsPlus [iElePlus]);
+           electrons.push_back(electronsMinus[iEleMinus]);
+           bestMZ_electrons = dielectron.M();
+         }
+       }  //for electrons minus
+     }  //for electrons plus
 
 
      if( electrons.size() < 2 && muons.size() < 2 ) continue;
