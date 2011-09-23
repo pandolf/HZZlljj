@@ -1606,8 +1606,8 @@ ofstream ofs("run_event.txt");
       std::cout << std::endl << std::endl << "----------------------------------" << std::endl;
       std::cout << "** LOG FOR EVENT: " << DEBUG_EVENTNUMBER << std::endl << std::endl;
       std::cout << "leptType: " << leptType << std::endl; 
-      std::cout << "lept1.Pt(): " << lept1.Pt() << std::endl;
-      std::cout << "lept2.Pt(): " << lept2.Pt() << std::endl;
+      std::cout << "lept1.Pt(): " << lept1.Pt() << " lept1.Eta(): " << lept1.Eta() << std::endl;
+      std::cout << "lept2.Pt(): " << lept2.Pt() << " lept2.Eta(): " << lept2.Eta() << std::endl;
       std::cout << "diLepton.M(): " << diLepton.M() << std::endl;
     }
 
@@ -1697,8 +1697,8 @@ ofstream ofs("run_event.txt");
 
       if( event==DEBUG_EVENTNUMBER ) {
         std::cout << std::endl << "jet pair N.: " << iJetPair << std::endl; 
-        std::cout << "jet1.Pt(): " << jet1.Pt() << std::endl;
-        std::cout << "jet2.Pt(): " << jet2.Pt() << std::endl;
+        std::cout << "jet1.Pt(): " << jet1.Pt() << " jet1.Eta(): " << jet1.Eta() << std::endl;
+        std::cout << "jet2.Pt(): " << jet2.Pt() << " jet2.Eta(): " << jet2.Eta() << std::endl;
         std::cout << "diJet.M(): " << diJet.M() << std::endl;
       }
 
@@ -1799,6 +1799,8 @@ ofstream ofs("run_event.txt");
       jet1.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
       jet2.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
       float QGLikelihoodProd = jet1.QGLikelihood*jet2.QGLikelihood;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "jet1: nCharged: " << jet1.nCharged << " nNeutral: " << jet1.nNeutral << " ptD: " << jet1.ptD << " QGlikelihood: " << jet1.QGLikelihood << std::endl;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "jet2: nCharged: " << jet2.nCharged << " nNeutral: " << jet2.nNeutral << " ptD: " << jet2.ptD << " QGlikelihood: " << jet2.QGLikelihood << std::endl;
       if( event==DEBUG_EVENTNUMBER ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
       if( nBTags==0 ) {
         //if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
@@ -2013,8 +2015,8 @@ ofstream ofs("run_event.txt");
     mZZ = ZZ_kinfit.M();
     mZZ_nokinfit = ZZ_nokinfit.M();
 
-    isSignalRegion = (Zjj_nokinfit.M()>75. && Zjj_nokinfit.M()<105.);
-    isSidebands = ( (Zjj_nokinfit.M()>60. && Zjj_nokinfit.M()<75.) || (Zjj_nokinfit.M()<130. && Zjj_nokinfit.M()>105.) );
+    isSignalRegion = (Zjj_nokinfit.M()>=75. && Zjj_nokinfit.M()<=105.);
+    isSidebands = !isSignalRegion &&  Zjj_nokinfit.M()>60. && Zjj_nokinfit.M()<130.;
 
     // and fill tree:
     tree_passedEvents->Fill();
