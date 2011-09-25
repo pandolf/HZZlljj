@@ -445,7 +445,7 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   
   TH1D* h1_kinfit_chiSquare = new TH1D("kinfit_chiSquare", "", 60, 0., 10.);
   h1_kinfit_chiSquare->Sumw2();
-  TH1D* h1_kinfit_chiSquareProb = new TH1D("kinfit_chiSquareProb", "", 20, -0.1, 1.1);
+  TH1D* h1_kinfit_chiSquareProb = new TH1D("kinfit_chiSquareProb", "", 12, -0.1, 1.1);
   h1_kinfit_chiSquareProb->Sumw2();
   TH1D* h1_kinfit_chiSquareProb_e = new TH1D("kinfit_chiSquareProb_e", "", 20, -0.1, 1.1);
   h1_kinfit_chiSquareProb_e->Sumw2();
@@ -652,6 +652,8 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   TH1D* h1_Studio2 = new TH1D("Studio2", "", 50, -2., 2.);
   TH1D* h1_Studio3 = new TH1D("Studio3", "", 50, -2., 2.);
   TH1D* h1_Studio4 = new TH1D("Studio4", "", 50, -2., 2.);
+  TH1D* h1_Himasses= new TH1D("Himasses", "", 25, 0., 1500.);
+
 
 //Double_t ptBins[16];
 //fitTools::getBins_int( 16, ptBins, 20., 500.);
@@ -933,6 +935,9 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   float nEvent_DrLeptLept=0;
   float nEvent_mtW=0;
   float nEvent_btag=0;
+  float nEvent_peakzone=0;
+  float nEvent_helicity=0;
+  float nEvent_QG=0;
   // In order to calculate efficiency
   int totSol=0, oneSol=0, oneSolMC=0, totPz=0, totPzR=0, totPzMC=0, totPzRMC=0, chooseHely=0, rightHely=0; // In order to count the right solutions of GetPz and the helicity
   //int timesTryJets=0, rightMatch=0;
@@ -941,11 +946,13 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
   Tree_optim_hely->Branch("helicityLD_kinfit", &helicityLD_kinfit, "helicityLD_kinfit/F");
   Tree_optim_hely->Branch("eventWeight", &eventWeight, "eventWeight/F");
 
-  Float_t mJJ, mWW ;
+  Float_t mJJ, mWW, PtJet1_UL, PtJet2_UL;
   Tree_FITUL->Branch("eventWeight", &eventWeight, "eventWeight/F");
   Tree_FITUL->Branch("mJJ", &mJJ, "mJJ/F");
   Tree_FITUL->Branch("mWW", &mWW, "mWW/F");
   Tree_FITUL->Branch("leptType", &leptType, "leptType/I");
+  Tree_FITUL->Branch("PtJet1_UL", &PtJet1_UL, "PtJet1_UL/F");
+  Tree_FITUL->Branch("PtJet2_UL", &PtJet2_UL, "PtJet2_UL/F");
 
    // FOR iEntry
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
@@ -1115,30 +1122,29 @@ void Ntp1Finalizer_HWWlvjj::finalize() {
      h1_btag->Fill(trackCountingHighEffBJetTagJet2[iJetPair]);
 
       TLorentzVector diJet = jet1 + jet2;
-      mJJ = (jet1+jet2).M(); // For the tree to calculate UL
 
       // Push jet after preselection
       jetPairs_JustPresel_selected.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 
-      if( !ripet_Presel ){ nEvent_Presel++; ripet_Presel = true;}
+      if( !ripet_Presel ){ nEvent_Presel+=eventWeight; ripet_Presel = true;}
 
       if( jet1.Pt()>ptJet1_thresh_ ){
-       if( !ripet_LeadJetPt ){ nEvent_LeadJetPt++; ripet_LeadJetPt = true;}
+       if( !ripet_LeadJetPt ){ nEvent_LeadJetPt+=eventWeight; ripet_LeadJetPt = true;}
       
        if( jet2.Pt()> ptJet2_thresh_ ){
-	 if( !ripet_SubleadJetPt ){  nEvent_SubleadJetPt++; ripet_SubleadJetPt = true;}
+	 if( !ripet_SubleadJetPt ){  nEvent_SubleadJetPt+=eventWeight; ripet_SubleadJetPt = true;}
 	
 	 if(  fabs(jet1.Eta())<etaJet1_thresh_ && fabs(jet2.Eta())<etaJet1_thresh_  ){
-	   if( !ripet_EtaJet ){ nEvent_EtaJet++;  ripet_EtaJet = true;}
+	   if( !ripet_EtaJet ){ nEvent_EtaJet+=eventWeight;  ripet_EtaJet = true;}
 	  
 	   if( jet1.DeltaR(jet2) < deltaRjj_thresh_ ){
-	     if( !ripet_DrJetJet ){  nEvent_DrJetJet++; ripet_DrJetJet = true;}
+	     if( !ripet_DrJetJet ){  nEvent_DrJetJet+=eventWeight; ripet_DrJetJet = true;}
 	    
 	     //if(  diJet.M() > mWjj_threshLo_ && diJet.M() < mWjj_threshHi_  ){ 
 	       //if( !ripet_DijetMass ){  nEvent_DijetMass++; ripet_DijetMass = true;} //TO FIT FOR THE UL
-	      
+	
 	       if(  diJet.Pt() > ptWjj_thresh_){
-	         if( !ripet_DijetPt ){ nEvent_DijetPt++; ripet_DijetPt = true;}
+	         if( !ripet_DijetPt ){ nEvent_DijetPt+=eventWeight; ripet_DijetPt = true;}
 		 jetPairs_selected.push_back( std::pair<AnalysisJet,AnalysisJet>(jet1,jet2) );
 	 }}}}} //}
       h1_mWjj_all_presel->Fill( diJet.M(), eventWeight );
@@ -1266,6 +1272,9 @@ if( jetPairs_selected.size()>1 ){
       AnalysisJet jet1 = jetPairs_selected[bestPair].first;
       AnalysisJet jet2 = jetPairs_selected[bestPair].second;
       TLorentzVector bestWDiJet = jet1 + jet2;
+      PtJet1_UL=jet1.Pt();
+      PtJet2_UL=jet2.Pt();
+      mJJ = (jet1+jet2).M(); // For the tree to calculate UL
 
       // In Order to verify How often you choose the right jets if right jets are preselected
 //float minMatch1=10;
@@ -1554,19 +1563,19 @@ if(leptType==1){
 } // if mJJ is right
 
 
-   if( !hibtag /*  !hibtagOthers*/ ){ nEvent_btag++;
+   if( !hibtag /*  !hibtagOthers*/ ){ nEvent_btag+=eventWeight;
       if( diLepton.Pt() > ptWll_thresh_ ){
-	nEvent_DileptPt++;
+	nEvent_DileptPt+=eventWeight;
 	if(  lept1.Pt() > ptLept1_thresh_ ){
-	  nEvent_LeadLeptPt++;
+	  nEvent_LeadLeptPt+=eventWeight;
 	  if(  lept2.Pt() > ptLept2_thresh_ ){
-	    nEvent_SubleadLeptPt++;
+	    nEvent_SubleadLeptPt+=eventWeight;
 	    if( fabs(lept1.Eta()) < etaLept1_thresh_ && fabs(lept2.Eta()) < etaLept2_thresh_){
-	      nEvent_EtaLept++;
+	      nEvent_EtaLept+=eventWeight;
 	      if( diLepton.M() /*Other sqrt(2*lept1.Pt()*lept2.Pt()*(1-cos(delta_phi(lept1.Phi(),lept2.Phi()))))*/ > mtWll_threshLo_ && diLepton.M() < mtWll_threshHi_ ){
-		nEvent_mtW++;
+		nEvent_mtW+=eventWeight;
 		if( lept1.DeltaR(lept2) < deltaRll_thresh_ ){
-		  nEvent_DrLeptLept++;         
+		  nEvent_DrLeptLept+=eventWeight;         
         
           	  // event has passed kinematic selection
 		  
@@ -1617,7 +1626,7 @@ if(leptType==1){
 		  // ------------------------
 		  //   KINEMATIC FIT (JET) : BEGIN
 		  // ------------------------
-                  // if( (((Quark1MC.DeltaR(jet1) <= Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet1)<0.3 && Quark2MC.DeltaR(jet2)<0.3)) || ((Quark1MC.DeltaR(jet1) > Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet2)<0.3 && Quark2MC.DeltaR(jet1)<0.3))) && jet1.DeltaR(jet2)>1. ){//only matched jets
+ //               if( (((Quark1MC.DeltaR(jet1) <= Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet1)<0.3 && Quark2MC.DeltaR(jet2)<0.3)) || ((Quark1MC.DeltaR(jet1) > Quark2MC.DeltaR(jet1)) && (Quark1MC.DeltaR(jet2)<0.3 && Quark2MC.DeltaR(jet1)<0.3))) && jet1.DeltaR(jet2)>1. ){//only matched jets
 		  h1_mWW_nokinfit->Fill( (bestWDiJet+lept1+lept2).M() ,eventWeight);
 		  DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", 80.399 );
 		  std::pair<TLorentzVector,TLorentzVector> jets_kinfit = fitter_jets->fit(jet1, jet2);
@@ -1651,7 +1660,6 @@ if(leptType==1){
        TVector3 NewMET=OldMET-JET1_new-JET2_new+JET1+JET2;
        h1_Studio1->Fill( (NewMET.Pt()-NeuMC.Pt())/NeuMC.Pt() ,eventWeight);
        h1_Studio2->Fill( (OldMET.Pt()-NeuMC.Pt())/NeuMC.Pt() ,eventWeight);
-
 
 
 		  // ------------------------
@@ -1896,10 +1904,10 @@ if( bestWDiJet.M()>75. && bestWDiJet.M()<105. ) {
  HelicityLikelihoodDiscriminant::HelicityAngles hangles;
  if( chargeLept<0. ) hangles = computeHelicityAngles(lept1, lept2, jet1, jet2);
  else                          hangles = computeHelicityAngles(lept2, lept1, jet1, jet2);
- 
+
  HelicityLikelihoodDiscriminant::HelicityAngles hangles_kinfit;
-   if( chargeLept<0. ) hangles_kinfit = computeHelicityAngles(lept1, LastNeu/*Neu_MetFitted*/, jet1_kinfit, jet2_kinfit);
-   else                hangles_kinfit = computeHelicityAngles(/*Neu_MetFitted*/LastNeu, lept1, jet1_kinfit, jet2_kinfit);
+ if( chargeLept<0. ) hangles_kinfit = computeHelicityAngles(lept1, LastNeu/*Neu_MetFitted*/, jet1_kinfit, jet2_kinfit);
+ else                hangles_kinfit = computeHelicityAngles(/*Neu_MetFitted*/LastNeu, lept1, jet1_kinfit, jet2_kinfit);
 
       HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
                  
@@ -2020,8 +2028,13 @@ if( peakZone ){
       // last step of selection: QG and helicity LD's
 
       if( QGLikelihoodProd < QGLikelihoodProd_thresh_ ) continue;
+        nEvent_QG+=eventWeight;
+
       //if( helicityLD_kinfit < helicityLD_thresh_ ) continue;
-      if( helicityLD_kinfit < 0.0010666*WW_kinfit.M()+0.1966667 ) continue; // To have only one analysis
+      if( selectionType_=="helicity" ){
+          if( helicityLD_kinfit < 0.0010666*WW_kinfit.M()+0.1966667 ) continue; // To have only one analysis
+          nEvent_helicity+=eventWeight; 
+      }
 
       // TO FIT FOR THE UL
       mWW=WW_kinfit.M(); // In orderd to extrapolate UL
@@ -2044,9 +2057,10 @@ if( peakZone ){
       if(leptType==0) h1_mWW_kinfitCUT_mu->Fill( WW_kinfit.M(), eventWeight );
    }
 
+      h1_Himasses->Fill((jet1+jet2+lept1+lept2).M(),eventWeight);
+
       if( !peakZone ) continue;
-
-
+        nEvent_peakzone+=eventWeight;
       // *****************************************
       // *****  PASSED ANALYSIS SELECTION ********
       // *****************************************
@@ -2091,7 +2105,6 @@ if( peakZone ){
           nEvents550_fb_kinfit += eventWeight;
           nEvents550_kinfit++;
         }
- 
 
         // fill histograms:
 
@@ -2223,11 +2236,11 @@ if( peakZone ){
   h1_Ev_nEventsPassed_fb_nokinfit ->SetBinContent(1,nEventsPassed_fb_nokinfit);
   h1_Ev_nEventsPassed_nokinfit ->SetBinContent(1,nEventsPassed_nokinfit);
 
-  std::cout<<"Ev(Presel)="<<nEvent_Presel<<"Ev(Jet1)="<<nEvent_LeadJetPt<<"Ev(Jet2)="<<nEvent_SubleadJetPt <<" Ev(EtaJet)="<<nEvent_EtaJet<<" Ev(DrJet)=" <<nEvent_DrJetJet<<" Ev(Mwjj)="
-	   <<nEvent_DijetMass<<" Ev(PtWjj)="<<nEvent_DijetPt<<std::endl;
-  std::cout<<"Ev(btag)="<<nEvent_btag<<std::endl;
-  std::cout<<"Ev(DileptonPt)="<<nEvent_DileptPt <<" Ev(Lept1)="<<nEvent_LeadLeptPt<<" Ev(Lept2)=" <<nEvent_SubleadLeptPt<<" Ev(EtaLept)="
-	   <<nEvent_EtaLept<<" Ev(mtW)="<<nEvent_mtW<<" Ev(DrLept)="<<nEvent_DrLeptLept<<std::endl;
+  std::cout<<"Ev(Presel)="<<1000.*nEvent_Presel<<"Ev(Jet1)="<<1000.*nEvent_LeadJetPt<<"Ev(Jet2)="<<1000.*nEvent_SubleadJetPt <<" Ev(EtaJet)="<<1000.*nEvent_EtaJet<<" Ev(DrJet)=" <<1000.*nEvent_DrJetJet<<" Ev(Mwjj)="
+	   <<1000.*nEvent_DijetMass<<" Ev(PtWjj)="<<1000.*nEvent_DijetPt<<std::endl;
+  std::cout<<"Ev(btag)="<<1000.*nEvent_btag<<std::endl;
+  std::cout<<"Ev(DileptonPt)="<<1000.*nEvent_DileptPt <<" Ev(Lept1)="<<1000.*nEvent_LeadLeptPt<<" Ev(Lept2)=" <<1000.*nEvent_SubleadLeptPt<<" Ev(EtaLept)="
+	   <<1000.*nEvent_EtaLept<<" Ev(mtW)="<<1000.*nEvent_mtW<<" Ev(DrLept)="<<1000.*nEvent_DrLeptLept<<" QG="<<1000.*nEvent_QG<<" Helicity"<<1000.*nEvent_helicity<<" Peak Zone"<<1000.*nEvent_peakzone<<std::endl;
 
   std::cout << std::endl << std::endl;
   std::cout << "----> PASSED preSELECTION: " << 1000.*nEvents_presel<<"  PASSED 2nd step: "<<1000*nEvents_met<<"  PASSED 3rd step: "<<1000*nEvents_btag_W_pt3<<" ev/fb-1"<<std::endl;
@@ -2241,8 +2254,12 @@ if( peakZone ){
   std::string WW350("GluGluToHToWWToLNuQQ_M-350_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1");
   std::string WW450("GluGluToHToWWToLNuQQ_M-450_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1");
   std::string WW550("GluGluToHToWWToLNuQQ_M-550_7TeV-powheg-pythia6_Spring11-PU_S1_START311_V1G1-v1");
+  std::string WW300_cast("GluGluToHToWWToLNuQQ_M-300_7TeV-powheg-pythia6");
+  std::string WW400_cast("GluGluToHToWWToLNuQQ_M-400_7TeV-powheg-pythia6");
+  std::string WW500_cast("GluGluToHToWWToLNuQQ_M-500_7TeV-powheg-pythia6");
+
   if( (dataset_.compare(WW200)==0) || (dataset_.compare(WW250)==0) || (dataset_.compare(WW300)==0) || (dataset_.compare(WW350)==0) || (dataset_.compare(WW400)==0) || (dataset_.compare(WW450)==0) ||
-      (dataset_.compare(WW500)==0) || (dataset_.compare(WW550)==0) ) isBKG=false;
+      (dataset_.compare(WW500)==0) || (dataset_.compare(WW550)==0) || (dataset_.compare(WW300_cast)==0) || (dataset_.compare(WW400_cast)==0) || (dataset_.compare(WW500_cast)==0) ) isBKG=false;
 
   if( isBKG ){
   std::cout << "----> PASSED SELECTION (250): " << 1000.*nEvents250_fb_kinfit << " ev/fb-1(" << nEvents250_kinfit << " events)"<< std::endl;
@@ -2273,6 +2290,8 @@ if( peakZone ){
   Tree_FITUL->Write();
 
   h2_correlation->Write();
+
+  h1_Himasses->Write();
 
   h1_resoPt->Write();
   h1_resoPzGetRight->Write();
@@ -2829,26 +2848,26 @@ void Ntp1Finalizer_HWWlvjj::setSelectionType( const std::string& selectionType )
     mWW_threshLo_ = 270.;
     mWW_threshHi_ = 330.;
 
-  } else if( selectionType=="opt350LD" ) {
+  } else if( selectionType=="opt350" ) {
 
-    ptLept1_thresh_ = 20.;
+    ptLept1_thresh_ = 40.;
     ptLept2_thresh_ = 20.;
     etaLept1_thresh_ = 3.;
     etaLept2_thresh_ = 3.;
-    ptJet1_thresh_ = 30.;
-    ptJet2_thresh_ = 30.;
+    ptJet1_thresh_ = 90.;
+    ptJet2_thresh_ = 55.;
     etaJet1_thresh_ = 2.4;
     etaJet2_thresh_ = 2.4;
-    mtWll_threshLo_ = 70.;
-    mtWll_threshHi_ = 110.;
-    mWjj_threshLo_ = 75.;
-    mWjj_threshHi_ = 105.;
+    mtWll_threshLo_ = 40.;
+    mtWll_threshHi_ = 999.;
+    mWjj_threshLo_ = 65.;
+    mWjj_threshHi_ = 95.;
     deltaRll_thresh_ = 9999.;
-    deltaRjj_thresh_ = 9999.;
-    ptWll_thresh_ = 0.;
+    deltaRjj_thresh_ = 1.2;
+    ptWll_thresh_ = 90.;
     ptWjj_thresh_ = 0.;
-    helicityLD_thresh_ = 0.5;
-    QGLikelihoodProd_thresh_ = 0.01;
+    helicityLD_thresh_ = 0.0;
+    QGLikelihoodProd_thresh_ = 0.0;
     mWW_threshLo_ = 330.;
     mWW_threshHi_ = 380.;
 
