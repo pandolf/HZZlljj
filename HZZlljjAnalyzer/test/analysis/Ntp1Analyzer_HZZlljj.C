@@ -16,6 +16,9 @@
 //#include "fitTools.h"
 
 
+int DEBUG_EVENTNUMBER = 17510;
+
+
 double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
 float getWeightPU(Int_t nPU);
 
@@ -641,6 +644,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      phipfMet_ = phiPFMet[0];
 
 
+     if( event_==DEBUG_EVENTNUMBER ) {
+       std::cout << std::endl << std::endl;
+       std::cout << "----- LOG for event: " << event_ << std::endl;
+       std::cout << std::endl << "*** Muons:" << std::endl;
+     }
+
      // ------------------
      // MUONS
      // ------------------
@@ -656,6 +665,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        AnalysisMuon thisMuon( pxMuon[iMuon], pyMuon[iMuon], pzMuon[iMuon], energyMuon[iMuon] );
        thisMuon.charge = chargeMuon[iMuon];
 
+       if( event_==DEBUG_EVENTNUMBER ) {
+         std::cout << "thisMuon.Pt: " << thisMuon.Pt() << std::endl;
+         std::cout << "thisMuon.Eta: " << thisMuon.Eta() << std::endl;
+         std::cout << "thisMuon.charge: " << thisMuon.charge << std::endl;
+       }
+
        // --------------
        // kinematics:
        // --------------
@@ -668,6 +683,14 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisMuon.trackerHits = trackValidHitsTrack[trackIndexMuon[iMuon]];
 
        thisMuon.nMatchedStations = numberOfMatchesMuon[iMuon];
+
+       if( event_==DEBUG_EVENTNUMBER ) {
+         std::cout << "thisMuon.isGlobalMuonPromptTight: " << thisMuon.isGlobalMuonPromptTight << std::endl;
+         std::cout << "thisMuon.isAllTrackerMuon: " << thisMuon.isAllTrackerMuon << std::endl;
+         std::cout << "thisMuon.pixelHits: " << thisMuon.pixelHits << std::endl;
+         std::cout << "thisMuon.trackerHits: " << thisMuon.trackerHits << std::endl;
+         std::cout << "thisMuon.nMatchedStations: " << thisMuon.nMatchedStations << std::endl;
+       }
 
 
        // to compute dxy, look for primary vertex:
@@ -699,8 +722,21 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisMuon.emEt03  = emEt03Muon[iMuon];
        thisMuon.hadEt03 = hadEt03Muon[iMuon];
 
+       if( event_==DEBUG_EVENTNUMBER ) {
+         std::cout << "thisMuon.dxy: " << thisMuon.dxy << std::endl;
+         std::cout << "thisMuon.dz: " << thisMuon.dz << std::endl;
+         std::cout << "thisMuon.sumPt03: " << thisMuon.sumPt03 << std::endl;
+         std::cout << "thisMuon.emEt03: " << thisMuon.emEt03 << std::endl;
+         std::cout << "thisMuon.hadEt03: " << thisMuon.hadEt03 << std::endl;
+       }
+
        if( !thisMuon.passedVBTF() ) continue;
 
+       if( event_==DEBUG_EVENTNUMBER ) {
+         std::cout << "PASSED VBTF. ";
+         if( thisMuon.charge > 0 ) std::cout << "Adding to collection of positive muons." << std::endl;
+         else std::cout << "Adding to collection of negative muons." << std::endl;
+       }
 
        if( thisMuon.charge > 0 ) muonsPlus.push_back(thisMuon);
        else muonsMinus.push_back(thisMuon);
@@ -753,6 +789,10 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      int chargeFirstEle = 0;
      bool firstPassedVBTF80 = false;
 
+     if( event_==DEBUG_EVENTNUMBER )
+       std::cout << std::endl << "*** Electrons:" << std::endl;
+
+
      //for( unsigned int iEle=0; (iEle<nEle) && (electrons.size()<2); ++iEle ) {
      for( unsigned int iEle=0; (iEle<nEle); ++iEle ) {
 
@@ -761,12 +801,20 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        float scEta = (superClusterIndexEle[iEle]>=0) ? etaSC[superClusterIndexEle[iEle]] : etaPFSC[PFsuperClusterIndexEle[iEle]];
 
+       if( event_==DEBUG_EVENTNUMBER ) {
+         std::cout << "thisEle.Pt: " << thisEle.Pt() << std::endl;
+         std::cout << "thisEle.Eta: " << thisEle.Eta() << std::endl;
+         std::cout << "thisEle.scEta: " << scEta << std::endl;
+         std::cout << "thisEle.charge: " << thisEle.charge << std::endl;
+       }
+
        // --------------
        // kinematics:
        // --------------
        if( thisEle.Pt() < 20. ) continue;
        if( (fabs(scEta) > 2.5) || ( fabs(scEta)>1.4442 && fabs(scEta)<1.566) ) continue;
        //if( (fabs(thisEle.Eta()) > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) continue;
+
 
        // isolation
        thisEle.dr03TkSumPt = dr03TkSumPtEle[iEle];
@@ -784,12 +832,28 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        thisEle.convDist = convDistEle[iEle];
        thisEle.convDcot = convDcotEle[iEle];
 
+       if( event_==DEBUG_EVENTNUMBER ) {
+         std::cout << "thisEle.dr03TkSumPt: " << thisEle.dr03TkSumPt << std::endl;
+         std::cout << "thisEle.dr03EcalRecHitSumEt: " << thisEle.dr03EcalRecHitSumEt << std::endl;
+         std::cout << "thisEle.dr03HcalTowerSumEt: " << thisEle.dr03HcalTowerSumEt << std::endl;
+         std::cout << "thisEle.sigmaIetaIeta: " << thisEle.sigmaIetaIeta << std::endl;
+         std::cout << "thisEle.deltaPhiAtVtx: " << thisEle.deltaPhiAtVtx << std::endl;
+         std::cout << "thisEle.deltaEtaAtVtx: " << thisEle.deltaEtaAtVtx << std::endl;
+         std::cout << "thisEle.hOverE: " << thisEle.hOverE << std::endl;
+         std::cout << "thisEle.expInnerLayersGsfTrack: " << thisEle.expInnerLayersGsfTrack << std::endl;
+         std::cout << "thisEle.convDist: " << thisEle.convDist << std::endl;
+         std::cout << "thisEle.convDcot: " << thisEle.convDcot << std::endl;
+       }
+
 
        bool passed_VBTF95 = thisEle.passedVBTF95();
        bool passed_VBTF80 = thisEle.passedVBTF80();
 
+
        if( !passed_VBTF95 ) continue;
        //if( !passed_VBTF80 ) continue;
+
+       if( event_==DEBUG_EVENTNUMBER ) std::cout << "Passed VBTF95." << std::endl;
 
        // additional ID to be as tight as trigger (HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL):
        if( fabs(scEta)<1.4442 ) { //barrel
@@ -799,6 +863,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          if( thisEle.hOverE > 0.1 ) continue;
        }
 
+       if( event_==DEBUG_EVENTNUMBER ) std::cout << "Passed additional eleID cuts (HLT)." << std::endl;
+
 
        // check that not matched to muon (clean electrons faked by muon MIP):
        bool matchedtomuon=false;
@@ -807,6 +873,12 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
        if( matchedtomuon ) continue;
 
+       if( event_==DEBUG_EVENTNUMBER ) std::cout << "Not matched to any muon." << std::endl;
+
+       if( event_==DEBUG_EVENTNUMBER ) {
+         if( thisEle.charge > 0 ) std::cout << "Adding to collection of positive electrons." << std::endl;
+         else std::cout << "Adding to collection of negative electrons." << std::endl;
+       }
 
        if( thisEle.charge > 0 ) electronsPlus.push_back(thisEle);
        else electronsMinus.push_back(thisEle);
@@ -850,7 +922,11 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      }  //for electrons plus
 
 
+     if( event_==DEBUG_EVENTNUMBER ) 
+       std::cout << "Found: " << muons.size() << " muons and " << electrons.size() << " electrons." << std::endl;
+
      if( electrons.size() < 2 && muons.size() < 2 ) continue;
+
 
 
 
@@ -1111,6 +1187,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
          } else {
 
+
+           // save jet1:
+
            eJet1_[nPairs_] = leadJets[iJet].Energy();
            ptJet1_[nPairs_] = leadJets[iJet].Pt();
            etaJet1_[nPairs_] = leadJets[iJet].Eta();
@@ -1151,6 +1230,9 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            etaPartJet1_[nPairs_] = leadJets[iJet].etaPart;
            phiPartJet1_[nPairs_] = leadJets[iJet].phiPart;
            pdgIdPartJet1_[nPairs_] = leadJets[iJet].pdgIdPart;
+
+
+           // save jet2:
             
            eJet2_[nPairs_] = leadJets[jJet].Energy();
            ptJet2_[nPairs_] = leadJets[jJet].Pt();
@@ -1191,6 +1273,52 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
            etaPartJet2_[nPairs_] = leadJets[jJet].etaPart;
            phiPartJet2_[nPairs_] = leadJets[jJet].phiPart;
            pdgIdPartJet2_[nPairs_] = leadJets[jJet].pdgIdPart;
+
+
+
+/*
+           // save recoil jet: (leadJets are ordered in pt)
+            
+           eJet2_[nPairs_] = leadJets[jJet].Energy();
+           ptJet2_[nPairs_] = leadJets[jJet].Pt();
+           etaJet2_[nPairs_] = leadJets[jJet].Eta();
+           phiJet2_[nPairs_] = leadJets[jJet].Phi();
+           eChargedHadronsJet2_[nPairs_] = leadJets[jJet].eChargedHadrons;
+           ePhotonsJet2_[nPairs_]        = leadJets[jJet].ePhotons;
+           eNeutralEmJet2_[nPairs_]      = leadJets[jJet].eNeutralEm;
+           eNeutralHadronsJet2_[nPairs_] = leadJets[jJet].eNeutralHadrons;
+           eElectronsJet2_[nPairs_]      = leadJets[jJet].eElectrons;
+           eMuonsJet2_[nPairs_]          = leadJets[jJet].eMuons;
+           nChargedHadronsJet2_[nPairs_] = leadJets[jJet].nChargedHadrons;
+           nPhotonsJet2_[nPairs_]        = leadJets[jJet].nPhotons;
+           nNeutralHadronsJet2_[nPairs_] = leadJets[jJet].nNeutralHadrons;
+           nElectronsJet2_[nPairs_]      = leadJets[jJet].nElectrons;
+           nMuonsJet2_[nPairs_]          = leadJets[jJet].nMuons;
+
+           ptDJet2_[nPairs_] = leadJets[jJet].ptD;
+           rmsCandJet2_[nPairs_] = leadJets[jJet].rmsCand;
+           nChargedJet2_[nPairs_] = leadJets[jJet].nCharged;
+           nNeutralJet2_[nPairs_] = leadJets[jJet].nNeutral;
+           QGlikelihoodJet2_[nPairs_] = leadJets[jJet].QGlikelihood;
+
+           trackCountingHighEffBJetTagJet2_[nPairs_] = leadJets[jJet].trackCountingHighEffBJetTag;
+           trackCountingHighPurBJetTagJet2_[nPairs_] = leadJets[jJet].trackCountingHighPurBJetTag;
+           simpleSecondaryVertexHighEffBJetTagJet2_[nPairs_] = leadJets[jJet].simpleSecondaryVertexHighEffBJetTag;
+           simpleSecondaryVertexHighPurBJetTagJet2_[nPairs_] = leadJets[jJet].simpleSecondaryVertexHighPurBJetTag;
+           jetBProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetBProbabilityBJetTag;
+           jetProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetProbabilityBJetTag;
+
+           eGenJet2_[nPairs_] = leadJets[jJet].eGen;
+           ptGenJet2_[nPairs_] = leadJets[jJet].ptGen;
+           etaGenJet2_[nPairs_] = leadJets[jJet].etaGen;
+           phiGenJet2_[nPairs_] = leadJets[jJet].phiGen;
+            
+           ePartJet2_[nPairs_] = leadJets[jJet].ePart;
+           ptPartJet2_[nPairs_] = leadJets[jJet].ptPart;
+           etaPartJet2_[nPairs_] = leadJets[jJet].etaPart;
+           phiPartJet2_[nPairs_] = leadJets[jJet].phiPart;
+           pdgIdPartJet2_[nPairs_] = leadJets[jJet].pdgIdPart;
+*/
 
            nPairs_++;
           
