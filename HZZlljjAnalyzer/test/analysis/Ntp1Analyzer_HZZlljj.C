@@ -16,7 +16,7 @@
 //#include "fitTools.h"
 
 
-int DEBUG_EVENTNUMBER = 17510;
+int DEBUG_EVENTNUMBER = 17473;
 
 
 double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
@@ -293,6 +293,54 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("etaPartJet2", etaPartJet2_, "etaPartJet2_[nPairs_]/F");
   reducedTree_->Branch("phiPartJet2", phiPartJet2_, "phiPartJet2_[nPairs_]/F");
   reducedTree_->Branch("pdgIdPartJet2", pdgIdPartJet2_, "pdgIdPartJet2_[nPairs_]/I");
+
+
+  reducedTree_->Branch("iJetRecoil",  iJetRecoil_,  "iJetRecoil_[nPairs_]/I");
+  reducedTree_->Branch("eJetRecoil",  eJetRecoil_,  "eJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch( "ptJetRecoil",  ptJetRecoil_,  "ptJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("etaJetRecoil", etaJetRecoil_, "etaJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("phiJetRecoil", phiJetRecoil_, "phiJetRecoil_[nPairs_]/F");
+
+  reducedTree_->Branch("ptDJetRecoil", ptDJetRecoil_, "ptDJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("rmsCandJetRecoil", rmsCandJetRecoil_, "rmsCandJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("nChargedJetRecoil", nChargedJetRecoil_, "nChargedJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("nNeutralJetRecoil", nNeutralJetRecoil_, "nNeutralJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("QGlikelihoodJetRecoil", QGlikelihoodJetRecoil_, "QGlikelihoodJetRecoil_[nPairs_]/F");
+
+  reducedTree_->Branch("eChargedHadronsJetRecoil", eChargedHadronsJetRecoil_, "eChargedHadronsJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("ePhotonsJetRecoil", ePhotonsJetRecoil_, "ePhotonsJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("eNeutralEmJetRecoil", eNeutralEmJetRecoil_, "eNeutralEmJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("eNeutralHadronsJetRecoil", eNeutralHadronsJetRecoil_, "eNeutralHadronsJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("eMuonsJetRecoil", eMuonsJetRecoil_, "eMuonsJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("eElectronsJetRecoil", eElectronsJetRecoil_, "eElectronsJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("eHFHadronsJetRecoil", eHFHadronsJetRecoil_, "eHFHadronsJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("eHFEMJetRecoil", eHFEMJetRecoil_, "eHFEMJetRecoil_[nPairs_]/F");
+
+  reducedTree_->Branch("nChargedHadronsJetRecoil", nChargedHadronsJetRecoil_, "nChargedHadronsJetRecoil_[nPairs_]/I");
+  reducedTree_->Branch("nPhotonsJetRecoil", nPhotonsJetRecoil_, "nPhotonsJetRecoil_[nPairs_]/I");
+  reducedTree_->Branch("nNeutralHadronsJetRecoil", nNeutralHadronsJetRecoil_, "nNeutralHadronsJetRecoil_[nPairs_]/I");
+  reducedTree_->Branch("nMuonsJetRecoil", nMuonsJetRecoil_, "nMuonsJetRecoil_[nPairs_]/I");
+  reducedTree_->Branch("nElectronsJetRecoil", nElectronsJetRecoil_, "nElectronsJetRecoil_[nPairs_]/I");
+  reducedTree_->Branch("nHFHadronsJetRecoil", nHFHadronsJetRecoil_, "nHFHadronsJetRecoil_[nPairs_]/I");
+  reducedTree_->Branch("nHFEMJetRecoil", nHFEMJetRecoil_, "nHFEMJetRecoil_[nPairs_]/I");
+
+  reducedTree_->Branch("trackCountingHighEffBJetTagJetRecoil", trackCountingHighEffBJetTagJetRecoil_, "trackCountingHighEffBJetTagJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("trackCountingHighPurBJetTagJetRecoil", trackCountingHighPurBJetTagJetRecoil_, "trackCountingHighPurBJetTagJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("simpleSecondaryVertexHighEffBJetTagJetRecoil", simpleSecondaryVertexHighEffBJetTagJetRecoil_, "simpleSecondaryVertexHighEffBJetTagJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("simpleSecondaryVertexHighPurBJetTagJetRecoil", simpleSecondaryVertexHighPurBJetTagJetRecoil_, "simpleSecondaryVertexHighPurBJetTagJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("jetBProbabilityBJetTagJetRecoil", jetBProbabilityBJetTagJetRecoil_, "jetBProbabilityBJetTagJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("jetProbabilityBJetTagJetRecoil", jetProbabilityBJetTagJetRecoil_, "jetProbabilityBJetTagJetRecoil_[nPairs_]/F");
+
+  reducedTree_->Branch("eGenJetRecoil",  eGenJetRecoil_,  "eGenJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch( "ptGenJetRecoil",  ptGenJetRecoil_,  "ptGenJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("etaGenJetRecoil", etaGenJetRecoil_, "etaGenJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("phiGenJetRecoil", phiGenJetRecoil_, "phiGenJetRecoil_[nPairs_]/F");
+
+  reducedTree_->Branch("ePartJetRecoil",  ePartJetRecoil_,  "ePartJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch( "ptPartJetRecoil",  ptPartJetRecoil_,  "ptPartJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("etaPartJetRecoil", etaPartJetRecoil_, "etaPartJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("phiPartJetRecoil", phiPartJetRecoil_, "phiPartJetRecoil_[nPairs_]/F");
+  reducedTree_->Branch("pdgIdPartJetRecoil", pdgIdPartJetRecoil_, "pdgIdPartJetRecoil_[nPairs_]/I");
 
 
   reducedTree_->Branch("nPFCand2",  &nPFCand2_,  "nPFCand2_/I");
@@ -1233,7 +1281,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 
            // save jet2:
-            
+
            eJet2_[nPairs_] = leadJets[jJet].Energy();
            ptJet2_[nPairs_] = leadJets[jJet].Pt();
            etaJet2_[nPairs_] = leadJets[jJet].Eta();
@@ -1276,49 +1324,55 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 
 
-/*
-           // save recoil jet: (leadJets are ordered in pt)
+           // save recoil jet (highest-pt jet which is not jet1 or jet2):
+           int iRecoil_found=-1;
+           for ( unsigned iRecoil=0; iRecoil<leadJets.size(); ++iRecoil ) {
+             // (leadjets are ordered in pt)
+             if( iRecoil==iJet || iRecoil==jJet ) continue;
+             iRecoil_found = iRecoil;
+             break;
+           }
             
-           eJet2_[nPairs_] = leadJets[jJet].Energy();
-           ptJet2_[nPairs_] = leadJets[jJet].Pt();
-           etaJet2_[nPairs_] = leadJets[jJet].Eta();
-           phiJet2_[nPairs_] = leadJets[jJet].Phi();
-           eChargedHadronsJet2_[nPairs_] = leadJets[jJet].eChargedHadrons;
-           ePhotonsJet2_[nPairs_]        = leadJets[jJet].ePhotons;
-           eNeutralEmJet2_[nPairs_]      = leadJets[jJet].eNeutralEm;
-           eNeutralHadronsJet2_[nPairs_] = leadJets[jJet].eNeutralHadrons;
-           eElectronsJet2_[nPairs_]      = leadJets[jJet].eElectrons;
-           eMuonsJet2_[nPairs_]          = leadJets[jJet].eMuons;
-           nChargedHadronsJet2_[nPairs_] = leadJets[jJet].nChargedHadrons;
-           nPhotonsJet2_[nPairs_]        = leadJets[jJet].nPhotons;
-           nNeutralHadronsJet2_[nPairs_] = leadJets[jJet].nNeutralHadrons;
-           nElectronsJet2_[nPairs_]      = leadJets[jJet].nElectrons;
-           nMuonsJet2_[nPairs_]          = leadJets[jJet].nMuons;
+           eJetRecoil_[nPairs_]   = (iRecoil_found>=0) ? leadJets[iRecoil_found].Energy() : 0.;
+           ptJetRecoil_[nPairs_]  = (iRecoil_found>=0) ? leadJets[iRecoil_found].Pt() : 0.;
+           etaJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].Eta() : 0.;
+           phiJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].Phi() : 0.;
+           eChargedHadronsJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].eChargedHadrons : 0.;
+           ePhotonsJetRecoil_[nPairs_]        = (iRecoil_found>=0) ? leadJets[iRecoil_found].ePhotons : 0.;
+           eNeutralEmJetRecoil_[nPairs_]      = (iRecoil_found>=0) ? leadJets[iRecoil_found].eNeutralEm : 0.;
+           eNeutralHadronsJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].eNeutralHadrons : 0.;
+           eElectronsJetRecoil_[nPairs_]      = (iRecoil_found>=0) ? leadJets[iRecoil_found].eElectrons : 0.;
+           eMuonsJetRecoil_[nPairs_]          = (iRecoil_found>=0) ? leadJets[iRecoil_found].eMuons : 0.;
+           nChargedHadronsJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].nChargedHadrons : 0.;
+           nPhotonsJetRecoil_[nPairs_]        = (iRecoil_found>=0) ? leadJets[iRecoil_found].nPhotons : 0.;
+           nNeutralHadronsJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].nNeutralHadrons : 0.;
+           nElectronsJetRecoil_[nPairs_]      = (iRecoil_found>=0) ? leadJets[iRecoil_found].nElectrons : 0.;
+           nMuonsJetRecoil_[nPairs_]          = (iRecoil_found>=0) ? leadJets[iRecoil_found].nMuons : 0.;
 
-           ptDJet2_[nPairs_] = leadJets[jJet].ptD;
-           rmsCandJet2_[nPairs_] = leadJets[jJet].rmsCand;
-           nChargedJet2_[nPairs_] = leadJets[jJet].nCharged;
-           nNeutralJet2_[nPairs_] = leadJets[jJet].nNeutral;
-           QGlikelihoodJet2_[nPairs_] = leadJets[jJet].QGlikelihood;
+           ptDJetRecoil_[nPairs_]          = (iRecoil_found>=0) ? leadJets[iRecoil_found].ptD : 0.;
+           rmsCandJetRecoil_[nPairs_]      = (iRecoil_found>=0) ? leadJets[iRecoil_found].rmsCand : 0.;
+           nChargedJetRecoil_[nPairs_]     = (iRecoil_found>=0) ? leadJets[iRecoil_found].nCharged : 0.;
+           nNeutralJetRecoil_[nPairs_]     = (iRecoil_found>=0) ? leadJets[iRecoil_found].nNeutral : 0.;
+           QGlikelihoodJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].QGlikelihood : 0.;
 
-           trackCountingHighEffBJetTagJet2_[nPairs_] = leadJets[jJet].trackCountingHighEffBJetTag;
-           trackCountingHighPurBJetTagJet2_[nPairs_] = leadJets[jJet].trackCountingHighPurBJetTag;
-           simpleSecondaryVertexHighEffBJetTagJet2_[nPairs_] = leadJets[jJet].simpleSecondaryVertexHighEffBJetTag;
-           simpleSecondaryVertexHighPurBJetTagJet2_[nPairs_] = leadJets[jJet].simpleSecondaryVertexHighPurBJetTag;
-           jetBProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetBProbabilityBJetTag;
-           jetProbabilityBJetTagJet2_[nPairs_] = leadJets[jJet].jetProbabilityBJetTag;
+           trackCountingHighEffBJetTagJetRecoil_[nPairs_]         = (iRecoil_found>=0) ? leadJets[iRecoil_found].trackCountingHighEffBJetTag : 0.;
+           trackCountingHighPurBJetTagJetRecoil_[nPairs_]         = (iRecoil_found>=0) ? leadJets[iRecoil_found].trackCountingHighPurBJetTag : 0.;
+           simpleSecondaryVertexHighEffBJetTagJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].simpleSecondaryVertexHighEffBJetTag : 0.;
+           simpleSecondaryVertexHighPurBJetTagJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].simpleSecondaryVertexHighPurBJetTag : 0.;
+           jetBProbabilityBJetTagJetRecoil_[nPairs_]              = (iRecoil_found>=0) ? leadJets[iRecoil_found].jetBProbabilityBJetTag : 0.;
+           jetProbabilityBJetTagJetRecoil_[nPairs_]               = (iRecoil_found>=0) ? leadJets[iRecoil_found].jetProbabilityBJetTag : 0.;
 
-           eGenJet2_[nPairs_] = leadJets[jJet].eGen;
-           ptGenJet2_[nPairs_] = leadJets[jJet].ptGen;
-           etaGenJet2_[nPairs_] = leadJets[jJet].etaGen;
-           phiGenJet2_[nPairs_] = leadJets[jJet].phiGen;
+           eGenJetRecoil_[nPairs_]   = (iRecoil_found>=0) ? leadJets[iRecoil_found].eGen : 0.;
+           ptGenJetRecoil_[nPairs_]  = (iRecoil_found>=0) ? leadJets[iRecoil_found].ptGen : 0.;
+           etaGenJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].etaGen : 0.;
+           phiGenJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].phiGen : 0.;
             
-           ePartJet2_[nPairs_] = leadJets[jJet].ePart;
-           ptPartJet2_[nPairs_] = leadJets[jJet].ptPart;
-           etaPartJet2_[nPairs_] = leadJets[jJet].etaPart;
-           phiPartJet2_[nPairs_] = leadJets[jJet].phiPart;
-           pdgIdPartJet2_[nPairs_] = leadJets[jJet].pdgIdPart;
-*/
+           ePartJetRecoil_[nPairs_]     = (iRecoil_found>=0) ? leadJets[iRecoil_found].ePart : 0.;
+           ptPartJetRecoil_[nPairs_]    = (iRecoil_found>=0) ? leadJets[iRecoil_found].ptPart : 0.;
+           etaPartJetRecoil_[nPairs_]   = (iRecoil_found>=0) ? leadJets[iRecoil_found].etaPart : 0.;
+           phiPartJetRecoil_[nPairs_]   = (iRecoil_found>=0) ? leadJets[iRecoil_found].phiPart : 0.;
+           pdgIdPartJetRecoil_[nPairs_] = (iRecoil_found>=0) ? leadJets[iRecoil_found].pdgIdPart : 0.;
+
 
            nPairs_++;
           

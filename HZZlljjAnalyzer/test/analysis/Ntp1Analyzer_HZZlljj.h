@@ -194,6 +194,57 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Int_t pdgIdPartJet2_[50];
 
 
+   Int_t  iJetRecoil_[50];
+   Float_t  ptJetRecoil_[50];
+   Float_t   eJetRecoil_[50];
+   Float_t phiJetRecoil_[50];
+   Float_t etaJetRecoil_[50];
+
+   Float_t ptDJetRecoil_[50];
+   Float_t rmsCandJetRecoil_[50];
+   Int_t nChargedJetRecoil_[50];
+   Int_t nNeutralJetRecoil_[50];
+   Float_t QGlikelihoodJetRecoil_[50];
+
+   Float_t  eChargedHadronsJetRecoil_[50];
+   Float_t  ePhotonsJetRecoil_[50];
+   Float_t  eNeutralEmJetRecoil_[50];
+   Float_t  eNeutralHadronsJetRecoil_[50];
+   Float_t  eMuonsJetRecoil_[50];
+   Float_t  eElectronsJetRecoil_[50];
+   Float_t  eHFHadronsJetRecoil_[50];
+   Float_t  eHFEMJetRecoil_[50];
+
+   Int_t  nChargedHadronsJetRecoil_[50];
+   Int_t  nPhotonsJetRecoil_[50];
+   Int_t  nNeutralHadronsJetRecoil_[50];
+   Int_t  nMuonsJetRecoil_[50];
+   Int_t  nElectronsJetRecoil_[50];
+   Int_t  nHFHadronsJetRecoil_[50];
+   Int_t  nHFEMJetRecoil_[50];
+
+   Float_t trackCountingHighEffBJetTagJetRecoil_[50];
+   Float_t trackCountingHighPurBJetTagJetRecoil_[50];
+   Float_t simpleSecondaryVertexHighEffBJetTagJetRecoil_[50];
+   Float_t simpleSecondaryVertexHighPurBJetTagJetRecoil_[50];
+   Float_t jetBProbabilityBJetTagJetRecoil_[50];
+   Float_t jetProbabilityBJetTagJetRecoil_[50];
+
+   Float_t SFTCHEJetRecoil_[50];
+   Float_t SFerrTCHEJetRecoil_[50];
+
+   Float_t  ptGenJetRecoil_[50];
+   Float_t   eGenJetRecoil_[50];
+   Float_t phiGenJetRecoil_[50];
+   Float_t etaGenJetRecoil_[50];
+
+   Float_t  ptPartJetRecoil_[50];
+   Float_t   ePartJetRecoil_[50];
+   Float_t phiPartJetRecoil_[50];
+   Float_t etaPartJetRecoil_[50];
+   Int_t pdgIdPartJetRecoil_[50];
+
+
    Int_t  nPFCand2_;
    Float_t  ePFCand2_[100];
    Float_t  ptPFCand2_[100];
