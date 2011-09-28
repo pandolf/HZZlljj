@@ -416,6 +416,11 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_ptJet2_prekin = new TH1D("ptJet2_prekin", "", 100, 30., 230.);
   h1_ptJet2_prekin->Sumw2();
 
+  TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 100, 30., 130.);
+  h1_ptJetRecoil->Sumw2();
+  TH1D* h1_ptHiggs = new TH1D("ptHiggs", "", 100, 30., 130.);
+  h1_ptHiggs->Sumw2();
+
   TH1D* h1_etaJet1 = new TH1D("etaJet1", "", 100, -2.4, 2.4);
   h1_etaJet1->Sumw2();
   TH1D* h1_etaJet2 = new TH1D("etaJet2", "", 100, -2.4, 2.4);
@@ -457,11 +462,6 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_mHreso_afterKin = new TH1D("mHreso_afterKin", "", 100, -1., 1.);
   h1_mHreso_afterKin->Sumw2();
 
-
-  TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 100, 30., 130.);
-  h1_ptJetRecoil->Sumw2();
-  TH1D* h1_QGLikelihoodRecoil = new TH1D("QGLikelihoodRecoil", "", 60, 0., 1.0001);
-  h1_QGLikelihoodRecoil->Sumw2();
 
   TH1D* h1_mZjjMC = new TH1D("mZjjMC", "", 400, 30., 430.);
   h1_mZjjMC->Sumw2();
@@ -541,6 +541,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodJet1_gluonMatched->Sumw2();
   TH1D* h1_QGLikelihoodJet1_quarkMatched = new TH1D("QGLikelihoodJet1_quarkMatched", "", 60, 0., 1.0001);
   h1_QGLikelihoodJet1_quarkMatched->Sumw2();
+  TH1D* h1_QGLikelihoodJetRecoil = new TH1D("QGLikelihoodJetRecoil", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJetRecoil->Sumw2();
+  TH1D* h1_QGLikelihoodJetProdRecoil = new TH1D("QGLikelihoodJetProdRecoil", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJetProdRecoil->Sumw2();
 
   TH1D* h1_QGLikelihood_100_123 = new TH1D("QGLikelihood_100_123", "", 50, 0., 1.0001);
   h1_QGLikelihood_100_123->Sumw2();
@@ -1102,6 +1106,21 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_->SetBranchAddress("jetBProbabilityBJetTagJet2", jetBProbabilityBJetTagJet2);
   Float_t jetProbabilityBJetTagJet2[50];
   tree_->SetBranchAddress("jetProbabilityBJetTagJet2", jetProbabilityBJetTagJet2);
+
+  Float_t ptJetRecoil[50];
+  tree_->SetBranchAddress("ptJetRecoil", ptJetRecoil);
+  Float_t etaJetRecoil[50];
+  tree_->SetBranchAddress("etaJetRecoil", etaJetRecoil);
+  Float_t phiJetRecoil[50];
+  tree_->SetBranchAddress("phiJetRecoil", phiJetRecoil);
+  Float_t eJetRecoil[50];
+  tree_->SetBranchAddress("eJetRecoil", eJetRecoil);
+  Float_t ptDJetRecoil[50];
+  tree_->SetBranchAddress("ptDJetRecoil", ptDJetRecoil);
+  Int_t nChargedJetRecoil[50];
+  tree_->SetBranchAddress("nChargedJetRecoil", nChargedJetRecoil);
+  Int_t nNeutralJetRecoil[50];
+  tree_->SetBranchAddress("nNeutralJetRecoil", nNeutralJetRecoil);
 
   Int_t nPFCand2;
   tree_->SetBranchAddress("nPFCand2", &nPFCand2);
@@ -1669,7 +1688,7 @@ ofstream ofs("run_event.txt");
 
 
     float cached_jetpt = 0.;
-    AnalysisJet jet1_selected, jet2_selected;
+    AnalysisJet jet1_selected, jet2_selected, jetRecoil_selected;
     float bestMass = 0.;
     int  foundJets = 0;
     int  foundJets_signalRegion = 0;
@@ -1724,6 +1743,12 @@ ofstream ofs("run_event.txt");
       jet2.etaGen = etaJet2Gen[iJetPair];
       jet2.phiGen = phiJet2Gen[iJetPair];
       jet2.eGen =     eJet2Gen[iJetPair];
+
+      AnalysisJet jetRecoil;
+      jetRecoil.SetPtEtaPhiE( ptJetRecoil[iJetPair], etaJetRecoil[iJetPair], phiJetRecoil[iJetPair], eJetRecoil[iJetPair]);
+      jetRecoil.ptD = ptDJetRecoil[iJetPair];
+      jetRecoil.nCharged = nChargedJetRecoil[iJetPair];
+      jetRecoil.nNeutral = nNeutralJetRecoil[iJetPair];
 
 
       TLorentzVector diJet = jet1 + jet2;
@@ -1981,6 +2006,7 @@ ofstream ofs("run_event.txt");
         bestMass = invMass;
         jet1_selected = jet1;
         jet2_selected = jet2; 
+        jetRecoil_selected = jetRecoil; 
         hangles_selected = hangles;
         helicityLD_selected = helicityLD;
         helicityLD_nokinfit_selected = helicityLD_nokinfit;
@@ -2002,6 +2028,7 @@ ofstream ofs("run_event.txt");
           bestMass = invMass;
           jet1_selected = jet1;
           jet2_selected = jet2;
+          jetRecoil_selected = jetRecoil; 
           hangles_selected = hangles;
           helicityLD_selected = helicityLD;
           helicityLD_nokinfit_selected = helicityLD_nokinfit;
@@ -2561,6 +2588,18 @@ ofstream ofs("run_event.txt");
 
       h1_tcheJet->Fill( jet1_selected.trackCountingHighEffBJetTag, eventWeight );
       h1_tcheJet->Fill( jet2_selected.trackCountingHighEffBJetTag, eventWeight );
+
+      h1_ptJetRecoil->Fill( jetRecoil_selected.Pt(), eventWeight );
+      h1_ptHiggs->Fill( ZZ_kinfit.Pt(), eventWeight );
+
+      if( fabs(jetRecoil_selected.Eta())<2.4 ) {
+        float QGLikelihoodJetRecoil = qglikeli->computeQGLikelihoodPU( jetRecoil_selected.Pt(), rhoPF, jetRecoil_selected.nCharged, jetRecoil_selected.nNeutral, jetRecoil_selected.ptD, -1. );
+        h1_QGLikelihoodJetRecoil->Fill( QGLikelihoodJetRecoil, eventWeight);
+        h1_QGLikelihoodJetProdRecoil->Fill( QGLikelihoodJetRecoil*jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight);
+      } else {
+        h1_QGLikelihoodJetRecoil->Fill( -1., eventWeight);
+      }
+     
   
       if( jet1_selected.Pt()>jet2_selected.Pt() ) {
         h1_ptJet1->Fill( jet1_selected.Pt(), eventWeight );
@@ -3569,6 +3608,9 @@ ofstream ofs("run_event.txt");
   h1_etaZZ->Write();
   h1_etaZZ_kinfit->Write();
 
+  h1_ptJetRecoil->Write();
+  h1_ptHiggs->Write();
+
   h1_deltaR_part1->Write();
   h1_ptJet1->Write();
   h1_ptJet1_prekin->Write();
@@ -3589,6 +3631,9 @@ ofstream ofs("run_event.txt");
   h1_tcheJet1->Write();
 
   h1_tcheJet->Write();
+
+  h1_QGLikelihoodJetRecoil->Write();
+  h1_QGLikelihoodJetProdRecoil->Write();
 
   h1_deltaR_part2->Write();
   h1_ptJet2->Write();
