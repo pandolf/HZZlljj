@@ -22,7 +22,7 @@
 bool ANALYZE_SIDEBANDS_=true;
 bool USE_MC_MASS=false;
 
-int DEBUG_EVENTNUMBER = 3485;
+int DEBUG_EVENTNUMBER = 17473;
 
 //HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
 
@@ -91,6 +91,32 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_nEvents_partFlavor_afterQG->GetXaxis()->SetLabelSize(0.1);
   h1_nEvents_partFlavor_afterQG->GetXaxis()->SetBinLabel(1, "2 Quarks");
   h1_nEvents_partFlavor_afterQG->GetXaxis()->SetBinLabel(1, "#geq 1 Gluon");
+
+
+  TH1D* h1_nEventsMW400_partFlavor_beforeQG = new TH1D("nEventsMW400_partFlavor_beforeQG", "", 2, -0.5, 1.5);
+  h1_nEventsMW400_partFlavor_beforeQG->Sumw2();
+  h1_nEventsMW400_partFlavor_beforeQG->GetXaxis()->SetLabelSize(0.1);
+  h1_nEventsMW400_partFlavor_beforeQG->GetXaxis()->SetBinLabel(1, "2 Quarks");
+  h1_nEventsMW400_partFlavor_beforeQG->GetXaxis()->SetBinLabel(1, "#geq 1 Gluon");
+
+  TH1D* h1_nEventsMW400_partFlavor_afterQG = new TH1D("nEventsMW400_partFlavor_afterQG", "", 2, -0.5, 1.5);
+  h1_nEventsMW400_partFlavor_afterQG->Sumw2();
+  h1_nEventsMW400_partFlavor_afterQG->GetXaxis()->SetLabelSize(0.1);
+  h1_nEventsMW400_partFlavor_afterQG->GetXaxis()->SetBinLabel(1, "2 Quarks");
+  h1_nEventsMW400_partFlavor_afterQG->GetXaxis()->SetBinLabel(1, "#geq 1 Gluon");
+
+
+  TH1D* h1_nEventsMW500_partFlavor_beforeQG = new TH1D("nEventsMW500_partFlavor_beforeQG", "", 2, -0.5, 1.5);
+  h1_nEventsMW500_partFlavor_beforeQG->Sumw2();
+  h1_nEventsMW500_partFlavor_beforeQG->GetXaxis()->SetLabelSize(0.1);
+  h1_nEventsMW500_partFlavor_beforeQG->GetXaxis()->SetBinLabel(1, "2 Quarks");
+  h1_nEventsMW500_partFlavor_beforeQG->GetXaxis()->SetBinLabel(1, "#geq 1 Gluon");
+
+  TH1D* h1_nEventsMW500_partFlavor_afterQG = new TH1D("nEventsMW500_partFlavor_afterQG", "", 2, -0.5, 1.5);
+  h1_nEventsMW500_partFlavor_afterQG->Sumw2();
+  h1_nEventsMW500_partFlavor_afterQG->GetXaxis()->SetLabelSize(0.1);
+  h1_nEventsMW500_partFlavor_afterQG->GetXaxis()->SetBinLabel(1, "2 Quarks");
+  h1_nEventsMW500_partFlavor_afterQG->GetXaxis()->SetBinLabel(1, "#geq 1 Gluon");
 
 
   // these histograms will save the final yields and efficiencies:
@@ -395,6 +421,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_etaJet2 = new TH1D("etaJet2", "", 100, -2.4, 2.4);
   h1_etaJet2->Sumw2();
 
+  TH1D* h1_tcheJet = new TH1D("tcheJet", "", 100, 0., 20.);
+  h1_tcheJet->Sumw2();
   TH1D* h1_tcheJet1 = new TH1D("tcheJet1", "", 100, 0., 20.);
   h1_tcheJet1->Sumw2();
   TH1D* h1_tcheJet2 = new TH1D("tcheJet2", "", 100, 0., 20.);
@@ -430,17 +458,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_mHreso_afterKin->Sumw2();
 
 
-//TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 27, 30., 400.);
-//h1_ptJetRecoil->Sumw2();
-//TH1D* h1_ptDJetRecoil = new TH1D("ptDJetRecoil", "", 60, 0., 1.);
-//h1_ptDJetRecoil->Sumw2();
-//TH1D* h1_rmsCandJetRecoil = new TH1D("rmsCandJetRecoil", "", 60, 0., 0.07);
-//h1_rmsCandJetRecoil->Sumw2();
-//TH1D* h1_nChargedJetRecoil = new TH1D("nChargedJetRecoil", "", 41, -0.5, 40.5);
-//h1_nChargedJetRecoil->Sumw2();
-//TH1D* h1_nNeutralJetRecoil = new TH1D("nNeutralJetRecoil", "", 41, -0.5, 40.5);
-//h1_nNeutralJetRecoil->Sumw2();
-
+  TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 100, 30., 130.);
+  h1_ptJetRecoil->Sumw2();
+  TH1D* h1_QGLikelihoodRecoil = new TH1D("QGLikelihoodRecoil", "", 60, 0., 1.0001);
+  h1_QGLikelihoodRecoil->Sumw2();
 
   TH1D* h1_mZjjMC = new TH1D("mZjjMC", "", 400, 30., 430.);
   h1_mZjjMC->Sumw2();
@@ -479,6 +500,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   //TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 30, -7.5, 22.5);
   TH1D* h1_partFlavorJet1= new TH1D("partFlavorJet1", "", 38, -15.5, 22.5);
   h1_partFlavorJet1->Sumw2();
+  TH1D* h1_partFlavorJet1_MW400= new TH1D("partFlavorJet1_MW400", "", 38, -15.5, 22.5);
+  h1_partFlavorJet1_MW400->Sumw2();
+  TH1D* h1_partFlavorJet1_MW500= new TH1D("partFlavorJet1_MW500", "", 38, -15.5, 22.5);
+  h1_partFlavorJet1_MW500->Sumw2();
   TH1D* h1_partFlavorJet1_matched= new TH1D("partFlavorJet1_matched", "", 38, -15.5, 22.5);
   h1_partFlavorJet1_matched->Sumw2();
   TH1D* h1_partFlavorJet1_notmatched= new TH1D("partFlavorJet1_notmatched", "", 38, -15.5, 22.5);
@@ -525,9 +550,12 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   TH1D* h1_deltaR_part2 = new TH1D("deltaR_part2", "", 60, 0., 0.8);
   h1_deltaR_part2->Sumw2();
-  //TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 30, -7.5, 22.5);
   TH1D* h1_partFlavorJet2= new TH1D("partFlavorJet2", "", 38, -15.5, 22.5);
   h1_partFlavorJet2->Sumw2();
+  TH1D* h1_partFlavorJet2_MW400= new TH1D("partFlavorJet2_MW400", "", 38, -15.5, 22.5);
+  h1_partFlavorJet2_MW400->Sumw2();
+  TH1D* h1_partFlavorJet2_MW500= new TH1D("partFlavorJet2_MW500", "", 38, -15.5, 22.5);
+  h1_partFlavorJet2_MW500->Sumw2();
   TH1D* h1_partFlavorJet2_matched= new TH1D("partFlavorJet2_matched", "", 38, -15.5, 22.5);
   h1_partFlavorJet2_matched->Sumw2();
   TH1D* h1_partFlavorJet2_notmatched= new TH1D("partFlavorJet2_notmatched", "", 38, -15.5, 22.5);
@@ -573,6 +601,10 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodProd_twoGluon->Sumw2();
   TH1D* h1_QGLikelihoodProd_twoQuark = new TH1D("QGLikelihoodProd_twoQuark", "", 60, 0., 1.0001);
   h1_QGLikelihoodProd_twoQuark->Sumw2();
+  TH1D* h1_QGLikelihoodProd_twoQuark_MW400 = new TH1D("QGLikelihoodProd_twoQuark_MW400", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProd_twoQuark_MW400->Sumw2();
+  TH1D* h1_QGLikelihoodProd_twoQuark_MW500 = new TH1D("QGLikelihoodProd_twoQuark_MW500", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProd_twoQuark_MW500->Sumw2();
 
   TH1D* h1_QGLikelihoodNoPUProd = new TH1D("QGLikelihoodNoPUProd", "", 60, 0., 1.0001);
   h1_QGLikelihoodNoPUProd->Sumw2();
@@ -1324,7 +1356,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
 
   //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root");
-  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
+  //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
+  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
   //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root");
   float Zmass = 91.1876;
   DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", Zmass );
@@ -1799,6 +1832,7 @@ ofstream ofs("run_event.txt");
       jet1.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet1.Pt(), jet1.nCharged, jet1.nNeutral, jet1.ptD, -1. );
       jet2.QGLikelihoodNoPU = qglikeli->computeQGLikelihood( jet2.Pt(), jet2.nCharged, jet2.nNeutral, jet2.ptD, -1. );
       float QGLikelihoodProd = jet1.QGLikelihood*jet2.QGLikelihood;
+      if( event==DEBUG_EVENTNUMBER ) std::cout << "rhoPF: " << rhoPF << std::endl;
       if( event==DEBUG_EVENTNUMBER ) std::cout << "jet1: nCharged: " << jet1.nCharged << " nNeutral: " << jet1.nNeutral << " ptD: " << jet1.ptD << " QGlikelihood: " << jet1.QGLikelihood << std::endl;
       if( event==DEBUG_EVENTNUMBER ) std::cout << "jet2: nCharged: " << jet2.nCharged << " nNeutral: " << jet2.nNeutral << " ptD: " << jet2.ptD << " QGlikelihood: " << jet2.QGLikelihood << std::endl;
       if( event==DEBUG_EVENTNUMBER ) std::cout << "QGLikelihoodProd: " << QGLikelihoodProd << std::endl;
@@ -1887,7 +1921,7 @@ ofstream ofs("run_event.txt");
    
       if( event==DEBUG_EVENTNUMBER ) std::cout << "metSignificance: " << metSignificance << std::endl;
       if( nBTags==2 )  {
-        if( metSignificance > 10. ) continue;
+        if( metSignificance > metSignificance_thresh_ ) continue;
       }
 
 
@@ -1924,7 +1958,7 @@ ofstream ofs("run_event.txt");
       // this pair has passed selections
       // if it is a signal region pair, dont consider any more sideband events:
       if( isSignalRegionMjj && !foundSignalRegionMjj) {
-        if( event==DEBUG_EVENTNUMBER ) std::cout << "updating maxBTag_found" << std::endl;
+        if( event==DEBUG_EVENTNUMBER ) std::cout << "updating maxBTag_found: " << nBTags << std::endl;
         maxBTag_found = nBTags; //reset maxbtag found
         foundSignalRegionMjj = true;
       }
@@ -1972,6 +2006,8 @@ ofstream ofs("run_event.txt");
           helicityLD_selected = helicityLD;
           helicityLD_nokinfit_selected = helicityLD_nokinfit;
           maxBTag_found = nBTags;
+        } else {
+          if( event==DEBUG_EVENTNUMBER ) std::cout << "NOPE. keeping old pair (" << bestMass << ")" << std::endl;
         }
 
       }
@@ -2110,7 +2146,7 @@ ofstream ofs("run_event.txt");
         std::cout << "helicityLD_selected is less than 0!!! THIS IS NOT POSSIBLE!!" << std::endl;
   
   
-  ofs << run << " " << event << std::endl;
+        if( maxBTag_found>=0 ) ofs << run << " " << event << std::endl;
   
   
   
@@ -2522,6 +2558,9 @@ ofstream ofs("run_event.txt");
       h1_rhoPF->Fill( rhoPF, eventWeight );
   
       h2_helicityLD_vs_mZZ->Fill( ZZ_kinfit.M(), helicityLD_selected, eventWeight );
+
+      h1_tcheJet->Fill( jet1_selected.trackCountingHighEffBJetTag, eventWeight );
+      h1_tcheJet->Fill( jet2_selected.trackCountingHighEffBJetTag, eventWeight );
   
       if( jet1_selected.Pt()>jet2_selected.Pt() ) {
         h1_ptJet1->Fill( jet1_selected.Pt(), eventWeight );
@@ -2671,6 +2710,8 @@ ofstream ofs("run_event.txt");
       }
       h1_deltaR_part1->Fill(deltaRmin1, eventWeight);
       h1_partFlavorJet1->Fill( partFlavor1, eventWeight );
+      if( ZZ_kinfit.M()>0.94*400. && ZZ_kinfit.M()<1.1*400. ) h1_partFlavorJet1_MW400->Fill( partFlavor1, eventWeight );
+      if( ZZ_kinfit.M()>0.94*500. && ZZ_kinfit.M()<1.1*500. ) h1_partFlavorJet1_MW500->Fill( partFlavor1, eventWeight );
       if( deltaRmin1<0.5 ) h1_partFlavorJet1_matched->Fill( partFlavor1, eventWeight );
       else h1_partFlavorJet1_notmatched->Fill( partFlavor1, eventWeight );
   
@@ -2696,6 +2737,8 @@ ofstream ofs("run_event.txt");
       }
       h1_deltaR_part2->Fill(deltaRmin2, eventWeight);
       h1_partFlavorJet2->Fill( partFlavor2, eventWeight );
+      if( ZZ_kinfit.M()>0.94*400. && ZZ_kinfit.M()<1.1*400. ) h1_partFlavorJet2_MW400->Fill( partFlavor2, eventWeight );
+      if( ZZ_kinfit.M()>0.94*500. && ZZ_kinfit.M()<1.1*500. ) h1_partFlavorJet2_MW500->Fill( partFlavor2, eventWeight );
       if( deltaRmin2<0.5 ) h1_partFlavorJet2_matched->Fill( partFlavor2, eventWeight );
       else h1_partFlavorJet2_notmatched->Fill( partFlavor2, eventWeight );
   
@@ -2708,27 +2751,53 @@ ofstream ofs("run_event.txt");
       else if( abs(partFlavor2)<5 ) h1_QGLikelihoodJet2_quarkMatched->Fill( jet2_selected.QGLikelihood, eventWeight );
   
   
-      if( partFlavor1==21 || partFlavor2==21 ) {
-        h1_QGLikelihoodProd_oneGluon->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-        h1_mZZ_kinfit_hiMass_oneGluon->Fill( mZZ, eventWeight );
-      }
-      if( partFlavor1==21 && partFlavor2==21 ) {
-        h1_QGLikelihoodProd_twoGluon->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-        h1_mZZ_kinfit_hiMass_twoGluon->Fill( mZZ, eventWeight );
-      }
-      if( abs(partFlavor1)<5 && abs(partFlavor2)<5 ) {
-        h1_QGLikelihoodProd_twoQuark->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
-        h1_mZZ_kinfit_hiMass_twoQuark->Fill( mZZ, eventWeight );
-        if( maxBTag_found<=0 ) {
-          h1_nEvents_partFlavor_beforeQG->Fill( 0., eventWeight );
-          if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEvents_partFlavor_afterQG->Fill( 0., eventWeight );
+      if( maxBTag_found<=0 ) {
+
+        if( partFlavor1==21 || partFlavor2==21 ) {
+          h1_QGLikelihoodProd_oneGluon->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+          h1_mZZ_kinfit_hiMass_oneGluon->Fill( mZZ, eventWeight );
         }
-      } else { 
-        if( maxBTag_found<=0 ) {
-          h1_nEvents_partFlavor_beforeQG->Fill( 1., eventWeight );
-          if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEvents_partFlavor_afterQG->Fill( 1., eventWeight );
+        if( partFlavor1==21 && partFlavor2==21 ) {
+          h1_QGLikelihoodProd_twoGluon->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+          h1_mZZ_kinfit_hiMass_twoGluon->Fill( mZZ, eventWeight );
         }
-      }
+        if( abs(partFlavor1)<5 && abs(partFlavor2)<5 ) {
+          h1_QGLikelihoodProd_twoQuark->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+          h1_mZZ_kinfit_hiMass_twoQuark->Fill( mZZ, eventWeight );
+          if( ZZ_kinfit.M()>0.94*400. && ZZ_kinfit.M()<1.1*400. ) {
+            h1_QGLikelihoodProd_twoQuark_MW400->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+          }
+          if( ZZ_kinfit.M()>0.94*500. && ZZ_kinfit.M()<1.1*500. ) {
+            h1_QGLikelihoodProd_twoQuark_MW500->Fill( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight );
+          }
+          if( maxBTag_found<=0 ) {
+            h1_nEvents_partFlavor_beforeQG->Fill( 0., eventWeight );
+            if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEvents_partFlavor_afterQG->Fill( 0., eventWeight );
+            if( ZZ_kinfit.M()>0.94*400. && ZZ_kinfit.M()<1.1*400. ) {
+              h1_nEventsMW400_partFlavor_beforeQG->Fill( 0., eventWeight );
+              if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEventsMW400_partFlavor_afterQG->Fill( 0., eventWeight );
+            }
+            if( ZZ_kinfit.M()>0.94*500. && ZZ_kinfit.M()<1.1*500. ) {
+              h1_nEventsMW500_partFlavor_beforeQG->Fill( 0., eventWeight );
+              if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEventsMW500_partFlavor_afterQG->Fill( 0., eventWeight );
+            }
+          }
+        } else { 
+          if( maxBTag_found<=0 ) {
+            h1_nEvents_partFlavor_beforeQG->Fill( 1., eventWeight );
+            if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEvents_partFlavor_afterQG->Fill( 1., eventWeight );
+            if( ZZ_kinfit.M()>0.94*400. && ZZ_kinfit.M()<1.1*400. ) {
+              h1_nEventsMW400_partFlavor_beforeQG->Fill( 1., eventWeight );
+              if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEventsMW400_partFlavor_afterQG->Fill( 1., eventWeight );
+            }
+            if( ZZ_kinfit.M()>0.94*500. && ZZ_kinfit.M()<1.1*500. ) {
+              h1_nEventsMW500_partFlavor_beforeQG->Fill( 1., eventWeight );
+              if( jet1_selected.QGLikelihood*jet2_selected.QGLikelihood>0.1 ) h1_nEventsMW500_partFlavor_afterQG->Fill( 1., eventWeight );
+            }
+          }
+        }
+
+      } //if 0/glue tag
   
 
     } //if signal region
@@ -3507,6 +3576,8 @@ ofstream ofs("run_event.txt");
   h1_eElectronsJet1->Write();
   h1_eMuonsJet1->Write();
   h1_partFlavorJet1->Write();
+  h1_partFlavorJet1_MW400->Write();
+  h1_partFlavorJet1_MW500->Write();
   h1_partFlavorJet1_matched->Write();
   h1_partFlavorJet1_notmatched->Write();
   h1_partFlavorJet1_0btag->Write();
@@ -3517,6 +3588,8 @@ ofstream ofs("run_event.txt");
   h1_QGLikelihoodJet1_quarkMatched->Write();
   h1_tcheJet1->Write();
 
+  h1_tcheJet->Write();
+
   h1_deltaR_part2->Write();
   h1_ptJet2->Write();
   h1_ptJet2_prekin->Write();
@@ -3524,6 +3597,8 @@ ofstream ofs("run_event.txt");
   h1_eElectronsJet2->Write();
   h1_eMuonsJet2->Write();
   h1_partFlavorJet2->Write();
+  h1_partFlavorJet2_MW400->Write();
+  h1_partFlavorJet2_MW500->Write();
   h1_partFlavorJet2_matched->Write();
   h1_partFlavorJet2_notmatched->Write();
   h1_partFlavorJet2_0btag->Write();
@@ -3539,10 +3614,18 @@ ofstream ofs("run_event.txt");
   h1_QGLikelihoodProd_twoGluon->Write();
   h1_mZZ_kinfit_hiMass_twoGluon->Write();
   h1_QGLikelihoodProd_twoQuark->Write();
+  h1_QGLikelihoodProd_twoQuark_MW400->Write();
+  h1_QGLikelihoodProd_twoQuark_MW500->Write();
   h1_mZZ_kinfit_hiMass_twoQuark->Write();
 
   h1_nEvents_partFlavor_beforeQG->Write();
   h1_nEvents_partFlavor_afterQG->Write();
+
+  h1_nEventsMW400_partFlavor_beforeQG->Write();
+  h1_nEventsMW400_partFlavor_afterQG->Write();
+
+  h1_nEventsMW500_partFlavor_beforeQG->Write();
+  h1_nEventsMW500_partFlavor_afterQG->Write();
 
 
   h1_deltaRZZ->Write();
@@ -3671,6 +3754,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
+    metSignificance_thresh_ = 9999999999.;
     use_looseBTags_ = true;
 
   } else if( selectionType_=="presel_invMZll" ) {
@@ -3701,6 +3785,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
+    metSignificance_thresh_ = 9999999999.;
     use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_v1" ) {
@@ -3731,7 +3816,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    pfMetThresh_ = 99999.;
+    metSignificance_thresh_ = 9999999999.;
     use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_v2" ) {
@@ -3762,7 +3847,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    pfMetThresh_ = 10.;
+    metSignificance_thresh_ = 10.;
     use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_noBTagCat" ) {
@@ -3793,7 +3878,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    pfMetThresh_ = 10.;
+    metSignificance_thresh_ = 10.;
     use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_mediumBTags_v1" ) { //"option 6"
@@ -3824,101 +3909,8 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    pfMetThresh_ = 10.;
+    metSignificance_thresh_ = 10.;
     use_looseBTags_ = false;
-
-  } else if( selectionType_=="optLD_looseBTags_metCut" ) {
-
-    ptLept1_thresh_ = 40.;
-    ptLept2_thresh_ = 20.;
-    etaLept1_thresh_ = 3.;
-    etaLept2_thresh_ = 3.;
-    ptJet1_thresh_ = 30.;
-    ptJet2_thresh_ = 30.;
-    etaJet1_thresh_ = 2.4;
-    etaJet2_thresh_ = 2.4;
-    invert_mZll_ = false;
-    mZll_threshLo_ = 70.;
-    mZll_threshHi_ = 110.;
-    mZjj_threshLo_ = 75.;
-    mZjj_threshHi_ = 105.;
-    helicityLD_slope_0btags_ = 0.00124;
-    helicityLD_slope_1btags_ = 0.;
-    helicityLD_slope_2btags_ = 0.;
-    helicityLD_intercept_0btags_ = 0.1433;
-    helicityLD_intercept_1btags_ = 0.55;
-    helicityLD_intercept_2btags_ = 0.5;
-    helicityLD_minThresh_0btags_ = 0.;
-    helicityLD_minThresh_1btags_ = 0.;
-    helicityLD_minThresh_2btags_ = 0.;
-    helicityLD_maxThresh_0btags_ = 1.;
-    helicityLD_maxThresh_1btags_ = 1.;
-    helicityLD_maxThresh_2btags_ = 1.;
-    QGLikelihoodProd_thresh_ = 0.1;
-    pfMetThresh_ = 0.2;
-    use_looseBTags_ = true;
-
-  } else if( selectionType_=="optLD_looseBTags_metSumetCut" ) {
-
-    ptLept1_thresh_ = 40.;
-    ptLept2_thresh_ = 20.;
-    etaLept1_thresh_ = 3.;
-    etaLept2_thresh_ = 3.;
-    ptJet1_thresh_ = 30.;
-    ptJet2_thresh_ = 30.;
-    etaJet1_thresh_ = 2.4;
-    etaJet2_thresh_ = 2.4;
-    invert_mZll_ = false;
-    mZll_threshLo_ = 70.;
-    mZll_threshHi_ = 110.;
-    mZjj_threshLo_ = 75.;
-    mZjj_threshHi_ = 105.;
-    helicityLD_slope_0btags_ = 0.00124;
-    helicityLD_slope_1btags_ = 0.;
-    helicityLD_slope_2btags_ = 0.;
-    helicityLD_intercept_0btags_ = 0.1433;
-    helicityLD_intercept_1btags_ = 0.55;
-    helicityLD_intercept_2btags_ = 0.5;
-    helicityLD_minThresh_0btags_ = 0.;
-    helicityLD_minThresh_1btags_ = 0.;
-    helicityLD_minThresh_2btags_ = 0.;
-    helicityLD_maxThresh_0btags_ = 1.;
-    helicityLD_maxThresh_1btags_ = 1.;
-    helicityLD_maxThresh_2btags_ = 1.;
-    QGLikelihoodProd_thresh_ = 0.1;
-    pfMetThresh_ = 0.2;
-    use_looseBTags_ = true;
-
-  } else if( selectionType_=="optLD_looseBTags_metSigCut" ) {
-
-    ptLept1_thresh_ = 40.;
-    ptLept2_thresh_ = 20.;
-    etaLept1_thresh_ = 3.;
-    etaLept2_thresh_ = 3.;
-    ptJet1_thresh_ = 30.;
-    ptJet2_thresh_ = 30.;
-    etaJet1_thresh_ = 2.4;
-    etaJet2_thresh_ = 2.4;
-    invert_mZll_ = false;
-    mZll_threshLo_ = 70.;
-    mZll_threshHi_ = 110.;
-    mZjj_threshLo_ = 75.;
-    mZjj_threshHi_ = 105.;
-    helicityLD_slope_0btags_ = 0.00124;
-    helicityLD_slope_1btags_ = 0.;
-    helicityLD_slope_2btags_ = 0.;
-    helicityLD_intercept_0btags_ = 0.1433;
-    helicityLD_intercept_1btags_ = 0.55;
-    helicityLD_intercept_2btags_ = 0.5;
-    helicityLD_minThresh_0btags_ = 0.;
-    helicityLD_minThresh_1btags_ = 0.;
-    helicityLD_minThresh_2btags_ = 0.;
-    helicityLD_maxThresh_0btags_ = 1.;
-    helicityLD_maxThresh_1btags_ = 1.;
-    helicityLD_maxThresh_2btags_ = 1.;
-    QGLikelihoodProd_thresh_ = 0.1;
-    pfMetThresh_ = 0.2;
-    use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_noQG" ) {
 
@@ -3948,7 +3940,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.;
-    pfMetThresh_ = 0.;
+    metSignificance_thresh_ = 10.;
     use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_v2_noQG" ) {
@@ -3979,7 +3971,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.;
-    pfMetThresh_ = 10.;
+    metSignificance_thresh_ = 10.;
     use_looseBTags_ = true;
 
   } else if( selectionType_=="optLD_looseBTags_fix400OLD" ) {
@@ -4011,7 +4003,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    pfMetThresh_ = 10.;
+    metSignificance_thresh_ = 10.;
     use_looseBTags_ = true;
 
   } else if( selectionType_=="noCutLD" ) {
@@ -4042,7 +4034,7 @@ void Ntp1Finalizer_HZZlljjRM::setSelectionType( const std::string& selectionType
     helicityLD_maxThresh_1btags_ = 1.;
     helicityLD_maxThresh_2btags_ = 1.;
     QGLikelihoodProd_thresh_ = 0.1;
-    pfMetThresh_ = 0.;
+    metSignificance_thresh_ = 10.;
     use_looseBTags_ = true;
 
   } else {
