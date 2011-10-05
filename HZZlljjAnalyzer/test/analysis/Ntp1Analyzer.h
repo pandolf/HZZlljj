@@ -595,14 +595,16 @@ public :
    // (needed for event weight determination in last step)
    TH1F* h1_nCounter_;
    // this one considers also PU reweighting:
-   TH1F* h1_nCounterPU_;
+   TH1F* h1_nCounterPU_;  //only intime pu
+   TH1F* h1_nCounterPU_ave_; //average of intime and out of time
 
    Int_t run_;
    Int_t oldrun_;
    Int_t cachedLS_;
    Int_t cachedRun_;
    Int_t LS_;
-   Int_t nPU_;
+   Int_t nPU_; //only intime pu
+   Int_t nPU_ave_; //average of intime and out of time
    Int_t nvertex_;
    Float_t rhoPF_;
    Int_t event_;
@@ -611,6 +613,7 @@ public :
    Float_t ptHatMax_;
    Float_t eventWeight_;
    Float_t eventWeightPU_;
+   Float_t eventWeightPU_ave_;
   
 
    bool DEBUG_;

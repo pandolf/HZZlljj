@@ -16,7 +16,7 @@
 //#include "fitTools.h"
 
 
-int DEBUG_EVENTNUMBER = 17473;
+int DEBUG_EVENTNUMBER = -1;
 
 
 double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
@@ -131,6 +131,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("rhoPF",&rhoPF_,"rhoPF_/F");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
   reducedTree_->Branch("eventWeightPU",&eventWeightPU_,"eventWeightPU_/F");
+  reducedTree_->Branch("eventWeightPU_ave",&eventWeightPU_ave_,"eventWeightPU_ave_/F");
   reducedTree_->Branch("leptTypeMC",&leptTypeMC_,"leptTypeMC_/I");
 
 //// triggers:
@@ -451,17 +452,22 @@ void Ntp1Analyzer_HZZlljj::Loop()
 
    // count number of events with PU reweighting:
    std::string puType = "Spring11_Flat10";
+   std::string puType_ave = "Spring11_Flat10";
    TString dataset_tstr(dataset_);
    if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") ) {
      puType = "Summer11_S4";
+     puType_ave = "Summer11_S4_ave";
    }
-   //PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
-   PUWeight* fPUWeight = new PUWeight(1089.2, "2011A", puType);
-   //TFile* filePU = TFile::Open("Pileup_2011_to_172802_LP_LumiScale.root");
-   //TH1F* h1_nPU_data = (TH1F*)filePU->Get("pileup");
-   //fPUWeight->SetDataHistogram(h1_nPU_data);
+   PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
+   PUWeight* fPUWeight_ave = new PUWeight(-1, "2011A", puType_ave);
+   //PUWeight* fPUWeight = new PUWeight(1089.2, "2011A", puType);
+   TFile* filePU = TFile::Open("Pileup_2011_to_173692_LPLumiScale_68mb.root");
+   TH1F* h1_nPU_data = (TH1F*)filePU->Get("pileup");
+   fPUWeight->SetDataHistogram(h1_nPU_data);
+   fPUWeight_ave->SetDataHistogram(h1_nPU_data);
 
    float nCounterPU=0.;
+   float nCounterPU_ave=0.;
 
 
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -491,19 +497,25 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      bool goodVertex = (ndofPV[0] >= 4.0 && sqrt(PVxPV[0]*PVxPV[0]+PVyPV[0]*PVyPV[0]) < 2. && fabs(PVzPV[0]) < 24. );
      if( !goodVertex ) continue;
   
+     nPU_ave_ = 0.;
      for( unsigned iBX=0; iBX<nBX; ++iBX ) {
-       if( bxPU[iBX]==0 ) nPU_ = nPU[iBX]; 
+       if( bxPU[iBX]==0 ) nPU_ = nPU[iBX]; //in time PU only
+       nPU_ave_ += nPU[iBX]; 
      }
+     nPU_ave_ /= (float)nBX;
 
      // PU reweighting:
      eventWeightPU_=1.;
+     eventWeightPU_ave_=1.;
      if( isMC_ ) {
      //if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") )
      //  eventWeightPU_ = getWeightPU(nPU_);
      //else
          eventWeightPU_ = fPUWeight->GetWeight(nPU_);
+         eventWeightPU_ave_ = fPUWeight_ave->GetWeight(nPU_ave_);
      }
      nCounterPU += eventWeightPU_;
+     nCounterPU_ave += eventWeightPU_ave_;
 
 
    //nPU_ = 0;
@@ -1497,6 +1509,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
    } //for entries
 
    h1_nCounterPU_->SetBinContent( 1, nCounterPU );
+   h1_nCounterPU_ave_->SetBinContent( 1, nCounterPU_ave );
 
 } //loop
 
