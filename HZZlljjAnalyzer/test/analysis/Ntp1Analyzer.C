@@ -42,6 +42,7 @@ Ntp1Analyzer::~Ntp1Analyzer()
    outfile_->cd();
    h1_nCounter_->Write();
    h1_nCounterPU_->Write();
+   h1_nCounterPU_ave_->Write();
    reducedTree_->Write();
    outfile_->Write();
    outfile_->Close();
@@ -350,6 +351,7 @@ void Ntp1Analyzer::CreateOutputFile() {
 
    h1_nCounter_ = new TH1F("nCounter", "", 1, 0., 1.);
    h1_nCounterPU_ = new TH1F("nCounterPU", "", 1, 0., 1.);
+   h1_nCounterPU_ave_ = new TH1F("nCounterPU_ave", "", 1, 0., 1.);
 
 }
 

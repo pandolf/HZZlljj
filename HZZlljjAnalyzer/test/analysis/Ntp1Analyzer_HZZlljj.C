@@ -490,7 +490,6 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
 
 
-
      if( !isGoodEvent(jentry) ) continue; //this takes care also of trigger
 
      if( nPV==0 ) continue;
@@ -508,21 +507,13 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      eventWeightPU_=1.;
      eventWeightPU_ave_=1.;
      if( isMC_ ) {
-     //if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") )
-     //  eventWeightPU_ = getWeightPU(nPU_);
-     //else
-         eventWeightPU_ = fPUWeight->GetWeight(nPU_);
-         eventWeightPU_ave_ = fPUWeight_ave->GetWeight(nPU_ave_);
+       eventWeightPU_ = fPUWeight->GetWeight(nPU_);
+       eventWeightPU_ave_ = fPUWeight_ave->GetWeight(nPU_ave_);
      }
      nCounterPU += eventWeightPU_;
      nCounterPU_ave += eventWeightPU_ave_;
 
 
-   //nPU_ = 0;
-   //for( unsigned iBX=0; iBX<nBX; ++iBX ) {
-   //  nPU_ += nPU[iBX]; 
-   //}
-   //nPU_ /= nBX; //average of the three
 
 
      nvertex_ = nPV;
