@@ -22,7 +22,7 @@
 bool ANALYZE_SIDEBANDS_=true;
 bool USE_MC_MASS=false;
 
-int DEBUG_EVENTNUMBER = 17473;
+int DEBUG_EVENTNUMBER = -1;
 
 //HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
 
@@ -345,6 +345,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_nvertex->Sumw2();
   TH1D* h1_nvertex_PUW = new TH1D("nvertex_PUW", "", 25, -0.5, 24.5);
   h1_nvertex_PUW->Sumw2();
+  TH1D* h1_nvertex_PUW_ave = new TH1D("nvertex_PUW_ave", "", 25, -0.5, 24.5);
+  h1_nvertex_PUW_ave->Sumw2();
 
   TH1D* h1_pfMet = new TH1D("pfMet", "", 60, 0., 120.);
   h1_pfMet->Sumw2();
@@ -416,9 +418,9 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_ptJet2_prekin = new TH1D("ptJet2_prekin", "", 100, 30., 230.);
   h1_ptJet2_prekin->Sumw2();
 
-  TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 100, 30., 130.);
+  TH1D* h1_ptJetRecoil = new TH1D("ptJetRecoil", "", 150, 0., 150.);
   h1_ptJetRecoil->Sumw2();
-  TH1D* h1_ptHiggs = new TH1D("ptHiggs", "", 100, 30., 130.);
+  TH1D* h1_ptHiggs = new TH1D("ptHiggs", "", 150, 0., 150.);
   h1_ptHiggs->Sumw2();
 
   TH1D* h1_etaJet1 = new TH1D("etaJet1", "", 100, -2.4, 2.4);
@@ -543,8 +545,12 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   h1_QGLikelihoodJet1_quarkMatched->Sumw2();
   TH1D* h1_QGLikelihoodJetRecoil = new TH1D("QGLikelihoodJetRecoil", "", 60, 0., 1.0001);
   h1_QGLikelihoodJetRecoil->Sumw2();
-  TH1D* h1_QGLikelihoodJetProdRecoil = new TH1D("QGLikelihoodJetProdRecoil", "", 60, 0., 1.0001);
-  h1_QGLikelihoodJetProdRecoil->Sumw2();
+  TH1D* h1_QGLikelihoodJetRecoil_MW400 = new TH1D("QGLikelihoodJetRecoil_MW400", "", 60, 0., 1.0001);
+  h1_QGLikelihoodJetRecoil_MW400->Sumw2();
+  TH1D* h1_QGLikelihoodProdRecoil = new TH1D("QGLikelihoodProdRecoil", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProdRecoil->Sumw2();
+  TH1D* h1_QGLikelihoodProdRecoil_MW400 = new TH1D("QGLikelihoodProdRecoil_MW400", "", 60, 0., 1.0001);
+  h1_QGLikelihoodProdRecoil_MW400->Sumw2();
 
   TH1D* h1_QGLikelihood_100_123 = new TH1D("QGLikelihood_100_123", "", 50, 0., 1.0001);
   h1_QGLikelihood_100_123->Sumw2();
@@ -957,6 +963,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_->SetBranchAddress("eventWeight", &eventWeight);
   Float_t eventWeightPU;
   tree_->SetBranchAddress("eventWeightPU", &eventWeightPU);
+  Float_t eventWeightPU_ave;
+  tree_->SetBranchAddress("eventWeightPU_ave", &eventWeightPU_ave);
   Float_t eventWeight_Zee;
   tree_->SetBranchAddress("eventWeight_Zee", &eventWeight_Zee);
   Float_t eventWeight_Zmm;
@@ -1525,6 +1533,7 @@ ofstream ofs("run_event.txt");
 
 
     h1_nvertex_PUW->Fill(nvertex, eventWeight);
+    h1_nvertex_PUW_ave->Fill(nvertex, eventWeight*eventWeightPU_ave/eventWeightPU);
 
 
     if( !isMC ) { 
@@ -2592,12 +2601,21 @@ ofstream ofs("run_event.txt");
       h1_ptJetRecoil->Fill( jetRecoil_selected.Pt(), eventWeight );
       h1_ptHiggs->Fill( ZZ_kinfit.Pt(), eventWeight );
 
-      if( fabs(jetRecoil_selected.Eta())<2.4 ) {
+      if( jetRecoil_selected.Pt()>0. && fabs(jetRecoil_selected.Eta())<2.4 ) {
         float QGLikelihoodJetRecoil = qglikeli->computeQGLikelihoodPU( jetRecoil_selected.Pt(), rhoPF, jetRecoil_selected.nCharged, jetRecoil_selected.nNeutral, jetRecoil_selected.ptD, -1. );
         h1_QGLikelihoodJetRecoil->Fill( QGLikelihoodJetRecoil, eventWeight);
-        h1_QGLikelihoodJetProdRecoil->Fill( QGLikelihoodJetRecoil*jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight);
+        h1_QGLikelihoodProdRecoil->Fill( QGLikelihoodJetRecoil*jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight);
+        if( ZZ_kinfit.M()>0.94*400. && ZZ_kinfit.M()<1.1*400. ) {
+          h1_QGLikelihoodJetRecoil_MW400->Fill( QGLikelihoodJetRecoil, eventWeight);
+          h1_QGLikelihoodProdRecoil_MW400->Fill( QGLikelihoodJetRecoil*jet1_selected.QGLikelihood*jet2_selected.QGLikelihood, eventWeight);
+        }
       } else {
         h1_QGLikelihoodJetRecoil->Fill( -1., eventWeight);
+        h1_QGLikelihoodProdRecoil->Fill( -1., eventWeight );
+        if( ZZ_kinfit.M()>0.94*400. && ZZ_kinfit.M()<1.1*400. ) {
+          h1_QGLikelihoodJetRecoil_MW400->Fill( -1., eventWeight);
+          h1_QGLikelihoodProdRecoil_MW400->Fill( -1., eventWeight);
+        }
       }
      
   
@@ -3445,6 +3463,7 @@ ofstream ofs("run_event.txt");
 
   h1_nvertex->Write();
   h1_nvertex_PUW->Write();
+  h1_nvertex_PUW_ave->Write();
 
   h1_rhoPF_presel->Write();
   h1_rhoPF->Write();
@@ -3633,7 +3652,9 @@ ofstream ofs("run_event.txt");
   h1_tcheJet->Write();
 
   h1_QGLikelihoodJetRecoil->Write();
-  h1_QGLikelihoodJetProdRecoil->Write();
+  h1_QGLikelihoodJetRecoil_MW400->Write();
+  h1_QGLikelihoodProdRecoil->Write();
+  h1_QGLikelihoodProdRecoil_MW400->Write();
 
   h1_deltaR_part2->Write();
   h1_ptJet2->Write();
