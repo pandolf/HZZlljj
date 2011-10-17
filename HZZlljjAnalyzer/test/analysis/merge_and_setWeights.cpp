@@ -14,9 +14,17 @@ std::string analysisType_;
 std::string flags_;
 
 
+struct EventStruct {
+
+  float totalEvents;
+  float totalEventsPU;
+  float totalEventsPU_ave;
+
+};
 
 
-std::pair<float,float> addInput( const std::string& dataset );
+
+EventStruct addInput( const std::string& dataset );
 float getWeight( const std::string& dataset, int nEvents );
 
 
@@ -44,9 +52,10 @@ int main( int argc, char* argv[] ) {
 
   tree = new TChain("reducedTree");
 
-  std::pair<float,float> totalEventsPair = addInput( dataset );
-  float nTotalEvents = totalEventsPair.first;
-  float nTotalEventsPU = totalEventsPair.second;
+  EventStruct totalEvents = addInput( dataset );
+  float nTotalEvents = totalEvents.totalEvents;
+  float nTotalEventsPU = totalEvents.totalEventsPU;
+  float nTotalEventsPU_ave = totalEvents.totalEventsPU_ave;
 
   std::cout << std::endl << "-> Finished adding. Total entries: " << tree->GetEntries() << std::endl;
 
@@ -79,6 +88,8 @@ int main( int argc, char* argv[] ) {
   h1_nCounterW->SetBinContent(1, nTotalEventsW);
   TH1F* h1_nCounterPU = new TH1F("nCounterPU", "", 1, 0., 1.);
   h1_nCounterPU->SetBinContent(1, nTotalEventsPU);
+  TH1F* h1_nCounterPU_ave = new TH1F("nCounterPU_ave", "", 1, 0., 1.);
+  h1_nCounterPU_ave->SetBinContent(1, nTotalEventsPU_ave);
 
   TTree* newTree = tree->CloneTree(0);
   Float_t newWeight;
@@ -111,7 +122,9 @@ int main( int argc, char* argv[] ) {
 
     } else if( dataset_tstr.BeginsWith("DoubleElectron") ) {
 
-      bool passedHLT = passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL || passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
+      //bool passedHLT = passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL || passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
+      bool passedHLT = (passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL || passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL)
+                       && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8;
 
       if( !passedHLT ) continue;
 
@@ -125,6 +138,7 @@ int main( int argc, char* argv[] ) {
   h1_nCounter->Write();
   h1_nCounterW->Write();
   h1_nCounterPU->Write();
+  h1_nCounterPU_ave->Write();
   newTree->Write();
   outfile->Write();
   outfile->Close();
@@ -134,18 +148,20 @@ int main( int argc, char* argv[] ) {
 }
 
 
-std::pair<float,float> addInput( const std::string& dataset ) {
+EventStruct addInput( const std::string& dataset ) {
 
   std::string infileName = "files_"+analysisType_+"_2ndLevel_" + dataset;
   if( flags_!="" ) infileName += "_" + flags_;
   infileName += ".txt";
   TH1F* h1_nCounter;
   TH1F* h1_nCounterPU;
+  TH1F* h1_nCounterPU_ave;
   TH1F* h1_nCounter_Zee;
   TH1F* h1_nCounter_Zmumu;
 
   float totalEvents = 0;
   float totalEventsPU = 0;
+  float totalEventsPU_ave = 0;
   // these are needed to fix the Spring11 ZJets Zee BR bug:
   int totalEvents_Zee = 0;
   int totalEvents_Zmumu = 0;
@@ -176,6 +192,14 @@ std::pair<float,float> addInput( const std::string& dataset ) {
       totalEventsPU += h1_nCounterPU->GetBinContent(1);
     } else {
       std::cout << std::endl << std::endl << " WARNING! File '" << infileName << "' has no nCounterPU information. Skipping." << std::endl;
+    }
+
+    // nCounterPU_ave:
+    h1_nCounterPU_ave = (TH1F*)infile->Get("nCounterPU_ave");
+    if( h1_nCounterPU_ave!=0 ) {
+      totalEventsPU_ave += h1_nCounterPU_ave->GetBinContent(1);
+    } else {
+      std::cout << std::endl << std::endl << " WARNING! File '" << infileName << "' has no nCounterPU_ave information. Skipping." << std::endl;
     }
 
     // nCounter_Zee
@@ -221,6 +245,14 @@ std::pair<float,float> addInput( const std::string& dataset ) {
         std::cout << std::endl << std::endl << " WARNING! File '" << rootfilename << "' has no nCounterPU information. Skipping." << std::endl;
       }
 
+      // nCounterPU_ave:
+      h1_nCounterPU_ave = (TH1F*)infile->Get("nCounterPU_ave");
+      if( h1_nCounterPU_ave!=0 ) {
+        totalEventsPU_ave += h1_nCounterPU_ave->GetBinContent(1);
+      } else {
+        std::cout << std::endl << std::endl << " WARNING! File '" << rootfilename << "' has no nCounterPU_ave information. Skipping." << std::endl;
+      }
+
       // nCounter_Zee
       h1_nCounter_Zee = (TH1F*)infile->Get("nCounter_Zee");
       if( h1_nCounter_Zee!=0 ) {
@@ -256,11 +288,12 @@ std::pair<float,float> addInput( const std::string& dataset ) {
 
   }
 
-  std::pair<float,float> eventPair;
-  eventPair.first = totalEvents;
-  eventPair.second = totalEventsPU;
+  EventStruct events;
+  events.totalEvents = totalEvents;
+  events.totalEventsPU = totalEventsPU;
+  events.totalEventsPU_ave = totalEventsPU_ave;
 
-  return eventPair;
+  return events;
 
 } //addinput
 
@@ -511,7 +544,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
   } else if( dataset=="GluGluToHToZZTo4L_M-400_7TeV-powheg-pythia6_Fall10" ) {
     xSection = (2.0608)*0.2724*0.100974*0.100974; //sigma x BR(H->ZZ) x BR(Z->ll) x BR(Z->ll) (l=e,m,t)
   } else if( dataset_tstr.BeginsWith("TTJets") || dataset_tstr.BeginsWith("TT_") ) {
-    xSection = 157.4; //NLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
+    xSection = 157.5; //NLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset_tstr.BeginsWith("ZZtoAnything") || dataset_tstr.BeginsWith("ZZ_") ) {
     xSection = 5.9*1.3; //MCFM NLO see http://ceballos.web.cern.ch/ceballos/hwwlnln/cross_sections_backgrounds.txt plus factor 1.3 to account for glu-glu
   } else if( dataset_tstr.BeginsWith("WWtoAnything")||dataset_tstr.BeginsWith("WW_") ) {
@@ -565,7 +598,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
   } else if( dataset_tstr.BeginsWith("TToBLNu") && dataset_tstr.Contains("t-channel") ) { 	 
     xSection = 62.8; 	 
   } else if( dataset_tstr.BeginsWith("TToBLNu") && dataset_tstr.Contains("tW-channel") ) { 	 
-    xSection = 10.56;
+    xSection = 10.6;
   } else if( dataset_tstr.BeginsWith("T_") && dataset_tstr.Contains("tW-channel") ) { 	 
     xSection = 7.46;
   } else if( dataset_tstr.BeginsWith("Tbar_") && dataset_tstr.Contains("tW-channel") ) { 	 
