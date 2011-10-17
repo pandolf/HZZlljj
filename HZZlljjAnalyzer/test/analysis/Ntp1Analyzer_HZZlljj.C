@@ -726,6 +726,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // kinematics:
        // --------------
        if( thisMuon.Pt() < 20. ) continue;
+       if( fabs(thisMuon.Eta()) > 2.4 ) continue;
 
        thisMuon.isGlobalMuonPromptTight = (muonIdMuon[iMuon]>>8)&1;
        thisMuon.isAllTrackerMuon = (muonIdMuon[iMuon]>>11)&1;
@@ -863,8 +864,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // kinematics:
        // --------------
        if( thisEle.Pt() < 20. ) continue;
-       if( (fabs(scEta) > 2.5) || ( fabs(scEta)>1.4442 && fabs(scEta)<1.566) ) continue;
-       //if( (fabs(thisEle.Eta()) > 2.5) || ( fabs(thisEle.Eta())>1.4442 && fabs(thisEle.Eta())<1.566) ) continue;
+       if( fabs(scEta)>1.4442 && fabs(scEta)<1.566 ) continue; //crack region vetoed with SC eta
+       if( fabs(thisEle.Eta()) > 2.5 ) continue; //acceptance cut with electron eta
 
 
        // isolation
