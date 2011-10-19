@@ -149,9 +149,6 @@ TH1D* getAlphaHisto( int nBTags, const std::string leptType, TFile* file_ZJets_m
 
   axes->Draw();
 
-  //h1_alpha_alpgen->Draw("histo");
-  //h1_alpha_madgraph->Draw("histo same");
-    
   h1_alpha_madgraph->Draw("same");
     
   std::string leptType_legendText;
@@ -167,13 +164,6 @@ TH1D* getAlphaHisto( int nBTags, const std::string leptType, TFile* file_ZJets_m
   legend->SetTextSize(0.04);
   legend->AddEntry(h1_alpha_madgraph, "Madgraph", "L");
   legend->Draw("same");
-
-//TPaveText* labelCMS = db->get_labelCMS();
-//TPaveText* labelSqrt = db->get_labelSqrt();
-
-//labelCMS->Draw("same");
-//labelSqrt->Draw("same");
-
 
 
   char canvasName[400];
@@ -224,11 +214,13 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
 //file_prova->Write();
 //exit(11);
 
-  char ofs_name[400];
-  sprintf( ofs_name, "FitSidebands/fitresults_%dbtag.txt", btagCategory);
+  char ofsMC_name[400];
+  sprintf( ofsMC_name, "FitSidebands/fitresultsMC_%dbtag.txt", btagCategory);
+  ofstream ofsMC(ofsMC_name);
 
-  ofstream ofs(ofs_name);
-
+  char ofsDATA_name[400];
+  sprintf( ofsDATA_name, "FitSidebands/fitresultsDATA_%dbtag.txt", btagCategory);
+  ofstream ofsDATA(ofsDATA_name);
 
 
   char cut_base[500];
@@ -285,25 +277,25 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
 
 
   // ------------------------ fermi ------------------------------
-  RooRealVar cutOff("cutOff","position of fermi",191.12,0,1000);
+  RooRealVar cutOff("cutOff","position of fermi",191.12,175.,220.);
   //cutOff.setConstant(kTRUE);
-  RooRealVar beta("beta","width of fermi",4.698,0,50);
+  RooRealVar beta("beta","width of fermi",4.698,0.,30.);
   //beta.setConstant(kTRUE);
   RooFermi fermi("fermi","fermi function",*mZZ,cutOff,beta);
 
   // -------------------- crystal ball ---------------------------
-  RooRealVar m("m","m",200.17,200,1000);
+  RooRealVar m("m","m",200.17,190.,300.);
   //m.setConstant(kTRUE);
-  RooRealVar wdth("wdth","wdth",85.73,0,1000);
-  RooRealVar n("n","n",13.067,0,100);
-  RooRealVar alpha("alpha","alpha",-1.395,-100,100); 
+  RooRealVar wdth("wdth","wdth",85.73,0.,200.);
+  RooRealVar n("n","n",13.067,0.,100.);
+  RooRealVar alpha("alpha","alpha",-1.395,-10.,10.); 
   RooCBShape CB("CB","Crystal ball",*mZZ,m,wdth,alpha,n);
 
   RooProdPdf background("background","background",RooArgSet(fermi,CB));
  
 
 
-/*
+
 
 
   TCanvas* c1 = new TCanvas("c1", "", 600, 600);
@@ -320,18 +312,26 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   c1->Clear();
   c1->SetLogy(false);
 
+  //RooFitResult *r_sidebandsMC_alpha = background.fitTo(sidebandsMC,SumW2Error(kTRUE));
   RooFitResult *r_sidebandsMC_alpha = background.fitTo(sidebandsMC_alpha,SumW2Error(kTRUE));
   //RooFitResult *r_sidebandsMC = exp.fitTo(sidebandsMC,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
 
-  ofs << "sidebands MC: " << std::endl;
-  ofs << "m: " << m.getVal() << " +- " << m.getError() << std::endl;
-  ofs << "m: " << m.getVal() << " +- " << m.getError() << std::endl;
+  ofsMC << "beta " << beta.getVal() << " " << beta.getError() << std::endl;
+  ofsMC << "cutOff " << cutOff.getVal() << " " << cutOff.getError() << std::endl;
+  ofsMC << "m " << m.getVal() << " " << m.getError() << std::endl;
+  ofsMC << "wdth " << wdth.getVal() << " " << wdth.getError() << std::endl;
+  ofsMC << "alpha " << alpha.getVal() << " " << alpha.getError() << std::endl;
+  ofsMC << "n " << n.getVal() << " " << n.getError() << std::endl;
+
+  ofsMC.close();
 
   RooPlot *plot_sidebandsMC_alpha = mZZ->frame();
 
+  //sidebandsMC.plotOn(plot_sidebandsMC, Binning(nBins));
   sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
 
-  landau_exp.plotOn(plot_sidebandsMC_alpha, LineColor(kRed));
+  background.plotOn(plot_sidebandsMC_alpha, LineColor(kRed));
+  //sidebandsMC.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
   sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
 
   plot_sidebandsMC_alpha->Draw();
@@ -357,27 +357,19 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   std::cout << std::endl << std::endl;
 
 
-
-  // -------------------- const landau ---------------------------
-  RooRealVar m_land_const("m_land_const","m_land_const",m_land.getVal(), 190., 300.);
-  m_land_const.setConstant(kTRUE);
-  RooRealVar s_land_const("s_land_const","s_land_const",s_land.getVal(), 0., 100.);
-  s_land_const.setConstant(kTRUE);
-  RooLandau landau_const("landau_const","landau_const",*mZZ,m_land_const,s_land_const);
-
-  // -------------------- const exp ---------------------------
-  RooRealVar a_exp_const("a_exp_const","a_exp_const",a_exp.getVal(), -2., 1.);
-  a_exp_const.setConstant(kTRUE);
-  RooExponential exp_const("exp_const","exp_const",*mZZ,a_exp_const);
-
-  RooProdPdf landau_exp_const("landau_exp_const","landau_exp_const",RooArgSet(landau_const,exp_const));
-
+  //fix shape:
+  cutOff.setConstant(kTRUE);
+  beta.setConstant(kTRUE);
+  m.setConstant(kTRUE);
+  wdth.setConstant(kTRUE);
+  n.setConstant(kTRUE);
+  alpha.setConstant(kTRUE);
 
 
   c1->Clear();
   c1->SetLogy(false);
 
-  RooFitResult *r_signalMC_alpha = landau_exp_const.fitTo(signalMC);
+  RooFitResult *r_signalMC_alpha = background.fitTo(signalMC);
   //RooFitResult *r_signalMC = exp.fitTo(signalMC,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
 
 
@@ -385,7 +377,7 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
 
   signalMC.plotOn(plot_signalMC_alpha, Binning(nBins));
 
-  landau_exp_const.plotOn(plot_signalMC_alpha, LineColor(kRed));
+  background.plotOn(plot_signalMC_alpha, LineColor(kRed));
   signalMC.plotOn(plot_signalMC_alpha, Binning(nBins));
 
   plot_signalMC_alpha->Draw();
@@ -413,19 +405,27 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   c1->Clear();
   c1->SetLogy(false);
 
-  RooFitResult *r_sidebandsDATA_alpha = landau_exp.fitTo(sidebandsDATA_alpha);
+  // unset const-ness of alpha and wdth:
+  wdth.setConstant(kFALSE);
+  alpha.setConstant(kFALSE);
+
+  RooFitResult *r_sidebandsDATA_alpha = background.fitTo(sidebandsDATA_alpha);
   //RooFitResult *r_sidebandsDATA = exp.fitTo(sidebandsDATA,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
 
-  ofs << "sidebands DATA: " << std::endl;
-  ofs << "m_land: " << m_land.getVal() << " +- " << m_land.getError() << std::endl;
-  ofs << "s_land: " << s_land.getVal() << " +- " << s_land.getError() << std::endl;
-  ofs << "a_exp: " << a_exp.getVal() << " +- " << a_exp.getError() << std::endl;
+  ofsDATA << "beta " << beta.getVal() << " " << beta.getError() << std::endl;
+  ofsDATA << "cutOff " << cutOff.getVal() << " " << cutOff.getError() << std::endl;
+  ofsDATA << "m " << m.getVal() << " " << m.getError() << std::endl;
+  ofsDATA << "wdth " << wdth.getVal() << " " << wdth.getError() << std::endl;
+  ofsDATA << "alpha " << alpha.getVal() << " " << alpha.getError() << std::endl;
+  ofsDATA << "n " << n.getVal() << " " << n.getError() << std::endl;
+
+  ofsDATA.close();
 
   RooPlot *plot_sidebandsDATA_alpha = mZZ->frame();
 
   sidebandsDATA_alpha.plotOn(plot_sidebandsDATA_alpha, Binning(nBins));
 
-  landau_exp.plotOn(plot_sidebandsDATA_alpha, LineColor(kRed));
+  background.plotOn(plot_sidebandsDATA_alpha, LineColor(kRed));
   sidebandsDATA_alpha.plotOn(plot_sidebandsDATA_alpha, Binning(nBins));
 
   plot_sidebandsDATA_alpha->Draw();
@@ -441,7 +441,7 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   c1->SaveAs(canvasName_eps.c_str());
 
 
-
+/*
 
 
   std::cout << std::endl << std::endl;
@@ -493,7 +493,6 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   canvasName_eps = *canvasName_str + ".eps";
   c1->SaveAs(canvasName_eps.c_str());
 
-  ofs.close();
 
 
   char alphaFileName[500];
@@ -534,6 +533,7 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   //delete tree_sidebandsDATA_alpha;
 */
 
+
 }
 
 
@@ -568,9 +568,7 @@ TTree* correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int btagCategory, cons
     tree->GetEntry( iEntry );
     if( (iEntry % 10000)==0 ) std::cout << "Entry: " << iEntry << "/" << nentries << std::endl;
 
-    //if( !isSidebands ) continue;
     if( nBTags!=btagCategory ) continue;
-    //if( mZZ>800. ) continue;
 
     int alphabin = h1_alpha->FindBin( mZZ );
     float alpha = h1_alpha->GetBinContent( alphabin );
