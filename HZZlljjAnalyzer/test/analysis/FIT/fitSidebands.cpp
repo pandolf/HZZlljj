@@ -218,10 +218,6 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   sprintf( ofsMC_name, "FitSidebands/fitresultsMC_%dbtag.txt", btagCategory);
   ofstream ofsMC(ofsMC_name);
 
-  char ofsDATA_name[400];
-  sprintf( ofsDATA_name, "FitSidebands/fitresultsDATA_%dbtag.txt", btagCategory);
-  ofstream ofsDATA(ofsDATA_name);
-
 
   char cut_base[500];
   sprintf( cut_base, "nBTags==%d %s", btagCategory, leptType_cut.c_str());
@@ -369,20 +365,34 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   c1->Clear();
   c1->SetLogy(false);
 
-  RooFitResult *r_signalMC_alpha = background.fitTo(signalMC);
+  RooFitResult *r_signalMC  = background.fitTo(signalMC);
   //RooFitResult *r_signalMC = exp.fitTo(signalMC,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
 
+  char ofsMCsig_name[400];
+  sprintf( ofsMCsig_name, "FitSidebands/fitresultsMCsig_%dbtag.txt", btagCategory);
+  ofstream ofsMCsig(ofsMCsig_name);
 
-  RooPlot *plot_signalMC_alpha = mZZ->frame();
 
-  signalMC.plotOn(plot_signalMC_alpha, Binning(nBins));
+  ofsMCsig << "beta " << beta.getVal() << " " << beta.getError() << std::endl;
+  ofsMCsig << "cutOff " << cutOff.getVal() << " " << cutOff.getError() << std::endl;
+  ofsMCsig << "m " << m.getVal() << " " << m.getError() << std::endl;
+  ofsMCsig << "wdth " << wdth.getVal() << " " << wdth.getError() << std::endl;
+  ofsMCsig << "alpha " << alpha.getVal() << " " << alpha.getError() << std::endl;
+  ofsMCsig << "n " << n.getVal() << " " << n.getError() << std::endl;
 
-  background.plotOn(plot_signalMC_alpha, LineColor(kRed));
-  signalMC.plotOn(plot_signalMC_alpha, Binning(nBins));
+  ofsMCsig.close();
 
-  plot_signalMC_alpha->Draw();
 
-  sprintf( canvasName, "FitSidebands/mZZ_signalMC_alpha_%dbtag_%s", btagCategory, leptType.c_str());
+  RooPlot *plot_signalMC  = mZZ->frame();
+
+  signalMC.plotOn(plot_signalMC , Binning(nBins));
+
+  background.plotOn(plot_signalMC, LineColor(kRed));
+  signalMC.plotOn(plot_signalMC, Binning(nBins));
+
+  plot_signalMC->Draw();
+
+  sprintf( canvasName, "FitSidebands/mZZ_signalMC_%dbtag_%s", btagCategory, leptType.c_str());
   canvasName_str = new std::string(canvasName);
   canvasName_eps = *canvasName_str + ".eps";
   c1->SaveAs(canvasName_eps.c_str());
@@ -411,6 +421,11 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
 
   RooFitResult *r_sidebandsDATA_alpha = background.fitTo(sidebandsDATA_alpha);
   //RooFitResult *r_sidebandsDATA = exp.fitTo(sidebandsDATA,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
+
+  char ofsDATA_name[400];
+  sprintf( ofsDATA_name, "FitSidebands/fitresultsDATA_%dbtag.txt", btagCategory);
+  ofstream ofsDATA(ofsDATA_name);
+
 
   ofsDATA << "beta " << beta.getVal() << " " << beta.getError() << std::endl;
   ofsDATA << "cutOff " << cutOff.getVal() << " " << cutOff.getError() << std::endl;
@@ -441,7 +456,7 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   c1->SaveAs(canvasName_eps.c_str());
 
 
-/*
+
 
 
   std::cout << std::endl << std::endl;
@@ -450,40 +465,48 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   std::cout << "-----------------------------------------------" << std::endl;
   std::cout << std::endl << std::endl;
 
+  //fix shape:
+  cutOff.setConstant(kTRUE);
+  beta.setConstant(kTRUE);
+  m.setConstant(kTRUE);
+  wdth.setConstant(kTRUE);
+  n.setConstant(kTRUE);
+  alpha.setConstant(kTRUE);
 
-//// -------------------- const landau ---------------------------
-//RooRealVar m_land_const_data("m_land_const_data","m_land_const_data",m_land.getVal(), 190., 300.);
-//m_land_const_data.setConstant(kTRUE);
-//RooRealVar s_land_const_data("s_land_const_data","s_land_const_data",s_land.getVal(), 0., 100.);
-//s_land_const_data.setConstant(kTRUE);
-//RooLandau landau_const_data("landau_const_data","landau_const_data",*mZZ,m_land_const_data,s_land_const_data);
+  char ofsDATAsig_name[400];
+  sprintf( ofsDATAsig_name, "FitSidebands/fitresultsDATAsig_%dbtag.txt", btagCategory);
+  ofstream ofsDATAsig(ofsDATAsig_name);
 
-//// -------------------- const exp ---------------------------
-//RooRealVar a_exp_const_data("a_exp_const","a_exp_const",a_exp.getVal(), -2., 1.);
-//a_exp_const_data.setConstant(kTRUE);
-//RooExponential exp_const_data("exp_const_data","exp_const_data",*mZZ,a_exp_const_data);
 
-//RooProdPdf landau_exp_const_data("landau_exp_const_data","landau_exp_const_data",RooArgSet(landau_const_data,exp_const_data));
+  ofsDATAsig << "beta " << beta.getVal() << " " << beta.getError() << std::endl;
+  ofsDATAsig << "cutOff " << cutOff.getVal() << " " << cutOff.getError() << std::endl;
+  ofsDATAsig << "m " << m.getVal() << " " << m.getError() << std::endl;
+  ofsDATAsig << "wdth " << wdth.getVal() << " " << wdth.getError() << std::endl;
+  ofsDATAsig << "alpha " << alpha.getVal() << " " << alpha.getError() << std::endl;
+  ofsDATAsig << "n " << n.getVal() << " " << n.getError() << std::endl;
+
+  ofsDATAsig.close();
+
 
 
   c1->Clear();
   c1->SetLogy(false);
 
-  //RooFitResult *r_signalDATA_alpha = landau_exp_const_data.fitTo(signalDATA);
+  RooFitResult *r_signalDATA = background.fitTo(signalDATA);
   //RooFitResult *r_signalDATA = exp.fitTo(signalDATA,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
 
 
-  RooPlot *plot_signalDATA_alpha = mZZ->frame();
+  RooPlot *plot_signalDATA = mZZ->frame();
 
-  //signalDATA.plotOn(plot_signalDATA_alpha, Binning(nBins));
+  signalDATA.plotOn(plot_signalDATA, Binning(nBins));
 
 //landau_exp_const_data.plotOn(plot_signalDATA_alpha, LineColor(kRed));
-  landau_exp.plotOn(plot_signalDATA_alpha, LineColor(kRed));
-  //signalDATA.plotOn(plot_signalDATA_alpha, Binning(nBins));
+  background.plotOn(plot_signalDATA, LineColor(kRed));
+  signalDATA.plotOn(plot_signalDATA, Binning(nBins));
 
-  plot_signalDATA_alpha->Draw();
+  plot_signalDATA->Draw();
 
-  sprintf( canvasName, "FitSidebands/mZZ_signalDATA_alpha_%dbtag_%s", btagCategory, leptType.c_str());
+  sprintf( canvasName, "FitSidebands/mZZ_signalDATA_%dbtag_%s", btagCategory, leptType.c_str());
   canvasName_str = new std::string(canvasName);
   canvasName_eps = *canvasName_str + ".eps";
   c1->SaveAs(canvasName_eps.c_str());
@@ -495,12 +518,6 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
 
 
 
-  char alphaFileName[500];
-  sprintf( alphaFileName, "alphaFile_%dbtag_%s.root", nBTags, leptType.c_str());
-  TFile* file_alpha = TFile::Open(alphaFileName, "recreate");
-  file_alpha->cd();
-  h1_alpha_madgraph->Write();
-  file_alpha->Close();
 
 
 
@@ -513,15 +530,15 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
  // delete plot_signalMC;
  // delete plot_sidebandsMC;
   delete plot_sidebandsMC_alpha;
-  delete plot_signalMC_alpha;
+  delete plot_signalMC;
  // delete plot_signalDATA;
  // delete plot_sidebandsDATA;
   delete plot_sidebandsDATA_alpha;
-  delete plot_signalDATA_alpha;
+  delete plot_signalDATA;
  // delete r_sidebandsMC;
  // delete r_signalMC;
   delete r_sidebandsMC_alpha;
-  delete r_signalMC_alpha;
+  delete r_signalMC;
 //  delete r_sidebandsDATA;
   delete r_sidebandsDATA_alpha;
   //delete r_signalDATA_alpha;
@@ -531,7 +548,7 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   //delete treeDATA;
   //delete tree_sidebandsMC_alpha;
   //delete tree_sidebandsDATA_alpha;
-*/
+
 
 
 }
