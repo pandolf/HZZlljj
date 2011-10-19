@@ -37,7 +37,7 @@ using namespace RooFit;
 //inputs: btag category, observed bkg yield (-> expected one for MC limit calc)
 //        mass of Higgs, sigma of Higgs, 4 parameters of CB (depend on mass)
 
-void make_roofitfiles(int btag, int chan, double massH, double sigmaH, double &obs_yield, double &exp_yield, vector<double> cb_pars){
+void make_roofitfiles(const std::string& dataset, int btag, int chan, double massH, double sigmaH, double &obs_yield, double &exp_yield, vector<double> cb_pars){
 
   gSystem->Load("libRooFit");
   cout<<"Trying to load custom PDFS ..."<<flush<<endl;
@@ -149,7 +149,40 @@ void make_roofitfiles(int btag, int chan, double massH, double sigmaH, double &o
 
   // ------------------------ fermi ------------------------------            
   vector<double> BKGparam;
-  //eps ones
+////new parameters from matthias (17-10-2011)
+// if(btag==0){//-1.5545 rot for Run2011A
+//   BKGparam.push_back(186.41); //cutOff
+//   BKGparam.push_back(5.257);	//beta	
+//   BKGparam.push_back(222.72);	//CB_mean
+//   BKGparam.push_back(27.6372);	//CB_wdth   2.0 /fb fits
+//   BKGparam.push_back(25.775);	//CB_n	    13.39
+//   BKGparam.push_back(-0.427402);	//CB_alpha  -.879
+//   BKGparam.push_back(0.); //theta
+//   //BKGparam.push_back(-1.5545); //theta
+// }
+// if(btag==1){//-1.552 rot for Run2011A
+//   BKGparam.push_back(184.04);  //cutOff
+//   BKGparam.push_back(3.225);	 //beta	
+//   BKGparam.push_back(166.6);	 //CB_mean
+//   BKGparam.push_back(83.3205);//CB_wdth   87.446    --- 2.0/fb fits
+//   BKGparam.push_back(6.5670  );//CB_n	     21.499
+//   BKGparam.push_back(-1.31797);//CB_alpha  -1.16716
+//   BKGparam.push_back(0.); //theta
+//   //BKGparam.push_back(-1.552); //theta
+// }
+// if(btag==2){//-1.5574 rot for Run2011A
+//   BKGparam.push_back(182.32);  //cutOff
+//   BKGparam.push_back(2.8492);	 //beta	
+//   BKGparam.push_back(226.23);	 //CB_mean
+//   BKGparam.push_back(46.4583); //CB_wdth  72.11  --- 2.0/fb fits
+//   BKGparam.push_back(6.1580 ); //CB_n	    2.7583
+//   BKGparam.push_back(-0.622234); //CB_alpha -1.654
+//   BKGparam.push_back(0.); //theta
+//   //BKGparam.push_back(-1.5574); //theta
+// }
+
+
+  // eps ones:
   if(btag==0){
      BKGparam.push_back(186.41); //cutoff
      BKGparam.push_back(5.257); //beta
@@ -230,7 +263,7 @@ void make_roofitfiles(int btag, int chan, double massH, double sigmaH, double &o
   n.setConstant(kTRUE);
   RooRealVar alpha(bkgp4name.c_str(),bkgp4name.c_str(),BKGparam.at(5),-100,100);  //0,100);  //,-100,0);
   alpha.setConstant(kTRUE);
-  RooRealVar theta(bkgp5name.c_str(),bkgp5name.c_str(),BKGparam.at(6),-3.1415,3.1415); 
+  RooRealVar theta(bkgp5name.c_str(),bkgp5name.c_str(),BKGparam.at(6),-3.14159,3.14159); 
   theta.setConstant(kTRUE);
 
   RooCB CB_BKG("CB_BKG","Crystal ball",CMS_hzz2l2q_mZZ,m,wdth,alpha,n, theta);
@@ -272,7 +305,8 @@ void make_roofitfiles(int btag, int chan, double massH, double sigmaH, double &o
   //RooDataSet *data_b = background.generate(x,int(obs_yield));
   cout<<"\nBTAG "<<btag<<"   OBS_YIELDS: "<<obs_yield<<" ->   "<<int(obs_yield)<<endl<<endl;*/
 
-  TFile* file = new TFile("./convertedTree_LP_20110811.root");
+  std::string fileName = "convertedTree_"+dataset+".root";
+  TFile* file = new TFile(fileName.c_str());
   RooFormulaVar cut1("mycut1",tree_sel.c_str(),RooArgList(CMS_hzz2l2q_mZZ,nBTags,mZjj,leptType));
   RooDataSet *dataset_obs_orig=new RooDataSet("dataset_obs_orig","dataset_obs_orig",(TTree*)file->Get("tree_passedEvents"),
 					      RooArgSet(CMS_hzz2l2q_mZZ,nBTags,mZjj,leptType),

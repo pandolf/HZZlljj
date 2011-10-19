@@ -14,13 +14,15 @@
 #include "TF1.h"
 
 #include "make_roofitfiles.C"
-#include "HiggsCSandWidth.cc"
+//#include "HiggsCSandWidth.cc"
 
 const int nbtag=3; //btag0, btag1 and btag2
 const int nprod=2; //VBF and gg
 const int nchan=2;//2e2j and 2m2j
-const float lumiee=1.556; //fb^-1, NEW!
-const float lumimm=1.615; //fb^-1, NEW!
+float lumiee=0.;
+float lumimm=0.;
+//const float lumiee=1.556; //fb^-1, NEW!
+//const float lumimm=1.615; //fb^-1, NEW!
 const int nmass=15;
 const bool isSM4=false; // if true add .15 to CSgg and CSvbf errors 
 const float mass[nmass]={190.0,200.0,210.0,230.0,250.0, 
@@ -58,7 +60,7 @@ float exp_bkg[nbtag][nchan];
 vector<float> btag0_ee_eff_pars,  btag1_ee_eff_pars, btag2_ee_eff_pars; //we store the parameters of the dependence of the eff on the Mzz
 vector<float> btag0_mm_eff_pars,  btag1_mm_eff_pars, btag2_mm_eff_pars; //we store the parameters of the dependence of the eff on the Mzz
 const float maxDiffSyst=0.01;
-HiggsCSandWidth *myCSW;
+//HiggsCSandWidth *myCSW;
 
 //vector<float>aux;
 
@@ -73,18 +75,30 @@ string make_JESunc(float mymass);
 string make_bakcgrNormErrLine(double expyields, int ibtag, int ich); 
 string make_obsstring(int btag);
 string make_obsstring(int btag, int obs);
-vector<float> eff_fit(int mybtag,int chan);
+vector<float> eff_fit(const std::string& dataset, int mybtag,int chan);
 vector<double> calculate_CBpars(int btag,double mH);
 int get_mass_index(float mymass);
 void extract_exp_sig_yields(float mymass,float mywidth);//,vector<float> ee_y , vector<float> mm_y);
 void get_gen_yields();
-int make_datacards();
+int make_datacards(const std::string& dataset);
 int get_signal_gen(float mymass);
-int make_datacards(){
 
+
+int make_datacards(const std::string& dataset){
+
+  if( dataset=="LP11" ) {
+    lumiee=1.556; //fb^-1, NEW!
+    lumimm=1.615; //fb^-1, NEW!
+  } else if( dataset=="Run2011A_FULL" ) {
+    lumiee=2.1; 
+    lumimm=2.1; 
+  } else {
+    std::cout << "Unkown dataset '" << dataset << "'!!! Exiting!!!" << std::endl;
+    exit(111);
+  }
   // gROOT->ProcessLine(".L make_roofitfiles.C++");
 
-  myCSW = new HiggsCSandWidth();
+//  myCSW = new HiggsCSandWidth();
 
   // return 1;
  
@@ -118,13 +132,13 @@ int make_datacards(){
  }
 
   //parametrize efficiencies
-  btag0_ee_eff_pars=eff_fit(0,0);
+  btag0_ee_eff_pars=eff_fit(dataset,0,0);
   //  cout<<"In main: "<<btag0_eff_pars.at(0)<<"    "<<btag0_eff_pars.at(1)<<endl;
-  btag1_ee_eff_pars=eff_fit(1,0);
-  btag2_ee_eff_pars=eff_fit(2,0);
-  btag0_mm_eff_pars=eff_fit(0,1);
-  btag1_mm_eff_pars=eff_fit(1,1);
-  btag2_mm_eff_pars=eff_fit(2,1);
+  btag1_ee_eff_pars=eff_fit(dataset,1,0);
+  btag2_ee_eff_pars=eff_fit(dataset,2,0);
+  btag0_mm_eff_pars=eff_fit(dataset,0,1);
+  btag1_mm_eff_pars=eff_fit(dataset,1,1);
+  btag2_mm_eff_pars=eff_fit(dataset,2,1);
  
   xsect_file.clear();
   xsect_file.seekg (0);
@@ -197,7 +211,7 @@ int make_datacards(){
 	vector<double> cbpars =calculate_CBpars(ibtag,mH);
 	double expyields=0.0;// exp_bkg[ibtag][ich];
 	double obsyields=0.0;
-	make_roofitfiles(ibtag,ich,mH,Gamma, obsyields, expyields,cbpars);
+	make_roofitfiles(dataset,ibtag,ich,mH,Gamma, obsyields, expyields,cbpars);
 	exp_bkg[ibtag][ich]=expyields;
 	cout<<"\n\n~~~~~~~~~~Btag "<< ibtag<<"   Expected MAKEDATACARDS "<<expyields<<endl;
 	string expRateLine=make_ratestring(mH,myxsect,ibtag,ich,expyields);
@@ -802,7 +816,7 @@ string make_bakcgrNormErrLine(double expyields, int btag, int ich){
   return bNorm_str;
 }
 
-vector<float> eff_fit(int mybtag,int chan){
+vector<float> eff_fit(const std::string& dataset,int mybtag,int chan){
   cout<<"\n~~~~~~~ Eff fit for btag="<<mybtag<<" chan = "<<chan<<endl;
   std::ostringstream ossm;
   ossm<<mybtag;
@@ -875,7 +889,8 @@ vector<float> eff_fit(int mybtag,int chan){
   c1f->SaveAs( ("eff_param_newHLT_"+btag_str +chan_str+"-extrange.C").c_str()  );
   // gr_eff->Write();
 
-  TFile *outf1=new TFile("./convertedTree_LP_20110811.root","UPDATE");
+  std::string outfileName = "convertedTree_" + dataset + ".root";
+  TFile *outf1=new TFile(outfileName.c_str(),"UPDATE");
   outf1->cd();
   gr_eff->Write();
   f1->Write();
