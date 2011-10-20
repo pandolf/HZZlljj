@@ -9,7 +9,6 @@
 #include "TLegend.h"
 #include "TPaveText.h"
 #include "TMatrixDSym.h"
-//#include "CommonTools/DrawBase.h"
 
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
@@ -18,10 +17,8 @@
 #include "RooArgSet.h"
 #include "RooFermi.h"
 #include "RooGaussian.h"
-#include "RooLandau.h"
 #include "RooCB.h"
 #include "RooExponential.h"
-#include "RooArgusBG.h"
 #include "RooProdPdf.h"
 #include "RooFitResult.h"
 
@@ -238,6 +235,7 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   RooRealVar alpha("alpha","alpha",a,-200.,200.); 
 
   RooRealVar theta("theta","theta",theta_val,-3.1416,3.1416); 
+  //theta.setConstant(kTRUE);
 
 
   RooCB CB("CB","Crystal ball",*mZZ,m,wdth,alpha,n, theta);
@@ -279,10 +277,10 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   TMatrixDSym corrMatrixMC_sidebands_alpha = r_sidebandsMC_alpha->correlationMatrix();
   TMatrixDSym covMatrixMC_sidebands_alpha = r_sidebandsMC_alpha->covarianceMatrix();
   
-  ofsMC << std::endl;
-  ofsMC << "Correlation matrix: " << std::endl;
-  ofsMC << corrMatrixMC_sidebands_alpha[0][0] << " " << corrMatrixMC_sidebands_alpha[0][1] << std::endl;
-  ofsMC << corrMatrixMC_sidebands_alpha[1][0] << " " << corrMatrixMC_sidebands_alpha[1][1] << std::endl;
+  //ofsMC << std::endl;
+  //ofsMC << "Correlation matrix: " << std::endl;
+  //ofsMC << corrMatrixMC_sidebands_alpha[0][0] << " " << corrMatrixMC_sidebands_alpha[0][1] << std::endl;
+  //ofsMC << corrMatrixMC_sidebands_alpha[1][0] << " " << corrMatrixMC_sidebands_alpha[1][1] << std::endl;
 
   ofsMC.close();
 
@@ -327,6 +325,7 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   wdth.setConstant(kTRUE);
   n.setConstant(kTRUE);
   alpha.setConstant(kTRUE);
+  theta.setConstant(kTRUE);
 
 
   c1->Clear();
@@ -407,10 +406,10 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   TMatrixDSym corrMatrixDATA_sidebands_alpha = r_sidebandsDATA_alpha->correlationMatrix();
   TMatrixDSym covMatrixDATA_sidebands_alpha = r_sidebandsDATA_alpha->covarianceMatrix();
   
-  ofsDATA << std::endl;
-  ofsDATA << "Correlation matrix: " << std::endl;
-  ofsDATA << corrMatrixDATA_sidebands_alpha[0][0] << " " << corrMatrixDATA_sidebands_alpha[0][1] << std::endl;
-  ofsDATA << corrMatrixDATA_sidebands_alpha[1][0] << " " << corrMatrixDATA_sidebands_alpha[1][1] << std::endl;
+  //ofsDATA << std::endl;
+  //ofsDATA << "Correlation matrix: " << std::endl;
+  //ofsDATA << corrMatrixDATA_sidebands_alpha[0][0] << " " << corrMatrixDATA_sidebands_alpha[0][1] << std::endl;
+  //ofsDATA << corrMatrixDATA_sidebands_alpha[1][0] << " " << corrMatrixDATA_sidebands_alpha[1][1] << std::endl;
 
   ofsDATA.close();
 
@@ -433,6 +432,53 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   canvasName_eps = *canvasName_str + ".eps";
   c1->SaveAs(canvasName_eps.c_str());
 
+
+  std::cout << std::endl << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << "  Trying to find decorrelation " << btagCategory << " btags)" << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << std::endl << std::endl;
+
+  
+  double precision=0.05;
+  double lowerBound = -2;
+  double upperBound = 0;
+  double bestValue=r_sidebandsDATA_alpha->correlation("alpha", "wdth");
+  double bestTheta=theta.getVal();
+  while(fabs(bestValue) > precision){
+  //for( int j=0;j<3;j++){
+    ofsDATA << "round " << std::endl;
+    double last = 0;
+    for(int i =0; i < 30; i++){
+      theta.setVal(lowerBound+i*(upperBound-lowerBound)/30.);
+      double a=cos(theta.getVal())*alpha0 + sin(theta.getVal())*width0;
+      double w=-sin(theta.getVal())*alpha0 + cos(theta.getVal())*width0;
+      alpha.setVal(a);
+      wdth.setVal(w);
+      RooFitResult *r_sidebandsDATA_alpha = background.fitTo(sidebandsDATA_alpha, SumW2Error(kFALSE), Save());
+      double newCor = r_sidebandsDATA_alpha->correlation("alpha", "wdth");
+      ofsDATA << theta.getVal() <<" " <<newCor  << std::endl;
+      if(fabs(newCor)<fabs(bestValue)){
+	bestValue=newCor;
+	bestTheta=theta.getVal();
+      }
+      if(newCor * last < 0 ){// found a zero-crossing
+	double oldstep = (upperBound-lowerBound)/30.;
+	lowerBound = theta.getVal()-5.*oldstep;
+	upperBound = theta.getVal()+5.*oldstep;
+	break;
+      }
+      else{
+	last = newCor;
+      }
+    }
+  }
+  std::cout << std::endl << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << "  found best angle "<< bestTheta << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << std::endl << std::endl;
+  ofsDATA.close();
 
 
 
@@ -479,7 +525,6 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
 
   signalDATA.plotOn(plot_signalDATA, Binning(nBins));
 
-//landau_exp_const_data.plotOn(plot_signalDATA_alpha, LineColor(kRed));
   background.plotOn(plot_signalDATA, LineColor(kRed));
   signalDATA.plotOn(plot_signalDATA, Binning(nBins));
 
