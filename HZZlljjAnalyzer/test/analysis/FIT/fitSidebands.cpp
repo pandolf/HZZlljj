@@ -28,7 +28,8 @@ using namespace RooFit;
 
 
 
-TH1D* getAlphaHisto( int nBTags, const std::string leptType, TFile* file_ZJets_madgraph, TFile* file_TT_TW, TFile* file_Diboson );
+TH1D* getAlphaHisto( int nBTags, const std::string leptType_str, TTree* treeMC );
+//TH1D* getAlphaHisto( int nBTags, const std::string leptType, TFile* file_ZJets_madgraph, TFile* file_TT_TW, TFile* file_Diboson );
 void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha=0 );
 TTree* correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int btagCategory, const std::string& name );
 
@@ -39,10 +40,6 @@ int main() {
   TFile* file_ZJets_madgraph = TFile::Open("HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root");
   TFile* file_TT_TW = TFile::Open("HZZlljjRM_TT_TW_TuneZ2_7TeV-powheg-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root");
   TFile* file_Diboson = TFile::Open("HZZlljjRM_VV_TuneZ2_7TeV-pythia6-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root");
-
-  TH1D* alpha_0btag = getAlphaHisto( 0, "ALL", file_ZJets_madgraph, file_TT_TW, file_Diboson );
-  TH1D* alpha_1btag = getAlphaHisto( 1, "ALL", file_ZJets_madgraph, file_TT_TW, file_Diboson );
-  TH1D* alpha_2btag = getAlphaHisto( 2, "ALL", file_ZJets_madgraph, file_TT_TW, file_Diboson );
 
   TFile* file_DATA = TFile::Open("HZZlljjRM_DATA_LP11_optLD_looseBTags_v2_ALL.root");
   TTree* treeDATA = (TTree*)file_DATA->Get("tree_passedEvents");
@@ -60,6 +57,13 @@ int main() {
   TTree* treeMC_1btag = chainMC->CopyTree("nBTags==1");
   TTree* treeMC_2btag = chainMC->CopyTree("nBTags==2");
 
+  //TH1D* alpha_0btag = getAlphaHisto( 0, "ALL", file_ZJets_madgraph, file_TT_TW, file_Diboson );
+  //TH1D* alpha_1btag = getAlphaHisto( 1, "ALL", file_ZJets_madgraph, file_TT_TW, file_Diboson );
+  //TH1D* alpha_2btag = getAlphaHisto( 2, "ALL", file_ZJets_madgraph, file_TT_TW, file_Diboson );
+
+  TH1D* alpha_0btag = getAlphaHisto( 0, "ALL", treeMC_0btag );
+  TH1D* alpha_1btag = getAlphaHisto( 1, "ALL", treeMC_1btag );
+  TH1D* alpha_2btag = getAlphaHisto( 2, "ALL", treeMC_2btag );
 
   fitSidebands( treeMC_0btag, treeDATA_0btag, 0, "ALL", alpha_0btag );
   fitSidebands( treeMC_1btag, treeDATA_1btag, 1, "ALL", alpha_1btag );
@@ -71,19 +75,64 @@ int main() {
 
 
 
-TH1D* getAlphaHisto( int nBTags, const std::string leptType, TFile* file_ZJets_madgraph, TFile* file_TT_TW, TFile* file_Diboson ) {
+//TH1D* getAlphaHisto( int nBTags, const std::string leptType, TFile* file_ZJets_madgraph, TFile* file_TT_TW, TFile* file_Diboson ) {
+TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* treeMC ) {
 
 
   std::string leptType_text;
-  if( leptType=="ELE" ) leptType_text = "_ELE";
-  else if( leptType=="MU" ) leptType_text = "_MU";
-  else if( leptType=="ALL" ) leptType_text = "";
+  if( leptType_str=="ELE" ) leptType_text = "_ELE";
+  else if( leptType_str=="MU" ) leptType_text = "_MU";
+  else if( leptType_str=="ALL" ) leptType_text = "";
   else {
-    std::cout << "UNKNOWN LEPT TYPE: " << leptType << ". EXITING." << std::endl;
+    std::cout << "UNKNOWN LEPT TYPE: " << leptType_str << ". EXITING." << std::endl;
     exit(1111);
   }
 
+  float mZZ;
+  float eventWeight;
+  float nBTags;
+  float mZjj;
+  float leptType;
 
+  treeMC->SetBranchAddress("mZZ",&mZZ);
+  treeMC->SetBranchAddress("eventWeight",&eventWeight);
+  treeMC->SetBranchAddress("nBTags",&nBTags);
+  treeMC->SetBranchAddress("mZjj",&mZjj);
+  treeMC->SetBranchAddress("leptType",&leptType);
+   
+  TH1D* h1_mZZ_signalRegion = new TH1D("mZZ_signalRegion", "", 65, 150.0, 800.0);
+  h1_mZZ_signalRegion->Sumw2();
+  TH1D* h1_mZZ_sidebands = new TH1D("mZZ_sidebands", "", 65, 150.0, 800.0);
+  h1_mZZ_sidebands->Sumw2();
+
+  for( unsigned iEntry=0; iEntry<treeMC->GetEntries(); ++iEntry ) {
+
+    treeMC->GetEntry(iEntry);
+    if( iEntry%10000 == 0 ) std::cout << "Entry: " << iEntry << "/" << treeMC->GetEntries() << std::endl;
+
+    if( leptType_str=="MU" && leptType!=0 ) continue;
+    if( leptType_str=="ELE" && leptType!=1 ) continue;
+    if( nBTags!=btagCategory ) continue;
+    if( mZZ>800. || mZZ < 183. ) continue;
+ 
+    bool isSignalRegion = (mZjj>75. && mZjj<105.);
+    if( isSignalRegion ) h1_mZZ_signalRegion->Fill(mZZ, eventWeight);
+    if( !isSignalRegion && mZjj>60. && mZjj<130.) h1_mZZ_sidebands->Fill(mZZ, eventWeight);
+
+  }
+
+  ////normalize:
+  //h1_mZZ_signalRegion->Scale( 1./h1_mZZ_signalRegion->Integral(1, h1_mZZ_signalRegion->GetNbinsX()) );
+  //h1_mZZ_sidebands->Scale( 1./h1_mZZ_sidebands->Integral(1, h1_mZZ_sidebands->GetNbinsX()) );
+
+  TH1D* h1_alpha = new TH1D(*h1_mZZ_signalRegion);
+  h1_alpha->SetName("alpha");
+  h1_alpha->Sumw2();
+  h1_alpha->Divide(h1_mZZ_sidebands);
+
+  return h1_alpha;
+  
+/*
   char histoName[300];
   sprintf( histoName, "mZZ_kinfit_hiMass_%dbtag%s", nBTags, leptType_text.c_str());
   char histoName_sidebands[300];
@@ -181,7 +230,7 @@ TH1D* getAlphaHisto( int nBTags, const std::string leptType, TFile* file_ZJets_m
 
   // default: return madgraph
   return h1_alpha_madgraph;
-
+*/
  
 }
 
