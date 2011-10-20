@@ -99,10 +99,15 @@ TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* tr
   treeMC->SetBranchAddress("nBTags",&nBTags);
   treeMC->SetBranchAddress("mZjj",&mZjj);
   treeMC->SetBranchAddress("leptType",&leptType);
+
+  
+  float bins0[26]={150,165,180,195,210,225,240,255,270,285,300,320,340,360,380,400,430,460,490,520,550,600,650,700,750,800};
    
-  TH1D* h1_mZZ_signalRegion = new TH1D("mZZ_signalRegion", "", 65, 150.0, 800.0);
+  TH1D* h1_mZZ_signalRegion = new TH1D("mZZ_signalRegion", "", 25, bins0);
+  //TH1D* h1_mZZ_signalRegion = new TH1D("mZZ_signalRegion", "", 65, 150.0, 800.0);
   h1_mZZ_signalRegion->Sumw2();
-  TH1D* h1_mZZ_sidebands = new TH1D("mZZ_sidebands", "", 65, 150.0, 800.0);
+  TH1D* h1_mZZ_sidebands = new TH1D("mZZ_sidebands", "", 25, bins0);
+  //TH1D* h1_mZZ_sidebands = new TH1D("mZZ_sidebands", "", 65, 150.0, 800.0);
   h1_mZZ_sidebands->Sumw2();
 
   for( unsigned iEntry=0; iEntry<treeMC->GetEntries(); ++iEntry ) {
@@ -414,7 +419,7 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   c1->Clear();
   c1->SetLogy(false);
 
-  RooFitResult *r_signalMC  = background.fitTo(signalMC);
+  //RooFitResult *r_signalMC  = background.fitTo(signalMC);
   //RooFitResult *r_signalMC = exp.fitTo(signalMC,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
 
   char ofsMCsig_name[400];
@@ -541,7 +546,7 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
   c1->Clear();
   c1->SetLogy(false);
 
-  RooFitResult *r_signalDATA = background.fitTo(signalDATA);
+  //RooFitResult *r_signalDATA = background.fitTo(signalDATA);
   //RooFitResult *r_signalDATA = exp.fitTo(signalDATA,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
 
 
@@ -587,7 +592,7 @@ void fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::
  // delete r_sidebandsMC;
  // delete r_signalMC;
   delete r_sidebandsMC_alpha;
-  delete r_signalMC;
+  //delete r_signalMC;
 //  delete r_sidebandsDATA;
   delete r_sidebandsDATA_alpha;
   //delete r_signalDATA_alpha;
