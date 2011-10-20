@@ -74,7 +74,7 @@ int main( int argc, char* argv[] ) {
 
   fitSidebands( dataset, treeMC_0btag, treeDATA_0btag, 0, "ALL", alpha_0btag );
   fitSidebands( dataset, treeMC_1btag, treeDATA_1btag, 1, "ALL", alpha_1btag );
-  //fitSidebands( dataset, treeMC_2btag, treeDATA_2btag, 2, "ALL", alpha_2btag );
+  fitSidebands( dataset, treeMC_2btag, treeDATA_2btag, 2, "ALL", alpha_2btag );
 
   return 0;
 
@@ -97,9 +97,9 @@ TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* tr
 
   float mZZ;
   float eventWeight;
-  float nBTags;
+  int nBTags;
   float mZjj;
-  float leptType;
+  int leptType;
 
   treeMC->SetBranchAddress("mZZ",&mZZ);
   treeMC->SetBranchAddress("eventWeight",&eventWeight);
@@ -222,8 +222,8 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
 
   float theta_val=0.;
   if( btagCategory==0 ) theta_val = -1.5545;
-  if( btagCategory==1 ) theta_val = -1.552;
-  if( btagCategory==2 ) theta_val = -1.5575;
+//if( btagCategory==1 ) theta_val = -1.552;
+//if( btagCategory==2 ) theta_val = -1.5575;
 
   float alpha0 = -1.395;
   float width0 = 85.73;
