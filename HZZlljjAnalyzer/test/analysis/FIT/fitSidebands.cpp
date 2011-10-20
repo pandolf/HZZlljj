@@ -82,7 +82,6 @@ int main( int argc, char* argv[] ) {
 
 
 
-//TH1D* getAlphaHisto( int nBTags, const std::string leptType, TFile* file_ZJets_madgraph, TFile* file_TT_TW, TFile* file_Diboson ) {
 TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* treeMC ) {
 
 
@@ -111,10 +110,8 @@ TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* tr
   float bins0[26]={150,165,180,195,210,225,240,255,270,285,300,320,340,360,380,400,430,460,490,520,550,600,650,700,750,800};
    
   TH1D* h1_mZZ_signalRegion = new TH1D("mZZ_signalRegion", "", 25, bins0);
-  //TH1D* h1_mZZ_signalRegion = new TH1D("mZZ_signalRegion", "", 65, 150.0, 800.0);
   h1_mZZ_signalRegion->Sumw2();
   TH1D* h1_mZZ_sidebands = new TH1D("mZZ_sidebands", "", 25, bins0);
-  //TH1D* h1_mZZ_sidebands = new TH1D("mZZ_sidebands", "", 65, 150.0, 800.0);
   h1_mZZ_sidebands->Sumw2();
 
   for( unsigned iEntry=0; iEntry<treeMC->GetEntries(); ++iEntry ) {
@@ -132,10 +129,6 @@ TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* tr
     if( !isSignalRegion && mZjj>60. && mZjj<130.) h1_mZZ_sidebands->Fill(mZZ, eventWeight);
 
   }
-
-  ////normalize:
-  //h1_mZZ_signalRegion->Scale( 1./h1_mZZ_signalRegion->Integral(1, h1_mZZ_signalRegion->GetNbinsX()) );
-  //h1_mZZ_sidebands->Scale( 1./h1_mZZ_sidebands->Integral(1, h1_mZZ_sidebands->GetNbinsX()) );
 
   TH1D* h1_alpha = new TH1D(*h1_mZZ_signalRegion);
   h1_alpha->SetName("alpha");
