@@ -534,9 +534,9 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   sprintf( canvasName_rot, "%s/check_rot_%dbtag_log.eps", outdir.c_str(), btagCategory);
   c1->SaveAs(canvasName_rot);
 
-  ofsDATA <<  "alpha_rot " << a_rot << std::endl;
-  ofsDATA <<  "wdth_rot " << w_rot << std::endl;
-  ofsDATA << "theta_best " << bestTheta << std::endl;
+  ofsDATA <<  "alpha_rot " << a_rot << " 0" << std::endl;
+  ofsDATA <<  "wdth_rot " << w_rot << " 0" << std::endl;
+  ofsDATA << "theta_best " << bestTheta << " 0" << std::endl;
   ofsDATA.close();
 
 
