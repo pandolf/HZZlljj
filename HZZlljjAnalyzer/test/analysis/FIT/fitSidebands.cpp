@@ -233,30 +233,21 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
 
 
 
-//float theta_val=0.;
-//if( btagCategory==0 ) theta_val = -1.5545;
-//if( btagCategory==1 ) theta_val = -1.552;
-//if( btagCategory==2 ) theta_val = -1.5575;
 
   double a0 = -1.395;
   double w0 = 85.73;
-  //double a=cos(-theta_val)*a0 - sin(-theta_val)*w0;
-  //double w=sin(-theta_val)*a0 + cos(-theta_val)*w0;
 
   // ------------------------ fermi ------------------------------
   RooRealVar cutOff("cutOff","position of fermi",191.12,175.,220.);
   RooRealVar cutOff2("cutOff2","position of fermi",191.12,175.,220.);
-  //cutOff.setConstant(kTRUE);
   RooRealVar beta("beta","width of fermi",4.698,0.,30.);
   RooRealVar beta2("beta2","width of fermi",4.698,0.,30.);
-  //beta.setConstant(kTRUE);
-  RooFermi fermi("fermi","fermi function",*mZZ,cutOff2,beta2);
+  RooFermi fermi("fermi","fermi function",*mZZ,cutOff,beta);
   RooFermi fermi2("fermi2","fermi function",*mZZ,cutOff2,beta2);
 
   // -------------------- crystal ball ---------------------------
   RooRealVar m("m","m",200.17,190.,300.);
   RooRealVar m2("m2","m2",200.17,190.,300.);
-  //m.setConstant(kTRUE);
   RooRealVar wdth("wdth","wdth",w0,-200.,200.);
   RooRealVar wdth0("wdth0","wdth0",w0,-200.,200.);
   RooRealVar n("n","n",13.067,0.,100.);
@@ -293,10 +284,8 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   c1->Clear();
   c1->SetLogy(false);
 
-  //RooFitResult *r_sidebandsMC_alpha = background.fitTo(sidebandsMC,SumW2Error(kTRUE));
   RooFitResult *r_sidebandsMC_alpha = background.fitTo(sidebandsMC_alpha,SumW2Error(kTRUE), Save());
   RooFitResult *r_sidebandsMC_alpha_2 = background2.fitTo(sidebandsMC_alpha,SumW2Error(kTRUE), Save());
-  //RooFitResult *r_sidebandsMC = exp.fitTo(sidebandsMC,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
 
   ofsMC << "beta " << beta.getVal() << " " << beta.getError() << std::endl;
   ofsMC << "cutOff " << cutOff.getVal() << " " << cutOff.getError() << std::endl;
@@ -310,10 +299,6 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   TMatrixDSym corrMatrixMC_sidebands_alpha = r_sidebandsMC_alpha->correlationMatrix();
   TMatrixDSym covMatrixMC_sidebands_alpha = r_sidebandsMC_alpha->covarianceMatrix();
   
-  //ofsMC << std::endl;
-  //ofsMC << "Correlation matrix: " << std::endl;
-  //ofsMC << corrMatrixMC_sidebands_alpha[0][0] << " " << corrMatrixMC_sidebands_alpha[0][1] << std::endl;
-  //ofsMC << corrMatrixMC_sidebands_alpha[1][0] << " " << corrMatrixMC_sidebands_alpha[1][1] << std::endl;
 
   ofsMC.close();
 
@@ -321,12 +306,10 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
 
   RooPlot *plot_sidebandsMC_alpha = mZZ->frame();
 
-  //sidebandsMC.plotOn(plot_sidebandsMC, Binning(nBins));
   sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
 
   background.plotOn(plot_sidebandsMC_alpha, LineColor(kRed));
   background2.plotOn(plot_sidebandsMC_alpha, LineColor(38), LineStyle(2));
-  //sidebandsMC.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
   sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
 
   plot_sidebandsMC_alpha->Draw();
