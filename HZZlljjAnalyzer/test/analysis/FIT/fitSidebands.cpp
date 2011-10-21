@@ -18,6 +18,7 @@
 #include "RooFermi.h"
 #include "RooGaussian.h"
 #include "RooCB.h"
+#include "RooCBShape.h"
 #include "RooExponential.h"
 #include "RooProdPdf.h"
 #include "RooFitResult.h"
@@ -132,6 +133,28 @@ TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* tr
   h1_alpha->Sumw2();
   h1_alpha->Divide(h1_mZZ_sidebands);
 
+  // smooth it:
+  double BinContent=0;
+  double SmoothingThreshold=3.0;
+  for(int iBin=1; iBin<h1_alpha->GetNbinsX(); iBin++){
+    if(h1_alpha->GetBinContent(iBin)>SmoothingThreshold){
+      //if(iBin!=h1_alpha->GetNbinsX()){
+        if( h1_alpha->GetBinContent(iBin+1)<SmoothingThreshold && h1_alpha->GetBinContent(iBin-1)<SmoothingThreshold )
+          h1_alpha->SetBinContent(iBin,(h1_alpha->GetBinContent(iBin+1)+h1_alpha->GetBinContent(iBin-1))/2.);     
+        else if( h1_alpha->GetBinContent(iBin+1)<SmoothingThreshold )
+          h1_alpha->SetBinContent(iBin,h1_alpha->GetBinContent(iBin+1));     
+        else if( h1_alpha->GetBinContent(iBin-1)<SmoothingThreshold )
+          h1_alpha->SetBinContent(iBin,h1_alpha->GetBinContent(iBin-1));
+        else
+          h1_alpha->SetBinContent(iBin,1.);
+      //} else if(iBin==h1_alpha->GetNbinsX()){
+      //  h1_alpha->SetBinContent(iBin,h1_alpha->GetBinContent(iBin-1));
+      //} else if(iBin==1){
+      //  h1_alpha->SetBinContent(iBin,(h1_alpha->GetBinContent(iBin+1)+h1_alpha->GetBinContent(iBin))/2);
+      //}
+    }
+  }
+
   return h1_alpha;
   
 }
@@ -210,37 +233,46 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
 
 
 
-  float theta_val=0.;
-  if( btagCategory==0 ) theta_val = -1.5545;
+//float theta_val=0.;
+//if( btagCategory==0 ) theta_val = -1.5545;
 //if( btagCategory==1 ) theta_val = -1.552;
 //if( btagCategory==2 ) theta_val = -1.5575;
 
-  float alpha0 = -1.395;
-  float width0 = 85.73;
-  double a=cos(theta_val)*alpha0 + sin(theta_val)*width0;
-  double w=-sin(theta_val)*alpha0 + cos(theta_val)*width0;
+  double a0 = -1.395;
+  double w0 = 85.73;
+  //double a=cos(-theta_val)*a0 - sin(-theta_val)*w0;
+  //double w=sin(-theta_val)*a0 + cos(-theta_val)*w0;
 
   // ------------------------ fermi ------------------------------
   RooRealVar cutOff("cutOff","position of fermi",191.12,175.,220.);
+  RooRealVar cutOff2("cutOff2","position of fermi",191.12,175.,220.);
   //cutOff.setConstant(kTRUE);
   RooRealVar beta("beta","width of fermi",4.698,0.,30.);
+  RooRealVar beta2("beta2","width of fermi",4.698,0.,30.);
   //beta.setConstant(kTRUE);
-  RooFermi fermi("fermi","fermi function",*mZZ,cutOff,beta);
+  RooFermi fermi("fermi","fermi function",*mZZ,cutOff2,beta2);
+  RooFermi fermi2("fermi2","fermi function",*mZZ,cutOff2,beta2);
 
   // -------------------- crystal ball ---------------------------
   RooRealVar m("m","m",200.17,190.,300.);
+  RooRealVar m2("m2","m2",200.17,190.,300.);
   //m.setConstant(kTRUE);
-  RooRealVar wdth("wdth","wdth",w,-200.,200.);
+  RooRealVar wdth("wdth","wdth",w0,-200.,200.);
+  RooRealVar wdth0("wdth0","wdth0",w0,-200.,200.);
   RooRealVar n("n","n",13.067,0.,100.);
-  RooRealVar alpha("alpha","alpha",a,-200.,200.); 
+  RooRealVar n2("n2","n2",13.067,0.,100.);
+  RooRealVar alpha("alpha","alpha",a0,-200.,200.); 
+  RooRealVar alpha0("alpha0","alpha0",a0,-200.,200.); 
 
-  RooRealVar theta("theta","theta",theta_val,-3.1416,3.1416); 
-  //theta.setConstant(kTRUE);
+  RooRealVar theta("theta","theta",0.,-3.1416,3.1416); 
+  theta.setConstant(kTRUE);
 
 
   RooCB CB("CB","Crystal ball",*mZZ,m,wdth,alpha,n, theta);
+  RooCBShape CBShape("CB","Crystal ball",*mZZ,m2,wdth0,alpha0,n2);
 
   RooProdPdf background("background","background",RooArgSet(fermi,CB));
+  RooProdPdf background2("background","background",RooArgSet(fermi2,CBShape));
  
 
 
@@ -263,6 +295,7 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
 
   //RooFitResult *r_sidebandsMC_alpha = background.fitTo(sidebandsMC,SumW2Error(kTRUE));
   RooFitResult *r_sidebandsMC_alpha = background.fitTo(sidebandsMC_alpha,SumW2Error(kTRUE), Save());
+  RooFitResult *r_sidebandsMC_alpha_2 = background2.fitTo(sidebandsMC_alpha,SumW2Error(kTRUE), Save());
   //RooFitResult *r_sidebandsMC = exp.fitTo(sidebandsMC,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
 
   ofsMC << "beta " << beta.getVal() << " " << beta.getError() << std::endl;
@@ -292,6 +325,7 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
 
   background.plotOn(plot_sidebandsMC_alpha, LineColor(kRed));
+  background2.plotOn(plot_sidebandsMC_alpha, LineColor(38), LineStyle(2));
   //sidebandsMC.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
   sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
 
@@ -307,7 +341,6 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   *canvasName_str += "_log";
   canvasName_eps = *canvasName_str + ".eps";
   c1->SaveAs(canvasName_eps.c_str());
-
 
 
 
@@ -411,7 +444,6 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   //ofsDATA << corrMatrixDATA_sidebands_alpha[0][0] << " " << corrMatrixDATA_sidebands_alpha[0][1] << std::endl;
   //ofsDATA << corrMatrixDATA_sidebands_alpha[1][0] << " " << corrMatrixDATA_sidebands_alpha[1][1] << std::endl;
 
-  ofsDATA.close();
 
   RooPlot *plot_sidebandsDATA_alpha = mZZ->frame();
 
@@ -439,45 +471,89 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   std::cout << "-----------------------------------------------" << std::endl;
   std::cout << std::endl << std::endl;
 
+
+  c1->Clear();
+  c1->SetLogy(false);
+
+
+  RooPlot *plot_rot = mZZ->frame();
+
+  background.plotOn(plot_rot, LineColor(kRed));
+
   
   double precision=0.05;
-  double lowerBound = -2;
-  double upperBound = 0;
-  double bestValue=r_sidebandsDATA_alpha->correlation("alpha", "wdth");
-  double bestTheta=theta.getVal();
+  double lowerBound = -2.;
+  double upperBound = 0.;
+  double bestValue = r_sidebandsDATA_alpha->correlation("alpha", "wdth");
+  double bestTheta = theta.getVal();
+  double alpha_fit = alpha.getVal();
+  double width_fit = wdth.getVal();
+
   while(fabs(bestValue) > precision){
-  //for( int j=0;j<3;j++){
-    ofsDATA << "round " << std::endl;
-    double last = 0;
+
+    double last = 0.;
+
     for(int i =0; i < 30; i++){
+
       theta.setVal(lowerBound+i*(upperBound-lowerBound)/30.);
-      double a=cos(theta.getVal())*alpha0 + sin(theta.getVal())*width0;
-      double w=-sin(theta.getVal())*alpha0 + cos(theta.getVal())*width0;
+      double a=cos(-theta.getVal())*alpha_fit - sin(-theta.getVal())*width_fit;
+      double w=sin(-theta.getVal())*alpha_fit + cos(-theta.getVal())*width_fit;
       alpha.setVal(a);
       wdth.setVal(w);
       RooFitResult *r_sidebandsDATA_alpha = background.fitTo(sidebandsDATA_alpha, SumW2Error(kFALSE), Save());
       double newCor = r_sidebandsDATA_alpha->correlation("alpha", "wdth");
-      ofsDATA << theta.getVal() <<" " <<newCor  << std::endl;
       if(fabs(newCor)<fabs(bestValue)){
-	bestValue=newCor;
-	bestTheta=theta.getVal();
+        bestValue=newCor;
+        bestTheta=theta.getVal();
       }
-      if(newCor * last < 0 ){// found a zero-crossing
-	double oldstep = (upperBound-lowerBound)/30.;
-	lowerBound = theta.getVal()-5.*oldstep;
-	upperBound = theta.getVal()+5.*oldstep;
-	break;
+      if(newCor * last < 0. ){// found a zero-crossing
+        double oldstep = (upperBound-lowerBound)/30.;
+        lowerBound = theta.getVal()-5.*oldstep;
+        upperBound = theta.getVal()+5.*oldstep;
+        break;
+      } else{
+        last = newCor;
       }
-      else{
-	last = newCor;
-      }
-    }
-  }
+
+    } //for i 0-30
+
+  } //while precision
+
+
   std::cout << std::endl << std::endl;
   std::cout << "-----------------------------------------------" << std::endl;
   std::cout << "  found best angle "<< bestTheta << std::endl;
   std::cout << "-----------------------------------------------" << std::endl;
   std::cout << std::endl << std::endl;
+  
+  double a_rot = cos(-bestTheta)*alpha_fit - sin(-bestTheta)*width_fit;
+  double w_rot = sin(-bestTheta)*alpha_fit + cos(-bestTheta)*width_fit;
+
+  RooRealVar wdth_rot("wdth_rot","wdth_rot",w_rot,-200.,200.);
+  RooRealVar alpha_rot("alpha_rot","alpha_rot",a_rot,-200.,200.);
+
+  RooRealVar theta_best("theta_best","theta_best",bestTheta,-3.1416,3.1416);
+
+
+  RooCB CB_rot("CB","Crystal ball",*mZZ,m,wdth_rot,alpha_rot,n, theta_best);
+
+  RooProdPdf background_rot("background_rot","background_rot",RooArgSet(fermi,CB_rot));
+  background_rot.plotOn(plot_rot, LineColor(38), LineStyle(2));
+
+  plot_rot->Draw();
+
+  char canvasName_rot[400];
+  sprintf( canvasName_rot, "%s/check_rot_%dbtag.eps", outdir.c_str(), btagCategory);
+  c1->SaveAs(canvasName_rot);
+  
+
+  c1->SetLogy();
+  sprintf( canvasName_rot, "%s/check_rot_%dbtag_log.eps", outdir.c_str(), btagCategory);
+  c1->SaveAs(canvasName_rot);
+
+  ofsDATA <<  "alpha_rot " << a_rot << std::endl;
+  ofsDATA <<  "wdth_rot " << w_rot << std::endl;
+  ofsDATA << "theta_best " << bestTheta << std::endl;
   ofsDATA.close();
 
 
