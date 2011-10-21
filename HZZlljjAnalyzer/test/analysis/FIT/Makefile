@@ -16,6 +16,9 @@ EXTRALIBS  :=  -L$(ROOTSYS)/lib -L$(ROOFIT_LIBDIR)/ -lHtml -lMathCore -lGenVecto
 fitSidebands: fitSidebands.cpp RooFermi.o RooCB.o
 	$(CC) -Wall $(INCLUDES) -o fitSidebands fitSidebands.cpp RooFermi.o RooCB.o $(ROOTFLAG) $(EXTRALIBS)
 
+create_datacards: create_datacards.cpp RooFermi.o RooCB.o
+	$(CC) -Wall $(INCLUDES) -o create_datacards create_datacards.cpp RooFermi.o RooCB.o $(ROOTFLAG) $(EXTRALIBS)
+
 
 
 RooFermi.o: RooFermi.cc
@@ -23,6 +26,7 @@ RooFermi.o: RooFermi.cc
 
 RooCB.o: RooCB.cc
 	$(CC) $(CFLAGS) $(INCLUDES) RooCB.cc $(ROOTFLAG) $(EXTRALIBS)
+
 
 
 
