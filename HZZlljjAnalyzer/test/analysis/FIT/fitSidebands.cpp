@@ -304,7 +304,7 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
 
   
 
-  RooPlot *plot_sidebandsMC_alpha = mZZ->frame();
+  RooPlot *plot_sidebandsMC_alpha = mZZ->frame(mZZ_min, mZZ_max, nBins);
 
   sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
 
@@ -366,11 +366,9 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
 //ofsMCsig.close();
 
 
-  RooPlot *plot_signalMC  = mZZ->frame();
+  RooPlot *plot_signalMC  = mZZ->frame(mZZ_min, mZZ_max, nBins);
 
-  signalMC.plotOn(plot_signalMC , Binning(nBins));
-
-  background.plotOn(plot_signalMC, LineColor(kRed));
+  background.plotOn(plot_signalMC, LineColor(kRed), Normalization(sidebandsMC_alpha.sumEntries()));
   signalMC.plotOn(plot_signalMC, Binning(nBins));
 
   plot_signalMC->Draw();
@@ -428,7 +426,7 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   //ofsDATA << corrMatrixDATA_sidebands_alpha[1][0] << " " << corrMatrixDATA_sidebands_alpha[1][1] << std::endl;
 
 
-  RooPlot *plot_sidebandsDATA_alpha = mZZ->frame();
+  RooPlot *plot_sidebandsDATA_alpha = mZZ->frame(mZZ_min, mZZ_max, nBins);
 
   sidebandsDATA_alpha.plotOn(plot_sidebandsDATA_alpha, Binning(nBins));
 
@@ -459,7 +457,7 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   c1->SetLogy(false);
 
 
-  RooPlot *plot_rot = mZZ->frame();
+  RooPlot *plot_rot = mZZ->frame(mZZ_min, mZZ_max, nBins);
 
   background.plotOn(plot_rot, LineColor(kRed));
 
@@ -580,11 +578,9 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   //RooFitResult *r_signalDATA = exp.fitTo(signalDATA,SumW2Error(kFALSE),InitialHesse(kTRUE),Save());
 
 
-  RooPlot *plot_signalDATA = mZZ->frame();
+  RooPlot *plot_signalDATA = mZZ->frame(mZZ_min, mZZ_max, nBins);
 
-  signalDATA.plotOn(plot_signalDATA, Binning(nBins));
-
-  background.plotOn(plot_signalDATA, LineColor(kRed));
+  background.plotOn(plot_signalDATA, LineColor(kRed), Normalization(sidebandsDATA_alpha.sumEntries()));
   signalDATA.plotOn(plot_signalDATA, Binning(nBins));
 
   plot_signalDATA->Draw();
