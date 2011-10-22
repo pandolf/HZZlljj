@@ -209,8 +209,19 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   double rate_background = get_expectedYield_background( dataset, leptType_str, nbtags, hp, w );
 
   ofs << "rate               " << rate_gg << "\t\t\t" << rate_VBF << "\t\t\t" << rate_background << std::endl;
+  ofs << "------------ " << std::endl;
+
+
+  // and now systematics:
+
+
+
+
 
   ofs.close();
+
+
+  // datacard is done. now write rootfile:
 
 }
 
