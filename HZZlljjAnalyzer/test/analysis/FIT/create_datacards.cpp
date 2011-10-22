@@ -55,14 +55,14 @@ struct CBParameters {
 
 
 int convert_leptType( const std::string& leptType );
-void create_singleDatacard( const std::string& dataset, float mass, float lumi, const std::string& leptType_str, int nbtags );
+void create_singleDatacard( const std::string& dataset, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass );
 HiggsParameters get_higgsParameters( float mass );
 double linear_interp( double x, double x_old, double mass, double mH, double mH_old );
 std::pair<double,double> get_massWindow( HiggsParameters hp );
 TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags );
 double get_observedYield( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w );
 double get_expectedYield_background( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w );
-pair<double,double> get_expectedYield_signal( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w );
+pair<double,double> get_expectedYield_signal( HiggsParameters hp, float lumi, TF1* eff_vs_mass );
 void import_signalShape( int nbtags, HiggsParameters hp, RooWorkspace* w );
 
 
@@ -120,12 +120,12 @@ int main( int argc, char* argv[] ) {
     sprintf( mkdir_command, "mkdir -p datacardsPROVA/%.0f", mass);
     system(mkdir_command);
 
-    create_singleDatacard( dataset, mass, lumi_ELE, "ELE", 0);
-    create_singleDatacard( dataset, mass, lumi_ELE, "ELE", 1);
-    create_singleDatacard( dataset, mass, lumi_ELE, "ELE", 2);
-    create_singleDatacard( dataset, mass, lumi_MU,  "MU", 0);
-    create_singleDatacard( dataset, mass, lumi_MU,  "MU", 1);
-    create_singleDatacard( dataset, mass, lumi_MU,  "MU", 2);
+    create_singleDatacard( dataset, mass, lumi_ELE, "ELE", 0, f1_eff_vs_mass_ELE_0btag);
+    create_singleDatacard( dataset, mass, lumi_ELE, "ELE", 1, f1_eff_vs_mass_ELE_1btag);
+    create_singleDatacard( dataset, mass, lumi_ELE, "ELE", 2, f1_eff_vs_mass_ELE_2btag);
+    create_singleDatacard( dataset, mass, lumi_MU,   "MU", 0, f1_eff_vs_mass_MU_0btag);
+    create_singleDatacard( dataset, mass, lumi_MU,   "MU", 1, f1_eff_vs_mass_MU_1btag);
+    create_singleDatacard( dataset, mass, lumi_MU,   "MU", 2, f1_eff_vs_mass_MU_2btag);
 
   } //while masses
 
@@ -135,7 +135,7 @@ int main( int argc, char* argv[] ) {
 
 
 
-void create_singleDatacard( const std::string& dataset, float mass, float lumi, const std::string& leptType_str, int nbtags ) {
+void create_singleDatacard( const std::string& dataset, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass ) {
 
   if( leptType_str!="ELE" && leptType_str!="MU" ) {
     std::cout << "Unkown Lept Type '" << leptType_str << "'. Exiting." << std::endl;
@@ -202,7 +202,7 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
 
 
 
-  std::pair<double,double> signalRate = get_expectedYield_signal( dataset, leptType_str, nbtags, hp, w);
+  std::pair<double,double> signalRate = get_expectedYield_signal( hp, lumi, f1_eff_vs_mass );
   double rate_gg = signalRate.first;
   double rate_VBF = signalRate.second;
 
@@ -274,7 +274,7 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags ) {
   TF1* f1_eff_vs_mass = new TF1(functName, "[0] + [1]*x + [2]*x*x + [3]*x*x*x", 150., 700.);
   gr_eff_vs_mass->Fit(f1_eff_vs_mass, "RQ");
 
-  system("mkdir EfficiencyFits");
+  system("mkdir -p EfficiencyFits");
 
   TCanvas* c1 = new TCanvas("c1", "", 600, 600);
   c1->cd();
@@ -285,6 +285,8 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags ) {
   char canvasName[500];
   sprintf( canvasName, "EfficiencyFits/effFit_%s_%dbtag.eps", leptType_str.c_str(), nbtags);
   c1->SaveAs(canvasName);
+
+  delete c1;
 
   return f1_eff_vs_mass;
 
@@ -640,11 +642,19 @@ double get_expectedYield_background( const std::string& dataset, const std::stri
 
 
 
-pair<double,double> get_expectedYield_signal( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w ) {
+pair<double,double> get_expectedYield_signal( HiggsParameters hp, float lumi, TF1* eff_vs_mass ) {
 
 
+  float eff = eff_vs_mass->Eval(hp.mH);
 
+  float expected_gg  = eff*hp.CSgg*hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
+  float expected_vbf  = eff*hp.CSvbf*hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
 
+  std::pair<double,double> returnPair;
+  returnPair.first = expected_gg;    
+  returnPair.second = expected_vbf;    
+
+  return returnPair;
 
 }
 
