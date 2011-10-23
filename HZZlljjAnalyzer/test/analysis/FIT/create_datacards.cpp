@@ -304,7 +304,15 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   ofs.close();
 
 
-  // datacard is done. now write rootfile:
+  // datacard is done. now write workspace to rootfile
+  
+  char outfileName[900];
+  sprintf( outfileName, "datacardsPROVA/%.0f/hzz2l2q_%s.input.root", mass, suffix);
+  TFile* outfile = TFile::Open( outfileName, "RECREATE");
+  outfile->cd();
+  w->Write();
+  outfile->Close();
+
 
 }
 
