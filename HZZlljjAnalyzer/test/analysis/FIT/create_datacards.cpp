@@ -88,7 +88,9 @@ std::pair<double,double> leptScaleSyst( const std::string& leptType_str);
 std::pair<double,double> jetScaleSyst( double mass );
 std::pair<double,double> bTagEffSyst( const std::string& leptType_str, int nbtags, double mass );
 
+double backgroundNorm( const std::string& dataset, const std::string& leptType_str, int nbtags );
 
+std::string getFitParamValue( const std::string& dataset, int nbtags, const std::string& name );
 
 
 
@@ -138,7 +140,7 @@ int main( int argc, char* argv[] ) {
     float mass;
     ifs >> mass;
 
-    std::cout << std::endl;
+    std::cout << std::endl << std::endl;;
     std::cout << "++++++++++++++++++++++" << std::endl;
     std::cout << "+++ MASS: " << mass << std::endl;
     std::cout << "++++++++++++++++++++++" << std::endl;
@@ -270,6 +272,33 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   ofs << "CMS_hzz2l2q_pu\t\tlnN\t1.02\t\t\t1.02\t\t\t1.0" << std::endl;
 
   ofs << "CMS_hzz2l2q_qgsep0b\t\tlnN\t1.046\t\t\t1.046\t\t\t1.0" << std::endl;
+
+  
+
+  // syst done. now finish with parameters:
+
+  char suffixForPars[100]; //this is crazy
+  sprintf( suffixForPars, "%db%s", nbtags, leptType_forDatacard.c_str());
+  std::string suffixForPars_str(suffixForPars);
+
+  char btag_char[10];
+  sprintf( btag_char, "%d", nbtags );
+  std::string btag_str(btag_char);
+
+  double bgNorm = backgroundNorm(dataset,leptType_str,nbtags);
+  char bgNorm_char[100];
+  sprintf( bgNorm_char, "%.0f", bgNorm);
+  std::string bgNorm_str(bgNorm_char);
+
+  double alpha = rate_background/bgNorm;
+  char alpha_char[100];
+  sprintf( alpha_char, "%f", alpha);
+  std::string alpha_str(alpha_char);
+  ofs << "CMS_hzz2l2q_bkg" << suffixForPars_str << "p0\tgmN " << bgNorm_str << "\t-----\t-----\t" << alpha_str << std::endl;
+
+ 
+  ofs << "CMS_hzz2l2q_bkg" << btag_str << "p2\tparam\t\t" << getFitParamValue( dataset, nbtags, "wdth_rot" ) << "   error" << std::endl;
+  ofs << "CMS_hzz2l2q_bkg" << btag_str << "p4\tparam\t\t" << getFitParamValue( dataset, nbtags, "alpha_rot" ) << "   error" << std::endl;;
 
 
   ofs.close();
@@ -546,13 +575,14 @@ double get_expectedYield_background( const std::string& dataset, const std::stri
   int leptType_int = convert_leptType(leptType_str);
 
 
-
-
   // read background parametrizations from fit results file
   char fitResultsFile[900];
   sprintf( fitResultsFile, "FitSidebands_%s/fitresultsDATA_%dbtag.txt", dataset.c_str(), nbtags);
   
   ifstream ifs(fitResultsFile);
+  ifs.clear();
+  ifs.seekg(0);
+
   CBParameters cbp;
   float fermi_cutoff0;
   float fermi_beta0;
@@ -576,15 +606,12 @@ double get_expectedYield_background( const std::string& dataset, const std::stri
       cbp.n = value;
     }
     if( varName=="alpha_rot" ) {
-    //if( varName=="alpha" ) {
       cbp.alpha = value;
     }
     if( varName=="wdth_rot" ) {
-    //if( varName=="wdth" ) {
       cbp.wdth = value;
     }
     if( varName=="theta_best" ) {
-    //if( varName=="theta" ) {
       cbp.theta = value;
     }
 
@@ -662,59 +689,14 @@ double get_expectedYield_background( const std::string& dataset, const std::stri
   //RooDataHist *BkgHisto = background.generateBinned(CMS_hzz2l2q_mZZ,EvtNorm,kTRUE,kFALSE);  
 
 
-/*   CANT MAKE THIS WORK, GETTING MAD
-
-  // check that everything is correct with a plot:
-  RooRealVar mZZ("mZZ","mZZ",fitRangeLow,fitRangeHigh);
-  RooRealVar nBTags("nBTags","nBTags",-1.,3.);
-  RooRealVar leptType("leptType","leptType",0,1);
-  RooRealVar mZjj("mZjj","mZjj",0,200.);
-  TH1D* h1_mZZ_signal = new TH1D("mZZ_signal", "", 30, 150., 750.);
-  char signalCut[500];
-  //sprintf(signalCut, "eventWeight_alpha*(mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d)", nbtags, leptType_int);
-  sprintf(signalCut, "(mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d)", nbtags, leptType_int);
-  //treeSidebandsDATA_alphaCorr->Project("mZZ_signal", "mZZ", signalCut);
-  RooDataSet *data_signalRegion = new RooDataSet("data_signalRegion", "data_signalRegion", treeSidebandsDATA_alphaCorr,
-                                                 RooArgSet(CMS_hzz2l2q_mZZfull,leptType,nBTags,mZjj), signalCut);
-
-  TCanvas* c1 = new TCanvas("c1", "", 600, 600);
-  c1->cd();
-  RooPlot *plot_MCbkg = CMS_hzz2l2q_mZZfull.frame();
-  data_signalRegion->plotOn(plot_MCbkg, RooFit::Binning(65));
-  //backgroundFull.plotOn(plot_MCbkg, RooFit::Normalization(EvtNorm));
-  BkgHisto->plotOn(plot_MCbkg);
-  //h1_mZZ_signal->SetMarkerStyle(20);
-  //h1_mZZ_signal->SetMarkerSize(1.4);
-  //h1_mZZ_signal->SetMarkerColor(kBlack);
-  //h1_mZZ_signal->Draw("e");
-  plot_MCbkg->Draw("");
-
-  char canvasName[500];
-  sprintf( canvasName, "FitSidebands_%s/crossCheck_%dbtag_%s.eps", dataset.c_str(), nbtags, leptType_str.c_str() );
-  c1->SaveAs(canvasName);
-*/
-
-
-
   char selection_massWindow[300];
   sprintf( selection_massWindow, "CMS_hzz2l2q_mZZfull>%f && CMS_hzz2l2q_mZZfull<%f", fitRangeLow, fitRangeHigh);
   //sprintf( selection_massWindow, "CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f", fitRangeLow, fitRangeHigh);
   double expectedYield_background = double( BkgHisto->sumEntries(selection_massWindow)  );
 
-//// put it back as it was:
-//treeSidebandsDATA_alphaCorr->GetBranch("CMS_hzz2l2q_mZZfull")->SetName("mZZ");
-
   return expectedYield_background;
 
 }
-
-
-//float CSggxs =1000.0*CSgg  *BRHZZ *BRZZ2l2q;
-//float CSvbfxs=1000.0*CSvbf*BRHZZ  *BRZZ2l2q;
-////   cout<<"THEOR xsect: "<<CSgg<<" , Vbf= "<<CSvbf<<"  BRHZZ="<<BRHZZ<<"  BRZZ2L2q="<<BRZZ2l2q<<endl;
-//vector<float> myxsect;
-//myxsect.push_back(CSggxs);
-//myxsect.push_back(CSvbfxs);
 
 
 
@@ -968,5 +950,59 @@ std::pair<double,double> bTagEffSyst( const std::string& leptType_str, int nbtag
   returnPair.second = p1*mass+p0;
 
   return returnPair;
+
+}
+
+
+
+double backgroundNorm( const std::string& dataset, const std::string& leptType_str, int nbtags ) {
+
+  int leptType_int = convert_leptType( leptType_str );
+
+  std::string fileName = "HZZlljjRM_DATA_" + dataset + "_optLD_looseBTags_v2_ALL.root";
+  TFile* file_data = TFile::Open(fileName.c_str());
+  TTree* tree = (TTree*)file_data->Get("tree_passedEvents");
+  char selection[400];
+  sprintf(selection, "isSidebands && leptType==%d && nBTags==%d", leptType_int, nbtags);
+  float nEvents_sidebands = tree->GetEntries(selection);
+
+  return nEvents_sidebands;
+
+}
+
+
+
+
+
+
+std::string getFitParamValue( const std::string& dataset, int nbtags, const std::string& name ) {
+
+  char fitResultsFile[900];
+  sprintf( fitResultsFile, "FitSidebands_%s/fitresultsDATA_%dbtag.txt", dataset.c_str(), nbtags);
+  
+  ifstream ifs(fitResultsFile);
+  ifs.clear();
+  ifs.seekg(0);
+
+  double paramValue;
+  
+  while( ifs.good() ) {
+  
+    std::string varName;
+    float value, error;
+    ifs >> varName >> value >> error;
+    
+    if( varName==name ) {
+      paramValue = value;
+      break;
+    }
+
+  } //while ifs good
+
+  char param_char[100];
+  sprintf( param_char, "%f", paramValue);
+  std::string param_str(param_char);
+
+  return param_str;
 
 }
