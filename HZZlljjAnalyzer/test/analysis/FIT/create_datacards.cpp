@@ -54,6 +54,18 @@ struct CBParameters {
 };
 
 
+double sign( double x ) {
+
+  double returnSign = 0.;
+
+  if( x>=0. ) returnSign =  1.;
+  else returnSign =  -1.;
+
+  return returnSign;
+
+}
+
+
 int convert_leptType( const std::string& leptType );
 void create_singleDatacard( const std::string& dataset, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass );
 HiggsParameters get_higgsParameters( float mass );
@@ -62,9 +74,10 @@ std::pair<double,double> get_massWindow( HiggsParameters hp );
 TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags );
 double get_observedYield( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w );
 double get_expectedYield_background( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w );
-pair<double,double> get_expectedYield_signal( HiggsParameters hp, float lumi, TF1* eff_vs_mass );
 void import_signalShape( int nbtags, HiggsParameters hp, RooWorkspace* w );
 
+std::string systString( std::pair<double,double> systPair, double maxDiff=0.01 );
+std::pair<double,double> getTheorSyst( double errMinus, double errPlus, double addMinus=0., double addPlus=0. );
 
 
 
@@ -202,20 +215,31 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
 
 
 
-  std::pair<double,double> signalRate = get_expectedYield_signal( hp, lumi, f1_eff_vs_mass );
-  double rate_gg = signalRate.first;
-  double rate_VBF = signalRate.second;
+  float eff = f1_eff_vs_mass->Eval(hp.mH);
+  float rate_gg   = eff*hp.CSgg *hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
+  float rate_vbf  = eff*hp.CSvbf*hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
 
   double rate_background = get_expectedYield_background( dataset, leptType_str, nbtags, hp, w );
 
-  ofs << "rate               " << rate_gg << "\t\t\t" << rate_VBF << "\t\t\t" << rate_background << std::endl;
+  ofs << "rate               " << rate_gg << "\t\t\t" << rate_vbf << "\t\t\t" << rate_background << std::endl;
   ofs << "------------ " << std::endl;
 
 
   // and now systematics:
 
+  ofs << "lumi\t\t\tlnN\t\t1.045\t\t1.045\t\t1.0" << std::endl;
 
+  std::pair<double,double> pdf_gg  = getTheorSyst( hp.CSpdfgg_m, hp.CSpdfgg_p, 0.04, 0.015 );
+  ofs << "pdf_gg\t\tlnN\t\t" << systString(pdf_gg) << "\t\t1.0\t\t1.0" << std::endl;
 
+  std::pair<double,double> pdf_vbf = getTheorSyst( hp.CSpdfvbf_m, hp.CSpdfvbf_p, 0.04, 0.015 );
+  ofs << "pdf_qqbar\t\tlnN\t\t1.0\t\t" << systString(pdf_vbf) << "\t\t1.0" << std::endl;
+
+  std::pair<double,double> QCDscale_ggH = getTheorSyst( hp.CSgg_m, hp.CSgg_p);
+  ofs << "QCDscale_ggH\tlnN\t\t" << systString(QCDscale_ggH) << "\t\t1.0\t\t1.0" << std::endl;
+
+  std::pair<double,double> QCDscale_qqH = getTheorSyst( hp.CSvbf_m, hp.CSvbf_p);
+  ofs << "QCDscale_qqH\tlnN\t\t1.0\t\t" << systString(QCDscale_qqH) << "\t\t1.0" << std::endl;
 
 
   ofs.close();
@@ -653,23 +677,6 @@ double get_expectedYield_background( const std::string& dataset, const std::stri
 
 
 
-pair<double,double> get_expectedYield_signal( HiggsParameters hp, float lumi, TF1* eff_vs_mass ) {
-
-
-  float eff = eff_vs_mass->Eval(hp.mH);
-
-  float expected_gg  = eff*hp.CSgg*hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
-  float expected_vbf  = eff*hp.CSvbf*hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
-
-  std::pair<double,double> returnPair;
-  returnPair.first = expected_gg;    
-  returnPair.second = expected_vbf;    
-
-  return returnPair;
-
-}
-
-
 
 void import_signalShape( int nbtags, HiggsParameters hp, RooWorkspace* w ) {
 
@@ -770,3 +777,62 @@ void import_signalShape( int nbtags, HiggsParameters hp, RooWorkspace* w ) {
   w->import(signal);
 
 }
+
+
+
+
+std::string systString( std::pair<double,double> systPair, double maxDiff ) {
+
+  double syst_ave = 1. + 0.5*(fabs(systPair.first-1.) + fabs(systPair.second-1.));
+  
+  char syst_char[100];
+  if( fabs(syst_ave-systPair.second)/syst_ave < maxDiff )
+    sprintf( syst_char, "%f\t", syst_ave );
+  else
+    sprintf( syst_char, "%f/%f", systPair.first, systPair.second );
+
+  std::string syst_str(syst_char);
+
+  return syst_str;
+
+}
+ 
+
+std::pair<double,double> getTheorSyst( double errMinus, double errPlus, double addMinus, double addPlus ) {
+
+  float systPlus  = sign(errPlus) *sqrt(errPlus*errPlus   + addPlus*addPlus);
+  float systMinus = sign(errMinus)*sqrt(errMinus*errMinus + addMinus*addMinus);
+
+  systPlus  += 1.;
+  systMinus += 1.;
+
+  std::pair<double,double> returnPair;
+  returnPair.first = systMinus;
+  returnPair.second = systPlus;
+
+  return returnPair;
+
+}
+
+
+
+/*
+std::pair<double,double> getSyst_pdfvbf( HiggsParameters hp ) {
+
+  float errPlus  = hp.CSpdfvbf_p; 
+  float errMinus = hp.CSpdfvbf_m; 
+
+  float systPlus  = sign(errPlus)*sqrt(errPlus*errPlus+0.015*0.015);//0.015 is the syst on signal acceptance due to pdf uncertainties
+  float systMinus = sign(errMinus)*sqrt(errMinus*errMinus+0.04*0.04);//0.04 is the syst on signal acceptance due to pdf uncertainties
+
+  systPlus  += 1.;
+  systMinus += 1.;
+
+  std::pair<double,double> returnPair;
+  returnPair.first = systMinus;
+  returnPair.second = systPlus;
+
+  return returnPair;
+
+}
+*/
