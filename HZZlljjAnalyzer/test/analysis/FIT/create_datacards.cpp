@@ -81,9 +81,9 @@ void import_signalShape( int nbtags, HiggsParameters hp, RooWorkspace* w );
 std::string systString( std::pair<double,double> systPair, double maxDiff=0.01 );
 std::pair<double,double> getTheorSyst( double errMinus, double errPlus, double addMinus=0., double addPlus=0. );
 
-double leptTriggerSyst( const std::string& leptType_str);
-double leptEffSyst( const std::string& leptType_str);
-double leptScaleSyst( const std::string& leptType_str);
+std::pair<double,double> leptTriggerSyst( const std::string& leptType_str);
+std::pair<double,double> leptEffSyst( const std::string& leptType_str);
+std::pair<double,double> leptScaleSyst( const std::string& leptType_str);
 
 
 int main( int argc, char* argv[] ) {
@@ -247,11 +247,11 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   ofs << "QCDscale_qqH\tlnN\t1.0\t\t\t" << systString(QCDscale_qqH) << "\t1.0" << std::endl;
 
 
-  ofs << "CMS_trigger_" << leptType_datacards(leptType_str) << "\tlnN\t" << leptTriggerSyst(leptType_str) << "\t\t\t" << leptTriggerSyst(leptType_str) << "\t\t\t1.0" << std::endl;
+  ofs << "CMS_trigger_" << leptType_datacards(leptType_str) << "\tlnN\t" << systString(leptTriggerSyst(leptType_str)) << "\t" << systString(leptTriggerSyst(leptType_str)) << "\t1.0" << std::endl;
 
-  ofs << "CMS_eff_" << leptType_datacards(leptType_str) << "\t\tlnN\t" << leptEffSyst(leptType_str) << "\t\t\t" << leptEffSyst(leptType_str) << "\t\t\t1.0" << std::endl;
+  ofs << "CMS_eff_" << leptType_datacards(leptType_str) << "\t\tlnN\t" << systString(leptEffSyst(leptType_str)) << "\t" << systString(leptEffSyst(leptType_str)) << "\t1.0" << std::endl;
 
-  ofs << "CMS_scale_" << leptType_datacards(leptType_str) << "\t\tlnN\t" << leptScaleSyst(leptType_str) << "\t\t\t" << leptScaleSyst(leptType_str) << "\t\t\t1.0" << std::endl;
+  ofs << "CMS_scale_" << leptType_datacards(leptType_str) << "\t\tlnN\t" << systString(leptScaleSyst(leptType_str)) << "\t" << systString(leptScaleSyst(leptType_str)) << "\t1.0" << std::endl;
 
 
   ofs.close();
@@ -839,35 +839,61 @@ std::pair<double,double> getTheorSyst( double errMinus, double errPlus, double a
 }
 
 
-double leptTriggerSyst( const std::string& leptType_str) {
+std::pair<double,double> leptTriggerSyst( const std::string& leptType_str) {
 
   double syst;
 
   if( leptType_str=="MU" )  syst = 1.02;
   if( leptType_str=="ELE" ) syst = 1.01;
 
-  return syst;
+  std::pair<double,double> returnPair;
+  returnPair.first  = syst; //symmetrical for now
+  returnPair.second = syst;
+
+  return returnPair;
 
 }
 
-double leptEffSyst( const std::string& leptType_str) {
+std::pair<double,double> leptEffSyst( const std::string& leptType_str) {
 
   double syst;
 
   if( leptType_str=="MU" )  syst = 1.008;
   if( leptType_str=="ELE" ) syst = 1.034;
 
-  return syst;
+  std::pair<double,double> returnPair;
+  returnPair.first  = syst; //symmetrical for now
+  returnPair.second = syst;
+
+  return returnPair;
 
 }
 
-double leptScaleSyst( const std::string& leptType_str) {
+std::pair<double,double> leptScaleSyst( const std::string& leptType_str) {
 
   double syst;
 
   if( leptType_str=="MU" )  syst = 1.01;
   if( leptType_str=="ELE" ) syst = 1.03;
 
-  return syst;
+  std::pair<double,double> returnPair;
+  returnPair.first  = syst; //symmetrical for now
+  returnPair.second = syst;
+
+  return returnPair;
+
+}
+
+
+std::pair<double,double> jetScaleSyst( double mass ) {
+
+  float p0= 8.3  , p1=-0.0215 ;
+  float m0=-8.6, m1=0.02 ;
+
+  std::pair<double,double> returnPair;
+  returnPair.first  = 1.0 + 0.01*(m0+m1*mass);
+  returnPair.second = 1.0 + 0.01*(p0+p1*mass);
+
+  return returnPair;
 
 }
