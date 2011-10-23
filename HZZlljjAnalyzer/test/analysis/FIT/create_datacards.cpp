@@ -269,6 +269,8 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
 
   ofs << "CMS_hzz2l2q_pu\t\tlnN\t1.02\t\t\t1.02\t\t\t1.0" << std::endl;
 
+  ofs << "CMS_hzz2l2q_qgsep0b\t\tlnN\t1.046\t\t\t1.046\t\t\t1.0" << std::endl;
+
 
   ofs.close();
 
