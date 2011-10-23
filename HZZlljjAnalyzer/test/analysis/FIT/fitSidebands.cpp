@@ -29,12 +29,14 @@ using namespace RooFit;
 
 TH1D* getAlphaHisto( int nBTags, const std::string leptType_str, TTree* treeMC );
 //TH1D* getAlphaHisto( int nBTags, const std::string leptType, TFile* file_ZJets_madgraph, TFile* file_TT_TW, TFile* file_Diboson );
-void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha=0 );
+TFile* fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha=0 );
 TTree* correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int btagCategory, const std::string& name );
 
 
 int main( int argc, char* argv[] ) {
 
+RooMsgService::instance().Print();
+exit(11);
   std::string dataset = "LP11";
   if( argc==2 ) {
     std::string dataset_str(argv[1]);
@@ -70,9 +72,17 @@ int main( int argc, char* argv[] ) {
   TH1D* alpha_1btag = getAlphaHisto( 1, "ALL", treeMC_1btag );
   TH1D* alpha_2btag = getAlphaHisto( 2, "ALL", treeMC_2btag );
 
-  fitSidebands( dataset, treeMC_0btag, treeDATA_0btag, 0, "ALL", alpha_0btag );
-  fitSidebands( dataset, treeMC_1btag, treeDATA_1btag, 1, "ALL", alpha_1btag );
-  fitSidebands( dataset, treeMC_2btag, treeDATA_2btag, 2, "ALL", alpha_2btag );
+  TFile* alphaFile_0btag = fitSidebands( dataset, treeMC_0btag, treeDATA_0btag, 0, "ALL", alpha_0btag );
+  TFile* alphaFile_1btag = fitSidebands( dataset, treeMC_1btag, treeDATA_1btag, 1, "ALL", alpha_1btag );
+  TFile* alphaFile_2btag = fitSidebands( dataset, treeMC_2btag, treeDATA_2btag, 2, "ALL", alpha_2btag );
+
+
+  // and now generate 1000 toys to get the error on the relevant fit parameters:
+//for( unsigned iToy=0; iToy<1000; ++iToy ) {
+
+//  TH1D* randomAlpha_0btag = shuffle( alpha_0btag );
+//  TH1D* randomAlpha_1btag = shuffle( alpha_1btag );
+//  TH1D* randomAlpha_2btag = shuffle( alpha_2btag );
 
   return 0;
 
@@ -162,7 +172,7 @@ TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* tr
 
 
 
-void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha ) {
+TFile* fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha ) {
 
   std::string leptType_cut="";
   if( leptType=="MU" ) {
@@ -171,7 +181,7 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
     leptType_cut=" && leptType==1";
   } else if( leptType!="ALL" ) {
     std::cout << "Unknown leptType: '" << leptType << "'. Exiting." << std::endl;
-    return;
+    exit(109);
   }
   
 
@@ -629,6 +639,7 @@ void fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, i
   //delete tree_sidebandsDATA_alpha;
 
 
+  return file_alpha;
 
 }
 
