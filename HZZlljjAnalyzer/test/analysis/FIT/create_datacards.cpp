@@ -67,6 +67,8 @@ double sign( double x ) {
 
 
 int convert_leptType( const std::string& leptType );
+std::string leptType_datacards( const std::string& leptType_str );
+
 void create_singleDatacard( const std::string& dataset, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass );
 HiggsParameters get_higgsParameters( float mass );
 double linear_interp( double x, double x_old, double mass, double mH, double mH_old );
@@ -79,6 +81,9 @@ void import_signalShape( int nbtags, HiggsParameters hp, RooWorkspace* w );
 std::string systString( std::pair<double,double> systPair, double maxDiff=0.01 );
 std::pair<double,double> getTheorSyst( double errMinus, double errPlus, double addMinus=0., double addPlus=0. );
 
+double leptTriggerSyst( const std::string& leptType_str);
+double leptEffSyst( const std::string& leptType_str);
+double leptScaleSyst( const std::string& leptType_str);
 
 
 int main( int argc, char* argv[] ) {
@@ -124,9 +129,9 @@ int main( int argc, char* argv[] ) {
     ifs >> mass;
 
     std::cout << std::endl;
-    std::cout << "++++++++++++++++++++++" << mass << std::endl;
+    std::cout << "++++++++++++++++++++++" << std::endl;
     std::cout << "+++ MASS: " << mass << std::endl;
-    std::cout << "++++++++++++++++++++++" << mass << std::endl;
+    std::cout << "++++++++++++++++++++++" << std::endl;
     std::cout << std::endl;
 
     char mkdir_command[100];
@@ -221,25 +226,32 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
 
   double rate_background = get_expectedYield_background( dataset, leptType_str, nbtags, hp, w );
 
-  ofs << "rate               " << rate_gg << "\t\t\t" << rate_vbf << "\t\t\t" << rate_background << std::endl;
+  ofs << "rate               " << rate_gg << "\t\t" << rate_vbf << "\t\t" << rate_background << std::endl;
   ofs << "------------ " << std::endl;
 
 
   // and now systematics:
 
-  ofs << "lumi\t\t\tlnN\t\t1.045\t\t1.045\t\t1.0" << std::endl;
+  ofs << "lumi\t\t\tlnN\t1.045\t\t\t1.045\t\t\t1.0" << std::endl;
 
   std::pair<double,double> pdf_gg  = getTheorSyst( hp.CSpdfgg_m, hp.CSpdfgg_p, 0.04, 0.015 );
-  ofs << "pdf_gg\t\tlnN\t\t" << systString(pdf_gg) << "\t\t1.0\t\t1.0" << std::endl;
+  ofs << "pdf_gg\t\tlnN\t" << systString(pdf_gg) << "\t1.0\t\t\t1.0" << std::endl;
 
   std::pair<double,double> pdf_vbf = getTheorSyst( hp.CSpdfvbf_m, hp.CSpdfvbf_p, 0.04, 0.015 );
-  ofs << "pdf_qqbar\t\tlnN\t\t1.0\t\t" << systString(pdf_vbf) << "\t\t1.0" << std::endl;
+  ofs << "pdf_qqbar\t\tlnN\t1.0\t\t\t" << systString(pdf_vbf) << "\t1.0" << std::endl;
 
   std::pair<double,double> QCDscale_ggH = getTheorSyst( hp.CSgg_m, hp.CSgg_p);
-  ofs << "QCDscale_ggH\tlnN\t\t" << systString(QCDscale_ggH) << "\t\t1.0\t\t1.0" << std::endl;
+  ofs << "QCDscale_ggH\tlnN\t" << systString(QCDscale_ggH) << "\t1.0\t\t\t1.0" << std::endl;
 
   std::pair<double,double> QCDscale_qqH = getTheorSyst( hp.CSvbf_m, hp.CSvbf_p);
-  ofs << "QCDscale_qqH\tlnN\t\t1.0\t\t" << systString(QCDscale_qqH) << "\t\t1.0" << std::endl;
+  ofs << "QCDscale_qqH\tlnN\t1.0\t\t\t" << systString(QCDscale_qqH) << "\t1.0" << std::endl;
+
+
+  ofs << "CMS_trigger_" << leptType_datacards(leptType_str) << "\tlnN\t" << leptTriggerSyst(leptType_str) << "\t\t\t" << leptTriggerSyst(leptType_str) << "\t\t\t1.0" << std::endl;
+
+  ofs << "CMS_eff_" << leptType_datacards(leptType_str) << "\t\tlnN\t" << leptEffSyst(leptType_str) << "\t\t\t" << leptEffSyst(leptType_str) << "\t\t\t1.0" << std::endl;
+
+  ofs << "CMS_scale_" << leptType_datacards(leptType_str) << "\t\tlnN\t" << leptScaleSyst(leptType_str) << "\t\t\t" << leptScaleSyst(leptType_str) << "\t\t\t1.0" << std::endl;
 
 
   ofs.close();
@@ -287,7 +299,7 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags ) {
     TTree* signalTree = (TTree*)signalFile->Get("tree_passedEvents");
 
     char signalCut_MW[500];
-    sprintf( signalCut_MW, "HLTSF*( mZjj>75. && mZjj<105. && mZZ>%f && mZZ<%f && nBTags==%d && leptType==%d)", fitRangeLow, fitRangeHigh, nbtags, leptType_int);
+    sprintf( signalCut_MW, "HLTSF*PUWeight*( mZjj>75. && mZjj<105. && mZZ>%f && mZZ<%f && nBTags==%d && leptType==%d)", fitRangeLow, fitRangeHigh, nbtags, leptType_int);
     TH1D* h1_mZZ_signal = new TH1D("mZZ_signal", "", 65, 150., 800.);
     h1_mZZ_signal->Sumw2();
     signalTree->Project( "mZZ_signal", "mZZ", signalCut_MW );
@@ -343,6 +355,18 @@ int convert_leptType( const std::string& leptType ) {
 
 }
 
+
+
+std::string leptType_datacards( const std::string& leptType_str ) {
+ 
+  std::string returnString="";
+
+  if( leptType_str=="MU" ) returnString = "m";
+  if( leptType_str=="ELE" ) returnString = "e";
+
+  return returnString;
+
+}
 
 
 HiggsParameters get_higgsParameters( float mass ) {
@@ -787,7 +811,7 @@ std::string systString( std::pair<double,double> systPair, double maxDiff ) {
   
   char syst_char[100];
   if( fabs(syst_ave-systPair.second)/syst_ave < maxDiff )
-    sprintf( syst_char, "%f\t", syst_ave );
+    sprintf( syst_char, "%f    ", syst_ave );
   else
     sprintf( syst_char, "%f/%f", systPair.first, systPair.second );
 
@@ -815,24 +839,35 @@ std::pair<double,double> getTheorSyst( double errMinus, double errPlus, double a
 }
 
 
+double leptTriggerSyst( const std::string& leptType_str) {
 
-/*
-std::pair<double,double> getSyst_pdfvbf( HiggsParameters hp ) {
+  double syst;
 
-  float errPlus  = hp.CSpdfvbf_p; 
-  float errMinus = hp.CSpdfvbf_m; 
+  if( leptType_str=="MU" )  syst = 1.02;
+  if( leptType_str=="ELE" ) syst = 1.01;
 
-  float systPlus  = sign(errPlus)*sqrt(errPlus*errPlus+0.015*0.015);//0.015 is the syst on signal acceptance due to pdf uncertainties
-  float systMinus = sign(errMinus)*sqrt(errMinus*errMinus+0.04*0.04);//0.04 is the syst on signal acceptance due to pdf uncertainties
-
-  systPlus  += 1.;
-  systMinus += 1.;
-
-  std::pair<double,double> returnPair;
-  returnPair.first = systMinus;
-  returnPair.second = systPlus;
-
-  return returnPair;
+  return syst;
 
 }
-*/
+
+double leptEffSyst( const std::string& leptType_str) {
+
+  double syst;
+
+  if( leptType_str=="MU" )  syst = 1.008;
+  if( leptType_str=="ELE" ) syst = 1.034;
+
+  return syst;
+
+}
+
+double leptScaleSyst( const std::string& leptType_str) {
+
+  double syst;
+
+  if( leptType_str=="MU" )  syst = 1.01;
+  if( leptType_str=="ELE" ) syst = 1.03;
+
+  return syst;
+
+}
