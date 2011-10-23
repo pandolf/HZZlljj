@@ -85,6 +85,16 @@ std::pair<double,double> leptTriggerSyst( const std::string& leptType_str);
 std::pair<double,double> leptEffSyst( const std::string& leptType_str);
 std::pair<double,double> leptScaleSyst( const std::string& leptType_str);
 
+std::pair<double,double> jetScaleSyst( double mass );
+std::pair<double,double> bTagEffSyst( const std::string& leptType_str, int nbtags, double mass );
+
+
+
+
+
+
+
+
 
 int main( int argc, char* argv[] ) {
 
@@ -252,6 +262,12 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   ofs << "CMS_eff_" << leptType_datacards(leptType_str) << "\t\tlnN\t" << systString(leptEffSyst(leptType_str)) << "\t" << systString(leptEffSyst(leptType_str)) << "\t1.0" << std::endl;
 
   ofs << "CMS_scale_" << leptType_datacards(leptType_str) << "\t\tlnN\t" << systString(leptScaleSyst(leptType_str)) << "\t" << systString(leptScaleSyst(leptType_str)) << "\t1.0" << std::endl;
+
+  ofs << "CMS_scale_j\t\tlnN\t" << systString(jetScaleSyst(hp.mH)) << "\t" << systString(jetScaleSyst(hp.mH)) << "\t1.0" << std::endl;
+
+  ofs << "CMS_eff_b\t\tlnN\t" << systString(bTagEffSyst(leptType_str, nbtags, hp.mH)) << "\t" << systString(bTagEffSyst(leptType_str, nbtags, hp.mH)) << "\t1.0" << std::endl;
+
+  ofs << "CMS_hzz2l2q_pu\t\tlnN\t1.02\t\t\t1.02\t\t\t1.0" << std::endl;
 
 
   ofs.close();
@@ -893,6 +909,61 @@ std::pair<double,double> jetScaleSyst( double mass ) {
   std::pair<double,double> returnPair;
   returnPair.first  = 1.0 + 0.01*(m0+m1*mass);
   returnPair.second = 1.0 + 0.01*(p0+p1*mass);
+
+  return returnPair;
+
+}
+
+
+std::pair<double,double> bTagEffSyst( const std::string& leptType_str, int nbtags, double mass ) {
+
+  float p0=0.0, p1=0.0;
+  float m0=0.0, m1=0.0;
+
+  if( leptType_str=="ELE" ) {
+    if(nbtags==0){
+      p0=0.983256647923;
+      p1=-0.0000883532570978;
+      m0=1.02907356239;
+      m1=0.0000713061639147;
+    }
+    else if(nbtags==1){
+      p0=1.04446110956;
+      p1=-0.0000195508160829;
+      m0=0.940063743731;
+      m1=0.0000737044467898;
+    }
+    else if(nbtags==2){
+      p0=1.13365470372;
+      p1=0.00000584572717646;
+      m0=0.82161771535;
+      m1=-0.0000161054152592;
+    }
+  }
+  else if(leptType_str=="MU" ) {
+    if(nbtags==0){
+      p0=0.984636818312;
+      p1=-0.0000898705296203;
+      m0=1.02836905579;
+      m1= 0.0000726807344479;
+    }
+    else if(nbtags==1){
+      p0=1.04385580002;
+      p1=0.0000206096278947;
+      m0=0.942713582987;
+      m1=0.0000719882385098;
+    }
+    else if(nbtags==2){
+      p0=1.1333366687;
+      p1=0.00000462542786413;
+      m0=0.813316607701;
+      m1=-0.00000205840248842;
+    }
+  }
+
+  std::pair<double,double> returnPair;
+  returnPair.first  = m1*mass+m0;
+  returnPair.second = p1*mass+p0;
 
   return returnPair;
 
