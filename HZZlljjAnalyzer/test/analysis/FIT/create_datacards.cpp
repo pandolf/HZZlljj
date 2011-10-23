@@ -43,13 +43,23 @@ struct HiggsParameters {
 };
 
 
-struct CBParameters {
+struct BGFitParameters {
 
-  float m;
-  float wdth;
-  float alpha;
-  float n;
-  float theta;
+  float fermi_cutoff;
+  float fermi_beta;
+  float CB_m;
+  float CB_wdth;
+  float CB_alpha;
+  float CB_n;
+  float CB_theta;
+
+  float fermi_cutoff_err;
+  float fermi_beta_err;
+  float CB_m_err;
+  float CB_wdth_err;
+  float CB_alpha_err;
+  float CB_n_err;
+  float CB_theta_err;
 
 };
 
@@ -70,7 +80,10 @@ int convert_leptType( const std::string& leptType );
 std::string leptType_datacards( const std::string& leptType_str );
 
 void create_singleDatacard( const std::string& dataset, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass );
+
 HiggsParameters get_higgsParameters( float mass );
+BGFitParameters get_BGFitParameters( const std::string& dataset, int nbtags );
+
 double linear_interp( double x, double x_old, double mass, double mH, double mH_old );
 std::pair<double,double> get_massWindow( HiggsParameters hp );
 TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags );
@@ -90,7 +103,6 @@ std::pair<double,double> bTagEffSyst( const std::string& leptType_str, int nbtag
 
 double backgroundNorm( const std::string& dataset, const std::string& leptType_str, int nbtags );
 
-std::string getFitParamValue( const std::string& dataset, int nbtags, const std::string& name );
 
 
 
@@ -297,9 +309,13 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   ofs << "CMS_hzz2l2q_bkg" << suffixForPars_str << "p0\tgmN " << bgNorm_str << "\t-----\t-----\t" << alpha_str << std::endl;
 
  
-  ofs << "CMS_hzz2l2q_bkg" << btag_str << "p2\tparam\t\t" << getFitParamValue( dataset, nbtags, "wdth_rot" ) << "   error" << std::endl;
-  ofs << "CMS_hzz2l2q_bkg" << btag_str << "p4\tparam\t\t" << getFitParamValue( dataset, nbtags, "alpha_rot" ) << "   error" << std::endl;;
+  BGFitParameters bgfp = get_BGFitParameters( dataset, nbtags );
 
+  ofs << "CMS_hzz2l2q_bkg" << btag_str << "p2\tparam\t\t" << bgfp.CB_alpha<< "   error" << std::endl;
+  ofs << "CMS_hzz2l2q_bkg" << btag_str << "p4\tparam\t\t" << bgfp.CB_wdth << "   error" << std::endl;;
+
+
+  //std::pair<double,double> value_error = getFitParError( dataset, nbtags );
 
   ofs.close();
 
@@ -511,6 +527,61 @@ HiggsParameters get_higgsParameters( float mass ) {
 }
 
 
+BGFitParameters get_BGFitParameters( const std::string& dataset, int nbtags ) {
+
+  // read background parametrizations from fit results file
+  char fitResultsFile[900];
+  sprintf( fitResultsFile, "FitSidebands_%s/fitresultsDATA_%dbtag.txt", dataset.c_str(), nbtags);
+  
+  ifstream ifs(fitResultsFile);
+  ifs.clear();
+  ifs.seekg(0);
+
+  BGFitParameters bgfp;
+
+  while( ifs.good() ) {
+
+    std::string varName;
+    float value, error;
+    ifs >> varName >> value >> error;
+
+    if( varName=="beta" ) {
+      bgfp.fermi_beta = value;
+      bgfp.fermi_beta_err = error;
+    }
+    if( varName=="cutOff" ) {
+      bgfp.fermi_cutoff = value;
+      bgfp.fermi_cutoff_err = error;
+    }
+    if( varName=="m" ) {
+      bgfp.CB_m = value;
+      bgfp.CB_m_err = error;
+    }
+    if( varName=="n" ) {
+      bgfp.CB_n = value;
+      bgfp.CB_n_err = error;
+    }
+    if( varName=="alpha_rot" ) {
+      bgfp.CB_alpha = value;
+      bgfp.CB_alpha_err = error;
+    }
+    if( varName=="wdth_rot" ) {
+      bgfp.CB_wdth = value;
+      bgfp.CB_wdth_err = error;
+    }
+    if( varName=="theta_best" ) {
+      bgfp.CB_theta = value;
+      bgfp.CB_theta_err = error;
+    }
+
+  } // while ifs fitresults
+
+  return bgfp;
+
+}
+
+
+
 
 std::pair<double,double> get_massWindow( HiggsParameters hp ) {
 
@@ -583,47 +654,7 @@ double get_expectedYield_background( const std::string& dataset, const std::stri
   int leptType_int = convert_leptType(leptType_str);
 
 
-  // read background parametrizations from fit results file
-  char fitResultsFile[900];
-  sprintf( fitResultsFile, "FitSidebands_%s/fitresultsDATA_%dbtag.txt", dataset.c_str(), nbtags);
-  
-  ifstream ifs(fitResultsFile);
-  ifs.clear();
-  ifs.seekg(0);
-
-  CBParameters cbp;
-  float fermi_cutoff0;
-  float fermi_beta0;
-
-  while( ifs.good() ) {
-
-    std::string varName;
-    float value, error;
-    ifs >> varName >> value >> error;
-
-    if( varName=="beta" ) {
-      fermi_beta0 = value;
-    }
-    if( varName=="cutOff" ) {
-      fermi_cutoff0 = value;
-    }
-    if( varName=="m" ) {
-      cbp.m = value;
-    }
-    if( varName=="n" ) {
-      cbp.n = value;
-    }
-    if( varName=="alpha_rot" ) {
-      cbp.alpha = value;
-    }
-    if( varName=="wdth_rot" ) {
-      cbp.wdth = value;
-    }
-    if( varName=="theta_best" ) {
-      cbp.theta = value;
-    }
-
-  } // while ifs fitresults
+  BGFitParameters bgfp = get_BGFitParameters( dataset, nbtags );
 
 
   //integration window
@@ -639,9 +670,9 @@ double get_expectedYield_background( const std::string& dataset, const std::stri
 
   // define background PDF:
 
-  RooRealVar fermi_cutoff("fermi_cutoff", "position of fermi", fermi_cutoff0, 0., 1000.);
+  RooRealVar fermi_cutoff("fermi_cutoff", "position of fermi", bgfp.fermi_cutoff, 0., 1000.);
   fermi_cutoff.setConstant(kTRUE);
-  RooRealVar fermi_beta("fermi_beta", "width of fermi", fermi_beta0, 0., 50.);
+  RooRealVar fermi_beta("fermi_beta", "width of fermi", bgfp.fermi_beta, 0., 50.);
   fermi_beta.setConstant(kTRUE);
 
   RooFermi fermi_BKG("fermi_BKG", "fermi function", CMS_hzz2l2q_mZZ, fermi_cutoff, fermi_beta);
@@ -649,19 +680,19 @@ double get_expectedYield_background( const std::string& dataset, const std::stri
 
   char backgroundParName[100];
   sprintf( backgroundParName, "CMS_hzz2l2q_bkg%dp1", nbtags);
-  RooRealVar m(backgroundParName, backgroundParName, cbp.m, 100., 1000.);
+  RooRealVar m(backgroundParName, backgroundParName, bgfp.CB_m, 100., 1000.);
   m.setConstant(kTRUE);
   sprintf( backgroundParName, "CMS_hzz2l2q_bkg%dp2", nbtags);
-  RooRealVar wdth(backgroundParName, backgroundParName, cbp.wdth, 0., 1000.);
+  RooRealVar wdth(backgroundParName, backgroundParName, bgfp.CB_wdth, 0., 1000.);
   wdth.setConstant(kTRUE);
   sprintf( backgroundParName, "CMS_hzz2l2q_bkg%dp3", nbtags);
-  RooRealVar n(backgroundParName, backgroundParName, cbp.n, 0., 1001.);
+  RooRealVar n(backgroundParName, backgroundParName, bgfp.CB_n, 0., 1001.);
   n.setConstant(kTRUE);
   sprintf( backgroundParName, "CMS_hzz2l2q_bkg%dp4", nbtags);
-  RooRealVar alpha(backgroundParName, backgroundParName, cbp.alpha, -100., 100.);
+  RooRealVar alpha(backgroundParName, backgroundParName, bgfp.CB_alpha, -100., 100.);
   alpha.setConstant(kTRUE);
   sprintf( backgroundParName, "CMS_hzz2l2q_bkg%dp5", nbtags);
-  RooRealVar theta(backgroundParName, backgroundParName, cbp.theta, -3.14159, 3.14159); 
+  RooRealVar theta(backgroundParName, backgroundParName, bgfp.CB_theta, -3.14159, 3.14159); 
   theta.setConstant(kTRUE);
   
 
@@ -978,39 +1009,3 @@ double backgroundNorm( const std::string& dataset, const std::string& leptType_s
 
 }
 
-
-
-
-
-
-std::string getFitParamValue( const std::string& dataset, int nbtags, const std::string& name ) {
-
-  char fitResultsFile[900];
-  sprintf( fitResultsFile, "FitSidebands_%s/fitresultsDATA_%dbtag.txt", dataset.c_str(), nbtags);
-  
-  ifstream ifs(fitResultsFile);
-  ifs.clear();
-  ifs.seekg(0);
-
-  double paramValue;
-  
-  while( ifs.good() ) {
-  
-    std::string varName;
-    float value, error;
-    ifs >> varName >> value >> error;
-    
-    if( varName==name ) {
-      paramValue = value;
-      break;
-    }
-
-  } //while ifs good
-
-  char param_char[100];
-  sprintf( param_char, "%f", paramValue);
-  std::string param_str(param_char);
-
-  return param_str;
-
-}
