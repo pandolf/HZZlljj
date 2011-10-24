@@ -2,6 +2,7 @@
 #include <fstream>
 #include "TH1D.h"
 #include "TH2D.h"
+#include "TF1.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TChain.h"
@@ -58,9 +59,12 @@ TH1D* getAlphaHisto( int nBTags, const std::string leptType_str, TTree* treeMC )
 //TH1D* getAlphaHisto( int nBTags, const std::string leptType, TFile* file_ZJets_madgraph, TFile* file_TT_TW, TFile* file_Diboson );
 //FitResults fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha=0, bool writeFile=true );
 FitResults fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha=0, int seed=-1 );
+std::string get_fitResultsName( const std::string& dataset, int nbtags, const std::string& data_mc="DATA" );
+std::string get_outdir( const std::string& dataset );
 TTree* correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int btagCategory, const std::string& name );
 //TH1D* shuffle(TH1D* inhist, TRandom3 random);
 TH1D* shuffle( TH1D* inhist, TRandom3* random, char *histname );
+void modifyFitResultError( const std::string& thisVar, double thisVarError, const std::string& dataset, int nbtags );
 
 
 int main( int argc, char* argv[] ) {
@@ -70,7 +74,16 @@ int main( int argc, char* argv[] ) {
   if( argc==2 ) {
     std::string dataset_str(argv[1]);
     dataset = dataset_str;
-  } 
+  }
+
+  int nToys = 100;
+  if( argc==3 ) {
+    nToys = atoi(argv[2]);
+  }
+
+  std::cout << std::endl << std::endl;
+  std::cout << "--> Will use " << nToys << " toys to determine fit parameter errors." << std::endl;
+
 
   TFile* file_ZJets_madgraph = TFile::Open("HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root");
   TFile* file_TT_TW = TFile::Open("HZZlljjRM_TT_TW_TuneZ2_7TeV-powheg-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root");
@@ -104,18 +117,15 @@ int main( int argc, char* argv[] ) {
 
   // and now generate toys to get the error on the relevant fit parameters:
   TH1D* h1_alphaFit_0btag = new TH1D("alphaFit_0btag", "", 100, -200., 50.); 
-  TH1D* h1_wdthFit_0btag = new TH1D("wdthFit_0btag", "", 100, 0., 1.); 
+  TH1D* h1_wdthFit_0btag = new TH1D("wdthFit_0btag", "", 100, -1., 2.); 
 
   TH1D* h1_alphaFit_1btag = new TH1D("alphaFit_1btag", "", 100, -200., 50.); 
-  TH1D* h1_wdthFit_1btag = new TH1D("wdthFit_1btag", "", 100, 0., 1.); 
+  TH1D* h1_wdthFit_1btag = new TH1D("wdthFit_1btag", "", 100, -1., 2.); 
 
   TH1D* h1_alphaFit_2btag = new TH1D("alphaFit_2btag", "", 100, -200., 50.); 
-  TH1D* h1_wdthFit_2btag = new TH1D("wdthFit_2btag", "", 100, 0., 1.); 
+  TH1D* h1_wdthFit_2btag = new TH1D("wdthFit_2btag", "", 100, -1., 2.); 
 
   TRandom3* rand = new TRandom3(13);
-  int nToys=2;
-  TFile* prova = TFile::Open("PROVA.root", "recreate");
-  prova->cd();
 
   for( unsigned iToy=0; iToy<nToys; ++iToy ) {
 
@@ -157,9 +167,41 @@ int main( int argc, char* argv[] ) {
 
   }
 
+  std::cout << std::endl << std::endl << std::endl;
+  std::cout << ">  Now modifying fitresults files." << std::endl;
+
+  TF1* f1_gaus = new TF1("gauss", "gaus");
+
+  h1_alphaFit_0btag->Fit(f1_gaus, "Q");
+  modifyFitResultError( "alpha_rot", f1_gaus->GetParameter(2), dataset, 0 );
+  h1_alphaFit_1btag->Fit(f1_gaus, "Q");
+  modifyFitResultError( "alpha_rot", f1_gaus->GetParameter(2), dataset, 1 );
+  h1_alphaFit_2btag->Fit(f1_gaus, "Q");
+  modifyFitResultError( "alpha_rot", f1_gaus->GetParameter(2), dataset, 2 );
+
+  h1_wdthFit_0btag->Fit(f1_gaus, "Q");
+  modifyFitResultError( "wdth_rot", f1_gaus->GetParameter(2), dataset, 0 );
+  h1_wdthFit_1btag->Fit(f1_gaus, "Q");
+  modifyFitResultError( "wdth_rot", f1_gaus->GetParameter(2), dataset, 1 );
+  h1_wdthFit_2btag->Fit(f1_gaus, "Q");
+  modifyFitResultError( "wdth_rot", f1_gaus->GetParameter(2), dataset, 2 );
+
+
+
+
+  std::string outfileName = "fitParamErrors_" + dataset + ".root";
+  TFile* outfile = TFile::Open(outfileName.c_str(), "recreate");
+  outfile->cd();
+
   h1_alphaFit_0btag->Write();
+  h1_alphaFit_1btag->Write();
+  h1_alphaFit_2btag->Write();
+
   h1_wdthFit_0btag->Write();
-  prova->Close();
+  h1_wdthFit_1btag->Write();
+  h1_wdthFit_2btag->Write();
+
+  outfile->Close();
 
   return 0;
 
@@ -276,7 +318,7 @@ FitResults fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeD
   }
   
 
-  std::string outdir = "FitSidebands_" + dataset;
+  std::string outdir = get_outdir(dataset);
   std::string mkdir_command = "mkdir -p " + outdir;
   system(mkdir_command.c_str());
 
@@ -403,9 +445,8 @@ FitResults fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeD
 
   if( writeFile ) {
 
-    char ofsMC_name[400];
-    sprintf( ofsMC_name, "%s/fitresultsMC_%dbtag.txt", outdir.c_str(), btagCategory);
-    ofstream ofsMC(ofsMC_name);
+    std::string ofsMCName = get_fitResultsName( dataset, btagCategory, "MC" );
+    ofstream ofsMC(ofsMCName.c_str());
 
     ofsMC << "beta " << beta.getVal() << " " << beta.getError() << std::endl;
     ofsMC << "cutOff " << cutOff.getVal() << " " << cutOff.getError() << std::endl;
@@ -632,9 +673,8 @@ FitResults fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeD
     sprintf( canvasName_rot, "%s/check_rot_%dbtag_log.eps", outdir.c_str(), btagCategory);
     c1->SaveAs(canvasName_rot);
 
-    char ofsDATA_name[600];
-    sprintf( ofsDATA_name, "%s/fitresultsDATA_%dbtag.txt", outdir.c_str(), btagCategory);
-    ofstream ofsDATA(ofsDATA_name);
+    std::string ofsDATAName = get_fitResultsName( dataset, btagCategory, "DATA" );
+    ofstream ofsDATA(ofsDATAName.c_str());
 
 
     ofsDATA << "beta " << beta.getVal() << " " << beta.getError() << std::endl;
@@ -736,6 +776,28 @@ FitResults fitSidebands( const std::string& dataset, TTree* treeMC, TTree* treeD
 
 
 
+std::string get_fitResultsName( const std::string& dataset, int nbtags, const std::string& data_mc ) {
+
+  std::string outdir = get_outdir(dataset);
+
+  char fitResultsName[600];
+  sprintf( fitResultsName, "%s/fitresults%s_%dbtag.txt", outdir.c_str(), data_mc.c_str(), nbtags);
+  std::string returnString(fitResultsName);
+
+  return returnString;
+
+}
+
+std::string get_outdir( const std::string& dataset ) {
+
+  std::string returnString = "FitSidebands_" + dataset;
+
+  return returnString;
+
+}
+
+
+
 TTree* correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int btagCategory, const std::string& name ) {
 
   Int_t leptType;
@@ -802,5 +864,37 @@ TH1D* shuffle( TH1D* inhist, TRandom3* random, char *histName ) {
   }
 
   return outhist;
+
+}
+
+
+
+void modifyFitResultError( const std::string& thisVar, double thisVarError, const std::string& dataset, int nbtags ) {
+
+  std::string fitResultsFile_old = get_fitResultsName( dataset, nbtags );
+  std::string fitResultsFile_new = get_fitResultsName( dataset, nbtags, "DATA_NEW" );
+
+  ifstream ifs(fitResultsFile_old.c_str());
+  ofstream ofs(fitResultsFile_new.c_str());
+
+  ifs.clear();
+  ifs.seekg(0);
+
+  while( ifs.good() ) {
+  
+    std::string varName;
+    float value, error;
+
+    ifs >> varName >> value >> error;
+
+    if( varName==thisVar ) {
+      ofs << varName << " " << value << " " << thisVarError << std::endl;
+    } else { 
+      ofs << varName << " " << value << " " << error << std::endl;
+    }
+
+  } // while ifs good
+
+  ofs.close();
 
 }
