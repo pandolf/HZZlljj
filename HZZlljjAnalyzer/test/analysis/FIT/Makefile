@@ -17,6 +17,9 @@ EXTRALIBS  :=  -L$(ROOTSYS)/lib -L$(ROOFIT_LIBDIR)/ -lHtml -lMathCore -lGenVecto
 fitSidebands: fitSidebands.cpp RooFermi.o RooCB.o SidebandFitter.o
 	$(CC) -Wall $(INCLUDES) -o fitSidebands fitSidebands.cpp RooFermi.o RooCB.o SidebandFitter.o $(ROOTFLAG) $(EXTRALIBS)
 
+generateToysForParErrors: generateToysForParErrors.cpp RooFermi.o RooCB.o SidebandFitter.o
+	$(CC) -Wall $(INCLUDES) -o generateToysForParErrors generateToysForParErrors.cpp RooFermi.o RooCB.o SidebandFitter.o $(ROOTFLAG) $(EXTRALIBS)
+
 create_datacards: create_datacards.cpp RooFermi.o RooCB.o RooDoubleCB.o RooRelBW.o
 	$(CC) -Wall $(INCLUDES) -o create_datacards create_datacards.cpp RooFermi.o RooCB.o RooDoubleCB.o RooRelBW.o $(ROOTFLAG) $(EXTRALIBS)
 
