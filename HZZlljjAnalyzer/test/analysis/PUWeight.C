@@ -36,6 +36,7 @@ PUWeight::PUWeight(float luminosity, const char* year, const std::string& idealM
   if (!LoadDataHistogram(luminosity, year))
     return;
 
+std::cout << "idealMCPU: " << idealMCPU << std::endl;
   //No MC given. Take ideal MC
   IdealMCHistogram(idealMCPU);
 
@@ -234,6 +235,13 @@ TH1F* PUWeight::CalculateWeight() {
 	 << endl;
   }
 
+TFile* prova = TFile::Open("PROVA.root", "recreate");
+prova->cd();
+fData->Write();
+fMC->Write();
+fWeight->Write();
+prova->Close();
+
   return fWeight;
 }
 
@@ -267,6 +275,7 @@ TH1F* PUWeight::IdealMCHistogram( const std::string& puType) {
 
   if( puType=="Spring11_Flat10" ) {
 
+std::cout << "Wrong!!! (Spring11)" << std::endl;
       idealpu[0]   =   0.0698146584;
       idealpu[1]   =   0.0698146584;
       idealpu[2]   =   0.0698146584;
@@ -295,6 +304,7 @@ TH1F* PUWeight::IdealMCHistogram( const std::string& puType) {
 
   } else if( puType=="Summer11_S4" ) {
 
+std::cout << "Right!" << std::endl;
       idealpu[0] =  0.14551;
       idealpu[1] =  0.0644453;
       idealpu[2] =  0.0696412;
@@ -320,6 +330,35 @@ TH1F* PUWeight::IdealMCHistogram( const std::string& puType) {
       idealpu[22] =  0.00203485;
       idealpu[23] =  0.00133045;
       idealpu[24] =  0.000893794;
+
+  } else if( puType=="Summer11_S4_ave" ) {
+
+std::cout << "Summer11 ave" << std::endl;
+      idealpu[0] =  0.104109;
+      idealpu[1] =  0.0703573;
+      idealpu[2] =  0.0698445;
+      idealpu[3] =  0.0698254;
+      idealpu[4] =  0.0697054;
+      idealpu[5] =  0.0697907;
+      idealpu[6] =  0.0696751;
+      idealpu[7] =  0.0694486;
+      idealpu[8] =  0.0680332;
+      idealpu[9] =  0.0651044;
+      idealpu[10] =  0.0598036;
+      idealpu[11] =  0.0527395;
+      idealpu[12] =  0.0439513;
+      idealpu[13] =  0.0352202;
+      idealpu[14] =  0.0266714;
+      idealpu[15] =  0.019411;
+      idealpu[16] =  0.0133974;
+      idealpu[17] =  0.00898536;
+      idealpu[18] =  0.0057516;
+      idealpu[19] =  0.00351493;
+      idealpu[20] =  0.00212087;
+      idealpu[21] =  0.00122891;
+      idealpu[22] =  0.00070592;
+      idealpu[23] =  0.000384744;
+      idealpu[24] =  0.000219377;
 
   } else {
 
