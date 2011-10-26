@@ -13,12 +13,18 @@ ROOTFLAG = `${ROOTSYS}/bin/root-config --cflags --libs`
 EXTRALIBS  :=  -L$(ROOTSYS)/lib -L$(ROOFIT_LIBDIR)/ -lHtml -lMathCore -lGenVector -lMinuit -lEG -lRooFitCore -lRooFit
 
 
+fitSidebandsPROVA: fitSidebandsPROVA.cpp RooFermi.o RooCB.o SidebandFitter.o
+	$(CC) -Wall $(INCLUDES) -o fitSidebandsPROVA fitSidebandsPROVA.cpp RooFermi.o RooCB.o SidebandFitter.o $(ROOTFLAG) $(EXTRALIBS)
+
 fitSidebands: fitSidebands.cpp RooFermi.o RooCB.o
 	$(CC) -Wall $(INCLUDES) -o fitSidebands fitSidebands.cpp RooFermi.o RooCB.o $(ROOTFLAG) $(EXTRALIBS)
 
-create_datacards: create_datacards.cpp RooFermi.o RooCB.o
-	$(CC) -Wall $(INCLUDES) -o create_datacards create_datacards.cpp RooFermi.o RooCB.o $(ROOTFLAG) $(EXTRALIBS)
+create_datacards: create_datacards.cpp RooFermi.o RooCB.o RooDoubleCB.o RooRelBW.o
+	$(CC) -Wall $(INCLUDES) -o create_datacards create_datacards.cpp RooFermi.o RooCB.o RooDoubleCB.o RooRelBW.o $(ROOTFLAG) $(EXTRALIBS)
 
+
+SidebandFitter.o: SidebandFitter.cc
+	$(CC) $(CFLAGS) $(INCLUDES) SidebandFitter.cc $(ROOTFLAG) $(EXTRALIBS)
 
 
 RooFermi.o: RooFermi.cc
@@ -26,6 +32,12 @@ RooFermi.o: RooFermi.cc
 
 RooCB.o: RooCB.cc
 	$(CC) $(CFLAGS) $(INCLUDES) RooCB.cc $(ROOTFLAG) $(EXTRALIBS)
+
+RooDoubleCB.o: RooDoubleCB.cc
+	$(CC) $(CFLAGS) $(INCLUDES) RooDoubleCB.cc $(ROOTFLAG) $(EXTRALIBS)
+
+RooRelBW.o: RooRelBW.cc
+	$(CC) $(CFLAGS) $(INCLUDES) RooRelBW.cc $(ROOTFLAG) $(EXTRALIBS)
 
 
 
