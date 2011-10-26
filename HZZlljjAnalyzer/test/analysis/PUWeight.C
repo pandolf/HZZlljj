@@ -275,7 +275,6 @@ TH1F* PUWeight::IdealMCHistogram( const std::string& puType) {
 
   if( puType=="Spring11_Flat10" ) {
 
-std::cout << "Wrong!!! (Spring11)" << std::endl;
       idealpu[0]   =   0.0698146584;
       idealpu[1]   =   0.0698146584;
       idealpu[2]   =   0.0698146584;
@@ -304,7 +303,6 @@ std::cout << "Wrong!!! (Spring11)" << std::endl;
 
   } else if( puType=="Summer11_S4" ) {
 
-std::cout << "Right!" << std::endl;
       idealpu[0] =  0.14551;
       idealpu[1] =  0.0644453;
       idealpu[2] =  0.0696412;
@@ -333,7 +331,6 @@ std::cout << "Right!" << std::endl;
 
   } else if( puType=="Summer11_S4_ave" ) {
 
-std::cout << "Summer11 ave" << std::endl;
       idealpu[0] =  0.104109;
       idealpu[1] =  0.0703573;
       idealpu[2] =  0.0698445;
