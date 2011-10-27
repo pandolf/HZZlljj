@@ -23,6 +23,9 @@ generateToysForParErrors: generateToysForParErrors.cpp RooFermi.o RooCB.o Sideba
 create_datacards: create_datacards.cpp RooFermi.o RooCB.o RooDoubleCB.o RooRelBW.o
 	$(CC) -Wall $(INCLUDES) -o create_datacards create_datacards.cpp RooFermi.o RooCB.o RooDoubleCB.o RooRelBW.o $(ROOTFLAG) $(EXTRALIBS)
 
+modifyFitParamErrors: modifyFitParamErrors.cpp SidebandFitter.o RooFermi.o RooCB.o 
+	$(CC) -Wall $(INCLUDES) -o modifyFitParamErrors modifyFitParamErrors.cpp SidebandFitter.o RooFermi.o RooCB.o $(ROOTFLAG) $(EXTRALIBS)
+
 
 SidebandFitter.o: SidebandFitter.cc
 	$(CC) $(CFLAGS) $(INCLUDES) SidebandFitter.cc $(ROOTFLAG) $(EXTRALIBS)
