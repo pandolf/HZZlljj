@@ -77,14 +77,14 @@ int main( int argc, char* argv[] ) {
 
   // now start toy machinery:
 
-  TH1D* h1_alphaToys_0btag = new TH1D("alphaToys_0btag", "", 100, -200., 50.); 
-  TH1D* h1_wdthToys_0btag = new TH1D("wdthToys_0btag", "", 100, -1., 2.); 
+  TH1D* h1_alphaToys_0btag = new TH1D("alpha_rot_toys_0btag", "", 100, -200., 50.); 
+  TH1D* h1_wdthToys_0btag = new TH1D("wdth_rot_toys_0btag", "", 100, -1., 2.); 
 
-  TH1D* h1_alphaToys_1btag = new TH1D("alphaToys_1btag", "", 100, -200., 50.); 
-  TH1D* h1_wdthToys_1btag = new TH1D("wdthToys_1btag", "", 100, -1., 2.); 
+  TH1D* h1_alphaToys_1btag = new TH1D("alpha_rot_toys_1btag", "", 100, -200., 50.); 
+  TH1D* h1_wdthToys_1btag = new TH1D("wdth_rot_toys_1btag", "", 100, -1., 2.); 
 
-  TH1D* h1_alphaToys_2btag = new TH1D("alphaToys_2btag", "", 100, -200., 50.); 
-  TH1D* h1_wdthToys_2btag = new TH1D("wdthToys_2btag", "", 100, -1., 2.); 
+  TH1D* h1_alphaToys_2btag = new TH1D("alpha_rot_toys_2btag", "", 100, -200., 50.); 
+  TH1D* h1_wdthToys_2btag = new TH1D("wdth_rot_toys_2btag", "", 100, -1., 2.); 
 
   TRandom3* rand = new TRandom3(seed);
 

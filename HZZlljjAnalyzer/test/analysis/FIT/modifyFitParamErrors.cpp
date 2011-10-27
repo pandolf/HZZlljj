@@ -58,7 +58,7 @@ void modifyFitResults( const std::string& dataset, int nbtags, TFile* file, std:
   for( unsigned ivar=0; ivar<varNames.size(); ++ivar ) {
 
     char histoName[500];
-    sprintf( histoName, "%sToys_%dbtag", varNames[ivar].c_str(), nbtags );
+    sprintf( histoName, "%s_toys_%dbtag", varNames[ivar].c_str(), nbtags );
 
     TH1D* histo = (TH1D*)file->Get(histoName);
 
