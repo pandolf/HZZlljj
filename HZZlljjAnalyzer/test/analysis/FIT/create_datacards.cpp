@@ -531,7 +531,7 @@ BGFitParameters get_BGFitParameters( const std::string& dataset, int nbtags ) {
 
   // read background parametrizations from fit results file
   char fitResultsFile[900];
-  sprintf( fitResultsFile, "FitSidebands_%s/fitresultsDATA_%dbtag.txt", dataset.c_str(), nbtags);
+  sprintf( fitResultsFile, "FitSidebands_%s/fitresultsDATA_NEW_%dbtag.txt", dataset.c_str(), nbtags);
   
   ifstream ifs(fitResultsFile);
   ifs.clear();
