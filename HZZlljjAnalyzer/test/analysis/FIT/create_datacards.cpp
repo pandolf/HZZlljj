@@ -311,8 +311,8 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
  
   BGFitParameters bgfp = get_BGFitParameters( dataset, nbtags );
 
-  ofs << "CMS_hzz2l2q_bkg" << btag_str << "p2\tparam\t\t" << bgfp.CB_alpha<< "   error" << std::endl;
-  ofs << "CMS_hzz2l2q_bkg" << btag_str << "p4\tparam\t\t" << bgfp.CB_wdth << "   error" << std::endl;;
+  ofs << "CMS_hzz2l2q_bkg" << btag_str << "p2\tparam\t\t" << bgfp.CB_alpha<< "\t" << bgfp.CB_alpha_err << std::endl;
+  ofs << "CMS_hzz2l2q_bkg" << btag_str << "p4\tparam\t\t" << bgfp.CB_wdth << "\t" << bgfp.CB_wdth_err << std::endl;;
 
 
   //std::pair<double,double> value_error = getFitParError( dataset, nbtags );
