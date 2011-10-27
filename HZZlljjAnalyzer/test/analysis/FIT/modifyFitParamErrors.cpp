@@ -29,7 +29,7 @@ int main( int argc, char* argv[] ) {
 
   std::string fitToysFileName = "fitParamErrors_" + dataset + ".root";
 
-  std::string hadd_command = "hadd -f " + fitToysFileName + " /cmsrm/pc22_2/pandolf/FitToys_LP11/fitParamErrors_LP11_*";
+  std::string hadd_command = "hadd -f " + fitToysFileName + " /cmsrm/pc22_2/pandolf/FitToys_"+dataset+"/fitParamErrors_"+dataset+"_*";
   system(hadd_command.c_str());
 
   TFile* fitToysFile = TFile::Open(fitToysFileName.c_str());
