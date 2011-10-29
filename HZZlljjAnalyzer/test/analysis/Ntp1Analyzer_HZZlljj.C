@@ -11,12 +11,12 @@
 #include "AnalysisElectron.h"
 #include "AnalysisMuon.h"
 
-#include "include/PUWeight.h"
+#include "PUWeight.h"
 
 //#include "fitTools.h"
 
 
-int DEBUG_EVENTNUMBER = -1;
+int DEBUG_EVENTNUMBER = 715236831;
 
 
 double trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
@@ -498,7 +498,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
   
      nPU_ave_ = 0.;
      for( unsigned iBX=0; iBX<nBX; ++iBX ) {
-       if( bxPU[iBX]==0 ) nPU_ = nPU[iBX]; //in time PU only
+       if( bxPU[iBX]==1 ) nPU_ = nPU[iBX]; //in time PU only
        nPU_ave_ += nPU[iBX]; 
      }
      nPU_ave_ /= (float)nBX;
@@ -697,7 +697,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      if( event_==DEBUG_EVENTNUMBER ) {
        std::cout << std::endl << std::endl;
-       std::cout << "----- LOG for event: " << event_ << std::endl;
+       std::cout << "----- LOG for run: " << run_ << "    event: " << event_ << std::endl;
        std::cout << std::endl << "*** Muons:" << std::endl;
      }
 
