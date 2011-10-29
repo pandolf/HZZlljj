@@ -22,11 +22,11 @@ int main( int argc, char* argv[]) {
   }
 
 
-//TString dataset_tstr(dataset);
+  TString dataset_tstr(dataset);
 //if( dataset_tstr.BeginsWith("DoubleMu") ) {
-//  //na->AddRequiredTrigger( "HLT_Mu13_Mu8" );
-//  //na->AddRequiredTrigger( "HLT_DoubleMu7" );
-//  ////na->AddRequiredTriggerNOT( "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL" );
+//  na->AddRequiredTrigger( "HLT_Mu13_Mu8" );
+//  na->AddRequiredTrigger( "HLT_DoubleMu7" );
+//  //na->AddRequiredTriggerNOT( "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL" );
 //} else if( dataset_tstr.BeginsWith("SingleMu") ) {
 //  na->AddRequiredTrigger( "HLT_IsoMu24" );
 //  na->AddRequiredTriggerNOT( "HLT_Mu13_Mu8" );
@@ -41,7 +41,14 @@ int main( int argc, char* argv[]) {
 
   //na->ReadJSONFile("Cert_160404-167913_7TeV_PromptReco_Collisions11_CMSSWConfig.txt");
   //na->ReadJSONFile("Cert_goodCollisions2011_CMSSWConfig.txt");
-  na->ReadJSONFile("Cert_160404-171116_7TeV_PromptReco_Collisions11_CMSSWConfig.txt");
+//if( dataset_tstr.BeginsWith("DoubleElectron") )
+//  na->ReadJSONFile("Cert_160404-172802_7TeV_PromptReco_Collisions11_DoubleElectron_plusMay10addon_CMSSWConfig.txt");
+//else
+//  na->ReadJSONFile("Cert_160404-172802_7TeV_PromptReco_Collisions11_plusMay10addon_CMSSWConfig.txt");
+////na->ReadJSONFile("Cert_160404-171116_7TeV_PromptReco_Collisions11_CMSSWConfig.txt");
+
+  //na->ReadJSONFile("Cert_160404-177053_7TeV_PromptReco_Collisions11_CMSSWConfig.txt");
+  na->ReadJSONFile("Cert_160404-179431_7TeV_PromptReco_Collisions11_CMSSWConfig.txt");
 
   if( argc==2 ) {
     na->LoadInput();
