@@ -70,8 +70,8 @@ finalize_QG: Ntp1Finalizer.o Ntp1Finalizer_QG.o finalize_QG.cpp fitTools.o Analy
 finalize_QGTMVA: Ntp1Finalizer.o Ntp1Finalizer_QGTMVA.o finalize_QGTMVA.cpp fitTools.o
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_QGTMVA finalize_QGTMVA.cpp Ntp1Finalizer.o Ntp1Finalizer_QGTMVA.o fitTools.o $(ROOTFLAG) -lMinuit
 
-finalize_ComputeQGLikelihood: Ntp1Finalizer.o Ntp1Finalizer_ComputeQGLikelihood.o QGLikelihoodCalculator.o finalize_ComputeQGLikelihood.cpp fitTools.o
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf -o finalize_ComputeQGLikelihood finalize_ComputeQGLikelihood.cpp Ntp1Finalizer.o Ntp1Finalizer_ComputeQGLikelihood.o QGLikelihoodCalculator.o fitTools.o $(ROOTFLAG) -lMinuit
+finalize_ComputeQGLikelihood: Ntp1Finalizer.o Ntp1Finalizer_ComputeQGLikelihood.o QGLikelihoodCalculator.o finalize_ComputeQGLikelihood.cpp fitTools.o AnalysisJet.o BTagSFUtil.o
+	$(CC) -Wall $(INCLUDES) -o finalize_ComputeQGLikelihood finalize_ComputeQGLikelihood.cpp Ntp1Finalizer.o Ntp1Finalizer_ComputeQGLikelihood.o QGLikelihoodCalculator.o fitTools.o AnalysisJet.o BTagSFUtil.o $(ROOTFLAG) $(EXTRALIBS)
 
 finalize_GG: Ntp1Finalizer.o Ntp1Finalizer_GG.o finalize_GG.cpp fitTools.o
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -o finalize_GG finalize_GG.cpp Ntp1Finalizer.o Ntp1Finalizer_GG.o fitTools.o $(ROOTFLAG) -lMinuit
@@ -101,11 +101,20 @@ do2ndLevel_DiJet: Ntp1Analyzer.o Ntp1Analyzer_DiJet.o do2ndLevel_DiJet.cpp
 drawHWWlvjj: DrawBase.o fitTools.o drawHWWlvjj.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawHWWlvjj drawHWWlvjj.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
 
+drawQGCompareDATA: DrawBase.o fitTools.o drawQGCompareDATA.cpp
+	$(CC) -Wall $(INCLUDES) -o drawQGCompareDATA drawQGCompareDATA.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS)
+
 drawHZZlljjRM: DrawBase.o fitTools.o drawHZZlljjRM.cpp
-	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawHZZlljjRM drawHZZlljjRM.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+	$(CC) -Wall $(INCLUDES) -o drawHZZlljjRM drawHZZlljjRM.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS)
 
 drawHZZlljjRM_DATA: DrawBase.o fitTools.o drawHZZlljjRM_DATA.cpp
 	$(CC) -Wall $(INCLUDES) -o drawHZZlljjRM_DATA drawHZZlljjRM_DATA.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS)
+
+drawHZZlljjRM_DATA_Check1TeV: DrawBase.o fitTools.o drawHZZlljjRM_DATA_Check1TeV.cpp
+	$(CC) -Wall $(INCLUDES) -o drawHZZlljjRM_DATA_Check1TeV drawHZZlljjRM_DATA_Check1TeV.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS)
+
+drawHZZlljjRM_JHU_vs_Powheg: DrawBase.o fitTools.o drawHZZlljjRM_JHU_vs_Powheg.cpp
+	$(CC) -Wall $(INCLUDES) -o drawHZZlljjRM_JHU_vs_Powheg drawHZZlljjRM_JHU_vs_Powheg.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS)
 
 drawHZZlljj_kinfit: DrawBase.o fitTools.o drawHZZlljj_kinfit.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawHZZlljj_kinfit drawHZZlljj_kinfit.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
@@ -160,6 +169,10 @@ drawFall10_vs_Spring11: DrawBase.o fitTools.o drawFall10_vs_Spring11.cpp
 
 drawLeptIsoStudies: DrawBase.o fitTools.o drawLeptIsoStudies.cpp
 	$(CC) -Wall -I$(CMSSW_BASE)/src/UserCode/pandolf/ -o drawLeptIsoStudies drawLeptIsoStudies.cpp DrawBase.o fitTools.o $(ROOTFLAG) -lMinuit
+
+drawAlpha: DrawBase.o fitTools.o drawAlpha.cpp
+	$(CC) -Wall $(INCLUDES) -o drawAlpha drawAlpha.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS)
+
 
 doLatexYieldTable: doLatexYieldTable.cpp
 	$(CC) -Wall -o doLatexYieldTable doLatexYieldTable.cpp $(ROOTFLAG)
@@ -319,8 +332,8 @@ RooCruijffPdf.o: RooCruijffPdf.cc
 BTagSFUtil.o: $(CMSSW_BASE)/src/UserCode/pandolf/BTagSFUtil/BTagSFUtil.cc
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/BTagSFUtil/ $(CMSSW_BASE)/src/UserCode/pandolf/BTagSFUtil/BTagSFUtil.cc $(ROOTFLAG)
 
-PUWeight.o: $(CMSSW_BASE)/src/UserCode/emanuele/CommonTools/src/PUWeight.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/emanuele/CommonTools $(CMSSW_BASE)/src/UserCode/emanuele/CommonTools/src/PUWeight.C $(ROOTFLAG)
+PUWeight.o: PUWeight.C
+	$(CC) $(CFLAGS) PUWeight.C $(ROOTFLAG)
 
 
 AnalysisJet.o: AnalysisJet.cc 
