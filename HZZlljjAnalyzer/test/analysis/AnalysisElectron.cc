@@ -135,7 +135,7 @@ bool AnalysisElectron::conversionRejectionVBTF80() {
 
 bool AnalysisElectron::conversionRejectionVBTF95() {
 
-   bool convRej_VBTF95 = (expInnerLayersGsfTrack<=1) && (fabs(convDist)>-1. || fabs(convDcot)>-1.);
+   bool convRej_VBTF95 = (expInnerLayersGsfTrack<=1);
    
    return convRej_VBTF95;
 
