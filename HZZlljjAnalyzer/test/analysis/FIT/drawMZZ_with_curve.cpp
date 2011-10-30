@@ -37,7 +37,7 @@ struct BGFitParameters {
 
 
 
-void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbtags );
+void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbtags, std::string flags="" );
 BGFitParameters get_BGFitParameters( const std::string& dataset, int nbtags );
 
 
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
   std::string data_prefix(argv[1]);
   std::string data_dataset = "DATA_" + data_prefix;
 
-  float signalScaleFactor=1.;
+  float signalScaleFactor=3.;
   if( argc>2 ) {
     std::string signalScaleFactor_str(argv[2]);
     signalScaleFactor = (float)atoi(signalScaleFactor_str.c_str());;
@@ -170,6 +170,7 @@ int main(int argc, char* argv[]) {
   bool log = true;
 
   db->set_rebin(20);
+  db->set_xAxisMax(750.);
 
   db->set_legendTitle("0 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_0btag", "m_{lljj}", "GeV", "Events", log);
@@ -182,6 +183,23 @@ int main(int argc, char* argv[]) {
   db->set_legendTitle("2 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_2btag", "m_{lljj}", "GeV", "Events", log);
   drawHistoWithCurve( db, data_prefix, 2);
+
+  db->set_xAxisMax();
+  db->set_rebin(1);
+
+  // long range (up to 1300 gev):
+  db->set_legendTitle("0 b-tag Category");
+  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 60, 150., 1350., "mZZ_0btag_longRange", "m_{ZZ} [GeV]", "GeV");
+  drawHistoWithCurve( db, data_prefix, 0, "longRange");
+
+  db->set_legendTitle("1 b-tag Category");
+  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", 60, 150., 1350., "mZZ_1btag_longRange", "m_{ZZ} [GeV]", "GeV");
+  drawHistoWithCurve( db, data_prefix, 1, "longRange");
+
+  db->set_legendTitle("2 b-tag Category");
+  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", 60, 150., 1350., "mZZ_2btag_longRange", "m_{ZZ} [GeV]", "GeV");
+  drawHistoWithCurve( db, data_prefix, 2, "longRange");
+
 
 //db->set_legendTitle("0 b-tag Sidebands");
 //db->drawHisto("mZZ_kinfit_hiMass_sidebands_0btag", "m_{lljj}", "GeV", "Events", log);
@@ -203,19 +221,22 @@ int main(int argc, char* argv[]) {
 
 
 
-void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbtags ) {
+void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbtags, std::string flags ) {
+
+  if( flags!="" ) flags = "_" + flags;
 
   TH1F::AddDirectory(kTRUE);
-
-  float xMin = 150.;
-  float xMax = 750.;
 
   // get histograms:
 
   std::vector< TH1D* > lastHistos_data = db->get_lastHistos_data();
   std::vector< TH1D* > lastHistos_mc   = db->get_lastHistos_mc();
 
+
   TH1D* h1_data = new TH1D(*(lastHistos_data[0]));
+  float xMin = (db->get_xAxisMin()!=9999.) ? db->get_xAxisMin() : h1_data->GetXaxis()->GetXmin();
+  float xMax = (db->get_xAxisMax()!=9999.) ? db->get_xAxisMax() : h1_data->GetXaxis()->GetXmax();
+
   // create data graph (poisson asymm errors):
   TGraphAsymmErrors* graph_data_poisson = new TGraphAsymmErrors(0);
   graph_data_poisson = fitTools::getGraphPoissonErrors(h1_data);
@@ -309,7 +330,7 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbta
   gPad->RedrawAxis();
 
   char canvasName[1000];
-  sprintf( canvasName, "%s/mZZ_%dbtag_withCurve", (db->get_outputdir()).c_str(), nbtags );
+  sprintf( canvasName, "%s/mZZ_%dbtag_withCurve%s", (db->get_outputdir()).c_str(), nbtags, flags.c_str() );
   std::string canvasName_str(canvasName);
   std::string canvasName_eps = canvasName_str+".eps";
   c1->SaveAs(canvasName_eps.c_str());
@@ -344,7 +365,7 @@ BGFitParameters get_BGFitParameters( const std::string& dataset, int nbtags ) {
 
   // read background parametrizations from fit results file
   char fitResultsFile[900];
-  sprintf( fitResultsFile, "FitSidebands_%s/fitresultsDATA_NEW_%dbtag.txt", dataset.c_str(), nbtags);
+  sprintf( fitResultsFile, "FitSidebands_%s/fitresultsDATA_%dbtag.txt", dataset.c_str(), nbtags);
   
   ifstream ifs(fitResultsFile);
   ifs.clear();
