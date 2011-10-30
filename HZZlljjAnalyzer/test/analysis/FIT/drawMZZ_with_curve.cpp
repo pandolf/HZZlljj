@@ -2,11 +2,13 @@
 #include <iostream>
 #include <string>
 #include "DrawBase.h"
+#include "fitTools.h"
 
 #include "RooRealVar.h"
 #include "RooFermi.h"
 #include "RooCB.h"
 #include "RooProdPdf.h"
+#include "RooPlot.h"
 
 
 bool withSignal_=true;
@@ -35,8 +37,8 @@ struct BGFitParameters {
 
 
 
+void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbtags );
 BGFitParameters get_BGFitParameters( const std::string& dataset, int nbtags );
-void drawHistoWithCurve( DrawBase* db, const BGFitParameters& bgfp);
 
 
 
@@ -65,7 +67,7 @@ int main(int argc, char* argv[]) {
     selType = selType_tmp;
   }
 
-  std::string ZJetsMC = "madgraph";
+  //std::string ZJetsMC = "madgraph";
 
 
 
@@ -74,8 +76,16 @@ int main(int argc, char* argv[]) {
 
 
 
-  std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset + "_" + ZJetsMC;
-  if( withSignal_ ) outputdir_str += "_plusSignal";
+  std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset;
+  if( withSignal_ ) {
+    outputdir_str += "_plusSignal";
+    if( signalScaleFactor!=1. ) {
+      char scaleFactorText[100];
+      sprintf( scaleFactorText, "_times%.0f", signalScaleFactor );
+      std::string scaleFactorText_str(scaleFactorText);
+      outputdir_str += scaleFactorText_str;
+    }
+  }
   outputdir_str += "_" + selType + "_" + leptType;
   db->set_outputdir(outputdir_str);
 
@@ -94,7 +104,7 @@ int main(int argc, char* argv[]) {
     if( signalScaleFactor==1. ) 
       sprintf( signalLegendText, "H(400)" );
     else
-      sprintf( signalLegendText, "H(400) #times %.0g", signalScaleFactor);
+      sprintf( signalLegendText, "H(400) #times %.0f", signalScaleFactor);
     std::string signalLegendText_str(signalLegendText);
     db->add_mcFile( signalFile, signalScaleFactor, "H400", signalLegendText_str, kRed+2, 3004);
   }
@@ -159,34 +169,28 @@ int main(int argc, char* argv[]) {
 
   bool log = true;
 
-  //db->set_xAxisMax(1200.);
   db->set_rebin(20);
 
-  //db->drawHisto("mZZ_kinfit_hiMass_all", "m_{lljj}", "GeV", "Events", log);
-  //db->set_xAxisMax(800.);
-  //db->set_legendTitle("Gluon-tag Category");
-  //db->drawHisto("mZZ_kinfit_hiMass_gluetag", "m_{lljj}", "GeV", "Events", log);
   db->set_legendTitle("0 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_0btag", "m_{lljj}", "GeV", "Events", log);
-  BGFitParameters bgfp = get_BGFitParameters( data_prefix, 0 );
-  drawHistoWithCurve( db, bgfp);
+  drawHistoWithCurve( db, data_prefix, 0);
+
   db->set_legendTitle("1 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_1btag", "m_{lljj}", "GeV", "Events", log);
+  drawHistoWithCurve( db, data_prefix, 1);
+
   db->set_legendTitle("2 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_2btag", "m_{lljj}", "GeV", "Events", log);
+  drawHistoWithCurve( db, data_prefix, 2);
 
-  db->set_legendTitle("0 b-tag Sidebands");
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_0btag", "m_{lljj}", "GeV", "Events", log);
-  db->set_legendTitle("1 b-tag Sidebands");
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag", "m_{lljj}", "GeV", "Events", log);
-  db->set_legendTitle("2 b-tag Sidebands");
-  db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag", "m_{lljj}", "GeV", "Events", log);
-  db->set_legendTitle("");
-  db->set_xAxisMax();
+//db->set_legendTitle("0 b-tag Sidebands");
+//db->drawHisto("mZZ_kinfit_hiMass_sidebands_0btag", "m_{lljj}", "GeV", "Events", log);
 
-  db->set_yAxisMaxScale();
-  db->set_rebin(1);
+//db->set_legendTitle("1 b-tag Sidebands");
+//db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag", "m_{lljj}", "GeV", "Events", log);
 
+//db->set_legendTitle("2 b-tag Sidebands");
+//db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag", "m_{lljj}", "GeV", "Events", log);
 
 
 
@@ -196,6 +200,143 @@ int main(int argc, char* argv[]) {
   return 0;
 
 }  
+
+
+
+void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbtags ) {
+
+  TH1F::AddDirectory(kTRUE);
+
+  float xMin = 150.;
+  float xMax = 750.;
+
+  // get histograms:
+
+  std::vector< TH1D* > lastHistos_data = db->get_lastHistos_data();
+  std::vector< TH1D* > lastHistos_mc   = db->get_lastHistos_mc();
+
+  TH1D* h1_data = new TH1D(*(lastHistos_data[0]));
+  // create data graph (poisson asymm errors):
+  TGraphAsymmErrors* graph_data_poisson = new TGraphAsymmErrors(0);
+  graph_data_poisson = fitTools::getGraphPoissonErrors(h1_data);
+  graph_data_poisson->SetMarkerStyle(20);
+
+  THStack* mc_stack = new THStack();
+  for( unsigned ihisto=0; ihisto<lastHistos_mc.size(); ++ihisto ) 
+    mc_stack->Add(lastHistos_mc[lastHistos_mc.size()-ihisto-1]);
+
+
+
+
+  // define mZZ variable
+  RooRealVar CMS_hzz2l2q_mZZ("CMS_hzz2l2q_mZZfull", "zz inv mass", xMin, xMax );
+
+
+  // define background PDF:
+  BGFitParameters bgfp = get_BGFitParameters( data_dataset, nbtags );
+
+  RooRealVar fermi_cutoff("fermi_cutoff", "position of fermi", bgfp.fermi_cutoff, 0., 1000.);
+  fermi_cutoff.setConstant(kTRUE);
+  RooRealVar fermi_beta("fermi_beta", "width of fermi", bgfp.fermi_beta, 0., 50.);
+  fermi_beta.setConstant(kTRUE);
+
+  RooFermi fermi_BKG("fermi_BKG", "fermi function", CMS_hzz2l2q_mZZ, fermi_cutoff, fermi_beta);
+
+
+  RooRealVar m("m", "m", bgfp.CB_m, 100., 1000.);
+  m.setConstant(kTRUE);
+  RooRealVar wdth("wdth", "wdth", bgfp.CB_wdth, 0., 1000.);
+  wdth.setConstant(kTRUE);
+  RooRealVar n("n", "n", bgfp.CB_n, 0., 1001.);
+  n.setConstant(kTRUE);
+  RooRealVar alpha("alpha", "alpha", bgfp.CB_alpha, -100., 100.);
+  alpha.setConstant(kTRUE);
+  RooRealVar theta("theta", "theta", bgfp.CB_theta, -3.14159, 3.14159); 
+  theta.setConstant(kTRUE);
+  
+
+  RooCB CB_BKG("CB_BKG", "Crystal ball", CMS_hzz2l2q_mZZ, m, wdth, alpha, n, theta);
+  RooProdPdf background("background", "background", RooArgSet(fermi_BKG,CB_BKG));
+
+
+  //get expected bg normalization:
+  char alphaFileName[200];
+  sprintf( alphaFileName, "alphaFile_%s_%dbtag_ALL.root", data_dataset.c_str(), nbtags);
+  TFile* alphaFile = TFile::Open(alphaFileName);
+  TTree* treeSidebandsDATA_alphaCorr = (TTree*)alphaFile->Get("sidebandsDATA_alpha");
+  TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, 150., 800.);
+  char sidebandsCut_alpha[500];
+  sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags);
+  treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "mZZ", sidebandsCut_alpha);
+  float expBkg = h1_mZZ_sidebands_alpha->Integral();
+
+  RooPlot *plot_MCbkg = CMS_hzz2l2q_mZZ.frame(xMin,xMax,(int)(xMax-xMin)/h1_data->GetXaxis()->GetBinWidth(1));
+  background.plotOn(plot_MCbkg,RooFit::Normalization(expBkg));
+
+  TH2D* h2_axes = new TH2D("axes", "", 10, xMin, xMax, 10, 0., 1.3*h1_data->GetMaximum());
+  char yTitle[200];
+  sprintf( yTitle, "Events / (%.0f GeV)", h1_data->GetXaxis()->GetBinWidth(1) );
+  h2_axes->SetYTitle(yTitle);
+  h2_axes->SetXTitle("m_{ZZ} [GeV]");
+
+  float legend_xMin = 0.9*0.63;
+  float legend_yMax = 0.91;
+  float legend_yMin = legend_yMax - 0.07*5.;
+  float legend_xMax = 0.92;
+
+  TLegend* legend = new TLegend(legend_xMin, legend_yMin, legend_xMax, legend_yMax, (db->get_legendTitle()).c_str());
+  legend->SetTextSize(0.04);
+  legend->SetFillColor(0);
+  legend->AddEntry( graph_data_poisson, "Data", "P");
+  for( unsigned imc=0; imc<lastHistos_mc.size(); ++imc ) 
+    legend->AddEntry( lastHistos_mc[imc], (db->get_mcFile(imc).legendName).c_str(), "F");
+
+  TPaveText* cmsLabel = db->get_labelCMS();
+  TPaveText* sqrtLabel = db->get_labelSqrt();
+
+
+  TCanvas* c1 = new TCanvas( "c1", "", 600, 600);
+  c1->cd();
+
+  h2_axes->Draw();
+  cmsLabel->Draw("same");
+  sqrtLabel->Draw("same");
+  legend->Draw("same");
+  mc_stack->Draw("histo same");
+  plot_MCbkg->Draw("same");
+  graph_data_poisson->Draw("P same");
+
+  gPad->RedrawAxis();
+
+  char canvasName[1000];
+  sprintf( canvasName, "%s/mZZ_%dbtag_withCurve", (db->get_outputdir()).c_str(), nbtags );
+  std::string canvasName_str(canvasName);
+  std::string canvasName_eps = canvasName_str+".eps";
+  c1->SaveAs(canvasName_eps.c_str());
+
+  c1->Clear();
+  c1->SetLogy();
+
+
+  TH2D* h2_axes_log = new TH2D("axes_log", "", 10, xMin, xMax, 10, 0.05, 50.*h1_data->GetMaximum());
+  h2_axes_log->SetYTitle(yTitle);
+  h2_axes_log->SetXTitle("m_{ZZ} [GeV]");
+  h2_axes_log->GetYaxis()->SetNoExponent();
+
+  h2_axes_log->Draw();
+  cmsLabel->Draw("same");
+  sqrtLabel->Draw("same");
+  legend->Draw("same");
+  mc_stack->Draw("histo same");
+  plot_MCbkg->Draw("same");
+  graph_data_poisson->Draw("P same");
+
+  gPad->RedrawAxis();
+
+  std::string canvasName_log_eps = canvasName_str+"_log.eps";
+  c1->SaveAs(canvasName_log_eps.c_str());
+
+}
 
 
 
@@ -252,90 +393,4 @@ BGFitParameters get_BGFitParameters( const std::string& dataset, int nbtags ) {
 
 }
 
-
-
-void drawHistoWithCurve( DrawBase* db, const BGFitParameters& bgfp ) {
-
-
-  float xMin = 150.;
-  float xMax = 750.;
-
-  // define mZZ variable
-  RooRealVar CMS_hzz2l2q_mZZ("CMS_hzz2l2q_mZZfull", "zz inv mass", xMin, xMax );
-
-
-  // define background PDF:
-
-  RooRealVar fermi_cutoff("fermi_cutoff", "position of fermi", bgfp.fermi_cutoff, 0., 1000.);
-  fermi_cutoff.setConstant(kTRUE);
-  RooRealVar fermi_beta("fermi_beta", "width of fermi", bgfp.fermi_beta, 0., 50.);
-  fermi_beta.setConstant(kTRUE);
-
-  RooFermi fermi_BKG("fermi_BKG", "fermi function", CMS_hzz2l2q_mZZ, fermi_cutoff, fermi_beta);
-
-
-  RooRealVar m("m", "m", bgfp.CB_m, 100., 1000.);
-  m.setConstant(kTRUE);
-  RooRealVar wdth("wdth", "wdth", bgfp.CB_wdth, 0., 1000.);
-  wdth.setConstant(kTRUE);
-  RooRealVar n("n", "n", bgfp.CB_n, 0., 1001.);
-  n.setConstant(kTRUE);
-  RooRealVar alpha("alpha", "alpha", bgfp.CB_alpha, -100., 100.);
-  alpha.setConstant(kTRUE);
-  RooRealVar theta("theta", "theta", bgfp.CB_theta, -3.14159, 3.14159); 
-  theta.setConstant(kTRUE);
-  
-
-  RooCB CB_BKG("CB_BKG", "Crystal ball", CMS_hzz2l2q_mZZ, m, wdth, alpha, n, theta);
-  RooProdPdf background("background", "background", RooArgSet(fermi_BKG,CB_BKG));
-
-
-  std::vector< TH1D* > lastHistos_data = db->get_lastHistos_data();
-  std::vector< TH1D* > lastHistos_mc   = db->get_lastHistos_mc();
-
-  TH1D* h1_data = new TH1D(*(lastHistos_data[0]));
-
-  THStack* mc_stack = new THStack();
-  for( unsigned ihisto=0; ihisto<lastHistos_mc.size(); ++ihisto ) 
-    mc_stack->Add(lastHistos_mc[lastHistos_mc.size()-ihisto-1]);
-
-
-  TH2D* h2_axes = new TH2D("axes", "", 10, xMin, xMax, 10, 0., 1.3*h1_data->GetMaximum());
-  h2_axes->SetXTitle("m_{ZZ} [GeV]");
-  char yTitle[200];
-  sprintf( yTitle, "Events / (%.0f GeV)", h1_data->GetXaxis()->GetBinWidth(1) );
-  h2_axes->SetYTitle(yTitle);
-  h2_axes->SetXTitle("m_{ZZ} [GeV]");
-
-  float legend_xMin = 0.9*0.63;
-  float legend_yMax = 0.91;
-  float legend_yMin = legend_yMax - 0.07*5.;
-  float legend_xMax = 0.92;
-
-  TLegend* legend = new TLegend(legend_xMin, legend_yMin, legend_xMax, legend_yMax, (db->get_legendTitle()).c_str());
-  legend->SetTextSize(0.04);
-  legend->SetFillColor(0);
-  legend->AddEntry( h1_data, "Data", "P");
-  for( unsigned imc=0; imc<lastHistos_mc.size(); ++imc ) 
-    legend->AddEntry( lastHistos_mc[imc], (db->get_mcFile(imc).legendName).c_str(), "F");
-
-  TPaveText* cmsLabel = db->get_labelCMS();
-  TPaveText* sqrtLabel = db->get_labelSqrt();
-
-
-  TCanvas* c1 = new TCanvas( "c1", "", 600, 600);
-  c1->cd();
-
-  h2_axes->Draw();
-  cmsLabel->Draw("same");
-  sqrtLabel->Draw("same");
-  legend->Draw("same");
-  mc_stack->Draw("histo same");
-  h1_data->Draw("same");
-
-  gPad->RedrawAxis();
-
-  c1->SaveAs("prova.eps");
-
-}
 
