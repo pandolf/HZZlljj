@@ -294,21 +294,27 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbta
   RooPlot *plot_MCbkg = CMS_hzz2l2q_mZZ.frame(xMin,xMax,(int)(xMax-xMin)/h1_data->GetXaxis()->GetBinWidth(1));
   background.plotOn(plot_MCbkg,RooFit::Normalization(expBkg));
 
+  TF1* f1_fakeBG = new TF1("fakeBG", "[0]");
+  f1_fakeBG->SetLineColor(kBlue);
+  f1_fakeBG->SetLineWidth(3);
+  
+
   TH2D* h2_axes = new TH2D("axes", "", 10, xMin, xMax, 10, 0., 1.3*h1_data->GetMaximum());
   char yTitle[200];
   sprintf( yTitle, "Events / (%.0f GeV)", h1_data->GetXaxis()->GetBinWidth(1) );
   h2_axes->SetYTitle(yTitle);
   h2_axes->SetXTitle("m_{ZZ} [GeV]");
 
-  float legend_xMin = 0.9*0.63;
+  float legend_xMin = 0.42;
   float legend_yMax = 0.91;
-  float legend_yMin = legend_yMax - 0.07*5.;
+  float legend_yMin = legend_yMax - 0.07*6.;
   float legend_xMax = 0.92;
 
   TLegend* legend = new TLegend(legend_xMin, legend_yMin, legend_xMax, legend_yMax, (db->get_legendTitle()).c_str());
   legend->SetTextSize(0.04);
   legend->SetFillColor(0);
   legend->AddEntry( graph_data_poisson, "Data", "P");
+  legend->AddEntry( f1_fakeBG, "Expected Background", "L");
   for( unsigned imc=0; imc<lastHistos_mc.size(); ++imc ) 
     legend->AddEntry( lastHistos_mc[imc], (db->get_mcFile(imc).legendName).c_str(), "F");
 
