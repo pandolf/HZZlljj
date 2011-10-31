@@ -352,8 +352,17 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbta
   c1->Clear();
   c1->SetLogy();
 
+  TLegend* legend_log = new TLegend(0.6, legend_yMin, legend_xMax, legend_yMax, (db->get_legendTitle()).c_str());
+  legend_log->SetTextSize(0.04);
+  legend_log->SetFillColor(0);
+  legend_log->AddEntry( graph_data_poisson, "Data", "P");
+  legend_log->AddEntry( f1_fakeBG, "Exp. BG", "L");
+  for( unsigned imc=0; imc<lastHistos_mc.size(); ++imc ) 
+    legend_log->AddEntry( lastHistos_mc[imc], (db->get_mcFile(imc).legendName).c_str(), "F");
 
-  TH2D* h2_axes_log = new TH2D("axes_log", "", 10, xMin, xMax, 10, 0.05, 50.*h1_data->GetMaximum());
+
+
+  TH2D* h2_axes_log = new TH2D("axes_log", "", 10, xMin, xMax, 10, 0.05, 200.*h1_data->GetMaximum());
   h2_axes_log->SetYTitle(yTitle);
   h2_axes_log->SetXTitle("m_{ZZ} [GeV]");
   h2_axes_log->GetYaxis()->SetNoExponent();
@@ -361,7 +370,7 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbta
   h2_axes_log->Draw();
   cmsLabel->Draw("same");
   sqrtLabel->Draw("same");
-  legend->Draw("same");
+  legend_log->Draw("same");
   mc_stack->Draw("histo same");
   plot_MCbkg->Draw("same");
   graph_data_poisson->Draw("P same");
