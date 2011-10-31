@@ -69,6 +69,8 @@ int main( int argc, char* argv[] ) {
   tree->SetBranchAddress("passed_HLT_DoubleMu7", &passed_HLT_DoubleMu7);
   Bool_t passed_HLT_Mu13_Mu8;
   tree->SetBranchAddress("passed_HLT_Mu13_Mu8", &passed_HLT_Mu13_Mu8);
+  Bool_t passed_HLT_Mu17_Mu8;
+  tree->SetBranchAddress("passed_HLT_Mu17_Mu8", &passed_HLT_Mu17_Mu8);
   Bool_t passed_HLT_IsoMu24;
   tree->SetBranchAddress("passed_HLT_IsoMu24", &passed_HLT_IsoMu24);
   Bool_t passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL;
@@ -109,14 +111,14 @@ int main( int argc, char* argv[] ) {
     if( dataset_tstr.BeginsWith("SingleMu") ) {
 
       bool passedHLT = passed_HLT_IsoMu24
-                    && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8
+                    && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8 && !passed_HLT_Mu17_Mu8
                     && !passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL && !passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
 
       if( !passedHLT ) continue;
 
     } else if( dataset_tstr.BeginsWith("DoubleMu") ) {
 
-      bool passedHLT = passed_HLT_DoubleMu7 || passed_HLT_Mu13_Mu8;
+      bool passedHLT = passed_HLT_DoubleMu7 || passed_HLT_Mu13_Mu8 || passed_HLT_Mu17_Mu8;
 
       if( !passedHLT ) continue;
 
@@ -124,7 +126,7 @@ int main( int argc, char* argv[] ) {
 
       //bool passedHLT = passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL || passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
       bool passedHLT = (passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL || passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL)
-                       && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8;
+                       && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8 && !passed_HLT_Mu17_Mu8;
 
       if( !passedHLT ) continue;
 
@@ -306,7 +308,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
   bool isAlpgenZJets = false;
 
   // all cross sections in pb-1:
-  if( dataset=="ZJets_madgraph" || dataset_tstr.Contains("DYJetsToLL_TuneZ2_M-50_7TeV-madgraph") ) {
+  if( dataset=="ZJets_madgraph" || dataset_tstr.Contains("DYJetsToLL_TuneZ2_M-50_7TeV-madgraph") || dataset_tstr.BeginsWith("DY_madgraph") ) {
     xSection = 3048.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="Z0Jets_Pt0to100-alpgen_Spring10" ) {
     xSection = 2350.*0.853 ; // sigma x filter efficiency taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/ProductionReProcessingSpring10#ALPGEN
