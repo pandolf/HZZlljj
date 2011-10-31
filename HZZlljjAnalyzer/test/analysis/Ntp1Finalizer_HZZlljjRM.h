@@ -17,7 +17,7 @@ class Ntp1Finalizer_HZZlljjRM : public Ntp1Finalizer {
 
  public:
 
-  Ntp1Finalizer_HZZlljjRM( const std::string& dataset, const std::string& selectionType, const std::string& leptType="ALL" );
+  Ntp1Finalizer_HZZlljjRM( const std::string& dataset, const std::string& selectionType, const std::string& PUType="HR11", const std::string& leptType="ALL");
   virtual ~Ntp1Finalizer_HZZlljjRM() {};
 
   virtual void finalize();
@@ -29,6 +29,7 @@ class Ntp1Finalizer_HZZlljjRM : public Ntp1Finalizer {
  private:
 
    std::string leptType_;
+   std::string PUType_;
    std::string selectionType_;
 
    float  ptLept1_thresh_;
@@ -39,6 +40,7 @@ class Ntp1Finalizer_HZZlljjRM : public Ntp1Finalizer {
    float  ptJet2_thresh_;
    float  etaJet1_thresh_;
    float  etaJet2_thresh_;
+   bool   invert_mZll_;
    float  mZll_threshLo_;
    float  mZll_threshHi_;
    float  mZjj_threshLo_;
@@ -56,7 +58,7 @@ class Ntp1Finalizer_HZZlljjRM : public Ntp1Finalizer {
    float  helicityLD_maxThresh_1btags_;
    float  helicityLD_maxThresh_2btags_;
    float  QGLikelihoodProd_thresh_;
-   float  pfMetThresh_;
+   float  metSignificance_thresh_;
    bool use_looseBTags_;
 
 };

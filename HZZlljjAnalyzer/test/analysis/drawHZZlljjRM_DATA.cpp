@@ -5,13 +5,14 @@
 #include "CommonTools/fitTools.h"
 
 
+bool withSignal_=false;
 
 
 
 int main(int argc, char* argv[]) {
 
   if(  argc != 2 && argc != 3 && argc != 4 ) {
-    std::cout << "USAGE: ./drawHZZlljjRM [(string)selType] [ZJetsMC=\"madgraph\"] [(string) leptType=\"ALL\"]" << std::endl;
+    std::cout << "USAGE: ./drawHZZlljjRM [(string)selType] [PUType=\"HR11\"] [(string) normType=\"LUMI\"]" << std::endl;
     exit(23);
   }
 
@@ -20,9 +21,11 @@ int main(int argc, char* argv[]) {
   std::string selType(argv[1]);
 
   std::string ZJetsMC = "madgraph";
+
+  std::string PUType = "HR11";
   if( argc>=3 ) {
-    std::string ZJetsMC_str(argv[2]);
-    ZJetsMC = ZJetsMC_str;
+    std::string PUType_str(argv[2]);
+    PUType = PUType_str;
   }
 
   std::string normType = "LUMI";
@@ -46,10 +49,12 @@ int main(int argc, char* argv[]) {
   //std::string data_dataset = "DATA_EPS_FINAL";
   //std::string data_dataset = "DATA_EPS_FINAL_FULL";
   std::string data_dataset = "DATA_LP11";
-  //std::string data_dataset = "DoubleElectron_Aug05ReReco";
-  //std::string data_dataset = "DoubleMu_Aug05ReReco";
+  //std::string data_dataset = "DATA_Run2011A_FULL";
+  //std::string data_dataset = "DATA_HR11";
 
-  std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset + "_" + ZJetsMC + "_" + selType + "_" + leptType;
+  std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset + "_" + ZJetsMC;
+  if( withSignal_ ) outputdir_str += "_plusSignal";
+  outputdir_str += "_" + selType + "_PU" + PUType + "_" + leptType;
   if( normType=="SHAPE" ) outputdir_str += "_SHAPE";
   //outputdir_str += "_OLDPU";
   db->set_outputdir(outputdir_str);
@@ -64,11 +69,22 @@ int main(int argc, char* argv[]) {
     TFile* dataFile = TFile::Open(dataFileName.c_str());
     db->add_dataFile( dataFile, "DoubleElectron_Run2011A" );
   } else {
-    std::string dataFileName = "HZZlljjRM_" + data_dataset + "_"+selType+"_"+leptType+".root";
+    std::string dataFileName = "HZZlljjRM_" + data_dataset + "_"+selType+"_PU"+PUType+"_"+leptType+".root";
     TFile* dataFile = TFile::Open(dataFileName.c_str());
     db->add_dataFile( dataFile, "DATA_Run2011A" );
   }
 
+  std::string signalFileName = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-400_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1";
+  signalFileName += "_" + selType;
+  signalFileName += "_PU" + PUType;
+  signalFileName += "_" + leptType;
+  signalFileName += ".root";
+  TFile* signalFile = TFile::Open(signalFileName.c_str());
+  if( selType=="presel" )
+    db->add_mcFile_superimp( signalFile, "H400", "H(400) #times 100", 100., kRed-1);
+
+  if( withSignal_ )
+    db->add_mcFile( signalFile, "H400", "H(400)", kRed+2, 3004);
 
   std::string mcZJetsFileName;
   if( ZJetsMC=="alpgen" )
@@ -81,6 +97,7 @@ int main(int argc, char* argv[]) {
     exit(13);
   }
   mcZJetsFileName += "_" + selType;
+  mcZJetsFileName += "_PU" + PUType;
   mcZJetsFileName += "_" + leptType;
   mcZJetsFileName += ".root";
   TFile* mcZJetsFile = TFile::Open(mcZJetsFileName.c_str());
@@ -91,6 +108,7 @@ int main(int argc, char* argv[]) {
   if( ZJetsMC=="alpgen" ) {
     std::string mcZBBFileName = "HZZlljjRM_ZBB_alpgen_TuneZ2_Spring11_v2";
     mcZBBFileName += "_" + selType;
+    mcZBBFileName += "_PU" + PUType;
     mcZBBFileName += "_" + leptType;
     mcZBBFileName += ".root";
     TFile* mcZBBFile = TFile::Open(mcZBBFileName.c_str());
@@ -108,6 +126,7 @@ int main(int argc, char* argv[]) {
   //std::string mcVVFileName = "HZZlljjRM_VVtoAnything_TuneZ2_7TeV-pythia6-tauola_Spring11_v2";
   std::string mcVVFileName = "HZZlljjRM_VV_TuneZ2_7TeV-pythia6-tauola_Summer11-PU_S4_START42_V11-v1";
   mcVVFileName += "_" + selType;
+  mcVVFileName += "_PU" + PUType;
   mcVVFileName += "_" + leptType;
   mcVVFileName += ".root";
   TFile* mcVVFile = TFile::Open(mcVVFileName.c_str());
@@ -118,20 +137,16 @@ int main(int argc, char* argv[]) {
   //std::string mcTTbarFileName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-pythia6-tauola_Spring11_v2";
   std::string mcTTbarFileName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-powheg-tauola_Summer11-PU_S4_START42_V11-v1";
   mcTTbarFileName += "_" + selType;
+  mcTTbarFileName += "_PU" + PUType;
   mcTTbarFileName += "_" + leptType;
   mcTTbarFileName += ".root";
   TFile* mcTTbarFile = TFile::Open(mcTTbarFileName.c_str());
   //db->add_mcFile( mcTTbarFile, "TTtW", "tt/tW", 30, 3002);
   db->add_mcFile( mcTTbarFile, "TTtW", "tt/tW", 39, 3002);
 
-  std::string signalFileName = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-400_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1";
-  signalFileName += "_" + selType;
-  signalFileName += "_" + leptType;
-  signalFileName += ".root";
-  TFile* signalFile = TFile::Open(signalFileName.c_str());
-  if( selType=="presel" )
-    db->add_mcFile_superimp( signalFile, "H400", "H(400) #times 100", 100., kRed-1);
-    //db->add_mcFile_superimp( signalFile, "H400", "H(400) #times 100", 100., kRed+3);
+
+
+
 
 
   if( normType=="LUMI" ) {
@@ -157,6 +172,10 @@ int main(int argc, char* argv[]) {
     else if( data_dataset=="DATA_LP11" )
       //db->set_lumiNormalization(1500.);
       db->set_lumiNormalization(1580.);
+    else if( data_dataset=="DATA_Run2011A_FULL" )
+      db->set_lumiNormalization(2100.);
+    else if( data_dataset=="DATA_HR11" )
+      db->set_lumiNormalization(4200.);
 
   } else { //shape
 
@@ -175,11 +194,11 @@ int main(int argc, char* argv[]) {
 
 
 
-
   bool log = true;
 
   db->drawHisto("nvertex", "Number of Reconstructed Vertexes", "", "Events", log);
   db->drawHisto("nvertex_PUW", "Number of Reconstructed Vertexes", "", "Events", log);
+  db->drawHisto("nvertex_PUW_ave", "Number of Reconstructed Vertexes", "", "Events", log);
 
   db->set_getBinLabels(true);
   db->set_yAxisMaxScaleLog(50.);
@@ -226,6 +245,7 @@ int main(int argc, char* argv[]) {
   db->set_yAxisMaxScale( 1.6 );
   db->drawHisto("etaJet1", "Lead Jet Pseudorapidity", "", "Events", log);
   db->drawHisto("etaJet2", "Sublead Jet Pseudorapidity", "", "Events", log);
+  db->drawHisto("tcheJet", "TCHE", "", "Events", log);
   db->drawHisto("tcheJet1", "Lead Jet TCHE", "", "Events", log);
   db->drawHisto("tcheJet2", "Sublead Jet TCHE", "", "Events", log);
 
@@ -258,8 +278,10 @@ int main(int argc, char* argv[]) {
   db->set_rebin(1);
   db->drawHisto("mZll_presel", "m_{ll}", "GeV", "Events", log);
 
+  db->set_xAxisMax(1200.);
   db->set_rebin(20);
   db->drawHisto("mZZ_kinfit_hiMass_all", "m_{lljj}", "GeV", "Events", log);
+  db->set_xAxisMax(800.);
   db->set_legendTitle("Gluon-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_gluetag", "m_{lljj}", "GeV", "Events", log);
   db->set_legendTitle("0 b-tag Category");
@@ -276,6 +298,7 @@ int main(int argc, char* argv[]) {
   db->set_legendTitle("2 b-tag Sidebands");
   db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag", "m_{lljj}", "GeV", "Events", log);
   db->set_legendTitle("");
+  db->set_xAxisMax();
 
   db->set_rebin(1);
   db->drawHisto("pfMet", "Particle Flow Missing E_{T}", "GeV", "Events", log);
@@ -345,8 +368,10 @@ int main(int argc, char* argv[]) {
   //db->drawHisto("mZjj_nogluetag_MU", "m_{jj}", "GeV", "Events", log);
 
   db->set_rebin(20);
+  db->set_xAxisMax(800.);
   db->set_legendTitle("Gluon-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_gluetag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
+  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(nBTags==-1 && leptType==0 && !isSidebands)", 1500, 150., 1650., "mZZ_kinfit_hiMass_gluetag_MU_PROVA", "m_{#mu#mujj}", "GeV", "Events", log);
   db->set_legendTitle("0 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_0btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
   db->set_legendTitle("1 b-tag Category");
@@ -360,6 +385,7 @@ int main(int argc, char* argv[]) {
   db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
   db->set_legendTitle("2 b-tag Sidebands");
   db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
+  db->set_xAxisMax();
 
   db->set_rebin(1);
   db->set_legendTitle("");
@@ -385,6 +411,7 @@ int main(int argc, char* argv[]) {
   //db->drawHisto("mZjj_nogluetag_ELE", "m_{jj}", "GeV", "Events", log);
 
   db->set_rebin(20);
+  db->set_xAxisMax(800.);
   db->set_legendTitle("Gluon-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_gluetag_ELE", "m_{eejj}", "GeV", "Events", log);
   db->set_legendTitle("0 b-tag Category");
@@ -400,6 +427,7 @@ int main(int argc, char* argv[]) {
   db->drawHisto("mZZ_kinfit_hiMass_sidebands_1btag_ELE", "m_{eejj}", "GeV", "Events", log);
   db->set_legendTitle("2 b-tag Sidebands");
   db->drawHisto("mZZ_kinfit_hiMass_sidebands_2btag_ELE", "m_{eejj}", "GeV", "Events", log);
+  db->set_xAxisMax();
 
 
 
