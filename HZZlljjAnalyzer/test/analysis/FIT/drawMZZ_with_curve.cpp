@@ -187,17 +187,25 @@ int main(int argc, char* argv[]) {
   db->set_xAxisMax();
   db->set_rebin(1);
 
+  db->set_legendTitle("Gluon- and 0 b-tag");
+  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags<=0)", 30, 150., 750., "mZZ_g0btag", "m_{ZZ}", "GeV");
+  db->set_legendTitle("0 b-tag Category");
+  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 30, 150., 750., "mZZ_0btag", "m_{ZZ}", "GeV");
+  db->set_legendTitle("Gluon-tag Category");
+  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==-1)", 30, 150., 750., "mZZ_gtag", "m_{ZZ}", "GeV");
+
+
   // long range (up to 1300 gev):
   db->set_legendTitle("0 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 60, 150., 1350., "mZZ_0btag_longRange", "m_{ZZ} [GeV]", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 60, 150., 1350., "mZZ_0btag_longRange", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, 0, "longRange");
 
   db->set_legendTitle("1 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", 60, 150., 1350., "mZZ_1btag_longRange", "m_{ZZ} [GeV]", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", 60, 150., 1350., "mZZ_1btag_longRange", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, 1, "longRange");
 
   db->set_legendTitle("2 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", 60, 150., 1350., "mZZ_2btag_longRange", "m_{ZZ} [GeV]", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", 60, 150., 1350., "mZZ_2btag_longRange", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, 2, "longRange");
 
 
