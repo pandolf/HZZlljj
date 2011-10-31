@@ -52,10 +52,6 @@ Ntp1Finalizer_HZZlljjRM::Ntp1Finalizer_HZZlljjRM( const std::string& dataset, co
 
   setSelectionType(selectionType);
 
-  std::string fullFlags = selectionType_ + "_PU" + PUType_ + "_" + leptType;
-  if( USE_MC_MASS ) fullFlags += "_MCMASS";
-  this->set_flags(fullFlags); //this is for the outfile name
-
 }
 
 
@@ -63,7 +59,19 @@ Ntp1Finalizer_HZZlljjRM::Ntp1Finalizer_HZZlljjRM( const std::string& dataset, co
 
 void Ntp1Finalizer_HZZlljjRM::finalize() {
 
-  if( outFile_==0 ) this->createOutputFile();
+  //if( outFile_==0 ) this->createOutputFile();
+  
+  Int_t run;
+  tree_->SetBranchAddress("run", &run);
+  tree_->GetEntry(0);
+  bool isMC = (run < 10);
+  std::string fullFlags = selectionType_;
+  if( isMC ) fullFlags = fullFlags + "_PU" + PUType_;
+  fullFlags = fullFlags + "_" + leptType_;
+  this->set_flags(fullFlags); //this is for the outfile name
+  this->createOutputFile();
+
+
 
   TTree* tree_passedEvents = new TTree("tree_passedEvents", "Unbinned data for statistical treatment");
 
@@ -949,8 +957,6 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
 
 
-  Int_t run;
-  tree_->SetBranchAddress("run", &run);
   Int_t nPU;
   tree_->SetBranchAddress("nPU", &nPU);
   Int_t nvertex;
@@ -1485,7 +1491,6 @@ ofstream ofs("run_event.txt");
 
 
 
-    bool isMC = (run<5);
 
     h1_nvertex->Fill(nvertex, eventWeight);
 

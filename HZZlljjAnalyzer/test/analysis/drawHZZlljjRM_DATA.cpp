@@ -11,8 +11,8 @@ bool withSignal_=false;
 
 int main(int argc, char* argv[]) {
 
-  if(  argc != 2 && argc != 3 && argc != 4 ) {
-    std::cout << "USAGE: ./drawHZZlljjRM [(string)selType] [PUType=\"HR11\"] [(string) normType=\"LUMI\"]" << std::endl;
+  if(  argc != 2 && argc != 3 ) {
+    std::cout << "USAGE: ./drawHZZlljjRM [(string)selType] [(string) normType=\"LUMI\"]" << std::endl;
     exit(23);
   }
 
@@ -22,15 +22,14 @@ int main(int argc, char* argv[]) {
 
   std::string ZJetsMC = "madgraph";
 
-  std::string PUType = "HR11";
-  if( argc>=3 ) {
-    std::string PUType_str(argv[2]);
-    PUType = PUType_str;
-  }
+//if( argc>=3 ) {
+//  std::string PUType_str(argv[2]);
+//  PUType = PUType_str;
+//}
 
   std::string normType = "LUMI";
-  if( argc==4 ) {
-    std::string normType_str(argv[3]);
+  if( argc>2 ) {
+    std::string normType_str(argv[2]);
     normType = normType_str;
   }
 
@@ -48,9 +47,24 @@ int main(int argc, char* argv[]) {
   //std::string data_dataset = "DATA_1fb";
   //std::string data_dataset = "DATA_EPS_FINAL";
   //std::string data_dataset = "DATA_EPS_FINAL_FULL";
-  std::string data_dataset = "DATA_LP11";
+  //std::string data_dataset = "DATA_LP11";
   //std::string data_dataset = "DATA_Run2011A_FULL";
-  //std::string data_dataset = "DATA_HR11";
+  std::string data_dataset = "DATA_HR11";
+
+  
+
+  std::string PUType = "HR11";
+  if( data_dataset=="DATA_LP11" || data_dataset=="DATA_Run2011A_FULL" )
+    PUType = "Run2011A";
+  else if( data_dataset=="DATA_HR11" )
+    PUType = "HR11";
+  else {
+    std::cout << "Don't knwo what PUType to choose for data dataset '" << data_dataset << "'. Choosing HR11 default." << std::endl;
+    PUType = "HR11";
+  }
+
+    
+
 
   std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset + "_" + ZJetsMC;
   if( withSignal_ ) outputdir_str += "_plusSignal";
@@ -69,7 +83,7 @@ int main(int argc, char* argv[]) {
     TFile* dataFile = TFile::Open(dataFileName.c_str());
     db->add_dataFile( dataFile, "DoubleElectron_Run2011A" );
   } else {
-    std::string dataFileName = "HZZlljjRM_" + data_dataset + "_"+selType+"_PU"+PUType+"_"+leptType+".root";
+    std::string dataFileName = "HZZlljjRM_" + data_dataset + "_"+selType+"_"+leptType+".root";
     TFile* dataFile = TFile::Open(dataFileName.c_str());
     db->add_dataFile( dataFile, "DATA_Run2011A" );
   }
