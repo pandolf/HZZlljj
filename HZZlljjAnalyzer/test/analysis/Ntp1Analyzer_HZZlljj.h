@@ -32,6 +32,7 @@ class Ntp1Analyzer_HZZlljj : public Ntp1Analyzer {
    Bool_t passed_HLT_DoubleMu6_;
    Bool_t passed_HLT_DoubleMu7_;
    Bool_t passed_HLT_Mu13_Mu8_;
+   Bool_t passed_HLT_Mu17_Mu8_;
    Bool_t passed_HLT_IsoMu17_;
    Bool_t passed_HLT_IsoMu24_;
    Bool_t passed_HLT_Mu8_Jet40_;

@@ -141,6 +141,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("passed_HLT_DoubleMu6", &passed_HLT_DoubleMu6_,"passed_HLT_DoubleMu6_/O)");
   reducedTree_->Branch("passed_HLT_DoubleMu7", &passed_HLT_DoubleMu7_,"passed_HLT_DoubleMu7_/O)");
   reducedTree_->Branch("passed_HLT_Mu13_Mu8",  &passed_HLT_Mu13_Mu8_, "passed_HLT_Mu13_Mu8_/O)");
+  reducedTree_->Branch("passed_HLT_Mu17_Mu8",  &passed_HLT_Mu17_Mu8_, "passed_HLT_Mu17_Mu8_/O)");
   reducedTree_->Branch("passed_HLT_IsoMu17",   &passed_HLT_IsoMu17_,  "passed_HLT_IsoMu17_/O)");
   reducedTree_->Branch("passed_HLT_IsoMu24",   &passed_HLT_IsoMu24_,  "passed_HLT_IsoMu24_/O)");
   reducedTree_->Branch("passed_HLT_Mu8_Jet40",   &passed_HLT_Mu8_Jet40_,  "passed_HLT_Mu8_Jet40_/O)");
@@ -525,6 +526,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      passed_HLT_DoubleMu6_ = this->PassedHLT( jentry, "HLT_DoubleMu6");
      passed_HLT_DoubleMu7_ = this->PassedHLT( jentry, "HLT_DoubleMu7");
      passed_HLT_Mu13_Mu8_ = this->PassedHLT( jentry, "HLT_Mu13_Mu8");
+     passed_HLT_Mu17_Mu8_ = this->PassedHLT( jentry, "HLT_Mu17_Mu8");
      passed_HLT_IsoMu17_ = this->PassedHLT( jentry, "HLT_IsoMu17");
      passed_HLT_IsoMu24_ = this->PassedHLT( jentry, "HLT_IsoMu24");
      passed_HLT_Mu8_Jet40_ = this->PassedHLT( jentry, "HLT_Mu8_Jet40");
