@@ -120,7 +120,7 @@ TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string leptTyp
 
 
 
-FitResults SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha, int seed ) {
+RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha, int seed ) {
 
   bool writeFile = (seed==-1);
 
@@ -204,20 +204,6 @@ FitResults SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int bta
 
 
   TFile* file_alpha = 0;
-
-  if( writeFile ) {
-
-    char alphaFileName[500];
-    sprintf( alphaFileName, "alphaFile_%s_%dbtag_%s.root", dataset_.c_str(), btagCategory, leptType.c_str());
-    file_alpha = TFile::Open(alphaFileName, "recreate");
-    file_alpha->cd();
-    h1_alpha->Write();
-    tree_sidebandsDATA_alpha->Write();
-    tree_sidebandsMC_alpha->Write();
-    file_alpha->Close();
-
-  }
-
 
 
   double a0 = -1.395;
@@ -377,6 +363,12 @@ FitResults SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int bta
   alpha.setConstant(kFALSE);
 
   RooFitResult *r_sidebandsDATA_alpha = background.fitTo(sidebandsDATA_alpha, SumW2Error(kFALSE), Save(), Warnings(warnings), PrintLevel(warningLevel));
+  char fitResultName[200];
+  if( leptType!="ALL" )
+    sprintf( fitResultName, "fitResults_%dbtag_%s", btagCategory, leptType.c_str() );
+  else 
+    sprintf( fitResultName, "fitResults_%dbtag", btagCategory );
+  r_sidebandsDATA_alpha->SetName(fitResultName);
 
 
   RooPlot *plot_sidebandsDATA_alpha = mZZ->frame(mZZ_min, mZZ_max, nBins);
@@ -405,103 +397,106 @@ FitResults SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int bta
   }
 
 
-  std::cout << std::endl << std::endl;
-  std::cout << "-----------------------------------------------" << std::endl;
-  std::cout << "  Trying to find decorrelation (" << btagCategory << " btags)" << std::endl;
-  std::cout << "-----------------------------------------------" << std::endl;
-  std::cout << std::endl << std::endl;
 
 
-  c1->Clear();
-  c1->SetLogy(false);
+
+//std::cout << std::endl << std::endl;
+//std::cout << "-----------------------------------------------" << std::endl;
+//std::cout << "  Trying to find decorrelation (" << btagCategory << " btags)" << std::endl;
+//std::cout << "-----------------------------------------------" << std::endl;
+//std::cout << std::endl << std::endl;
 
 
-  RooPlot *plot_rot = mZZ->frame(mZZ_min, mZZ_max, nBins);
-
-  background.plotOn(plot_rot, LineColor(kRed));
-
-  
-  double precision=0.05;
-  double lowerBound = -2.;
-  double upperBound = 0.;
-  double bestValue = r_sidebandsDATA_alpha->correlation("alpha", "wdth");
-  double bestTheta = theta.getVal();
-  double alpha_fit = alpha.getVal();
-  double width_fit = wdth.getVal();
-  int iTry = 0;
-
-  while( fabs(bestValue) > precision && (iTry<=100 || writeFile) ) { //(no more than 100 tries if not writing)
-
-    double last = 0.;
-
-    for(int i =0; i < 30; i++){
-
-      theta.setVal(lowerBound+i*(upperBound-lowerBound)/30.);
-      double a=cos(-theta.getVal())*alpha_fit - sin(-theta.getVal())*width_fit;
-      double w=sin(-theta.getVal())*alpha_fit + cos(-theta.getVal())*width_fit;
-      alpha.setVal(a);
-      wdth.setVal(w);
-      // now fit but please shut up:
-      RooFitResult *r_sidebandsDATA_alpha_rot = background.fitTo(sidebandsDATA_alpha, SumW2Error(kFALSE), Save(), RooFit::PrintLevel(-1));
-      double newCor = r_sidebandsDATA_alpha_rot->correlation("alpha", "wdth");
-      if(fabs(newCor)<fabs(bestValue)){
-        bestValue=newCor;
-        bestTheta=theta.getVal();
-      }
-      if(newCor * last < 0. ){// found a zero-crossing
-        double oldstep = (upperBound-lowerBound)/30.;
-        lowerBound = theta.getVal()-5.*oldstep;
-        upperBound = theta.getVal()+5.*oldstep;
-        break;
-      } else{
-        last = newCor;
-      }
-
-      delete r_sidebandsDATA_alpha_rot;
-
-    } //for i 0-30
-
-    iTry++;
-
-  } //while precision
+//c1->Clear();
+//c1->SetLogy(false);
 
 
-  if( iTry==200 && !writeFile ) bestTheta=0.;
+//RooPlot *plot_rot = mZZ->frame(mZZ_min, mZZ_max, nBins);
 
-  std::cout << std::endl << std::endl;
-  std::cout << "-----------------------------------------------" << std::endl;
-  std::cout << "  found best angle " << bestTheta << std::endl;
-  std::cout << "-----------------------------------------------" << std::endl;
-  std::cout << std::endl << std::endl;
-  
-  double a_rot = cos(-bestTheta)*alpha_fit - sin(-bestTheta)*width_fit;
-  double w_rot = sin(-bestTheta)*alpha_fit + cos(-bestTheta)*width_fit;
+//background.plotOn(plot_rot, LineColor(kRed));
+
+//
+//double precision=0.05;
+//double lowerBound = -2.;
+//double upperBound = 0.;
+//double bestValue = r_sidebandsDATA_alpha->correlation("alpha", "wdth");
+//double bestTheta = theta.getVal();
+//double alpha_fit = alpha.getVal();
+//double width_fit = wdth.getVal();
+//int iTry = 0;
+
+//while( fabs(bestValue) > precision && (iTry<=100 || writeFile) ) { //(no more than 100 tries if not writing)
+
+//  double last = 0.;
+
+//  for(int i =0; i < 30; i++){
+
+//    theta.setVal(lowerBound+i*(upperBound-lowerBound)/30.);
+//    double a=cos(-theta.getVal())*alpha_fit - sin(-theta.getVal())*width_fit;
+//    double w=sin(-theta.getVal())*alpha_fit + cos(-theta.getVal())*width_fit;
+//    alpha.setVal(a);
+//    wdth.setVal(w);
+//    // now fit but please shut up:
+//    RooFitResult *r_sidebandsDATA_alpha_rot = background.fitTo(sidebandsDATA_alpha, SumW2Error(kFALSE), Save(), RooFit::PrintLevel(-1));
+//    double newCor = r_sidebandsDATA_alpha_rot->correlation("alpha", "wdth");
+//    if(fabs(newCor)<fabs(bestValue)){
+//      bestValue=newCor;
+//      bestTheta=theta.getVal();
+//    }
+//    if(newCor * last < 0. ){// found a zero-crossing
+//      double oldstep = (upperBound-lowerBound)/30.;
+//      lowerBound = theta.getVal()-5.*oldstep;
+//      upperBound = theta.getVal()+5.*oldstep;
+//      break;
+//    } else{
+//      last = newCor;
+//    }
+
+//    delete r_sidebandsDATA_alpha_rot;
+
+//  } //for i 0-30
+
+//  iTry++;
+
+//} //while precision
+
+
+//if( iTry==200 && !writeFile ) bestTheta=0.;
+
+//std::cout << std::endl << std::endl;
+//std::cout << "-----------------------------------------------" << std::endl;
+//std::cout << "  found best angle " << bestTheta << std::endl;
+//std::cout << "-----------------------------------------------" << std::endl;
+//std::cout << std::endl << std::endl;
+//
+//double a_rot = cos(-bestTheta)*alpha_fit - sin(-bestTheta)*width_fit;
+//double w_rot = sin(-bestTheta)*alpha_fit + cos(-bestTheta)*width_fit;
 
 
 
   if( writeFile ) {
 
-    RooRealVar wdth_rot("wdth_rot","wdth_rot",w_rot,-200.,200.);
-    RooRealVar alpha_rot("alpha_rot","alpha_rot",a_rot,-200.,200.);
+  //RooRealVar wdth_rot("wdth_rot","wdth_rot",w_rot,-200.,200.);
+  //RooRealVar alpha_rot("alpha_rot","alpha_rot",a_rot,-200.,200.);
 
-    RooRealVar theta_best("theta_best","theta_best",bestTheta,-3.1416,3.1416);
+  //RooRealVar theta_best("theta_best","theta_best",bestTheta,-3.1416,3.1416);
 
 
-    RooCB CB_rot("CB","Crystal ball",*mZZ,m,wdth_rot,alpha_rot,n, theta_best);
+  //RooCB CB_rot("CB","Crystal ball",*mZZ,m,wdth_rot,alpha_rot,n, theta_best);
 
-    RooProdPdf background_rot("background_rot","background_rot",RooArgSet(fermi,CB_rot));
-    background_rot.plotOn(plot_rot, LineColor(38), LineStyle(2));
+  //RooProdPdf background_rot("background_rot","background_rot",RooArgSet(fermi,CB_rot));
+  //background_rot.plotOn(plot_rot, LineColor(38), LineStyle(2));
 
-    plot_rot->Draw();
+  //plot_rot->Draw();
 
-    char canvasName_rot[400];
-    sprintf( canvasName_rot, "%s/check_rot_%dbtag.eps", outdir.c_str(), btagCategory);
-    c1->SaveAs(canvasName_rot);
-    
+  //char canvasName_rot[400];
+  //sprintf( canvasName_rot, "%s/check_rot_%dbtag.eps", outdir.c_str(), btagCategory);
+  //c1->SaveAs(canvasName_rot);
+  //
 
-    c1->SetLogy();
-    sprintf( canvasName_rot, "%s/check_rot_%dbtag_log.eps", outdir.c_str(), btagCategory);
-    c1->SaveAs(canvasName_rot);
+  //c1->SetLogy();
+  //sprintf( canvasName_rot, "%s/check_rot_%dbtag_log.eps", outdir.c_str(), btagCategory);
+  //c1->SaveAs(canvasName_rot);
 
     std::string ofsDATAName = get_fitResultsName( btagCategory, "DATA" );
     ofstream ofsDATA(ofsDATAName.c_str());
@@ -515,9 +510,9 @@ FitResults SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int bta
     ofsDATA << "n " << n.getVal() << " " << n.getError() << std::endl;
     ofsDATA << "theta " << theta.getVal() << " " << theta.getError() << std::endl;
 
-    ofsDATA << "alpha_rot " << a_rot << " 0" << std::endl;
-    ofsDATA << "wdth_rot " << w_rot << " 0" << std::endl;
-    ofsDATA << "theta_best " << bestTheta << " 0" << std::endl;
+  //ofsDATA << "alpha_rot " << a_rot << " 0" << std::endl;
+  //ofsDATA << "wdth_rot " << w_rot << " 0" << std::endl;
+  //ofsDATA << "theta_best " << bestTheta << " 0" << std::endl;
     ofsDATA.close();
 
 
@@ -566,27 +561,43 @@ FitResults SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int bta
 
 
 
-  FitResults fr;
+  //FitResults fr;
 
-  fr.fermi_beta   = beta.getVal();
-  fr.fermi_cutoff = cutOff.getVal();
-  fr.CB_m         = m.getVal();
-  fr.CB_wdth      = wdth.getVal();
-  fr.CB_alpha     = alpha.getVal();
-  fr.CB_n         = n.getVal();
-  fr.CB_theta     = theta.getVal();
+  //fr.fermi_beta   = beta.getVal();
+  //fr.fermi_cutoff = cutOff.getVal();
+  //fr.CB_m         = m.getVal();
+  //fr.CB_wdth      = wdth.getVal();
+  //fr.CB_alpha     = alpha.getVal();
+  //fr.CB_n         = n.getVal();
+  //fr.CB_theta     = theta.getVal();
 
-  fr.fermi_beta_err   = beta.getError();
-  fr.fermi_cutoff_err = cutOff.getError();
-  fr.CB_m_err         = m.getError();
-  fr.CB_wdth_err      = wdth.getError();
-  fr.CB_alpha_err     = alpha.getError();
-  fr.CB_n_err         = n.getError();
-  fr.CB_theta_err     = theta.getError();
+  //fr.fermi_beta_err   = beta.getError();
+  //fr.fermi_cutoff_err = cutOff.getError();
+  //fr.CB_m_err         = m.getError();
+  //fr.CB_wdth_err      = wdth.getError();
+  //fr.CB_alpha_err     = alpha.getError();
+  //fr.CB_n_err         = n.getError();
+  //fr.CB_theta_err     = theta.getError();
 
-  fr.CB_alpha_rot  = a_rot;
-  fr.CB_wdth_rot   = w_rot;
-  fr.CB_theta_best = bestTheta;
+  //fr.CB_alpha_rot  = a_rot;
+  //fr.CB_wdth_rot   = w_rot;
+  //fr.CB_theta_best = bestTheta;
+
+
+  if( writeFile ) {
+
+    char alphaFileName[500];
+    sprintf( alphaFileName, "alphaFile_%s_%dbtag_%s.root", dataset_.c_str(), btagCategory, leptType.c_str());
+    file_alpha = TFile::Open(alphaFileName, "recreate");
+    file_alpha->cd();
+    h1_alpha->Write();
+    tree_sidebandsDATA_alpha->Write();
+    tree_sidebandsMC_alpha->Write();
+    r_sidebandsDATA_alpha->Write();
+    file_alpha->Close();
+
+  }
+
 
 
 
@@ -598,9 +609,10 @@ FitResults SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int bta
   delete c1;
   delete r_sidebandsMC_alpha;
   delete r_sidebandsMC_alpha_2;
-  delete r_sidebandsDATA_alpha;
 
-  return fr; 
+
+  return r_sidebandsDATA_alpha;
+  //return fr; 
 
 }
 
