@@ -11,8 +11,8 @@ bool withSignal_=false;
 
 int main(int argc, char* argv[]) {
 
-  if(  argc != 2 && argc != 3 ) {
-    std::cout << "USAGE: ./drawHZZlljjRM [(string)selType] [(string) normType=\"LUMI\"]" << std::endl;
+  if(  argc != 2 && argc != 3 && argc !=4 ) {
+    std::cout << "USAGE: ./drawHZZlljjRM [(string)selType] [(string)data_dataset=\"HR11\"] [(string) normType=\"LUMI\"]" << std::endl;
     exit(23);
   }
 
@@ -27,9 +27,15 @@ int main(int argc, char* argv[]) {
 //  PUType = PUType_str;
 //}
 
+  std::string data_dataset = "HR11";
+  if( argc>3 ) {
+    std::string data_dataset_str(argv[3]);
+    data_dataset = data_dataset_str;
+  }
+
   std::string normType = "LUMI";
-  if( argc>2 ) {
-    std::string normType_str(argv[2]);
+  if( argc>4 ) {
+    std::string normType_str(argv[4]);
     normType = normType_str;
   }
 
@@ -49,15 +55,20 @@ int main(int argc, char* argv[]) {
   //std::string data_dataset = "DATA_EPS_FINAL_FULL";
   //std::string data_dataset = "DATA_LP11";
   //std::string data_dataset = "DATA_Run2011A_FULL";
-  std::string data_dataset = "DATA_HR11";
+  //std::string data_dataset = "DATA_Run2011B_v1";
+  //std::string data_dataset = "DATA_HR11";
 
   
 
   std::string PUType = "HR11";
-  if( data_dataset=="DATA_LP11" || data_dataset=="DATA_Run2011A_FULL" )
+  if( data_dataset=="LP11" || data_dataset=="Run2011A_FULL" )
     PUType = "Run2011A";
-  else if( data_dataset=="DATA_HR11" )
+  else if( data_dataset=="HR11" )
     PUType = "HR11";
+  else if( data_dataset=="Run2011B_v1" )
+    //PUType = "HR11";
+    //PUType = "Run2011B_73pb";
+    PUType = "Run2011B";
   else {
     std::cout << "Don't knwo what PUType to choose for data dataset '" << data_dataset << "'. Choosing HR11 default." << std::endl;
     PUType = "HR11";
@@ -66,7 +77,7 @@ int main(int argc, char* argv[]) {
     
 
 
-  std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset + "_" + ZJetsMC;
+  std::string outputdir_str = "HZZlljjRMPlots_DATA_" + data_dataset + "_" + ZJetsMC;
   if( withSignal_ ) outputdir_str += "_plusSignal";
   outputdir_str += "_" + selType + "_PU" + PUType + "_" + leptType;
   if( normType=="SHAPE" ) outputdir_str += "_SHAPE";
@@ -83,7 +94,7 @@ int main(int argc, char* argv[]) {
     TFile* dataFile = TFile::Open(dataFileName.c_str());
     db->add_dataFile( dataFile, "DoubleElectron_Run2011A" );
   } else {
-    std::string dataFileName = "HZZlljjRM_" + data_dataset + "_"+selType+"_"+leptType+".root";
+    std::string dataFileName = "HZZlljjRM_DATA_" + data_dataset + "_"+selType+"_"+leptType+".root";
     TFile* dataFile = TFile::Open(dataFileName.c_str());
     db->add_dataFile( dataFile, "DATA_Run2011A" );
   }
@@ -165,41 +176,43 @@ int main(int argc, char* argv[]) {
 
   if( normType=="LUMI" ) {
 
-    if( data_dataset=="DATA_Run2011A_v2_Sub2" )
+    if( data_dataset=="Run2011A_v2_Sub2" )
       db->set_lumiNormalization(175.);
-    else if( data_dataset=="DATA_1fb" )
+    else if( data_dataset=="1fb" )
       db->set_lumiNormalization(859.);
-    else if( data_dataset=="DATA_EPS" )
+    else if( data_dataset=="EPS" )
       db->set_lumiNormalization(960.); 
-    else if( data_dataset=="DATA_EPS_FINAL" )
+    else if( data_dataset=="EPS_FINAL" )
       db->set_lumiNormalization(1000.); 
-    else if( data_dataset=="DATA_EPS_FINAL_FULL" )
+    else if( data_dataset=="EPS_FINAL_FULL" )
       db->set_lumiNormalization(1143.); 
-    else if( data_dataset=="DATA_EPS_FINAL_FULL_plusSingleMu" )
+    else if( data_dataset=="EPS_FINAL_FULL_plusSingleMu" )
       db->set_lumiNormalization(1143.); 
     else if( data_dataset=="DoubleElectron_Aug05ReReco" )
       db->set_lumiNormalization(227.); 
     else if( data_dataset=="DoubleMu_Aug05ReReco" )
       db->set_lumiNormalization(285.); 
-    else if( data_dataset=="DATA_EPS_FINAL_plusSingleMu" )
+    else if( data_dataset=="EPS_FINAL_plusSingleMu" )
       db->set_lumiNormalization(1143.);
-    else if( data_dataset=="DATA_LP11" )
+    else if( data_dataset=="LP11" )
       //db->set_lumiNormalization(1500.);
       db->set_lumiNormalization(1580.);
-    else if( data_dataset=="DATA_Run2011A_FULL" )
+    else if( data_dataset=="Run2011A_FULL" )
       db->set_lumiNormalization(2100.);
-    else if( data_dataset=="DATA_HR11" )
+    else if( data_dataset=="HR11" )
       db->set_lumiNormalization(4200.);
+    else if( data_dataset=="Run2011B_v1" )
+      db->set_lumiNormalization(2100.);
 
   } else { //shape
 
-    if( data_dataset=="DATA_Run2011A_v2_Sub2" )
+    if( data_dataset=="Run2011A_v2_Sub2" )
       db->set_lumi(175.);
-    else if( data_dataset=="DATA_1fb" )
+    else if( data_dataset=="1fb" )
       db->set_lumi(859.);
-    else if( data_dataset=="DATA_EPS" )
+    else if( data_dataset=="EPS" )
       db->set_lumi(960.); 
-    else if( data_dataset=="DATA_EPS_FINAL" )
+    else if( data_dataset=="EPS_FINAL" )
       db->set_lumi(1000.); 
   
     db->set_shapeNormalization();
@@ -368,7 +381,7 @@ int main(int argc, char* argv[]) {
   // MUON PLOTS:
   //------------
 
-  if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1530.);
+  if( data_dataset=="LP11" ) db->set_lumiNormalization(1530.);
   //if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1615.);
 
   db->set_yAxisMaxScale( 1.6 );
@@ -411,7 +424,7 @@ int main(int argc, char* argv[]) {
   //----------------
 
   //if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1556.);
-  if( data_dataset=="DATA_LP11" ) db->set_lumiNormalization(1480.);
+  if( data_dataset=="LP11" ) db->set_lumiNormalization(1480.);
 
   
   db->set_yAxisMaxScale( 1.6 );
