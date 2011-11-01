@@ -351,11 +351,11 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   TH1F* h1_run = new TH1F("run", "", 15149, 132440, 147589);
 
-  TH1D* h1_nvertex = new TH1D("nvertex", "", 25, -0.5, 24.5);
+  TH1D* h1_nvertex = new TH1D("nvertex", "", 36, -0.5, 35.5);
   h1_nvertex->Sumw2();
-  TH1D* h1_nvertex_PUW = new TH1D("nvertex_PUW", "", 25, -0.5, 24.5);
+  TH1D* h1_nvertex_PUW = new TH1D("nvertex_PUW", "", 36, -0.5, 35.5);
   h1_nvertex_PUW->Sumw2();
-  TH1D* h1_nvertex_PUW_ave = new TH1D("nvertex_PUW_ave", "", 25, -0.5, 24.5);
+  TH1D* h1_nvertex_PUW_ave = new TH1D("nvertex_PUW_ave", "", 36, -0.5, 35.5);
   h1_nvertex_PUW_ave->Sumw2();
 
   TH1D* h1_pfMet = new TH1D("pfMet", "", 60, 0., 120.);
@@ -1392,8 +1392,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root");
   //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_1_3/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
-  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
-  //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root");
+  //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root");
+  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/UserCode/pandolf/QGLikelihood/QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root");
   float Zmass = 91.1876;
   DiJetKinFitter* fitter_jets = new DiJetKinFitter( "fitter_jets", "fitter_jets", Zmass );
   HelicityLikelihoodDiscriminant *LD = new HelicityLikelihoodDiscriminant();
@@ -1421,6 +1421,14 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
     filePU = TFile::Open("Pileup_DATA_up_to_178078.root");
   else if( PUType_=="Run2011A" )
     filePU = TFile::Open("Pileup_DATA_up_to_173692.root");
+  else if( PUType_=="Run2011A_73pb" )
+    filePU = TFile::Open("all2011A.pileup_v2_73mb.root");
+  else if( PUType_=="Run2011B" )
+    filePU = TFile::Open("Pileup_DATA_173692_to_178078.root");
+  else if( PUType_=="Run2011B_73pb" )
+    filePU = TFile::Open("all2011B.pileup_v2_73mb.root");
+  else if( PUType_=="HR11_73pb" )
+    filePU = TFile::Open("all2011AB.pileup_v2_73mb.root");
   else {
     std::cout << "-> Unknown PU Type: '" << PUType_ << "'. Will use HR11 default." << std::endl;
     filePU = TFile::Open("Pileup_DATA_up_to_178078.root");
@@ -1431,6 +1439,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   int maxBTag_found = -1;
   float mZZ, mZZ_nokinfit, mZjj, mZll;
+  float ptLept1_t, ptLept2_t, etaLept1_t, etaLept2_t;
+  float ptJet1_t, ptJet2_t, etaJet1_t, etaJet2_t;
   float HLTSF;
   bool isSidebands=false;
   bool isSignalRegion=false;
@@ -1441,6 +1451,14 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_passedEvents->Branch( "LS", &LS, "LS/I" );
   tree_passedEvents->Branch( "event", &event, "event/I" );
   tree_passedEvents->Branch( "leptType", &leptType, "leptType/I" );
+  tree_passedEvents->Branch( "ptLept1", &ptLept1_t, "ptLept1_t/F" );
+  tree_passedEvents->Branch( "ptLept2", &ptLept2_t, "ptLept2_t/F" );
+  tree_passedEvents->Branch( "etaLept1", &etaLept1_t, "etaLept1_t/F" );
+  tree_passedEvents->Branch( "etaLept2", &etaLept2_t, "etaLept2_t/F" );
+  tree_passedEvents->Branch( "ptJet1", &ptJet1_t, "ptJet1_t/F" );
+  tree_passedEvents->Branch( "ptJet2", &ptJet2_t, "ptJet2_t/F" );
+  tree_passedEvents->Branch( "etaJet1", &etaJet1_t, "etaJet1_t/F" );
+  tree_passedEvents->Branch( "etaJet2", &etaJet2_t, "etaJet2_t/F" );
   tree_passedEvents->Branch( "mZjj", &mZjj, "mZjj/F" );
   tree_passedEvents->Branch( "mZll", &mZll, "mZll/F" );
   tree_passedEvents->Branch( "mZZ", &mZZ, "mZZ/F" );
@@ -1527,8 +1545,10 @@ ofstream ofs("run_event.txt");
         // weighted average over full run (weighted with lumi):
         // LP11:
         //HLTSF = (217.*HLTSF_Run2011A1 + 920.*HLTSF_Run2011A2 + 478.*HLTSF_Run2011A3)/(217.+920.+478.);
-        // full 2011A run:
-        HLTSF = (217.*HLTSF_Run2011A1 + 920.*HLTSF_Run2011A2 + 1000.*HLTSF_Run2011A3)/(217.+920.+1000.);
+        if( PUType_=="Run2011A" || PUType_=="Run2011A_73pb" )
+          HLTSF = (217.*HLTSF_Run2011A1 + 920.*HLTSF_Run2011A2 + 1000.*HLTSF_Run2011A3)/(217.+920.+1000.);
+        else if( PUType_=="HR11" || PUType_=="HR11_73pb" ) 
+          HLTSF = (217.*HLTSF_Run2011A1 + 920.*HLTSF_Run2011A2 + 3100.*HLTSF_Run2011A3)/(217.+920.+3100.);
 
         eventWeight *= HLTSF;
 
@@ -2099,6 +2119,15 @@ ofstream ofs("run_event.txt");
 
     TLorentzVector ZZ_nokinfit = Zjj_nokinfit + diLepton;
     TLorentzVector ZZ_kinfit = diLepton + Zjj_kinfit;
+
+    ptLept1_t = ptLept1;
+    ptLept2_t = ptLept2;
+    etaLept1_t = etaLept1;
+    etaLept2_t = etaLept2;
+    ptJet1_t = jet1_selected.Pt();
+    ptJet2_t = jet2_selected.Pt();
+    etaJet1_t = jet1_selected.Pt();
+    etaJet2_t = jet2_selected.Eta();
 
     mZjj = Zjj_nokinfit.M();
     mZll = diLepton.M();
@@ -4405,65 +4434,4 @@ float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger, const std::string
 
 }
 
-
-
-/*
-float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger, const std::string& runPeriod ) {
-
-  if( !isDoubleTrigger && pt<25. ) return 0.;
-
-  double eff_Double[1][3]={{0.975, 0.955, 0.910}};
-
-  double eff_Single[1][4];
-  if( !isDoubleTrigger ) {
-    if( runPeriod=="Run2011A1" ) { //up to may10 technical stop
-      eff_Single[0][0] = 0.980;
-      eff_Single[0][1] = 0.925;
-      eff_Single[0][2] = 0.890;
-      eff_Single[0][3] = 0.758;
-    } else if( runPeriod=="Run2011A2" ) { //from may10 to EPS
-      eff_Single[0][0] = 0.979;
-      eff_Single[0][1] = 0.945;
-      eff_Single[0][2] = 0.941;
-      eff_Single[0][3] = 0.883;
-    } else if( runPeriod=="Run2011A3" ) { //from EPS to LP
-      eff_Single[0][0] = 0.970;
-      eff_Single[0][1] = 0.942;
-      eff_Single[0][2] = 0.923;
-      eff_Single[0][3] = 0.814;
-    } else {
-      std::cout << "----> WARNING!!! Unknown run period: '" << runPeriod << "'. Exiting. " << std::endl;
-    }
-  }
-  
-  double w(1.);
-  int y_D=-1;
-  int y_S=-1;
-  
-  
-  if (TMath::Abs(eta)<=0.8) {
-    if(isDoubleTrigger) y_D=0;
-    else y_S=0;
-  } else if (TMath::Abs(eta)>0.8 && TMath::Abs(eta)<=1.2) {   
-    if(isDoubleTrigger) y_D=1;
-    else y_S=1;
-  } else if (TMath::Abs(eta)>1.2 && TMath::Abs(eta)<=1.48) {
-    if(isDoubleTrigger) y_D=2;
-    else y_S=1;
-  } else if (TMath::Abs(eta)>1.48 && TMath::Abs(eta)<=2.1) {
-    if(isDoubleTrigger) y_D=2;
-    else y_S=2;
-  }else if(TMath::Abs(eta)>2.1 && TMath::Abs(eta)<=2.4) {
-    if(isDoubleTrigger) y_D=2;
-    else y_S=3;  
-  }
-  
-  if (y_D>=0 || y_S>=0) {     
-    if(isDoubleTrigger) w =  eff_Double[0][y_D];
-    else w= eff_Single[0][y_S];
-  }
-  return w;
-
-}
-*/
 
