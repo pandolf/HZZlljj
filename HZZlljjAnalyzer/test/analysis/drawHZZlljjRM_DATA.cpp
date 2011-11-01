@@ -29,13 +29,13 @@ int main(int argc, char* argv[]) {
 
   std::string data_dataset = "HR11";
   if( argc>3 ) {
-    std::string data_dataset_str(argv[3]);
+    std::string data_dataset_str(argv[2]);
     data_dataset = data_dataset_str;
   }
 
   std::string normType = "LUMI";
   if( argc>4 ) {
-    std::string normType_str(argv[4]);
+    std::string normType_str(argv[3]);
     normType = normType_str;
   }
 
