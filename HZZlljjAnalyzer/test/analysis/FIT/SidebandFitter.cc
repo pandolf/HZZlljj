@@ -442,7 +442,7 @@ FitResults SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int bta
       alpha.setVal(a);
       wdth.setVal(w);
       // now fit but please shut up:
-      RooFitResult *r_sidebandsDATA_alpha_rot = background.fitTo(sidebandsDATA_alpha, SumW2Error(kFALSE), Save(), Verbose(false), Warnings(false), PrintEvalErrors(false), PrintLevel(-1));
+      RooFitResult *r_sidebandsDATA_alpha_rot = background.fitTo(sidebandsDATA_alpha, SumW2Error(kFALSE), Save(), RooFit::PrintLevel(-1));
       double newCor = r_sidebandsDATA_alpha_rot->correlation("alpha", "wdth");
       if(fabs(newCor)<fabs(bestValue)){
         bestValue=newCor;
