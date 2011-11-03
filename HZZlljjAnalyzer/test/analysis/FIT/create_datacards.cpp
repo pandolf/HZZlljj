@@ -89,6 +89,7 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
 HiggsParameters get_higgsParameters( float mass );
 RooArgList get_BGFitParameters( const std::string& dataset, int nbtags );
 RooFitResult* get_BGFitResult( const std::string& dataset, int nbtags );
+RooWorkspace* get_BGWorkspace( const std::string& dataset, int nbtags );
 
 double linear_interp( double x, double x_old, double mass, double mH, double mH_old );
 std::pair<double,double> get_massWindow( HiggsParameters hp );
@@ -96,6 +97,8 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags );
 double get_observedYield( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w );
 //double get_expectedYield_background( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w );
 double get_expectedYield_background( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp );
+//RooProdPdf* get_backgroundShape( RooRealVar* x, RooFitResult* bgfr, const std::string& suffix="" );
+RooArgList import_backgroundShape( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w );
 void import_signalShape( int nbtags, HiggsParameters hp, RooWorkspace* w );
 
 std::string systString( std::pair<double,double> systPair, double maxDiff=0.01 );
@@ -212,7 +215,7 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   ofs << "------------ " << std::endl;
   ofs << "shapes ggH CMS_hzz2l2q_" << suffix_str << " hzz2l2q_" << suffix_str << ".input.root  w:signal" << std::endl;
   ofs << "shapes VBF CMS_hzz2l2q_" << suffix_str << " hzz2l2q_" << suffix_str << ".input.root  w:signal" << std::endl;
-  ofs << "shapes background CMS_hzz2l2q_" << suffix_str << " hzz2l2q_" << suffix_str << ".input.root w:background_eig" << std::endl;
+  ofs << "shapes background CMS_hzz2l2q_" << suffix_str << " hzz2l2q_" << suffix_str << ".input.root w:background_decorr" << std::endl;
   ofs << "shapes data_obs   CMS_hzz2l2q_" << suffix_str << " hzz2l2q_" << suffix_str << ".input.root w:dataset_obs" << std::endl;
   ofs << "------------ " << std::endl;
   ofs << "bin         CMS_hzz2l2q_" << suffix << std::endl;
@@ -238,7 +241,6 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   // (in any case new shapes from matthias will change stuff here)
   import_signalShape( nbtags, hp, w );
 
-
   double observed = get_observedYield( dataset, leptType_str, nbtags, hp, w );
   ofs << "observation   " << observed << std::endl;
   ofs << "------------ " << std::endl;
@@ -253,7 +255,8 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   float rate_gg   = eff*hp.CSgg *hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
   float rate_vbf  = eff*hp.CSvbf*hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
 
-  double rate_background = get_expectedYield_background( dataset, leptType_str, nbtags, hp, w );
+  double rate_background = get_expectedYield_background( dataset, leptType_str, nbtags, hp );
+  RooArgList bgPars = import_backgroundShape( dataset, leptType_str, nbtags, hp, w );
 
   ofs << "rate               " << rate_gg << "\t\t" << rate_vbf << "\t\t" << rate_background << std::endl;
   ofs << "------------ " << std::endl;
@@ -315,10 +318,9 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
 
  
   //RooArgList bgPars = get_BGFitParameters( dataset, nbtags );
-  RooArgList bgPars = (RooArgList)w->Get("BGDiagonalParameters");
 
   for( unsigned iVar=0; iVar<bgPars.getSize(); ++iVar ) {
-    RooRealVar* thisVar = (RooRealVar*)bgPars.at(iVar);
+    RooRealVar* thisVar = dynamic_cast<RooRealVar*>(bgPars.at(iVar));
     ofs << thisVar->GetName() << "\tparam\t\t" << thisVar->getVal() << "\t" << thisVar->getError() << std::endl;
   }
 
@@ -545,10 +547,30 @@ RooFitResult* get_BGFitResult( const std::string& dataset, int nbtags ) {
   TFile* file_alpha = TFile::Open(fitResultsFileName);
 
   char fitResultName[200];
-  sprintf( fitResultName, "fitResults_%dbtag", nbtags );
+  sprintf( fitResultName, "fitResults_%dbtag_decorr", nbtags );
   RooFitResult* r = (RooFitResult*)file_alpha->Get(fitResultName);
 
+  file_alpha->Close();
+
   return r;
+
+}
+
+  
+RooWorkspace* get_BGWorkspace( const std::string& dataset, int nbtags ) {
+
+
+  char fitResultsFileName[500];
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL.root", dataset.c_str(), nbtags);
+  TFile* file_alpha = TFile::Open(fitResultsFileName);
+
+  char fitResultName[200];
+  sprintf( fitResultName, "fitWorkspace_%dbtag", nbtags );
+  RooWorkspace* ws = (RooWorkspace*)file_alpha->Get(fitResultName);
+
+  file_alpha->Close();
+
+  return ws;
 
 }
 
@@ -638,9 +660,7 @@ double get_observedYield( const std::string& dataset, const std::string& leptTyp
 
 
 
-RooArgList import_bgShape( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w ) {
-
-  int leptType_int = convert_leptType(leptType_str);
+RooArgList import_backgroundShape( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp, RooWorkspace* w ) {
 
 
   //integration window
@@ -649,24 +669,21 @@ RooArgList import_bgShape( const std::string& dataset, const std::string& leptTy
   double fitRangeHigh = massWindow.second;
 
 
-  // define mZZ variable
-  RooRealVar CMS_hzz2l2q_mZZ("CMS_hzz2l2q_mZZ", "zz inv mass", fitRangeLow, fitRangeHigh);
+  RooWorkspace* bgws = get_BGWorkspace( dataset, nbtags );
 
-  RooFitResult* bgfr = get_BGFitResult( dataset, nbtags );
+  RooRealVar* CMS_hzz2l2q_mZZ = bgws->var("CMS_hzz2l2q_mZZ");
+  CMS_hzz2l2q_mZZ->setMin( fitRangeLow );
+  CMS_hzz2l2q_mZZ->setMax( fitRangeHigh );
 
-  RooAbsPdf* background = get_backgroundShape(CMS_hzz2l2q_mZZ, bgfr);
+  RooAbsPdf* background_decorr = bgws->pdf("background_decorr");
+ 
 
   // import in the workspace the diagonalized pdf:
-  char diagonalizerName[200];
-  sprintf( diagonalizerName, "CMS_hzz2l2q_bkg_%db%s%s", nbtags, (leptType_datacards(leptType_str)).c_str(), (leptType_datacards(leptType_str)).c_str() );
-  PdfDiagonalizer diago(diagonalizerName, w, *bgfr);
-  RooAbsPdf *newfit = diago.diagonalize(background);
-  newfit->SetName("background_eig");
-  w->import(*newfit, RooFit::RecycleConflictNodes());
+  w->import(*background_decorr, RooFit::RecycleConflictNodes());
 
-  RooArgList diagVars = diago.diagonalParams();
 
-  return diagVars;
+  RooFitResult* bgfr = get_BGFitResult( dataset, nbtags );
+  return bgfr->floatParsFinal();
 
 }
 
@@ -675,7 +692,8 @@ RooArgList import_bgShape( const std::string& dataset, const std::string& leptTy
 
 
 
-RooAbsPdf* get_backgroundShape( RooRealVar x, RooFitResult*, const std::string& suffix ) {
+/*
+RooProdPdf* get_backgroundShape( RooRealVar* x, RooFitResult* bgfr, const std::string& suffix ) {
 
 
   RooArgList constPars = bgfr->constPars();
@@ -690,8 +708,8 @@ RooAbsPdf* get_backgroundShape( RooRealVar x, RooFitResult*, const std::string& 
   beta->setConstant(kTRUE);
 
   char funcName[100];
-  sprintf( funcName, "fermi_BKG%d", suffix.c_str() );
-  RooFermi fermi_BKG(funcName, "fermi function", x, *cutoff, *beta);
+  sprintf( funcName, "fermi_BKG%s", suffix.c_str() );
+  RooFermi* fermi_BKG = new RooFermi(funcName, "fermi function", *x, *cutoff, *beta);
 
 
 
@@ -708,16 +726,16 @@ RooAbsPdf* get_backgroundShape( RooRealVar x, RooFitResult*, const std::string& 
 
   RooRealVar* alpha = (RooRealVar*)floatPars.find("alpha");
 
-  sprintf( funcName, "CB_BKG%d", suffix.c_str() );
-  RooCBShape CB_BKG( funcName, "Crystal ball", x, *m, *wdth, *alpha, *n);
+  sprintf( funcName, "CB_BKG%s", suffix.c_str() );
+  RooCBShape* CB_BKG = new RooCBShape( funcName, "Crystal ball", *x, *m, *wdth, *alpha, *n);
 
-  sprintf( funcName, "background%d", suffix.c_str() );
-  RooProdPdf* background = new RooProdPdf( funcName, "background", RooArgSet(fermi_BKG,CB_BKG));
+  sprintf( funcName, "background%s", suffix.c_str() );
+  RooProdPdf* background = new RooProdPdf( funcName, "background", RooArgSet(*fermi_BKG,*CB_BKG));
 
   return background;
 
 }
-
+*/
 
 
 
@@ -726,9 +744,21 @@ double get_expectedYield_background( const std::string& dataset, const std::stri
 
   int leptType_int = convert_leptType(leptType_str);
 
-  RooRealVar CMS_hzz2l2q_mZZfull("CMS_hzz2l2q_mZZfull", "zz inv mass", 183., 800.);
-  RooFitResult* bgfr = get_BGFitResult( dataset, nbtags );
-  RooAbsPdf* backgroundFull = get_backgroundShape(CMS_hzz2l2q_mZZfull, bgfr, "full");
+  RooWorkspace* bgws = get_BGWorkspace( dataset, nbtags );
+
+  RooRealVar* CMS_hzz2l2q_mZZfull = new RooRealVar("CMS_hzz2l2q_mZZfull", "zz inv mass", 183., 800.);
+  CMS_hzz2l2q_mZZfull->setMin( 183. );
+  CMS_hzz2l2q_mZZfull->setMax( 800. );
+  CMS_hzz2l2q_mZZfull->SetName( "CMS_hzz2l2q_mZZfull" );
+
+  RooAbsPdf* background = bgws->pdf("background_decorr");
+
+
+  //RooRealVar* CMS_hzz2l2q_mZZfull = new RooRealVar("CMS_hzz2l2q_mZZfull", "zz inv mass", 183., 800.);
+  //RooFitResult* bgfr = get_BGFitResult( dataset, nbtags );
+  //RooProdPdf* backgroundFull = get_backgroundShape(CMS_hzz2l2q_mZZfull, bgfr, "full");
+
+
 
 
   char fitResultsFileName[300];
@@ -743,13 +773,9 @@ double get_expectedYield_background( const std::string& dataset, const std::stri
   treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "mZZ", sidebandsCut_alpha);
   float EvtNorm = h1_mZZ_sidebands_alpha->Integral();
 
-  RooFermi fermi_BKG_FULL("fermi_BKG_FULL","fermi function", CMS_hzz2l2q_mZZfull, *cutoff, *beta);
-  RooCBShape CB_BKG_FULL("CBbkgFull","Crystal ball for background", CMS_hzz2l2q_mZZfull, *m, *wdth, *alpha, *n);
-  RooProdPdf backgroundFull("backgroundFull","backgroundFull",RooArgSet(fermi_BKG_FULL,CB_BKG_FULL));
 
 
-  RooDataHist *BkgHisto = backgroundFull.generateBinned(CMS_hzz2l2q_mZZfull,EvtNorm,kTRUE,kFALSE);  
-
+  RooDataHist *BkgHisto = background->generateBinned(*CMS_hzz2l2q_mZZfull,EvtNorm,kTRUE,kFALSE);  
 
   //integration window
   std::pair<double,double> massWindow = get_massWindow(hp);
