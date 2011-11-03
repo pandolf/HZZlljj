@@ -382,7 +382,9 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   }
 
 
-  RooWorkspace* fitWorkspace = new RooWorkspace("fitWorkspace","fitWorkspace");
+  char fitWorkspaceName[200];
+  sprintf( fitWorkspaceName, "fitWorkspace_%dbtag", btagCategory );
+  RooWorkspace* fitWorkspace = new RooWorkspace(fitWorkspaceName, fitWorkspaceName);
   fitWorkspace->addClassDeclImportDir("/afs/cern.ch/cms/slc5_amd64_gcc434/lcg/roofit/5.28.00a-cms3/include/");
 
   fitWorkspace->importClassCode(RooFermi::Class(),kTRUE);
