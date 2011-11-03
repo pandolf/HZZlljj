@@ -26,6 +26,10 @@
 #include "RooExponential.h"
 #include "RooProdPdf.h"
 #include "RooFitResult.h"
+#include "RooWorkspace.h"
+
+#include "PdfDiagonalizer.h"
+
 
 
 using namespace RooFit;
@@ -93,7 +97,6 @@ TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string leptTyp
   h1_alpha->Divide(h1_mZZ_sidebands);
 
   // smooth it:
-  double BinContent=0;
   double SmoothingThreshold=3.0;
   for(int iBin=1; iBin<h1_alpha->GetNbinsX()+1; iBin++) {
     if(h1_alpha->GetBinContent(iBin)>SmoothingThreshold) {
@@ -174,7 +177,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   RooRealVar* nBTags = new RooRealVar("nBTags", "number of BTags", -1., 2., "");
   RooRealVar* mZjj = new RooRealVar("mZjj", "mZjj", 60., 130., "GeV");
 
-  RooFormulaVar* weight_lumi = new RooFormulaVar("weight_lumi", "@0*1000.", RooArgList(*eventWeight));
 
   //RooDataSet sidebandsMC("sidebandsMC","sidebandsMC",treeMC,RooArgSet(*eventWeight,*mZZ,*nBTags,*mZjj,*weight_lumi),cut_sidebands,"weight_lumi");
   //RooDataSet signalMC("signalMC","signalMC",treeMC,RooArgSet(*eventWeight,*mZZ,*nBTags,*mZjj,*weight_lumi),cut_signal,"weight_lumi");
@@ -211,31 +213,19 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
   // ------------------------ fermi ------------------------------
   RooRealVar cutOff("cutOff","position of fermi",191.12,175.,220.);
-  RooRealVar cutOff2("cutOff2","position of fermi",191.12,175.,220.);
   RooRealVar beta("beta","width of fermi",4.698,0.,30.);
-  RooRealVar beta2("beta2","width of fermi",4.698,0.,30.);
   RooFermi fermi("fermi","fermi function",*mZZ,cutOff,beta);
-  RooFermi fermi2("fermi2","fermi function",*mZZ,cutOff2,beta2);
 
   // -------------------- crystal ball ---------------------------
   RooRealVar m("m","m",200.17,190.,300.);
-  RooRealVar m2("m2","m2",200.17,190.,300.);
   RooRealVar wdth("wdth","wdth",w0,-200.,200.);
-  RooRealVar wdth0("wdth0","wdth0",w0,-200.,200.);
   RooRealVar n("n","n",13.067,0.,100.);
-  RooRealVar n2("n2","n2",13.067,0.,100.);
   RooRealVar alpha("alpha","alpha",a0,-200.,200.); 
-  RooRealVar alpha0("alpha0","alpha0",a0,-200.,200.); 
-
-  RooRealVar theta("theta","theta",0.,-3.1416,3.1416); 
-  theta.setConstant(kTRUE);
 
 
-  RooCB CB("CB","Crystal ball",*mZZ,m,wdth,alpha,n, theta);
-  RooCBShape CBShape("CB","Crystal ball",*mZZ,m2,wdth0,alpha0,n2);
+  RooCBShape CBShape("CB","Crystal ball",*mZZ,m,wdth,alpha,n);
 
-  RooProdPdf background("background","background",RooArgSet(fermi,CB));
-  RooProdPdf background2("background","background",RooArgSet(fermi2,CBShape));
+  RooProdPdf background("background","background",RooArgSet(fermi,CBShape));
  
 
 
@@ -257,7 +247,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   c1->SetLogy(false);
 
   RooFitResult *r_sidebandsMC_alpha = background.fitTo(sidebandsMC_alpha,SumW2Error(kTRUE), Save(), Warnings(warnings), PrintLevel(warningLevel));
-  RooFitResult *r_sidebandsMC_alpha_2 = background2.fitTo(sidebandsMC_alpha,SumW2Error(kTRUE), Save(), Warnings(warnings), PrintLevel(warningLevel));
 
   if( writeFile ) {
 
@@ -270,7 +259,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
     ofsMC << "wdth " << wdth.getVal() << " " << wdth.getError() << std::endl;
     ofsMC << "alpha " << alpha.getVal() << " " << alpha.getError() << std::endl;
     ofsMC << "n " << n.getVal() << " " << n.getError() << std::endl;
-    ofsMC << "theta " << theta.getVal() << " " << theta.getError() << std::endl;
 
     ofsMC.close();
 
@@ -279,7 +267,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
     sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
 
     background.plotOn(plot_sidebandsMC_alpha, LineColor(kRed));
-    background2.plotOn(plot_sidebandsMC_alpha, LineColor(38), LineStyle(2));
     sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
 
     plot_sidebandsMC_alpha->Draw();
@@ -317,7 +304,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
     wdth.setConstant(kTRUE);
     n.setConstant(kTRUE);
     alpha.setConstant(kTRUE);
-    theta.setConstant(kTRUE);
 
 
     c1->Clear();
@@ -397,6 +383,32 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   }
 
 
+  RooWorkspace* fitWorkspace = new RooWorkspace("fitWorkspace","fitWorkspace");
+  fitWorkspace->addClassDeclImportDir("/afs/cern.ch/cms/slc5_amd64_gcc434/lcg/roofit/5.28.00a-cms3/include/");
+
+  fitWorkspace->importClassCode(RooFermi::Class(),kTRUE);
+  fitWorkspace->importClassCode("RooFermi",kTRUE);
+
+
+  std::string leptType_datacards = (leptType=="ELE") ? "ee" : "mm";
+
+  //now decorrelate parameters:
+  char diagonalizerName[200];
+  sprintf( diagonalizerName, "CMS_hzz2l2q_bkg_%db%s", btagCategory, leptType_datacards.c_str() );
+  PdfDiagonalizer diago(diagonalizerName, fitWorkspace, *r_sidebandsDATA_alpha);
+  RooAbsPdf *newfit = diago.diagonalize(background);
+  newfit->SetName("background_eig");
+  RooFitResult *r_sidebandsDATA_alpha_decorr = newfit->fitTo(sidebandsDATA_alpha, SumW2Error(kFALSE), Save(), Warnings(warnings), PrintLevel(warningLevel));
+  char fitResultName_eig[200];
+  if( leptType!="ALL" )
+    sprintf( fitResultName_eig, "%s_%s_decorr", fitResultName, leptType.c_str() );
+  else 
+    sprintf( fitResultName_eig, "%s_decorr", fitResultName );
+  r_sidebandsDATA_alpha_decorr->SetName(fitResultName_eig);
+
+  //import both pdfs in the workspace:
+  fitWorkspace->import(background);
+  fitWorkspace->import(*newfit);
 
 
 
@@ -508,7 +520,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
     ofsDATA << "wdth " << wdth.getVal() << " " << wdth.getError() << std::endl;
     ofsDATA << "alpha " << alpha.getVal() << " " << alpha.getError() << std::endl;
     ofsDATA << "n " << n.getVal() << " " << n.getError() << std::endl;
-    ofsDATA << "theta " << theta.getVal() << " " << theta.getError() << std::endl;
 
   //ofsDATA << "alpha_rot " << a_rot << " 0" << std::endl;
   //ofsDATA << "wdth_rot " << w_rot << " 0" << std::endl;
@@ -586,14 +597,16 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
   if( writeFile ) {
 
-    char alphaFileName[500];
-    sprintf( alphaFileName, "alphaFile_%s_%dbtag_%s.root", dataset_.c_str(), btagCategory, leptType.c_str());
-    file_alpha = TFile::Open(alphaFileName, "recreate");
+    char fitResultsFileName[500];
+    sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s.root", dataset_.c_str(), btagCategory, leptType.c_str());
+    file_alpha = TFile::Open(fitResultsFileName, "recreate");
     file_alpha->cd();
     h1_alpha->Write();
     tree_sidebandsDATA_alpha->Write();
     tree_sidebandsMC_alpha->Write();
     r_sidebandsDATA_alpha->Write();
+    r_sidebandsDATA_alpha_decorr->Write();
+    fitWorkspace->Write();
     file_alpha->Close();
 
   }
@@ -608,7 +621,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   delete mZjj;
   delete c1;
   delete r_sidebandsMC_alpha;
-  delete r_sidebandsMC_alpha_2;
 
 
   return r_sidebandsDATA_alpha;
