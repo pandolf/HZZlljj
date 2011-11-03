@@ -165,7 +165,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   //float mZZ_min = 230.;
   //float mZZ_min = (btagCategory==1) ? 150 : 170.;
   float mZZ_min = 150.;
-  //float mZZ_max = 300.;
   float mZZ_max = 810.;
   float binWidth = 20.;
   int nBins = (int)(mZZ_max-mZZ_min)/binWidth;
@@ -408,7 +407,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
   //import both pdfs in the workspace:
   fitWorkspace->import(background);
-  fitWorkspace->import(*background_decorr);
+  fitWorkspace->import(*background_decorr, RooFit::RecycleConflictNodes());
 
 
   RooPlot *plot_rot = CMS_hzz2l2q_mZZ->frame(mZZ_min, mZZ_max, nBins);
