@@ -19,14 +19,16 @@
 #include "RooDataSet.h"
 #include "RooPlot.h"
 #include "RooArgSet.h"
-#include "RooFermi.h"
+//#include "RooFermi.h"
 #include "RooGaussian.h"
-#include "RooCB.h"
+//#include "RooCB.h"
 #include "RooCBShape.h"
 #include "RooExponential.h"
 #include "RooProdPdf.h"
 #include "RooFitResult.h"
 #include "RooWorkspace.h"
+
+#include "/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/HiggsAnalysis/CombinedLimit/interface/HZZ2L2QRooPdfs.h"
 
 #include "PdfDiagonalizer.h"
 
@@ -164,14 +166,14 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
   //float mZZ_min = 230.;
   //float mZZ_min = (btagCategory==1) ? 150 : 170.;
-  float mZZ_min = 150.;
-  float mZZ_max = 810.;
+  float mZZ_min = 183.;
+  float mZZ_max = 800.;
   float binWidth = 20.;
   int nBins = (int)(mZZ_max-mZZ_min)/binWidth;
+  RooRealVar* CMS_hzz2l2q_mZZ = new RooRealVar("CMS_hzz2l2q_mZZ", "m_{lljj}", mZZ_min, mZZ_max, "GeV");
 
   RooRealVar* eventWeight = new RooRealVar("eventWeight", "event weight", 0., 2., "");
   RooRealVar* eventWeight_alpha = new RooRealVar("eventWeight_alpha", "event weight (alpha corrected)", 0., 2., "");
-  RooRealVar* CMS_hzz2l2q_mZZ = new RooRealVar("CMS_hzz2l2q_mZZ", "m_{lljj}", mZZ_min, mZZ_max, "GeV");
   RooRealVar* nBTags = new RooRealVar("nBTags", "number of BTags", -1., 2., "");
   RooRealVar* mZjj = new RooRealVar("mZjj", "mZjj", 60., 130., "GeV");
 
@@ -384,10 +386,10 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   char fitWorkspaceName[200];
   sprintf( fitWorkspaceName, "fitWorkspace_%dbtag", btagCategory );
   RooWorkspace* fitWorkspace = new RooWorkspace(fitWorkspaceName, fitWorkspaceName);
-  fitWorkspace->addClassDeclImportDir("/afs/cern.ch/cms/slc5_amd64_gcc434/lcg/roofit/5.28.00a-cms3/include/");
+  //fitWorkspace->addClassDeclImportDir("/afs/cern.ch/cms/slc5_amd64_gcc434/lcg/roofit/5.28.00a-cms3/include/");
 
-  fitWorkspace->importClassCode(RooFermi::Class(),kTRUE);
-  fitWorkspace->importClassCode("RooFermi",kTRUE);
+  //fitWorkspace->importClassCode(RooFermi::Class(),kTRUE);
+  //fitWorkspace->importClassCode("RooFermi",kTRUE);
 
 
 
@@ -406,9 +408,11 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   r_sidebandsDATA_alpha_decorr->SetName(fitResultName_eig);
 
   //import both pdfs in the workspace:
+  fitWorkspace->import(*CMS_hzz2l2q_mZZ);
   fitWorkspace->import(background);
   fitWorkspace->import(*background_decorr, RooFit::RecycleConflictNodes());
 
+  fitWorkspace->Print("V");
 
   RooPlot *plot_rot = CMS_hzz2l2q_mZZ->frame(mZZ_min, mZZ_max, nBins);
   sidebandsDATA_alpha.plotOn(plot_rot);
@@ -664,6 +668,7 @@ TH1D* SidebandFitter::shuffle( TH1D* inhist, TRandom3* random, char *histName ) 
 
 
 
+/*
 void SidebandFitter::modifyFitResultError( const std::string& thisVar, double thisVarError, int nbtags ) {
 
   std::string fitResultsFile_old = get_fitResultsName( nbtags );
@@ -693,3 +698,4 @@ void SidebandFitter::modifyFitResultError( const std::string& thisVar, double th
   ofs.close();
 
 }
+*/
