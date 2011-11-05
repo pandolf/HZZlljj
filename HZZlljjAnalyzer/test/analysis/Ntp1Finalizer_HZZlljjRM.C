@@ -1565,7 +1565,7 @@ ofstream ofs("run_event.txt");
       //eventWeight *= eventWeightPU;
      
       eventWeight *= fPUWeight->GetWeight(nPU);
-      std::cout << event << " " << nPU << " " << nvertex << " " << fPUWeight->GetWeight(nPU) << std::endl;
+      //std::cout << event << " " << nPU << " " << nvertex << " " << fPUWeight->GetWeight(nPU) << std::endl;
       //eventWeight *= getWeight_oscar(nPU);
 
     } // if is MC
