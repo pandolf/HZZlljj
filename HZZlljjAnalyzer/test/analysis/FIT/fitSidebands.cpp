@@ -29,10 +29,20 @@ int main( int argc, char* argv[] ) {
   TFile* file_DATA = TFile::Open(datafileName.c_str());
   TTree* treeDATA = (TTree*)file_DATA->Get("tree_passedEvents");
 
+
+  std::string PUReweighing = "Run2011A";
+  if( dataset=="HR11" ) PUReweighing = "HR11";
+  if( dataset_tstr.BeginsWith("Run2011B") ) PUReweighing = "Run2011B";
+
+
   TChain* chainMC = new TChain("tree_passedEvents");
-  chainMC->Add("HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root/tree_passedEvents");
-  chainMC->Add("HZZlljjRM_TT_TW_TuneZ2_7TeV-powheg-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root/tree_passedEvents");
-  chainMC->Add("HZZlljjRM_VV_TuneZ2_7TeV-pythia6-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root/tree_passedEvents");
+  std::string bgTreeName;
+  bgTreeName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU" + PUReweighing + "_ALL.root/tree_passedEvents";
+  chainMC->Add(bgTreeName.c_str());
+  bgTreeName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-powheg-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU" + PUReweighing + "_ALL.root/tree_passedEvents";
+  chainMC->Add(bgTreeName.c_str());
+  bgTreeName = "HZZlljjRM_VV_TuneZ2_7TeV-pythia6-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU" + PUReweighing + "_ALL.root/tree_passedEvents";
+  chainMC->Add(bgTreeName.c_str());
 
   TTree* treeDATA_0btag = treeDATA->CopyTree("nBTags==0");
   TTree* treeDATA_1btag = treeDATA->CopyTree("nBTags==1");
