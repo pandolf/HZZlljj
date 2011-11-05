@@ -6,6 +6,8 @@
 #include "TH1D.h"
 #include "TRandom3.h"
 
+#include "RooFitResult.h"
+
 
 struct FitResults {
 
@@ -43,7 +45,7 @@ class SidebandFitter {
 
   TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* treeMC );
   
-  FitResults fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha, int seed=-1 );
+  RooFitResult* fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha, int seed=-1 );
 
   std::string get_fitResultsName( int nbtags, const std::string& data_mc="DATA" );
 

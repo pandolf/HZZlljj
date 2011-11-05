@@ -52,9 +52,13 @@ int main( int argc, char* argv[] ) {
   TH1D* alpha_1btag = sf->getAlphaHisto( 1, "ALL", treeMC_1btag );
   TH1D* alpha_2btag = sf->getAlphaHisto( 2, "ALL", treeMC_2btag );
 
-  FitResults fr_0btag = sf->fitSidebands( treeMC_0btag, treeDATA_0btag, 0, "ALL", alpha_0btag );
-  FitResults fr_1btag = sf->fitSidebands( treeMC_1btag, treeDATA_1btag, 1, "ALL", alpha_1btag );
-  FitResults fr_2btag = sf->fitSidebands( treeMC_2btag, treeDATA_2btag, 2, "ALL", alpha_2btag );
+  RooFitResult* fr_0btag = sf->fitSidebands( treeMC_0btag, treeDATA_0btag, 0, "ALL", alpha_0btag );
+  RooFitResult* fr_1btag = sf->fitSidebands( treeMC_1btag, treeDATA_1btag, 1, "ALL", alpha_1btag );
+  RooFitResult* fr_2btag = sf->fitSidebands( treeMC_2btag, treeDATA_2btag, 2, "ALL", alpha_2btag );
+
+  delete fr_0btag;
+  delete fr_1btag;
+  delete fr_2btag;
 
   return 0;
 
