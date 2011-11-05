@@ -412,7 +412,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   fitWorkspace->import(background);
   fitWorkspace->import(*background_decorr, RooFit::RecycleConflictNodes());
 
-  fitWorkspace->Print("V");
 
   RooPlot *plot_rot = CMS_hzz2l2q_mZZ->frame(mZZ_min, mZZ_max, nBins);
   sidebandsDATA_alpha.plotOn(plot_rot);
