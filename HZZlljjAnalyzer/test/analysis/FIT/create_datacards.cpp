@@ -366,6 +366,9 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   // import variable in output workspace:
   w->import(*CMS_hzz2l2q_mZZ);
 
+  // import observed dataset:
+  w->import(*dataset_obs);
+
   // get BG shape:
   RooAbsPdf* background_decorr = bgws->pdf("background_decorr");
  
