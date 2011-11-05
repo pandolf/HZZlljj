@@ -1,3 +1,6 @@
+# USAGE: source create_combinedDatacards.sh [dataset]
+# [dataset] is the same one used in fitSidebands and in create_datacards
+
 setenv dataset $1
 
 cd datacards_${dataset}
