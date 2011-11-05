@@ -266,6 +266,7 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d)", nbtags, leptType_int);
   treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "mZZ", sidebandsCut_alpha);
   double rate_background = h1_mZZ_sidebands_alpha->Integral();
+  delete h1_mZZ_sidebands_alpha;
 
 
   ofs << "rate               " << rate_gg << "\t\t" << rate_vbf << "\t\t" << rate_background << std::endl;
