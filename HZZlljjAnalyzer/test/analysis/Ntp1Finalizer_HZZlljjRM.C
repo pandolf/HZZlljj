@@ -1416,23 +1416,25 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   }
   PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
   PUWeight* fPUWeight_ave = new PUWeight(-1, "2011A", puType_ave);
-  TFile* filePU;
+  std::string puFileName;
   if( PUType_=="HR11" )
-    filePU = TFile::Open("Pileup_DATA_up_to_178078.root");
+    puFileName = "Pileup_DATA_up_to_178078.root";
   else if( PUType_=="Run2011A" )
-    filePU = TFile::Open("Pileup_DATA_up_to_173692.root");
+    puFileName = "Pileup_DATA_up_to_173692.root";
   else if( PUType_=="Run2011A_73pb" )
-    filePU = TFile::Open("all2011A.pileup_v2_73mb.root");
+    puFileName = "all2011A.pileup_v2_73mb.root";
   else if( PUType_=="Run2011B" )
-    filePU = TFile::Open("Pileup_DATA_173692_to_178078.root");
+    puFileName = "Pileup_DATA_173692_to_178078.root";
   else if( PUType_=="Run2011B_73pb" )
-    filePU = TFile::Open("all2011B.pileup_v2_73mb.root");
+    puFileName = "all2011B.pileup_v2_73mb.root";
   else if( PUType_=="HR11_73pb" )
-    filePU = TFile::Open("all2011AB.pileup_v2_73mb.root");
+    puFileName = "all2011AB.pileup_v2_73mb.root";
   else {
     std::cout << "-> Unknown PU Type: '" << PUType_ << "'. Will use HR11 default." << std::endl;
-    filePU = TFile::Open("Pileup_DATA_up_to_178078.root");
+    puFileName = "Pileup_DATA_up_to_178078.root";
   }
+  std::cout << std::endl << "-> Using data pileup file: " << puFileName << std::endl;
+  TFile* filePU = TFile::Open(puFileName.c_str());
   TH1F* h1_nPU_data = (TH1F*)filePU->Get("pileup");
   fPUWeight->SetDataHistogram(h1_nPU_data);
   fPUWeight_ave->SetDataHistogram(h1_nPU_data);
