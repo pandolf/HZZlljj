@@ -1563,6 +1563,7 @@ ofstream ofs("run_event.txt");
       //eventWeight *= eventWeightPU;
      
       eventWeight *= fPUWeight->GetWeight(nPU);
+      std::cout << event << " " << nPU << " " << nvertex << " " << fPUWeight->GetWeight(nPU) << std::endl;
       //eventWeight *= getWeight_oscar(nPU);
 
     } // if is MC
@@ -3245,7 +3246,9 @@ ofstream ofs("run_event.txt");
 
 
   std::cout << std::endl << std::endl;
-  std::cout << "----> SELECTION: " << selectionType_ << "    DATASET: " << dataset_ << std::endl << std::endl;
+  std::cout << "----> DATASET: " << dataset_ << std::endl << std::endl;
+  std::cout << "----> SELECTION: " << selectionType_ << std::endl;
+  if( isMC ) std::cout << "----> PU REWEIGHING: " << PUType_ << std::endl;
   std::cout << "----> 250 GeV (235-275): " << std::endl;
   std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_250 << " ev/fb-1  (" << nEventsPassed_0btag_250 << " events)" << " Efficiency: " << 100.*eff_0btag_250 << "%" << std::endl;
   std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_250 << " ev/fb-1  (" << nEventsPassed_1btag_250 << " events)" << " Efficiency: " << 100.*eff_1btag_250 << "%" << std::endl;
