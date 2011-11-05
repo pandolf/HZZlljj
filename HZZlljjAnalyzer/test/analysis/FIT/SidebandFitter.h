@@ -40,7 +40,7 @@ class SidebandFitter {
 
  public:
 
-  SidebandFitter( const std::string& dataset );
+  SidebandFitter( const std::string& dataset, const std::string PUType );
   ~SidebandFitter();
 
   TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* treeMC );
@@ -61,6 +61,7 @@ class SidebandFitter {
  private:
 
   std::string dataset_;
+  std::string PUType_;
 
 };
 

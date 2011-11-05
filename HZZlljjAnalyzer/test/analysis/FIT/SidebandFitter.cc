@@ -19,16 +19,13 @@
 #include "RooDataSet.h"
 #include "RooPlot.h"
 #include "RooArgSet.h"
-//#include "RooFermi.h"
 #include "RooGaussian.h"
-//#include "RooCB.h"
 #include "RooCBShape.h"
-#include "RooExponential.h"
 #include "RooProdPdf.h"
 #include "RooFitResult.h"
 #include "RooWorkspace.h"
 
-#include "/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/HiggsAnalysis/CombinedLimit/interface/HZZ2L2QRooPdfs.h"
+#include "HiggsAnalysis/CombinedLimit/interface/HZZ2L2QRooPdfs.h"
 
 #include "PdfDiagonalizer.h"
 
@@ -37,9 +34,10 @@
 using namespace RooFit;
 
 
-SidebandFitter::SidebandFitter( const std::string& dataset ) {
+SidebandFitter::SidebandFitter( const std::string& dataset, const std::string PUType ) {
 
   dataset_ = dataset;
+  PUType_ = PUType;
 
 }
 
@@ -540,7 +538,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   if( writeFile ) {
 
     char fitResultsFileName[500];
-    sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s.root", dataset_.c_str(), btagCategory, leptType.c_str());
+    sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str());
     file_alpha = TFile::Open(fitResultsFileName, "recreate");
     file_alpha->cd();
     h1_alpha->Write();

@@ -5,6 +5,7 @@
 #include "TFile.h"
 #include "TChain.h"
 #include "TH1D.h"
+#include "TString.h"
 
 #include "SidebandFitter.h"
 
@@ -21,18 +22,20 @@ int main( int argc, char* argv[] ) {
   }
 
 
+  TString dataset_tstr(dataset);
+  std::string PUReweighing = "Run2011A";
+  if( dataset=="HR11" ) PUReweighing = "HR11";
+  if( dataset_tstr.BeginsWith("Run2011B") ) PUReweighing = "Run2011B";
 
-  SidebandFitter *sf = new SidebandFitter(dataset);
+
+
+  SidebandFitter *sf = new SidebandFitter(dataset, PUReweighing);
 
 
   std::string datafileName = "HZZlljjRM_DATA_" + dataset + "_optLD_looseBTags_v2_ALL.root";
   TFile* file_DATA = TFile::Open(datafileName.c_str());
   TTree* treeDATA = (TTree*)file_DATA->Get("tree_passedEvents");
 
-
-  std::string PUReweighing = "Run2011A";
-  if( dataset=="HR11" ) PUReweighing = "HR11";
-  if( dataset_tstr.BeginsWith("Run2011B") ) PUReweighing = "Run2011B";
 
 
   TChain* chainMC = new TChain("tree_passedEvents");
