@@ -15,13 +15,13 @@
 #include "RooRealVar.h"
 #include "RooDataHist.h"
 #include "RooCBShape.h"
-#include "RooDoubleCB.h"
-#include "RooRelBW.h"
-#include "RooFermi.h"
 #include "RooProdPdf.h"
+#include "RooAddPdf.h"
 #include "RooFFTConvPdf.h"
 #include "RooFitResult.h"
 #include "RooWorkspace.h"
+
+#include "HiggsAnalysis/CombinedLimit/interface/HZZ2L2QRooPdfs.h"
 
 #include "PdfDiagonalizer.h"
 
@@ -93,9 +93,7 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags );
 
 RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& dataset, const std::string& leptType_str, int nbtags );
 
-double get_expectedYield_background( const std::string& dataset, const std::string& leptType_str, int nbtags, HiggsParameters hp );
-
-RooAbsPdf* get_signalShape( RooRealVar* CMS_hzz2l2q_mZZ, int nbtags, HiggsParameters hp );
+//RooAbsPdf* get_signalShape( RooRealVar* CMS_hzz2l2q_mZZ, int nbtags, float massH );
 double get_signalParameter(int btag, double massH, std::string varname);
 
 std::string systString( std::pair<double,double> systPair, double maxDiff=0.01 );
@@ -210,13 +208,12 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   // get workspace:
   char workspaceName[200];
   sprintf( workspaceName, "fitWorkspace_%dbtag", nbtags );
-  RooWorkspace* bgws = (RooWorkspace*)fitResultsFile->Get(fitResultName);
+  RooWorkspace* bgws = (RooWorkspace*)fitResultsFile->Get(workspaceName);
 
   // get sidebands tree:
   TTree* treeSidebandsDATA_alphaCorr = (TTree*)fitResultsFile->Get("sidebandsDATA_alpha");
 
 
-  fitResultsFile->Close();
 
 
   // get main variable from input workspace:
@@ -337,21 +334,32 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
 
 
   ofs.close();
+  fitResultsFile->Close();
 
+
+  
+  std::cout << std::endl << std::endl;
+  std::cout << "+++ DATACARD FOR MASS " << mass << " IS DONE." << std::endl;
+  std::cout << std::endl;
 
   // datacard is done. now create output workspace and write it to rootfile
+
+  char outfileName[900];
+  sprintf( outfileName, "datacardsPROVA/%.0f/hzz2l2q_%s.input.root", mass, suffix);
+  TFile* outfile = TFile::Open( outfileName, "RECREATE");
+  outfile->cd();
 
 
   RooWorkspace* w = new RooWorkspace("w","w");
   w->addClassDeclImportDir("/afs/cern.ch/cms/slc5_amd64_gcc434/lcg/roofit/5.28.00a-cms3/include/");
   //w->addClassDeclImportDir("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/HZZlljj/HZZlljjAnalyzer/test/analysis/FIT/PDFs");
 
-  w->importClassCode(RooFermi::Class(),kTRUE);
-  w->importClassCode("RooFermi",kTRUE);
-  w->importClassCode(RooRelBW::Class(),kTRUE);
-  w->importClassCode("RooRelBW",kTRUE);
-  w->importClassCode(RooDoubleCB::Class(),kTRUE);
-  w->importClassCode("RooDoubleCB",kTRUE);
+  //w->importClassCode(RooFermi::Class(),kTRUE);
+  //w->importClassCode("RooFermi",kTRUE);
+  //w->importClassCode(RooRelBW::Class(),kTRUE);
+  //w->importClassCode("RooRelBW",kTRUE);
+  //w->importClassCode(RooDoubleCB::Class(),kTRUE);
+  //w->importClassCode("RooDoubleCB",kTRUE);
 
 
 
@@ -365,19 +373,61 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   w->import(*background_decorr, RooFit::RecycleConflictNodes());
 
 
-  // now define signal shape:
-  RooAbsPdf* signal = get_signalShape( CMS_hzz2l2q_mZZ, nbtags, hp );
+//// now define signal shape:
+//RooAbsPdf* signal = get_signalShape( CMS_hzz2l2q_mZZ, nbtags, hp.mH );
+
+
+  // now define signal shape (didn manage to do use get_signalShape without a crash):
+
+  // ------------------- Crystal Ball (matched) -------------------------------
+  float massH = hp.mH;
+  char sigp1name[200];
+  char sigp2name[200];
+  sprintf( sigp1name, "CMS_hzz2l2q_sig%dbp1", nbtags ); //m
+  sprintf( sigp2name, "CMS_hzz2l2q_sig%dbp2", nbtags ); //width
+  RooRealVar CB_mean(sigp1name,sigp1name, get_signalParameter(nbtags,massH,"matched_MassCBmean"));
+  RooRealVar CB_sigma(sigp2name,sigp2name,get_signalParameter(nbtags,massH,"matched_MassCBsigma"));
+  RooRealVar CB_alpha1("CB_alpha1","param 3 of CB",get_signalParameter(nbtags,massH,"matched_MassCBalpha1"));
+  RooRealVar CB_n1("CB_n1","param 4 of CB",get_signalParameter(nbtags,massH,"matched_MassCBn1"));
+  RooRealVar CB_alpha2("CB_alpha2","param 3 of CB",get_signalParameter(nbtags,massH,"matched_MassCBalpha2"));
+  RooRealVar CB_n2("CB_n2","param 5 of CB",get_signalParameter(nbtags,massH,"matched_MassCBn2"));
+
+  RooDoubleCB* CB_SIG = new RooDoubleCB("CB_SIG","Crystal Ball",*CMS_hzz2l2q_mZZ,CB_mean,CB_sigma,CB_alpha1,CB_n1,CB_alpha2,CB_n2);
+
+
+  // ------------------- SmearedTriangle (un-matched) -------------------------------
+  RooRealVar CB_UMmean( "CB_UMmean"," CB_UMmean", get_signalParameter(nbtags,massH,"unmatched_MassCBmean"));
+  RooRealVar CB_UMsigma("CB_UMsigma","CB_UMsigma",get_signalParameter(nbtags,massH,"unmatched_MassCBsigma"));
+  RooRealVar CB_UMalpha("CB_UMalpha","CB_UMalpha",get_signalParameter(nbtags,massH,"unmatched_MassCBalpha"));
+  RooRealVar CB_UMn("CB_UMn","CB_UMn",get_signalParameter(nbtags,massH,"unmatched_MassCBn"));
+  RooCBShape* CB_UM = new RooCBShape("CB_UM","Crystal Ball unmacthed",*CMS_hzz2l2q_mZZ,CB_UMmean,CB_UMsigma ,CB_UMalpha,CB_UMn);
+
+  RooRealVar TRI_start("TRI_start","TRI_start", get_signalParameter(nbtags,massH,"unmatched_Mass_start"));
+  RooRealVar TRI_turn("TRI_turn","TRI_turn", get_signalParameter(nbtags,massH,"unmatched_Mass_turn"));
+  RooRealVar TRI_stop("TRI_stop","TRI_stop", get_signalParameter(nbtags,massH,"unmatched_Mass_stop"));
+  Triangle* TRI = new Triangle("TRI","TRI",*CMS_hzz2l2q_mZZ,TRI_start,TRI_turn,TRI_stop);
+
+  //------------------------ convolution -------------------------
+
+  //CMS_hzz2l2q_mZZ->setBins(10000,"fft");
+
+  RooFFTConvPdf* TRI_SMEAR = new RooFFTConvPdf("TRI_SMEAR","triangle (X) CB",*CMS_hzz2l2q_mZZ,*TRI,*CB_UM);
+  TRI_SMEAR->setBufferFraction(1.0);
+
+
+  //------------------------ add matched and unmatched -------------------------
+  RooRealVar MATCH("MATCH","MATCH", get_signalParameter(nbtags,massH,"N_matched"));
+  RooAddPdf* signal = new RooAddPdf("signal","signal",*CB_SIG,*TRI_SMEAR,MATCH);
+
+
+
 
   // and import it:
   w->import(*signal, RooFit::RecycleConflictNodes());
 
 
+
   // done. now save:
-  
-  char outfileName[900];
-  sprintf( outfileName, "datacardsPROVA/%.0f/hzz2l2q_%s.input.root", mass, suffix);
-  TFile* outfile = TFile::Open( outfileName, "RECREATE");
-  outfile->cd();
   w->Write();
   outfile->Close();
 
@@ -598,9 +648,8 @@ RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string&
   std::string dataFileName = "HZZlljjRM_DATA_" + dataset + "_optLD_looseBTags_v2_ALL.root";
   TFile* dataFile = TFile::Open(dataFileName.c_str());
   TTree* tree_data = (TTree*)dataFile->Get("tree_passedEvents");
-  tree_data->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ"); //needed for combination
+  tree_data->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ");
 
-  dataFile->Close();
   
 
   RooRealVar nBTags("nBTags","nBTags",-1.,3.);
@@ -626,7 +675,8 @@ RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string&
 
 
 
-RooAbsPdf* get_signalShape( RooRealVar* CMS_hzz2l2q_mZZ, int nbtags, HiggsParameters hp ) {
+/*
+RooAbsPdf* get_signalShape( RooRealVar* CMS_hzz2l2q_mZZ, int nbtags, float massH ) {
 
 
   // ------------------- Crystal Ball (matched) -------------------------------
@@ -634,51 +684,51 @@ RooAbsPdf* get_signalShape( RooRealVar* CMS_hzz2l2q_mZZ, int nbtags, HiggsParame
   char sigp2name[200];
   sprintf( sigp1name, "CMS_hzz2l2q_sig%dbp1", nbtags ); //m
   sprintf( sigp2name, "CMS_hzz2l2q_sig%dbp2", nbtags ); //width
-  RooRealVar CB_mean(sigp1name,sigp1name, get_signalParameter(nbtags,chan,hp.mH,"matched_MassCBmean"));
-  RooRealVar CB_sigma(sigp2name,sigp2name,get_signalParameter(nbtags,chan,hp.mH,"matched_MassCBsigma"));
-  RooRealVar CB_alpha1("CB_alpha1","param 3 of CB",get_signalParameter(nbtags,chan,hp.mH,"matched_MassCBalpha1"));
-  RooRealVar CB_n1("CB_n1","param 4 of CB",get_signalParameter(nbtags,chan,hp.mH,"matched_MassCBn1"));
-  RooRealVar CB_alpha2("CB_alpha2","param 3 of CB",get_signalParameter(nbtags,chan,hp.mH,"matched_MassCBalpha2"));
-  RooRealVar CB_n2("CB_n2","param 5 of CB",get_signalParameter(nbtags,chan,hp.mH,"matched_MassCBn2"));
+  RooRealVar CB_mean(sigp1name,sigp1name, get_signalParameter(nbtags,massH,"matched_MassCBmean"));
+  RooRealVar CB_sigma(sigp2name,sigp2name,get_signalParameter(nbtags,massH,"matched_MassCBsigma"));
+  RooRealVar CB_alpha1("CB_alpha1","param 3 of CB",get_signalParameter(nbtags,massH,"matched_MassCBalpha1"));
+  RooRealVar CB_n1("CB_n1","param 4 of CB",get_signalParameter(nbtags,massH,"matched_MassCBn1"));
+  RooRealVar CB_alpha2("CB_alpha2","param 3 of CB",get_signalParameter(nbtags,massH,"matched_MassCBalpha2"));
+  RooRealVar CB_n2("CB_n2","param 5 of CB",get_signalParameter(nbtags,massH,"matched_MassCBn2"));
 
-  RooDoubleCB CB_SIG("CB_SIG","Crystal Ball",CMS_hzz2l2q_mZZ,CB_mean,CB_sigma,CB_alpha1,CB_n1,CB_alpha2,CB_n2);
+  RooDoubleCB* CB_SIG = new RooDoubleCB("CB_SIG","Crystal Ball",*CMS_hzz2l2q_mZZ,CB_mean,CB_sigma,CB_alpha1,CB_n1,CB_alpha2,CB_n2);
 
 
   // ------------------- SmearedTriangle (un-matched) -------------------------------
-  RooRealVar CB_UMmean( "CB_UMmean"," CB_UMmean", get_signalParameter(nbtags,chan,hp.mH,"unmatched_MassCBmean"));
-  RooRealVar CB_UMsigma("CB_UMsigma","CB_UMsigma",get_signalParameter(nbtags,chan,hp.mH,"unmatched_MassCBsigma"));
-  RooRealVar CB_UMalpha("CB_UMalpha","CB_UMalpha",get_signalParameter(nbtags,chan,hp.mH,"unmatched_MassCBalpha"));
-  RooRealVar CB_UMn("CB_UMn","CB_UMn",get_signalParameter(nbtags,chan,hp.mH,"unmatched_MassCBn"));
-  RooCBShape CB_UM("CB_UM","Crystal Ball unmacthed",CMS_hzz2l2q_mZZ,CB_UMmean,CB_UMsigma ,CB_UMalpha,CB_UMn);
+  RooRealVar CB_UMmean( "CB_UMmean"," CB_UMmean", get_signalParameter(nbtags,massH,"unmatched_MassCBmean"));
+  RooRealVar CB_UMsigma("CB_UMsigma","CB_UMsigma",get_signalParameter(nbtags,massH,"unmatched_MassCBsigma"));
+  RooRealVar CB_UMalpha("CB_UMalpha","CB_UMalpha",get_signalParameter(nbtags,massH,"unmatched_MassCBalpha"));
+  RooRealVar CB_UMn("CB_UMn","CB_UMn",get_signalParameter(nbtags,massH,"unmatched_MassCBn"));
+  RooCBShape* CB_UM = new RooCBShape("CB_UM","Crystal Ball unmacthed",*CMS_hzz2l2q_mZZ,CB_UMmean,CB_UMsigma ,CB_UMalpha,CB_UMn);
 
-  RooRealVar TRI_start("TRI_start","TRI_start", get_signalParameter(nbtags,chan,hp.mH,"unmatched_Mass_start"));
-  RooRealVar TRI_turn("TRI_turn","TRI_turn", get_signalParameter(nbtags,chan,hp.mH,"unmatched_Mass_turn"));
-  RooRealVar TRI_stop("TRI_stop","TRI_stop", get_signalParameter(nbtags,chan,hp.mH,"unmatched_Mass_stop"));
-  Triangle TRI("TRI","TRI",CMS_hzz2l2q_mZZ,TRI_start,TRI_turn,TRI_stop);
+  RooRealVar TRI_start("TRI_start","TRI_start", get_signalParameter(nbtags,massH,"unmatched_Mass_start"));
+  RooRealVar TRI_turn("TRI_turn","TRI_turn", get_signalParameter(nbtags,massH,"unmatched_Mass_turn"));
+  RooRealVar TRI_stop("TRI_stop","TRI_stop", get_signalParameter(nbtags,massH,"unmatched_Mass_stop"));
+  Triangle* TRI = new Triangle("TRI","TRI",*CMS_hzz2l2q_mZZ,TRI_start,TRI_turn,TRI_stop);
 
   //------------------------ convolution -------------------------
   
-  CMS_hzz2l2q_mZZ.setBins(10000,"fft");
+  //CMS_hzz2l2q_mZZ.setBins(10000,"fft");
 
-  RooFFTConvPdf TRI_SMEAR("TRI_SMEAR","triangle (X) CB",CMS_hzz2l2q_mZZ,TRI,CB_UM);
-  TRI_SMEAR.setBufferFraction(1.0);
+  RooFFTConvPdf* TRI_SMEAR = new RooFFTConvPdf("TRI_SMEAR","triangle (X) CB",*CMS_hzz2l2q_mZZ,*TRI,*CB_UM);
+  TRI_SMEAR->setBufferFraction(1.0);
   
 
   //------------------------ add matched and unmatched -------------------------
-  RooRealVar MATCH("MATCH","MATCH", get_signalParameter(nbtags,chan,massH,"N_matched"));
-  RooAddPdf* signal = new RooAddPdf("signal","signal",CB_SIG,TRI_SMEAR,MATCH);
+  RooRealVar MATCH("MATCH","MATCH", get_signalParameter(nbtags,massH,"N_matched"));
+  RooAddPdf* signal = new RooAddPdf("signal","signal",*CB_SIG,*TRI_SMEAR,MATCH);
 
   return signal;  
 
 }
-
+*/
 
 
 
 double get_signalParameter(int btag, double massH, std::string varname) {
 
   int masses[18] = {190,200,210,230,250,275,300,325,350,375,400,425,475,500,525,550,575,600};
-  int nsamples= 18;
+  //int nsamples= 18;
 
   RooRealVar var(varname.c_str(),varname.c_str(),0.);
   RooArgSet paramsup, paramslow;
@@ -897,7 +947,6 @@ double backgroundNorm( const std::string& dataset, const std::string& leptType_s
   sprintf(selection, "isSidebands && leptType==%d && nBTags==%d", leptType_int, nbtags);
   float nEvents_sidebands = tree->GetEntries(selection);
 
-  file_data->Close();
 
   return nEvents_sidebands;
 
