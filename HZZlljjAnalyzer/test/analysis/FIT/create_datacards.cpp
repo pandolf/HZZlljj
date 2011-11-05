@@ -165,7 +165,7 @@ int main( int argc, char* argv[] ) {
     std::cout << std::endl;
 
     char mkdir_command[100];
-    sprintf( mkdir_command, "mkdir -p datacardsPROVA/%.0f", mass);
+    sprintf( mkdir_command, "mkdir -p datacards_%s/%.0f", dataset.c_str(), mass);
     system(mkdir_command);
 
     create_singleDatacard( dataset, mass, lumi_ELE, "ELE", 0, f1_eff_vs_mass_ELE_0btag);
@@ -226,7 +226,7 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   std::string suffix_str(suffix);
 
   char datacardName[400];
-  sprintf( datacardName, "datacardsPROVA/%.0f/hzz2l2q_%s.%.0f.txt", mass, suffix, mass);
+  sprintf( datacardName, "datacards_%s/%.0f/hzz2l2q_%s.%.0f.txt", dataset.c_str(), mass, suffix, mass);
 
 
   std::ofstream ofs(datacardName);
@@ -345,7 +345,7 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
   // datacard is done. now create output workspace and write it to rootfile
 
   char outfileName[900];
-  sprintf( outfileName, "datacardsPROVA/%.0f/hzz2l2q_%s.input.root", mass, suffix);
+  sprintf( outfileName, "datacards_%s/%.0f/hzz2l2q_%s.input.root", dataset.c_str(), mass, suffix);
   TFile* outfile = TFile::Open( outfileName, "RECREATE");
   outfile->cd();
 
