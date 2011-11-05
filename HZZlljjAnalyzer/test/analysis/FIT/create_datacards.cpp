@@ -8,7 +8,7 @@
 #include "TH1D.h"
 #include "TF1.h"
 #include "TCanvas.h"
-#include "TSystem.h"
+#include "TString.h"
 
 #include "RooPlot.h"
 #include "RooDataSet.h"
@@ -89,7 +89,7 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
 HiggsParameters get_higgsParameters( float mass );
 
 double linear_interp( double x, double x_old, double mass, double mH, double mH_old );
-TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags );
+TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::string& PUType );
 
 RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& dataset, const std::string& leptType_str, int nbtags );
 
@@ -139,14 +139,21 @@ int main( int argc, char* argv[] ) {
   }
 
 
-  //first loop over available signal MC files to fit efficiency:
-  TF1* f1_eff_vs_mass_MU_0btag = get_eff_vs_mass("MU", 0);
-  TF1* f1_eff_vs_mass_MU_1btag = get_eff_vs_mass("MU", 1);
-  TF1* f1_eff_vs_mass_MU_2btag = get_eff_vs_mass("MU", 2);
+  TString dataset_tstr(dataset);
+  std::string PUType = "Run2011A";
+  if( dataset=="HR11" )
+    PUType = "HR11";
+  if( dataset_tstr.Contains("Run2011B") )
+    PUType = "2011B"; 
 
-  TF1* f1_eff_vs_mass_ELE_0btag = get_eff_vs_mass("ELE", 0);
-  TF1* f1_eff_vs_mass_ELE_1btag = get_eff_vs_mass("ELE", 1);
-  TF1* f1_eff_vs_mass_ELE_2btag = get_eff_vs_mass("ELE", 2);
+  //first loop over available signal MC files to fit efficiency:
+  TF1* f1_eff_vs_mass_MU_0btag = get_eff_vs_mass("MU", 0, PUType);
+  TF1* f1_eff_vs_mass_MU_1btag = get_eff_vs_mass("MU", 1, PUType);
+  TF1* f1_eff_vs_mass_MU_2btag = get_eff_vs_mass("MU", 2, PUType);
+
+  TF1* f1_eff_vs_mass_ELE_0btag = get_eff_vs_mass("ELE", 0, PUType);
+  TF1* f1_eff_vs_mass_ELE_1btag = get_eff_vs_mass("ELE", 1, PUType);
+  TF1* f1_eff_vs_mass_ELE_2btag = get_eff_vs_mass("ELE", 2, PUType);
 
 
 
@@ -447,7 +454,7 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
 
 
 
-TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags ) {
+TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::string& PUType ) {
 
   int leptType_int = convert_leptType(leptType_str);
 
@@ -470,7 +477,7 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags ) {
 
 
     char signalfileName[800];
-    sprintf( signalfileName, "HZZlljjRM_GluGluToHToZZTo2L2Q_M-%.0f_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_ALL.root", hp.mH );
+    sprintf( signalfileName, "HZZlljjRM_GluGluToHToZZTo2L2Q_M-%.0f_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU%s_ALL.root", hp.mH, PUType.c_str() );
 
     TFile* signalFile = TFile::Open(signalfileName);
     TTree* signalTree = (TTree*)signalFile->Get("tree_passedEvents");
@@ -508,8 +515,15 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags ) {
   gr_eff_vs_mass->SetMarkerSize(1.3);
   gr_eff_vs_mass->Draw("APE");
 
+  char effDirName[200];
+  sprintf( effDirName, "EfficiencyFits_PU%s", PUType.c_str() );
+  char mkdirCommand[200];
+  sprintf( mkdirCommand, "mkdir -p %s", effDirName );
+  
+  system( mkdirCommand ); 
+
   char canvasName[500];
-  sprintf( canvasName, "EfficiencyFits/effFit_%s_%dbtag.eps", leptType_str.c_str(), nbtags);
+  sprintf( canvasName, "%s/effFit_%s_%dbtag.eps", effDirName, leptType_str.c_str(), nbtags);
   c1->SaveAs(canvasName);
 
   delete c1;
