@@ -773,10 +773,10 @@ double get_signalParameter(int btag, double massH, std::string varname) {
 
   //std::cout << indexlow << " " << indexhigh <<std::endl;
 
-  sprintf(filename,"fitresults/out-%d-%s-btag%d.config",masses[indexlow],"EM",btag);
+  sprintf(filename,"signalFitResults/out-%d-%s-btag%d.config",masses[indexlow],"EM",btag);
   paramsup.readFromFile(filename, "READ", "Parameters");
   double low = var.getVal();
-  sprintf(filename,"fitresults/out-%d-%s-btag%d.config",masses[indexhigh],"EM",btag);
+  sprintf(filename,"signalFitResults/out-%d-%s-btag%d.config",masses[indexhigh],"EM",btag);
   paramsup.readFromFile(filename, "READ", "Parameters");
   double high = var.getVal();
   
