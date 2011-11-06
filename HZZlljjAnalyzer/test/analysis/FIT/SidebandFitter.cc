@@ -64,7 +64,8 @@ TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string leptTyp
   float mZjj;
   int leptType;
 
-  treeMC->SetBranchAddress("mZZ",&mZZ);
+  //treeMC->SetBranchAddress("mZZ",&mZZ);
+  treeMC->SetBranchAddress("CMS_hzz2l2q_mZZ",&mZZ);
   treeMC->SetBranchAddress("eventWeight",&eventWeight);
   treeMC->SetBranchAddress("nBTags",&nBTags);
   treeMC->SetBranchAddress("mZjj",&mZjj);
@@ -165,6 +166,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   sprintf( cut_signal, "%s && ( mZjj>75. && mZjj<105. )", cut_base);
   
 
+
   float binWidth = 20.;
   int nBins = (int)(mZZmax_-mZZmin_)/binWidth;
   RooRealVar* CMS_hzz2l2q_mZZ = new RooRealVar("CMS_hzz2l2q_mZZ", "m_{lljj}", mZZmin_, mZZmax_, "GeV");
@@ -175,7 +177,8 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   RooRealVar* mZjj = new RooRealVar("mZjj", "mZjj", 60., 130., "GeV");
 
 
-  RooDataSet sidebandsMC("sidebandsMC","sidebandsMC",treeMC,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight");
+
+  //RooDataSet sidebandsMC("sidebandsMC","sidebandsMC",treeMC,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight");
   RooDataSet signalMC("signalMC","signalMC",treeMC,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_signal,"eventWeight");
 
   char suffix[20];
@@ -188,17 +191,17 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   std::string treeName_MC_str(treeName_MC);
   std::cout << "Correcting signal (MC): " << std::endl;
   TTree* tree_sidebandsMC_alpha = correctTreeWithAlpha( treeMC, h1_alpha, btagCategory, treeName_MC_str );
-  tree_sidebandsMC_alpha->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ"); 
+  //tree_sidebandsMC_alpha->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ"); 
   RooDataSet sidebandsMC_alpha("sidebandsMC_alpha","sidebandsMC_alpha",tree_sidebandsMC_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight_alpha");
 
-  RooDataSet sidebandsDATA("sidebandsDATA","sidebandsDATA",treeDATA,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands);
+  //RooDataSet sidebandsDATA("sidebandsDATA","sidebandsDATA",treeDATA,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands);
   RooDataSet signalDATA("signalDATA","signalDATA",treeDATA,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_signal);
   char treeName_DATA[200];
   sprintf( treeName_DATA, "sidebandsDATA_alpha%s", suffix );
   std::string treeName_DATA_str(treeName_DATA);
   std::cout << "Correcting signal (DATA): " << std::endl;
   TTree* tree_sidebandsDATA_alpha = correctTreeWithAlpha( treeDATA, h1_alpha, btagCategory, treeName_DATA_str );
-  tree_sidebandsDATA_alpha->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ"); 
+  //tree_sidebandsDATA_alpha->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ"); 
   RooDataSet sidebandsDATA_alpha("sidebandsDATA_alpha","sidebandsDATA_alpha",tree_sidebandsDATA_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight_alpha");
 
 
@@ -577,7 +580,8 @@ TTree* SidebandFitter::correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int bt
   Int_t nBTags;
   tree->SetBranchAddress( "nBTags", &nBTags );
   Float_t mZZ;
-  tree->SetBranchAddress( "mZZ", &mZZ );
+  //tree->SetBranchAddress( "mZZ", &mZZ );
+  tree->SetBranchAddress( "CMS_hzz2l2q_mZZ", &mZZ );
   Float_t mZjj;
   tree->SetBranchAddress( "mZjj", &mZjj );
   Float_t eventWeight;

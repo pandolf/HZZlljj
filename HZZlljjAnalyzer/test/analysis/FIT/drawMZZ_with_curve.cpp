@@ -201,24 +201,24 @@ int main(int argc, char* argv[]) {
   db->set_rebin(1);
 
   db->set_legendTitle("Gluon- and 0 b-tag");
-  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags<=0)", 30, 150., 750., "mZZ_g0btag", "m_{ZZ}", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags<=0)", 30, 150., 750., "mZZ_g0btag", "m_{ZZ}", "GeV");
   db->set_legendTitle("0 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 30, 150., 750., "mZZ_0btag", "m_{ZZ}", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 30, 150., 750., "mZZ_0btag", "m_{ZZ}", "GeV");
   db->set_legendTitle("Gluon-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==-1)", 30, 150., 750., "mZZ_gtag", "m_{ZZ}", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==-1)", 30, 150., 750., "mZZ_gtag", "m_{ZZ}", "GeV");
 
 
   // long range (up to 1300 gev):
   db->set_legendTitle("0 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 60, 150., 1350., "mZZ_0btag_longRange", "m_{ZZ}", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 60, 150., 1350., "mZZ_0btag_longRange", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 0, "longRange");
 
   db->set_legendTitle("1 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", 60, 150., 1350., "mZZ_1btag_longRange", "m_{ZZ}", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", 60, 150., 1350., "mZZ_1btag_longRange", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 1, "longRange");
 
   db->set_legendTitle("2 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", 60, 150., 1350., "mZZ_2btag_longRange", "m_{ZZ}", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", 60, 150., 1350., "mZZ_2btag_longRange", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 2, "longRange");
 
 
@@ -293,7 +293,7 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
   TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, xMin, xMax);
   char sidebandsCut_alpha[500];
   sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags);
-  treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "mZZ", sidebandsCut_alpha);
+  treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
   float expBkg = h1_mZZ_sidebands_alpha->Integral();
 
   RooPlot *plot_MCbkg = CMS_hzz2l2q_mZZ->frame(xMin,xMax,(int)(xMax-xMin)/h1_data->GetXaxis()->GetBinWidth(1));
