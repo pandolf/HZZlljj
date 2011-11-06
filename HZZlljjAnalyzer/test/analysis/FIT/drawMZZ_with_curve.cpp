@@ -5,16 +5,18 @@
 #include "fitTools.h"
 
 #include "RooRealVar.h"
-#include "RooFermi.h"
-#include "RooCB.h"
 #include "RooProdPdf.h"
 #include "RooPlot.h"
+#include "RooWorkspace.h"
+
+#include "TString.h"
 
 
 bool withSignal_=true;
 
 
 
+/*
 struct BGFitParameters {
 
   float fermi_cutoff;
@@ -34,11 +36,11 @@ struct BGFitParameters {
   float CB_theta_err;
 
 };
+*/
 
 
 
-void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbtags, std::string flags="" );
-BGFitParameters get_BGFitParameters( const std::string& dataset, int nbtags );
+void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, int nbtags, std::string flags="" );
 
 
 
@@ -70,6 +72,13 @@ int main(int argc, char* argv[]) {
   //std::string ZJetsMC = "madgraph";
 
 
+  TString dataset_tstr(data_prefix);
+  std::string PUType = "Run2011A";
+  if( data_dataset=="HR11" )
+    PUType = "HR11";
+  if( dataset_tstr.BeginsWith("Run2011B") )
+    PUType = "2011B";
+
 
   DrawBase* db = new DrawBase("HZZlljjRM");
   db->set_pdf_aussi((bool)false);
@@ -86,7 +95,7 @@ int main(int argc, char* argv[]) {
       outputdir_str += scaleFactorText_str;
     }
   }
-  outputdir_str += "_" + selType + "_" + leptType;
+  outputdir_str += "_" + selType + "_PU" + PUType + "_" + leptType;
   db->set_outputdir(outputdir_str);
 
 
@@ -96,6 +105,7 @@ int main(int argc, char* argv[]) {
 
   std::string signalFileName = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-400_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1";
   signalFileName += "_" + selType;
+  signalFileName += "_PU" + PUType;
   signalFileName += "_" + leptType;
   signalFileName += ".root";
   TFile* signalFile = TFile::Open(signalFileName.c_str());
@@ -112,6 +122,7 @@ int main(int argc, char* argv[]) {
   std::string mcZJetsFileName;
   mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1";
   mcZJetsFileName += "_" + selType;
+  signalFileName += "_PU" + PUType;
   mcZJetsFileName += "_" + leptType;
   mcZJetsFileName += ".root";
   TFile* mcZJetsFile = TFile::Open(mcZJetsFileName.c_str());
@@ -121,6 +132,7 @@ int main(int argc, char* argv[]) {
 
   std::string mcVVFileName = "HZZlljjRM_VV_TuneZ2_7TeV-pythia6-tauola_Summer11-PU_S4_START42_V11-v1";
   mcVVFileName += "_" + selType;
+  signalFileName += "_PU" + PUType;
   mcVVFileName += "_" + leptType;
   mcVVFileName += ".root";
   TFile* mcVVFile = TFile::Open(mcVVFileName.c_str());
@@ -129,6 +141,7 @@ int main(int argc, char* argv[]) {
 
   std::string mcTTbarFileName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-powheg-tauola_Summer11-PU_S4_START42_V11-v1";
   mcTTbarFileName += "_" + selType;
+  signalFileName += "_PU" + PUType;
   mcTTbarFileName += "_" + leptType;
   mcTTbarFileName += ".root";
   TFile* mcTTbarFile = TFile::Open(mcTTbarFileName.c_str());
@@ -174,15 +187,15 @@ int main(int argc, char* argv[]) {
 
   db->set_legendTitle("0 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_0btag", "m_{lljj}", "GeV", "Events", log);
-  drawHistoWithCurve( db, data_prefix, 0);
+  drawHistoWithCurve( db, data_prefix, PUType, 0);
 
   db->set_legendTitle("1 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_1btag", "m_{lljj}", "GeV", "Events", log);
-  drawHistoWithCurve( db, data_prefix, 1);
+  drawHistoWithCurve( db, data_prefix, PUType, 1);
 
   db->set_legendTitle("2 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_2btag", "m_{lljj}", "GeV", "Events", log);
-  drawHistoWithCurve( db, data_prefix, 2);
+  drawHistoWithCurve( db, data_prefix, PUType, 2);
 
   db->set_xAxisMax();
   db->set_rebin(1);
@@ -198,15 +211,15 @@ int main(int argc, char* argv[]) {
   // long range (up to 1300 gev):
   db->set_legendTitle("0 b-tag Category");
   db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 60, 150., 1350., "mZZ_0btag_longRange", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, 0, "longRange");
+  drawHistoWithCurve( db, data_prefix, PUType, 0, "longRange");
 
   db->set_legendTitle("1 b-tag Category");
   db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", 60, 150., 1350., "mZZ_1btag_longRange", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, 1, "longRange");
+  drawHistoWithCurve( db, data_prefix, PUType, 1, "longRange");
 
   db->set_legendTitle("2 b-tag Category");
   db->drawHisto_fromTree("tree_passedEvents", "mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", 60, 150., 1350., "mZZ_2btag_longRange", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, 2, "longRange");
+  drawHistoWithCurve( db, data_prefix, PUType, 2, "longRange");
 
 
 //db->set_legendTitle("0 b-tag Sidebands");
@@ -229,7 +242,7 @@ int main(int argc, char* argv[]) {
 
 
 
-void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbtags, std::string flags ) {
+void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, int nbtags, std::string flags ) {
 
   if( flags!="" ) flags = "_" + flags;
 
@@ -257,54 +270,38 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbta
 
 
 
-  // define mZZ variable
-  RooRealVar CMS_hzz2l2q_mZZ("CMS_hzz2l2q_mZZfull", "zz inv mass", xMin, xMax );
+
+  // open fit results file:
+  char fitResultsFileName[200];
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s.root", data_dataset.c_str(), nbtags, PUType.c_str());
+  TFile* fitResultsFile = TFile::Open(fitResultsFileName);
+
+  // get bg workspace:
+  char workspaceName[200];
+  sprintf( workspaceName, "fitWorkspace_%dbtag", nbtags );
+  RooWorkspace* bgws = (RooWorkspace*)fitResultsFile->Get(workspaceName);
+
+  // get mZZ variable:
+  RooRealVar* CMS_hzz2l2q_mZZ = (RooRealVar*)bgws->var("CMS_hzz2l2q_mZZ");
+
+  // get bg shape:
+  RooAbsPdf* background = (RooAbsPdf*)bgws->pdf("background_decorr");
 
 
-  // define background PDF:
-  BGFitParameters bgfp = get_BGFitParameters( data_dataset, nbtags );
-
-  RooRealVar fermi_cutoff("fermi_cutoff", "position of fermi", bgfp.fermi_cutoff, 0., 1000.);
-  fermi_cutoff.setConstant(kTRUE);
-  RooRealVar fermi_beta("fermi_beta", "width of fermi", bgfp.fermi_beta, 0., 50.);
-  fermi_beta.setConstant(kTRUE);
-
-  RooFermi fermi_BKG("fermi_BKG", "fermi function", CMS_hzz2l2q_mZZ, fermi_cutoff, fermi_beta);
-
-
-  RooRealVar m("m", "m", bgfp.CB_m, 100., 1000.);
-  m.setConstant(kTRUE);
-  RooRealVar wdth("wdth", "wdth", bgfp.CB_wdth, 0., 1000.);
-  wdth.setConstant(kTRUE);
-  RooRealVar n("n", "n", bgfp.CB_n, 0., 1001.);
-  n.setConstant(kTRUE);
-  RooRealVar alpha("alpha", "alpha", bgfp.CB_alpha, -100., 100.);
-  alpha.setConstant(kTRUE);
-  RooRealVar theta("theta", "theta", bgfp.CB_theta, -3.14159, 3.14159); 
-  theta.setConstant(kTRUE);
-  
-
-  RooCB CB_BKG("CB_BKG", "Crystal ball", CMS_hzz2l2q_mZZ, m, wdth, alpha, n, theta);
-  RooProdPdf background("background", "background", RooArgSet(fermi_BKG,CB_BKG));
-
-
-  //get expected bg normalization:
-  char alphaFileName[200];
-  sprintf( alphaFileName, "alphaFile_%s_%dbtag_ALL.root", data_dataset.c_str(), nbtags);
-  TFile* alphaFile = TFile::Open(alphaFileName);
-  TTree* treeSidebandsDATA_alphaCorr = (TTree*)alphaFile->Get("sidebandsDATA_alpha");
-  TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, 150., 800.);
+  // get bg normalization:
+  TTree* treeSidebandsDATA_alphaCorr = (TTree*)fitResultsFile->Get("sidebandsDATA_alpha");
+  TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, xMin, xMax);
   char sidebandsCut_alpha[500];
   sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags);
   treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "mZZ", sidebandsCut_alpha);
   float expBkg = h1_mZZ_sidebands_alpha->Integral();
 
-  RooPlot *plot_MCbkg = CMS_hzz2l2q_mZZ.frame(xMin,xMax,(int)(xMax-xMin)/h1_data->GetXaxis()->GetBinWidth(1));
-  background.plotOn(plot_MCbkg,RooFit::Normalization(expBkg));
+  RooPlot *plot_MCbkg = CMS_hzz2l2q_mZZ->frame(xMin,xMax,(int)(xMax-xMin)/h1_data->GetXaxis()->GetBinWidth(1));
+  background->plotOn(plot_MCbkg,RooFit::Normalization(expBkg));
 
-  TF1* f1_fakeBG = new TF1("fakeBG", "[0]");
-  f1_fakeBG->SetLineColor(kBlue);
-  f1_fakeBG->SetLineWidth(3);
+  TF1* f1_bgForLegend = new TF1("bgForLegend", "[0]");
+  f1_bgForLegend->SetLineColor(kBlue);
+  f1_bgForLegend->SetLineWidth(3);
   
 
   TH2D* h2_axes = new TH2D("axes", "", 10, xMin, xMax, 10, 0., 1.3*h1_data->GetMaximum());
@@ -322,7 +319,7 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbta
   legend->SetTextSize(0.04);
   legend->SetFillColor(0);
   legend->AddEntry( graph_data_poisson, "Data", "P");
-  legend->AddEntry( f1_fakeBG, "Expected Background", "L");
+  legend->AddEntry( f1_bgForLegend, "Expected Background", "L");
   for( unsigned imc=0; imc<lastHistos_mc.size(); ++imc ) 
     legend->AddEntry( lastHistos_mc[imc], (db->get_mcFile(imc).legendName).c_str(), "F");
 
@@ -356,7 +353,7 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbta
   legend_log->SetTextSize(0.04);
   legend_log->SetFillColor(0);
   legend_log->AddEntry( graph_data_poisson, "Data", "P");
-  legend_log->AddEntry( f1_fakeBG, "Exp. BG", "L");
+  legend_log->AddEntry( f1_bgForLegend, "Exp. BG", "L");
   for( unsigned imc=0; imc<lastHistos_mc.size(); ++imc ) 
     legend_log->AddEntry( lastHistos_mc[imc], (db->get_mcFile(imc).legendName).c_str(), "F");
 
@@ -382,59 +379,5 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, int nbta
 
 }
 
-
-
-BGFitParameters get_BGFitParameters( const std::string& dataset, int nbtags ) {
-
-  // read background parametrizations from fit results file
-  char fitResultsFile[900];
-  sprintf( fitResultsFile, "FitSidebands_%s/fitresultsDATA_%dbtag.txt", dataset.c_str(), nbtags);
-  
-  ifstream ifs(fitResultsFile);
-  ifs.clear();
-  ifs.seekg(0);
-
-  BGFitParameters bgfp;
-
-  while( ifs.good() ) {
-
-    std::string varName;
-    float value, error;
-    ifs >> varName >> value >> error;
-
-    if( varName=="beta" ) {
-      bgfp.fermi_beta = value;
-      bgfp.fermi_beta_err = error;
-    }
-    if( varName=="cutOff" ) {
-      bgfp.fermi_cutoff = value;
-      bgfp.fermi_cutoff_err = error;
-    }
-    if( varName=="m" ) {
-      bgfp.CB_m = value;
-      bgfp.CB_m_err = error;
-    }
-    if( varName=="n" ) {
-      bgfp.CB_n = value;
-      bgfp.CB_n_err = error;
-    }
-    if( varName=="alpha_rot" ) {
-      bgfp.CB_alpha = value;
-      bgfp.CB_alpha_err = error;
-    }
-    if( varName=="wdth_rot" ) {
-      bgfp.CB_wdth = value;
-      bgfp.CB_wdth_err = error;
-    }
-    if( varName=="theta_best" ) {
-      bgfp.CB_theta = value;
-      bgfp.CB_theta_err = error;
-    }
-
-  } // while ifs fitresults
-
-  return bgfp;
-
-}
 
 
