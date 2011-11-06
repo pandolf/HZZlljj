@@ -20,8 +20,11 @@ fitSidebands: fitSidebands.cpp SidebandFitter.o
 create_datacards: create_datacards.cpp 
 	$(CC) -Wall $(INCLUDES) -o create_datacards create_datacards.cpp $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
-drawMZZ_with_curve: drawMZZ_with_curve.cpp DrawBase.o RooFermi.o RooCB.o fitTools.o
-	$(CC) -Wall $(INCLUDES) -o drawMZZ_with_curve drawMZZ_with_curve.cpp RooFermi.o RooCB.o DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS)
+drawMZZ_with_curve: drawMZZ_with_curve.cpp DrawBase.o fitTools.o
+	$(CC) -Wall $(INCLUDES) -o drawMZZ_with_curve drawMZZ_with_curve.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
+
+draw_golfcourse: draw_golfcourse.cpp DrawBase.o fitTools.o
+	$(CC) -Wall $(INCLUDES) -o draw_golfcourse draw_golfcourse.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
 
 DrawBase.o: $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/DrawBase.C fitTools.o
