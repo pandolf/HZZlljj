@@ -53,8 +53,8 @@ int main( int argc, char* argv[] ) {
   TGraph* graphObserved = get_observedLimit( data_dataset );
 
   graphObserved->SetMarkerStyle(21);
-  graphObserved->SetMarkerColor(kGreen+4);
-  graphObserved->SetMarkerSize(1.);
+  //graphObserved->SetMarkerColor(kGreen+4);
+  //graphObserved->SetMarkerSize(1.);
 
   std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> graphs_expected = get_expectedLimit( data_dataset );
   TGraphAsymmErrors* graphExpected68 = graphs_expected.first;
@@ -64,7 +64,8 @@ int main( int argc, char* argv[] ) {
   graphExpected68_forLegend->SetFillColor(kGreen);
 
   graphExpected68->SetFillColor(kGreen);
-  graphExpected68->SetLineColor(kGreen+2);
+  graphExpected68->SetLineColor(kBlack);
+  graphExpected68->SetLineStyle(2);
   graphExpected68->SetLineWidth(2);
   graphExpected68->SetFillStyle(1001);//solid
 
