@@ -39,6 +39,9 @@ SidebandFitter::SidebandFitter( const std::string& dataset, const std::string PU
   dataset_ = dataset;
   PUType_ = PUType;
 
+  mZZmin_ = 160.;
+  mZZmax_ = 800.;
+
 }
 
 
@@ -83,7 +86,7 @@ TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string leptTyp
     if( leptType_str=="MU" && leptType!=0 ) continue;
     if( leptType_str=="ELE" && leptType!=1 ) continue;
     if( nBTags!=btagCategory ) continue;
-    if( mZZ>800. || mZZ < 183. ) continue;
+    if( mZZ>mZZmax_ || mZZ < mZZmin_ ) continue;
  
     bool isSignalRegion = (mZjj>75. && mZjj<105.);
     if( isSignalRegion ) h1_mZZ_signalRegion->Fill(mZZ, eventWeight);
@@ -162,13 +165,9 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   sprintf( cut_signal, "%s && ( mZjj>75. && mZjj<105. )", cut_base);
   
 
-  //float mZZ_min = 230.;
-  //float mZZ_min = (btagCategory==1) ? 150 : 170.;
-  float mZZ_min = 183.;
-  float mZZ_max = 800.;
   float binWidth = 20.;
-  int nBins = (int)(mZZ_max-mZZ_min)/binWidth;
-  RooRealVar* CMS_hzz2l2q_mZZ = new RooRealVar("CMS_hzz2l2q_mZZ", "m_{lljj}", mZZ_min, mZZ_max, "GeV");
+  int nBins = (int)(mZZmax_-mZZmin_)/binWidth;
+  RooRealVar* CMS_hzz2l2q_mZZ = new RooRealVar("CMS_hzz2l2q_mZZ", "m_{lljj}", mZZmin_, mZZmax_, "GeV");
 
   RooRealVar* eventWeight = new RooRealVar("eventWeight", "event weight", 0., 2., "");
   RooRealVar* eventWeight_alpha = new RooRealVar("eventWeight_alpha", "event weight (alpha corrected)", 0., 2., "");
@@ -260,7 +259,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
     ofsMC.close();
 
-    RooPlot *plot_sidebandsMC_alpha = CMS_hzz2l2q_mZZ->frame(mZZ_min, mZZ_max, nBins);
+    RooPlot *plot_sidebandsMC_alpha = CMS_hzz2l2q_mZZ->frame(mZZmin_, mZZmax_, nBins);
 
     sidebandsMC_alpha.plotOn(plot_sidebandsMC_alpha, Binning(nBins));
 
@@ -308,7 +307,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
     c1->SetLogy(false);
 
 
-    RooPlot *plot_signalMC  = CMS_hzz2l2q_mZZ->frame(mZZ_min, mZZ_max, nBins);
+    RooPlot *plot_signalMC  = CMS_hzz2l2q_mZZ->frame(mZZmin_, mZZmax_, nBins);
 
     background.plotOn(plot_signalMC, LineColor(kRed), Normalization(sidebandsMC_alpha.sumEntries()));
     signalMC.plotOn(plot_signalMC, Binning(nBins));
@@ -355,7 +354,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   r_sidebandsDATA_alpha->SetName(fitResultName);
 
 
-  RooPlot *plot_sidebandsDATA_alpha = CMS_hzz2l2q_mZZ->frame(mZZ_min, mZZ_max, nBins);
+  RooPlot *plot_sidebandsDATA_alpha = CMS_hzz2l2q_mZZ->frame(mZZmin_, mZZmax_, nBins);
 
 
   if( writeFile ) {
@@ -411,7 +410,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   fitWorkspace->import(*background_decorr, RooFit::RecycleConflictNodes());
 
 
-  RooPlot *plot_rot = CMS_hzz2l2q_mZZ->frame(mZZ_min, mZZ_max, nBins);
+  RooPlot *plot_rot = CMS_hzz2l2q_mZZ->frame(mZZmin_, mZZmax_, nBins);
   sidebandsDATA_alpha.plotOn(plot_rot);
   background.plotOn(plot_rot,RooFit::LineColor(kRed));
   background_decorr->plotOn(plot_rot,RooFit::LineColor(kBlue), RooFit::LineStyle(2));
@@ -488,7 +487,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
     c1->SetLogy(false);
 
 
-    RooPlot *plot_signalDATA = CMS_hzz2l2q_mZZ->frame(mZZ_min, mZZ_max, nBins);
+    RooPlot *plot_signalDATA = CMS_hzz2l2q_mZZ->frame(mZZmin_, mZZmax_, nBins);
 
     background.plotOn(plot_signalDATA, LineColor(kRed), Normalization(sidebandsDATA_alpha.sumEntries()));
     signalDATA.plotOn(plot_signalDATA, Binning(nBins));
@@ -511,28 +510,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   } //if writeFile
 
 
-
-  //FitResults fr;
-
-  //fr.fermi_beta   = beta.getVal();
-  //fr.fermi_cutoff = cutOff.getVal();
-  //fr.CB_m         = m.getVal();
-  //fr.CB_wdth      = wdth.getVal();
-  //fr.CB_alpha     = alpha.getVal();
-  //fr.CB_n         = n.getVal();
-  //fr.CB_theta     = theta.getVal();
-
-  //fr.fermi_beta_err   = beta.getError();
-  //fr.fermi_cutoff_err = cutOff.getError();
-  //fr.CB_m_err         = m.getError();
-  //fr.CB_wdth_err      = wdth.getError();
-  //fr.CB_alpha_err     = alpha.getError();
-  //fr.CB_n_err         = n.getError();
-  //fr.CB_theta_err     = theta.getError();
-
-  //fr.CB_alpha_rot  = a_rot;
-  //fr.CB_wdth_rot   = w_rot;
-  //fr.CB_theta_best = bestTheta;
 
 
   if( writeFile ) {
@@ -564,7 +541,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
 
   return r_sidebandsDATA_alpha;
-  //return fr; 
 
 }
 
@@ -631,7 +607,7 @@ TTree* SidebandFitter::correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int bt
 
     // alpha correction
     newWeight = eventWeight;
-    if( isSidebands && mZZ>183. && mZZ<800. ) newWeight *= alpha;
+    if( isSidebands && mZZ>mZZmin_ && mZZ<mZZmax_ ) newWeight *= alpha;
 
     newTree->Fill();
 
@@ -664,35 +640,3 @@ TH1D* SidebandFitter::shuffle( TH1D* inhist, TRandom3* random, char *histName ) 
 }
 
 
-
-/*
-void SidebandFitter::modifyFitResultError( const std::string& thisVar, double thisVarError, int nbtags ) {
-
-  std::string fitResultsFile_old = get_fitResultsName( nbtags );
-  std::string fitResultsFile_new = get_fitResultsName( nbtags, "DATA_NEW" );
-
-  ifstream ifs(fitResultsFile_old.c_str());
-  ofstream ofs(fitResultsFile_new.c_str());
-
-  ifs.clear();
-  ifs.seekg(0);
-
-  while( ifs.good() ) {
-  
-    std::string varName;
-    float value, error;
-
-    ifs >> varName >> value >> error;
-
-    if( varName==thisVar ) {
-      ofs << varName << " " << value << " " << thisVarError << std::endl;
-    } else { 
-      ofs << varName << " " << value << " " << error << std::endl;
-    }
-
-  } // while ifs good
-
-  ofs.close();
-
-}
-*/

@@ -9,30 +9,6 @@
 #include "RooFitResult.h"
 
 
-struct FitResults {
-
-  float fermi_beta;
-  float fermi_cutoff;
-  float CB_m;
-  float CB_wdth;
-  float CB_alpha;
-  float CB_n;
-  float CB_theta;
-
-  float fermi_beta_err;
-  float fermi_cutoff_err;
-  float CB_m_err;
-  float CB_wdth_err;
-  float CB_alpha_err;
-  float CB_n_err;
-  float CB_theta_err;
-
-  float CB_alpha_rot;
-  float CB_wdth_rot;
-  float CB_theta_best;
-
-};
-
 
 
 
@@ -62,6 +38,9 @@ class SidebandFitter {
 
   std::string dataset_;
   std::string PUType_;
+
+  float mZZmin_;
+  float mZZmax_;
 
 };
 
