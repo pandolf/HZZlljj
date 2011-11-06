@@ -53,12 +53,15 @@ int main( int argc, char* argv[] ) {
   TGraph* graphObserved = get_observedLimit( data_dataset );
 
   graphObserved->SetMarkerStyle(21);
-  graphObserved->SetMarkerSize(1.1);
+  graphObserved->SetMarkerColor(kGreen+4);
+  graphObserved->SetMarkerSize(1.);
 
   std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> graphs_expected = get_expectedLimit( data_dataset );
   TGraphAsymmErrors* graphExpected68 = graphs_expected.first;
   TGraphAsymmErrors* graphExpected95 = graphs_expected.second;
 
+  TGraphAsymmErrors* graphExpected68_forLegend = new TGraphAsymmErrors(*graphExpected68);
+  graphExpected68_forLegend->SetFillColor(kGreen);
 
   graphExpected68->SetFillColor(kGreen);
   graphExpected68->SetLineColor(kGreen+2);
@@ -76,9 +79,21 @@ int main( int argc, char* argv[] ) {
   TPaveText* labelCMS = db->get_labelCMS();
   TPaveText* labelSqrt = db->get_labelSqrt();
 
+
   TLine* line_one = new TLine( 160., 1., 640., 1.);
   line_one->SetLineColor(kRed);
   line_one->SetLineWidth(2);
+
+  TLegend* legend = new TLegend( 0.3, 0.6, 0.74, 0.91 );
+  legend->SetFillColor(0);
+  legend->SetFillStyle(0);
+  legend->SetTextSize(0.038);
+  legend->AddEntry( graphObserved, "Bayesian Observed", "P" ); 
+  legend->AddEntry( graphExpected68, "Bayesian Expected", "L" ); 
+  legend->AddEntry( graphExpected68_forLegend, "Expected #pm 1#sigma", "F" ); 
+  legend->AddEntry( graphExpected95, "Expected #pm 2#sigma", "F" ); 
+  legend->AddEntry( line_one, "SM", "L" ); 
+
 
   TCanvas* c1 = new TCanvas("c1", "", 600, 600);
   c1->cd();
@@ -90,8 +105,12 @@ int main( int argc, char* argv[] ) {
   graphExpected68->Draw("LXsame");
   graphObserved->Draw("PLsame");
   line_one->Draw("same");
+  legend->Draw("same");
   gPad->RedrawAxis();
-  c1->SaveAs("Prova.eps");
+
+  char canvasName[500];
+  sprintf( canvasName, "upperLimit_%s.eps", data_dataset.c_str() );
+  c1->SaveAs(canvasName);
 
   return 0;
 
@@ -116,6 +135,8 @@ TGraph* get_observedLimit( const std::string& dataset ) {
 
     int mass;
     massesFile >> mass;
+
+    if( mass<200 ) continue;
 
     char limitLogFile[300];
     sprintf( limitLogFile, "datacards_%s/%d/log.txt", dataset.c_str(), mass );
@@ -150,6 +171,7 @@ TGraph* get_observedLimit( const std::string& dataset ) {
     } //while logFile.good()
 
     graphObserved->SetPoint( imass++, mass, limit );
+    if( mass==600 ) break;
 
   } //while masses
 
