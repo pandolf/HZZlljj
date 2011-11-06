@@ -1418,13 +1418,15 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   PUWeight* fPUWeight_ave = new PUWeight(-1, "2011A", puType_ave);
   std::string puFileName;
   if( PUType_=="HR11" )
-    puFileName = "Pileup_DATA_up_to_178078.root";
+    puFileName = "Pileup_DATA_up_to_178479_SiXie.root";
+    //puFileName = "Pileup_DATA_up_to_178078.root";
   else if( PUType_=="Run2011A" )
     puFileName = "Pileup_DATA_up_to_173692.root";
   else if( PUType_=="Run2011A_73pb" )
     puFileName = "all2011A.pileup_v2_73mb.root";
   else if( PUType_=="Run2011B" )
-    puFileName = "Pileup_DATA_173692_to_178078.root";
+    puFileName = "Pileup_DATA_Run2011B.root";
+    //puFileName = "Pileup_DATA_173692_to_178078.root";
   else if( PUType_=="Run2011B_73pb" )
     puFileName = "all2011B.pileup_v2_73mb.root";
   else if( PUType_=="HR11_73pb" )
@@ -1463,7 +1465,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_passedEvents->Branch( "etaJet2", &etaJet2_t, "etaJet2_t/F" );
   tree_passedEvents->Branch( "mZjj", &mZjj, "mZjj/F" );
   tree_passedEvents->Branch( "mZll", &mZll, "mZll/F" );
-  tree_passedEvents->Branch( "mZZ", &mZZ, "mZZ/F" );
+  tree_passedEvents->Branch( "CMS_hzz2l2q_mZZ", &mZZ, "mZZ/F" );
   tree_passedEvents->Branch( "mZZ_nokinfit", &mZZ_nokinfit, "mZZ_nokinfit/F" );
   tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
   tree_passedEvents->Branch( "HLTSF", &HLTSF, "HLTSF/F" );
