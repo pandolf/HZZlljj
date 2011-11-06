@@ -84,7 +84,7 @@ double sign( double x ) {
 int convert_leptType( const std::string& leptType );
 std::string leptType_datacards( const std::string& leptType_str );
 
-void create_singleDatacard( const std::string& dataset, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass );
+void create_singleDatacard( const std::string& dataset, const std::string& PUType, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass );
 
 HiggsParameters get_higgsParameters( float mass );
 
@@ -175,12 +175,12 @@ int main( int argc, char* argv[] ) {
     sprintf( mkdir_command, "mkdir -p datacards_%s/%.0f", dataset.c_str(), mass);
     system(mkdir_command);
 
-    create_singleDatacard( dataset, mass, lumi_ELE, "ELE", 0, f1_eff_vs_mass_ELE_0btag);
-    create_singleDatacard( dataset, mass, lumi_ELE, "ELE", 1, f1_eff_vs_mass_ELE_1btag);
-    create_singleDatacard( dataset, mass, lumi_ELE, "ELE", 2, f1_eff_vs_mass_ELE_2btag);
-    create_singleDatacard( dataset, mass, lumi_MU,   "MU", 0, f1_eff_vs_mass_MU_0btag);
-    create_singleDatacard( dataset, mass, lumi_MU,   "MU", 1, f1_eff_vs_mass_MU_1btag);
-    create_singleDatacard( dataset, mass, lumi_MU,   "MU", 2, f1_eff_vs_mass_MU_2btag);
+    create_singleDatacard( dataset, PUType, mass, lumi_ELE, "ELE", 0, f1_eff_vs_mass_ELE_0btag);
+    create_singleDatacard( dataset, PUType, mass, lumi_ELE, "ELE", 1, f1_eff_vs_mass_ELE_1btag);
+    create_singleDatacard( dataset, PUType, mass, lumi_ELE, "ELE", 2, f1_eff_vs_mass_ELE_2btag);
+    create_singleDatacard( dataset, PUType, mass, lumi_MU,   "MU", 0, f1_eff_vs_mass_MU_0btag);
+    create_singleDatacard( dataset, PUType, mass, lumi_MU,   "MU", 1, f1_eff_vs_mass_MU_1btag);
+    create_singleDatacard( dataset, PUType, mass, lumi_MU,   "MU", 2, f1_eff_vs_mass_MU_2btag);
 
   } //while masses
 
@@ -190,7 +190,7 @@ int main( int argc, char* argv[] ) {
 
 
 
-void create_singleDatacard( const std::string& dataset, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass ) {
+void create_singleDatacard( const std::string& dataset, const std::string& PUType, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass ) {
 
   if( leptType_str!="ELE" && leptType_str!="MU" ) {
     std::cout << "Unkown Lept Type '" << leptType_str << "'. Exiting." << std::endl;
@@ -204,7 +204,7 @@ void create_singleDatacard( const std::string& dataset, float mass, float lumi, 
 
   // open fitResults file:
   char fitResultsFileName[500];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL.root", dataset.c_str(), nbtags);
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s.root", dataset.c_str(), nbtags, PUType.c_str() );
   TFile* fitResultsFile = TFile::Open(fitResultsFileName);
 
   // get fit result:
