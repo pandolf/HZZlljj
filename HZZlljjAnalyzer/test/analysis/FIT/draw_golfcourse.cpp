@@ -72,7 +72,10 @@ int main( int argc, char* argv[] ) {
   graphExpected95->SetFillColor(kYellow);
   graphExpected95->SetFillStyle(1001);//solid
 
-  TH2D* axes = new TH2D("axes", "", 10, 160., 640., 10, 0., 10.);
+  float xmin = 180.;
+  float xmax = 620.;
+
+  TH2D* axes = new TH2D("axes", "", 10, xmin, xmax, 10, 0., 10.);
   axes->SetXTitle("m_{H} [GeV]");
   axes->SetYTitle("#sigma_{95%} / #sigma_{SM}");
 
@@ -81,7 +84,7 @@ int main( int argc, char* argv[] ) {
   TPaveText* labelSqrt = db->get_labelSqrt();
 
 
-  TLine* line_one = new TLine( 160., 1., 640., 1.);
+  TLine* line_one = new TLine( xmin, 1., xmax, 1.);
   line_one->SetLineColor(kRed);
   line_one->SetLineWidth(2);
 
