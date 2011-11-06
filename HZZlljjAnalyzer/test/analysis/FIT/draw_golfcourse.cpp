@@ -1,16 +1,25 @@
-#include "cstdlib"
+#include <cstdlib>
+#include <fstream>
 
+#include "TGraph.h"
 #include "TGraphAsymmErrors.h"
 #include "TString.h"
+#include "TRegexp.h"
 
 #include "CommonTools/DrawBase.h"
 
 
-std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::string& data_dataset, const std::string& PUType );
+
+
+TGraph* get_observedLimit( const std::string& dataset );
+std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::string& data_dataset );
 float getMedian( TH1D* h1 );
 float get_lowBound( TH1D* h1, float frac );
 float get_upBound( TH1D* h1, float frac );
 TPaveText* get_labelCMS( DrawBase* db );
+
+
+
 
 
 
@@ -36,14 +45,20 @@ int main( int argc, char* argv[] ) {
 
   DrawBase* db = new DrawBase("Golfcourse");
   db->set_lumiNormalization(lumi);
-  TFile* file_data = TFile::Open("HZZlljjRM_DATA_Run2011A_FULL_optLD_looseBTags_v2_ALL.root"); //any file is good, got to fix this
-  db->add_dataFile( file_data, "dummydata" );
+  std::string dataFileName = "HZZlljjRM_DATA_" + data_dataset + "_optLD_looseBTags_v2_ALL.root";
+  TFile* file_data = TFile::Open(dataFileName.c_str());
+  db->add_dataFile( file_data, "data" );
 
 
+  TGraph* graphObserved = get_observedLimit( data_dataset );
 
-  std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> graphs_expected = get_expectedLimit( data_dataset, PUType );
+  graphObserved->SetMarkerStyle(21);
+  graphObserved->SetMarkerSize(1.1);
+
+  std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> graphs_expected = get_expectedLimit( data_dataset );
   TGraphAsymmErrors* graphExpected68 = graphs_expected.first;
   TGraphAsymmErrors* graphExpected95 = graphs_expected.second;
+
 
   graphExpected68->SetFillColor(kGreen);
   graphExpected68->SetLineColor(kGreen+2);
@@ -73,6 +88,7 @@ int main( int argc, char* argv[] ) {
   graphExpected95->Draw("3same");
   graphExpected68->Draw("3same");
   graphExpected68->Draw("LXsame");
+  graphObserved->Draw("PLsame");
   line_one->Draw("same");
   gPad->RedrawAxis();
   c1->SaveAs("Prova.eps");
@@ -84,8 +100,68 @@ int main( int argc, char* argv[] ) {
 
 
 
+TGraph* get_observedLimit( const std::string& dataset ) { 
 
-std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::string& data_dataset, const std::string& PUType ) {
+
+  TGraph* graphObserved = new TGraph(0);
+
+  ifstream massesFile("masses.txt");
+
+  massesFile.clear();
+  massesFile.seekg(0);
+
+  int imass = 0;
+
+  while( massesFile.good() ) {
+
+    int mass;
+    massesFile >> mass;
+
+    char limitLogFile[300];
+    sprintf( limitLogFile, "datacards_%s/%d/log.txt", dataset.c_str(), mass );
+
+    ifstream logFile(limitLogFile);
+
+    logFile.clear();
+    logFile.seekg(0);
+
+    bool goForIt = false;
+    float limit = 0.;
+
+    while( logFile.good() ) {
+
+      if( goForIt ) {
+        std::string dummy;
+        logFile >> dummy >> dummy >> dummy >> limit;
+        break;
+      }
+
+
+      std::string thisLine;
+      getline(logFile,thisLine);
+
+      TString thisLine_tstr(thisLine);
+      TRegexp lineBefore(" -- MarkovChainMC --");
+
+      if( thisLine_tstr.Contains(lineBefore) ) { //means that it's next line
+        goForIt = true;
+      }
+
+    } //while logFile.good()
+
+    graphObserved->SetPoint( imass++, mass, limit );
+
+  } //while masses
+
+
+  return graphObserved;
+
+}
+
+
+
+
+std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::string& data_dataset ) {
 
 
   TGraphAsymmErrors* graph68 = new TGraphAsymmErrors(0);
