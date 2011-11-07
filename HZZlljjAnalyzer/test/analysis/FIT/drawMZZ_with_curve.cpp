@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
 
   TString dataset_tstr(data_prefix);
   std::string PUType = "Run2011A";
-  if( data_dataset=="HR11" )
+  if( data_prefix=="HR11" )
     PUType = "HR11";
   if( dataset_tstr.BeginsWith("Run2011B") )
     PUType = "2011B";
@@ -122,7 +122,7 @@ int main(int argc, char* argv[]) {
   std::string mcZJetsFileName;
   mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1";
   mcZJetsFileName += "_" + selType;
-  signalFileName += "_PU" + PUType;
+  mcZJetsFileName += "_PU" + PUType;
   mcZJetsFileName += "_" + leptType;
   mcZJetsFileName += ".root";
   TFile* mcZJetsFile = TFile::Open(mcZJetsFileName.c_str());
@@ -132,7 +132,7 @@ int main(int argc, char* argv[]) {
 
   std::string mcVVFileName = "HZZlljjRM_VV_TuneZ2_7TeV-pythia6-tauola_Summer11-PU_S4_START42_V11-v1";
   mcVVFileName += "_" + selType;
-  signalFileName += "_PU" + PUType;
+  mcVVFileName += "_PU" + PUType;
   mcVVFileName += "_" + leptType;
   mcVVFileName += ".root";
   TFile* mcVVFile = TFile::Open(mcVVFileName.c_str());
@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
 
   std::string mcTTbarFileName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-powheg-tauola_Summer11-PU_S4_START42_V11-v1";
   mcTTbarFileName += "_" + selType;
-  signalFileName += "_PU" + PUType;
+  mcTTbarFileName += "_PU" + PUType;
   mcTTbarFileName += "_" + leptType;
   mcTTbarFileName += ".root";
   TFile* mcTTbarFile = TFile::Open(mcTTbarFileName.c_str());
@@ -182,23 +182,23 @@ int main(int argc, char* argv[]) {
 
   bool log = true;
 
-  db->set_rebin(20);
-  db->set_xAxisMax(750.);
+  //db->set_rebin(20);
+  //db->set_xAxisMax(750.);
 
-  db->set_legendTitle("0 b-tag Category");
-  db->drawHisto("mZZ_kinfit_hiMass_0btag", "m_{lljj}", "GeV", "Events", log);
-  drawHistoWithCurve( db, data_prefix, PUType, 0);
+  //db->set_legendTitle("0 b-tag Category");
+  //db->drawHisto("mZZ_kinfit_hiMass_0btag", "m_{lljj}", "GeV", "Events", log);
+  //drawHistoWithCurve( db, data_prefix, PUType, 0);
 
-  db->set_legendTitle("1 b-tag Category");
-  db->drawHisto("mZZ_kinfit_hiMass_1btag", "m_{lljj}", "GeV", "Events", log);
-  drawHistoWithCurve( db, data_prefix, PUType, 1);
+  //db->set_legendTitle("1 b-tag Category");
+  //db->drawHisto("mZZ_kinfit_hiMass_1btag", "m_{lljj}", "GeV", "Events", log);
+  //drawHistoWithCurve( db, data_prefix, PUType, 1);
 
-  db->set_legendTitle("2 b-tag Category");
-  db->drawHisto("mZZ_kinfit_hiMass_2btag", "m_{lljj}", "GeV", "Events", log);
-  drawHistoWithCurve( db, data_prefix, PUType, 2);
+  //db->set_legendTitle("2 b-tag Category");
+  //db->drawHisto("mZZ_kinfit_hiMass_2btag", "m_{lljj}", "GeV", "Events", log);
+  //drawHistoWithCurve( db, data_prefix, PUType, 2);
 
-  db->set_xAxisMax();
-  db->set_rebin(1);
+  //db->set_xAxisMax();
+  //db->set_rebin(1);
 
   db->set_legendTitle("Gluon- and 0 b-tag");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags<=0)", 30, 150., 750., "mZZ_g0btag", "m_{ZZ}", "GeV");
@@ -208,17 +208,41 @@ int main(int argc, char* argv[]) {
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==-1)", 30, 150., 750., "mZZ_gtag", "m_{ZZ}", "GeV");
 
 
+  float binWidth = 20.;
+  float xMin = 160.;
+  float xMax = 800.;
+  int nBins = (int)((xMax-xMin)/binWidth);
+
+
+  // signal box plots:
+  db->set_legendTitle("0 b-tag Category");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", nBins, xMin, xMax, "mZZ_0btag", "m_{ZZ}", "GeV");
+  drawHistoWithCurve( db, data_prefix, PUType, 0 );
+
+  db->set_legendTitle("1 b-tag Category");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", nBins, xMin, xMax, "mZZ_1btag", "m_{ZZ}", "GeV");
+  drawHistoWithCurve( db, data_prefix, PUType, 1 );
+
+  db->set_legendTitle("2 b-tag Category");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", nBins, xMin, xMax, "mZZ_2btag", "m_{ZZ}", "GeV");
+  drawHistoWithCurve( db, data_prefix, PUType, 2 );
+
+
+  xMin = 160.;
+  xMax = 1350.;
+  nBins = (int)((xMax-xMin)/binWidth);
+
   // long range (up to 1300 gev):
   db->set_legendTitle("0 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 60, 150., 1350., "mZZ_0btag_longRange", "m_{ZZ}", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", nBins, xMin, xMax, "mZZ_0btag_longRange", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 0, "longRange");
 
   db->set_legendTitle("1 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", 60, 150., 1350., "mZZ_1btag_longRange", "m_{ZZ}", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", nBins, xMin, xMax, "mZZ_1btag_longRange", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 1, "longRange");
 
   db->set_legendTitle("2 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", 60, 150., 1350., "mZZ_2btag_longRange", "m_{ZZ}", "GeV");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", nBins, xMin, xMax, "mZZ_2btag_longRange", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 2, "longRange");
 
 
