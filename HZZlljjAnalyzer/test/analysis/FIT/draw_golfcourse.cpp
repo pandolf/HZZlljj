@@ -107,12 +107,19 @@ int main( int argc, char* argv[] ) {
   graphExpected95->Draw("3same");
   graphExpected68->Draw("3same");
   graphExpected68->Draw("LXsame");
-  graphObserved->Draw("PLsame");
   line_one->Draw("same");
   legend->Draw("same");
   gPad->RedrawAxis();
 
   char canvasName[500];
+  sprintf( canvasName, "upperLimitExpected_%s.eps", data_dataset.c_str() );
+  c1->SaveAs(canvasName);
+
+  graphObserved->Draw("PLsame");
+  line_one->Draw("same");
+  legend->Draw("same");
+  gPad->RedrawAxis();
+
   sprintf( canvasName, "upperLimit_%s.eps", data_dataset.c_str() );
   c1->SaveAs(canvasName);
 
