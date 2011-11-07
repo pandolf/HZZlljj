@@ -11,11 +11,15 @@
 ///////////////////////////////////////////////////////////////////////
 
 #ifndef PUWEIGHT_H
-#define PUWEIGHT_H 1
+#define PUWEIGHT_H 
 
 
 #include "TH1F.h"
 #include "TNamed.h"
+
+#include "TFile.h"
+#include <cstdlib>
+#include <iostream>
 
 class PUWeight {
  public:
@@ -25,14 +29,13 @@ class PUWeight {
   ~PUWeight() {delete fWeight; delete fMC; delete fData;}
 
 
-  // Tells if this object has loaded correctly the histograms
-  bool IsValid() const { return fWeight;}
+  //// Tells if this object has loaded correctly the histograms
+  //bool IsValid() const { return fWeight;}
 
 
   // Returns the weight for a given PU value
-  float GetWeight(unsigned int pu) const {
-    return (fWeight? fWeight->GetBinContent(pu+1):0);
-  }
+  float GetWeight(unsigned int pu) const;
+
 
   // Returns the MC only weight for a given PU value
   float GetPUMC(unsigned int pu) const {

@@ -41,7 +41,7 @@ PUWeight::PUWeight(float luminosity, const char* year, const std::string& idealM
 
 
   //Calculate Weight
-  CalculateWeight();
+  //CalculateWeight();
 }
 
 
@@ -62,7 +62,7 @@ PUWeight::PUWeight(const char* mcfolder, const char* mcproccess,
 
 
   //Calculate Weight
-  CalculateWeight();
+  //CalculateWeight();
 }
 
 
@@ -115,7 +115,16 @@ TH1F* PUWeight::LoadMCHistogram(const char* mcfolder, const char* mcproccess) {
 
 void PUWeight::SetMCHistogram(const TH1F* mcHisto) {
 
-  fMC = (TH1F*)mcHisto->Clone();
+  //Read MC histogram...
+  TH1F* fMC_tmp = (TH1F*)mcHisto->Clone("PU_MC_tmp");
+
+  if( fMC!=0 ) delete fMC;
+  int nBins = fMC_tmp->GetNbinsX();
+  float xMax = (float)nBins-0.5;
+  fMC = new TH1F("PU_MC", "", nBins, -0.5, xMax);
+  for( unsigned iBin=1; iBin<nBins+1; ++iBin )
+    fMC->SetBinContent( iBin, fMC_tmp->GetBinContent(iBin) );
+
 
   if (fMC->Integral() != 1) {
     cout << "NOTE [PUWeight]: MC histogram is not normalized to 1! Normalizing..."
@@ -123,7 +132,7 @@ void PUWeight::SetMCHistogram(const TH1F* mcHisto) {
     fMC->Scale(1./fMC->Integral());
   }
 
-  CalculateWeight();
+  //CalculateWeight();
   
 }
 
@@ -138,23 +147,23 @@ void PUWeight::SetDataHistogram(const TH1F* dataHisto) {
   //Read data histogram...
   TH1F* fData_tmp = (TH1F*)dataHisto->Clone("PU_Data_tmp");
 
-  if( fData_tmp->GetXaxis()->GetNbins()==36 ) {
-    if( fData!=0 ) delete fData;
-    fData = new TH1F("PU_Data", "", 36, -0.5, 35.5);
-    for( unsigned iBin=1; iBin<37; ++iBin ) 
-      fData->SetBinContent( iBin, fData_tmp->GetBinContent(iBin) );
-  } else {
-    fData = (TH1F*)fData_tmp->Clone("PU_Data");
-  }
+  if( fData!=0 ) delete fData;
+  int nBins = fData_tmp->GetNbinsX();
+  float xMax = (float)nBins-0.5;
+  fData = new TH1F("PU_Data", "", nBins, -0.5, xMax);
+  for( unsigned iBin=1; iBin<nBins+1; ++iBin )
+    fData->SetBinContent( iBin, fData_tmp->GetBinContent(iBin) );
 
   if (fData->Integral() != 1) {
-    cout << "NOTE [PUWeight]: Data histogram is not normalized to 1! Normalizing..."
-	 << endl;
+    cout << "NOTE [PUWeight]: Data histogram is not normalized to 1! Normalizing..."  << endl;
     fData->Scale(1./fData->Integral());
   }
 
+
+
+
   fData->SetDirectory(0);
-  CalculateWeight();
+  //CalculateWeight();
 
 }
 
@@ -229,6 +238,7 @@ TH1F* PUWeight::LoadDataHistogram(float luminosity, const char* year) {
 }
 
 
+/*
 TH1F* PUWeight::CalculateWeight() {
   if (fData && fMC) {
     unsigned int nbins = fData->GetXaxis()->GetNbins();
@@ -245,15 +255,45 @@ TH1F* PUWeight::CalculateWeight() {
 	 << endl;
   }
 
-TFile* prova = TFile::Open("PROVA.root", "recreate");
-prova->cd();
-fData->Write();
-fMC->Write();
-fWeight->Write();
-prova->Close();
 
   return fWeight;
 }
+*/
+
+
+float PUWeight::GetWeight(unsigned int pu) const {
+
+
+  int bin = pu+1;
+
+  int nBinsData = fData->GetNbinsX();
+  int nBinsMC = fMC->GetNbinsX();
+
+  float num = 0.;
+  float denom = 0.;
+
+  if( bin<nBinsData+1 && bin<nBinsMC+1 ) {
+    num = fData->GetBinContent(bin);
+    denom = fMC->GetBinContent(bin);
+  } else if( bin<nBinsData+1 ) {
+    num = fData->GetBinContent(bin);
+    denom = fMC->GetBinContent(nBinsMC);
+  } else if( bin<nBinsMC+1 ) {
+    num = fData->GetBinContent(nBinsMC);
+    denom = fMC->GetBinContent(bin);
+  } else {
+    num = 0.;
+    denom = 0.;
+  }
+
+
+  float returnWeight = (denom>0.) ? num/denom : 0.;
+
+  return returnWeight;
+
+}
+
+
 
 TH1F* PUWeight::IdealMCHistogram( const std::string& puType) {
   unsigned int nbins = 36;
