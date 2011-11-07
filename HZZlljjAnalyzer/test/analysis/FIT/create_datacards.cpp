@@ -271,7 +271,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   h1_mZZ_sidebands_alpha->Sumw2();
   char sidebandsCut_alpha[500];
   sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d)", nbtags, leptType_int);
-  treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "mZZ", sidebandsCut_alpha);
+  treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
   double rate_background = h1_mZZ_sidebands_alpha->Integral();
   delete h1_mZZ_sidebands_alpha;
 
@@ -486,7 +486,10 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
     sprintf( signalCut, "HLTSF*PUWeight*( mZjj>75. && mZjj<105. && mZZ>183. && mZZ<800. && nBTags==%d && leptType==%d)", nbtags, leptType_int);
     TH1D* h1_mZZ_signal = new TH1D("mZZ_signal", "", 65, 150., 800.);
     h1_mZZ_signal->Sumw2();
-    signalTree->Project( "mZZ_signal", "mZZ", signalCut );
+    if( mass==400. ) {
+      signalTree->Project( "mZZ_signal", "CMS_hzz2l2q_mZZ", signalCut );
+    else 
+      signalTree->Project( "mZZ_signal", "mZZ", signalCut );
 
     float signalYield = h1_mZZ_signal->Integral();
 
@@ -507,7 +510,6 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
   TF1* f1_eff_vs_mass = new TF1(functName, "[0] + [1]*x + [2]*x*x + [3]*x*x*x", 150., 700.);
   gr_eff_vs_mass->Fit(f1_eff_vs_mass, "RQ");
 
-  system("mkdir -p EfficiencyFits");
 
   TCanvas* c1 = new TCanvas("c1", "", 600, 600);
   c1->cd();
@@ -666,7 +668,7 @@ RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string&
   std::string dataFileName = "HZZlljjRM_DATA_" + dataset + "_optLD_looseBTags_v2_ALL.root";
   TFile* dataFile = TFile::Open(dataFileName.c_str());
   TTree* tree_data = (TTree*)dataFile->Get("tree_passedEvents");
-  tree_data->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ");
+  //tree_data->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ");
 
   
 
