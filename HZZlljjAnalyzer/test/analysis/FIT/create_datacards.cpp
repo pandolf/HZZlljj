@@ -47,27 +47,6 @@ struct HiggsParameters {
 };
 
 
-/*
-struct BGFitParameters {
-
-  float fermi_cutoff;
-  float fermi_beta;
-  float CB_m;
-  float CB_wdth;
-  float CB_alpha;
-  float CB_n;
-  float CB_theta;
-
-  float fermi_cutoff_err;
-  float fermi_beta_err;
-  float CB_m_err;
-  float CB_wdth_err;
-  float CB_alpha_err;
-  float CB_n_err;
-  float CB_theta_err;
-
-};*/
-
 
 double sign( double x ) {
 
@@ -133,6 +112,9 @@ int main( int argc, char* argv[] ) {
   } else if( dataset=="Run2011A_FULL" ) {
     lumi_ELE=2100.; //pb^-1
     lumi_MU =2100.; //pb^-1
+  } else if( dataset=="HR11" ) {
+    lumi_ELE=4200.; //pb^-1
+    lumi_MU =4200.; //pb^-1
   } else {
     std::cout << "Unknown dataset '" << dataset << "'. Exiting." << std::endl;
     exit(333);
