@@ -486,7 +486,7 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
     sprintf( signalCut, "HLTSF*PUWeight*( mZjj>75. && mZjj<105. && mZZ>183. && mZZ<800. && nBTags==%d && leptType==%d)", nbtags, leptType_int);
     TH1D* h1_mZZ_signal = new TH1D("mZZ_signal", "", 65, 150., 800.);
     h1_mZZ_signal->Sumw2();
-    if( mass==400. ) {
+    if( mass==400. )
       signalTree->Project( "mZZ_signal", "CMS_hzz2l2q_mZZ", signalCut );
     else 
       signalTree->Project( "mZZ_signal", "mZZ", signalCut );
