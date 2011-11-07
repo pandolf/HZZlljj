@@ -6,6 +6,7 @@
 #include "TChain.h"
 #include "TH1D.h"
 #include "TString.h"
+#include "TROOT.h"
 
 #include "SidebandFitter.h"
 
@@ -47,6 +48,8 @@ int main( int argc, char* argv[] ) {
   chainMC->Add(bgTreeName.c_str());
   bgTreeName = "HZZlljjRM_VV_TuneZ2_7TeV-pythia6-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU" + PUReweighing + "_ALL.root/tree_passedEvents";
   chainMC->Add(bgTreeName.c_str());
+
+  gROOT->cd(); //magic!
 
   TTree* treeDATA_0btag = treeDATA->CopyTree("nBTags==0");
   TTree* treeDATA_1btag = treeDATA->CopyTree("nBTags==1");
