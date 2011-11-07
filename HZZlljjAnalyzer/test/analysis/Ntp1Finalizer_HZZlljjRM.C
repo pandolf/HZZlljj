@@ -1435,11 +1435,17 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
     std::cout << "-> Unknown PU Type: '" << PUType_ << "'. Will use HR11 default." << std::endl;
     puFileName = "Pileup_DATA_up_to_178078.root";
   }
+
   std::cout << std::endl << "-> Using data pileup file: " << puFileName << std::endl;
   TFile* filePU = TFile::Open(puFileName.c_str());
   TH1F* h1_nPU_data = (TH1F*)filePU->Get("pileup");
   fPUWeight->SetDataHistogram(h1_nPU_data);
   fPUWeight_ave->SetDataHistogram(h1_nPU_data);
+
+  TFile* filePUMC = TFile::Open("PUemanuele/DY_PU.root");
+  TH1F* h1_nPU_mc = (TH1F*)filePUMC->Get("hNPU");
+  if( PUType_!="Run2011A" ) 
+    fPUWeight->SetMCHistogram(h1_nPU_mc);
 
   int maxBTag_found = -1;
   float mZZ, mZZ_nokinfit, mZjj, mZll;
@@ -1488,6 +1494,13 @@ ofstream ofs("run_event.txt");
   float nEvents_presel_mZll_mZjj_1btag=0.;
   float nEvents_presel_mZll_mZjj_2btag=0.;
 
+
+  std::cout << std::endl << std::endl;
+  std::cout << "+++ BEGINNING ANALYSIS LOOP." << std::endl;
+  std::cout << "----> DATASET: " << dataset_ << std::endl;
+  std::cout << "----> SELECTION: " << selectionType_ << std::endl;
+  if( isMC ) std::cout << "----> PU REWEIGHING: " << PUType_ << std::endl;
+  std::cout << std::endl << std::endl;
 
 //nEntries=10000;
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
@@ -1566,6 +1579,9 @@ ofstream ofs("run_event.txt");
       h1_nvertex_PUW_ave->Fill(nvertex, eventWeight*eventWeightPU_ave);
       //eventWeight *= eventWeightPU;
      
+//for( unsigned ii=0; ii<36; ++ii )
+//  std::cout << ii << " " << fPUWeight->GetWeight(ii) << std::endl;
+//exit(1);
       eventWeight *= fPUWeight->GetWeight(nPU);
       //std::cout << event << " " << nPU << " " << nvertex << " " << fPUWeight->GetWeight(nPU) << std::endl;
       //eventWeight *= getWeight_oscar(nPU);
@@ -3250,9 +3266,10 @@ ofstream ofs("run_event.txt");
 
 
   std::cout << std::endl << std::endl;
-  std::cout << "----> DATASET: " << dataset_ << std::endl << std::endl;
+  std::cout << "----> DATASET: " << dataset_ << std::endl;
   std::cout << "----> SELECTION: " << selectionType_ << std::endl;
   if( isMC ) std::cout << "----> PU REWEIGHING: " << PUType_ << std::endl;
+  std::cout << std::endl << std::endl;
   std::cout << "----> 250 GeV (235-275): " << std::endl;
   std::cout << "            0 btag: " << 1000.*nEventsPassed_fb_0btag_250 << " ev/fb-1  (" << nEventsPassed_0btag_250 << " events)" << " Efficiency: " << 100.*eff_0btag_250 << "%" << std::endl;
   std::cout << "            1 btag: " << 1000.*nEventsPassed_fb_1btag_250 << " ev/fb-1  (" << nEventsPassed_1btag_250 << " events)" << " Efficiency: " << 100.*eff_1btag_250 << "%" << std::endl;
