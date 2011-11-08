@@ -59,3 +59,4 @@ cp FIT/EfficiencyFits_PUHR11/effFit_MU_2btag.eps ~/scratch0/tdr2/notes/AN-11-388
 cp FIT/EfficiencyFits_PUHR11/effFit_ELE_0btag.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/effFit_ELE_0btag.eps
 cp FIT/EfficiencyFits_PUHR11/effFit_ELE_1btag.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/effFit_ELE_1btag.eps
 cp FIT/EfficiencyFits_PUHR11/effFit_ELE_2btag.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/effFit_ELE_2btag.eps
+cp FIT/upperLimit_HR11.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/plot_baysian.eps
