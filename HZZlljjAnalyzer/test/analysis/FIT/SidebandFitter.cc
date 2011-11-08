@@ -186,15 +186,16 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
     sprintf( suffix, "_%d", seed );
   else
     sprintf( suffix, "" );
-  char treeName_MC[200];
-  sprintf( treeName_MC, "sidebandsMC_alpha%s", suffix );
-  std::string treeName_MC_str(treeName_MC);
-  std::cout << "Correcting sidebands (MC): " << std::endl;
-  TTree* tree_sidebandsMC_alpha = correctTreeWithAlpha( treeMC, h1_alpha, btagCategory, treeName_MC_str );
-  //tree_sidebandsMC_alpha->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ"); 
-  RooDataSet sidebandsMC_alpha("sidebandsMC_alpha","sidebandsMC_alpha",tree_sidebandsMC_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight_alpha");
 
-  //RooDataSet sidebandsDATA("sidebandsDATA","sidebandsDATA",treeDATA,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands);
+  //char treeName_MC[200];
+  //sprintf( treeName_MC, "sidebandsMC_alpha%s", suffix );
+  //std::string treeName_MC_str(treeName_MC);
+  //std::cout << "Correcting sidebands (MC): " << std::endl;
+  //TTree* tree_sidebandsMC_alpha = correctTreeWithAlpha( treeMC, h1_alpha, btagCategory, treeName_MC_str );
+  ////tree_sidebandsMC_alpha->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ"); 
+  //RooDataSet sidebandsMC_alpha("sidebandsMC_alpha","sidebandsMC_alpha",tree_sidebandsMC_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight_alpha");
+
+  
   RooDataSet signalDATA("signalDATA","signalDATA",treeDATA,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_signal);
   char treeName_DATA[200];
   sprintf( treeName_DATA, "sidebandsDATA_alpha%s", suffix );
@@ -236,6 +237,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   c1->cd();
 
 
+/*
   std::cout << std::endl << std::endl;
   std::cout << "-----------------------------------------------" << std::endl;
   std::cout << "  FIT ALPHA-CORRECTED MC SIDEBANDS (" << btagCategory << " btags)" << std::endl;
@@ -286,33 +288,40 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
   } //if writeFile
 
+*/
+
+
+
+  std::cout << std::endl << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << "  FIT MC SIGNAL (" << btagCategory << " btags)" << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << std::endl << std::endl;
+
+
+  RooFitResult *r_signalMC = background.fitTo(signalMC,SumW2Error(kTRUE), Save(), Warnings(warnings), PrintLevel(warningLevel));
 
 
   if( writeFile ) {
 
-    std::cout << std::endl << std::endl;
-    std::cout << "-----------------------------------------------" << std::endl;
-    std::cout << "  FIT MC SIGNAL (" << btagCategory << " btags)" << std::endl;
-    std::cout << "-----------------------------------------------" << std::endl;
-    std::cout << std::endl << std::endl;
 
+    std::string ofsMCName = get_fitResultsName( btagCategory, "MC" );
+    ofstream ofsMC(ofsMCName.c_str());
 
-    //fix shape:
-    cutOff.setConstant(kTRUE);
-    beta.setConstant(kTRUE);
-    m.setConstant(kTRUE);
-    wdth.setConstant(kTRUE);
-    n.setConstant(kTRUE);
-    alpha.setConstant(kTRUE);
+    ofsMC << "beta " << beta.getVal() << " " << beta.getError() << std::endl;
+    ofsMC << "cutOff " << cutOff.getVal() << " " << cutOff.getError() << std::endl;
+    ofsMC << "m " << m.getVal() << " " << m.getError() << std::endl;
+    ofsMC << "wdth " << wdth.getVal() << " " << wdth.getError() << std::endl;
+    ofsMC << "alpha " << alpha.getVal() << " " << alpha.getError() << std::endl;
+    ofsMC << "n " << n.getVal() << " " << n.getError() << std::endl;
 
+    ofsMC.close();
 
-    c1->Clear();
-    c1->SetLogy(false);
+    RooPlot *plot_signalMC = CMS_hzz2l2q_mZZ->frame(mZZmin_, mZZmax_, nBins);
 
+    signalMC.plotOn(plot_signalMC, Binning(nBins));
 
-    RooPlot *plot_signalMC  = CMS_hzz2l2q_mZZ->frame(mZZmin_, mZZmax_, nBins);
-
-    background.plotOn(plot_signalMC, LineColor(kRed), Normalization(sidebandsMC_alpha.sumEntries()));
+    background.plotOn(plot_signalMC, LineColor(kRed));
     signalMC.plotOn(plot_signalMC, Binning(nBins));
 
     plot_signalMC->Draw();
@@ -334,6 +343,8 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
 
 
+
+
   std::cout << std::endl << std::endl;
   std::cout << "-----------------------------------------------" << std::endl;
   std::cout << "  FIT ALPHA-CORRECTED DATA SIDEBANDS (" << btagCategory << " btags)" << std::endl;
@@ -344,9 +355,17 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   c1->Clear();
   c1->SetLogy(false);
 
-  // unset const-ness of alpha and wdth:
+
+  // fix parameters to MC value:
+  cutOff.setConstant(kTRUE);
+  beta.setConstant(kTRUE);
+  m.setConstant(kTRUE);
+  n.setConstant(kTRUE);
+
+  // except for alpha and wdth:
   wdth.setConstant(kFALSE);
   alpha.setConstant(kFALSE);
+
 
   RooFitResult *r_sidebandsDATA_alpha = background.fitTo(sidebandsDATA_alpha, SumW2Error(kFALSE), Save(), Warnings(warnings), PrintLevel(warningLevel));
   char fitResultName[200];
@@ -523,7 +542,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
     file_alpha->cd();
     h1_alpha->Write();
     tree_sidebandsDATA_alpha->Write();
-    tree_sidebandsMC_alpha->Write();
+    //tree_sidebandsMC_alpha->Write();
     r_sidebandsDATA_alpha->Write();
     r_sidebandsDATA_alpha_decorr->Write();
     fitWorkspace->Write();
@@ -540,7 +559,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   delete nBTags;
   delete mZjj;
   delete c1;
-  delete r_sidebandsMC_alpha;
+  //delete r_sidebandsMC_alpha;
 
 
   return r_sidebandsDATA_alpha;
