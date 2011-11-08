@@ -47,3 +47,9 @@ cp HZZlljjRMPlots_MConly_madgraph_presel_ALL/ptJet2.eps ~/scratch0/tdr2/notes/AN
 cp HZZlljjRMPlots_MConly_madgraph_presel_ALL/ptLept1.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/tmva_ptLept1.eps
 cp HZZlljjRMPlots_MConly_madgraph_presel_ALL/ptLept2.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/tmva_ptLept2.eps
 cp HZZlljjRMPlots_MConly_madgraph_presel_ALL/ptZll.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/tmva_ptZll.eps
+cp FIT/HZZlljjRMPlots_DATA_HR11_plusSignal_times3_optLD_looseBTags_v2_PUHR11_ALL/mZZ_0btag_withCurve.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/AllInOne_0btag_ll_LIMIT.eps
+cp FIT/HZZlljjRMPlots_DATA_HR11_plusSignal_times3_optLD_looseBTags_v2_PUHR11_ALL/mZZ_1btag_withCurve.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/AllInOne_1btag_ll_LIMIT.eps
+cp FIT/HZZlljjRMPlots_DATA_HR11_plusSignal_times3_optLD_looseBTags_v2_PUHR11_ALL/mZZ_2btag_withCurve.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/AllInOne_2btag_ll_LIMIT.eps
+cp FIT/HZZlljjRMPlots_DATA_HR11_plusSignal_times3_optLD_looseBTags_v2_PUHR11_ALL/mZZ_0btag_withCurve_log.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/AllInOne_0btag_ll_LIMIT_log.eps
+cp FIT/HZZlljjRMPlots_DATA_HR11_plusSignal_times3_optLD_looseBTags_v2_PUHR11_ALL/mZZ_1btag_withCurve_log.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/AllInOne_1btag_ll_LIMIT_log.eps
+cp FIT/HZZlljjRMPlots_DATA_HR11_plusSignal_times3_optLD_looseBTags_v2_PUHR11_ALL/mZZ_2btag_withCurve_log.eps ~/scratch0/tdr2/notes/AN-11-388/trunk/plots/AllInOne_2btag_ll_LIMIT_log.eps
