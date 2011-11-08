@@ -465,7 +465,7 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
     TTree* signalTree = (TTree*)signalFile->Get("tree_passedEvents");
 
     char signalCut[500];
-    sprintf( signalCut, "HLTSF*PUWeight*( mZjj>75. && mZjj<105. && mZZ>183. && mZZ<800. && nBTags==%d && leptType==%d)", nbtags, leptType_int);
+    sprintf( signalCut, "HLTSF*PUWeight*( mZjj>75. && mZjj<105. && mZZ>160. && mZZ<800. && nBTags==%d && leptType==%d)", nbtags, leptType_int);
     TH1D* h1_mZZ_signal = new TH1D("mZZ_signal", "", 65, 150., 800.);
     h1_mZZ_signal->Sumw2();
     if( mass==400. )
@@ -660,7 +660,7 @@ RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string&
   RooRealVar leptType("leptType","lepton type",-1,2);
 
   char selection[900];
-  sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>183. && CMS_hzz2l2q_mZZ<800.", nbtags, leptType_int );
+  sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>160. && CMS_hzz2l2q_mZZ<800.", nbtags, leptType_int );
 
 
   RooFormulaVar rooselection("selection", selection, RooArgList(*CMS_hzz2l2q_mZZ,nBTags,mZjj,leptType));
