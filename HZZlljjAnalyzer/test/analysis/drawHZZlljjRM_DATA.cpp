@@ -67,8 +67,8 @@ int main(int argc, char* argv[]) {
     PUType = "HR11";
   else if( data_dataset=="Run2011B_v1" )
     //PUType = "HR11";
-    //PUType = "Run2011B_73pb";
-    PUType = "Run2011B";
+    PUType = "Run2011B_73pb";
+    //PUType = "Run2011B";
   else {
     std::cout << "Don't knwo what PUType to choose for data dataset '" << data_dataset << "'. Choosing HR11 default." << std::endl;
     PUType = "HR11";
@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
   } else {
     std::string dataFileName = "HZZlljjRM_DATA_" + data_dataset + "_"+selType+"_"+leptType+".root";
     TFile* dataFile = TFile::Open(dataFileName.c_str());
-    db->add_dataFile( dataFile, "DATA_Run2011A" );
+    db->add_dataFile( dataFile, "DATA" );
   }
 
   std::string signalFileName = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-400_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1";
@@ -223,9 +223,11 @@ int main(int argc, char* argv[]) {
 
   bool log = true;
 
+  db->set_xAxisMax(25.5);
   db->drawHisto("nvertex", "Number of Reconstructed Vertexes", "", "Events", log);
   db->drawHisto("nvertex_PUW", "Number of Reconstructed Vertexes", "", "Events", log);
   db->drawHisto("nvertex_PUW_ave", "Number of Reconstructed Vertexes", "", "Events", log);
+  db->set_xAxisMax();
 
   db->set_getBinLabels(true);
   db->set_yAxisMaxScaleLog(50.);
