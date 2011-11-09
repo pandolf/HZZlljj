@@ -177,6 +177,9 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   RooRealVar* mZjj = new RooRealVar("mZjj", "mZjj", 60., 130., "GeV");
 
 
+  //char treeMCName[200];
+  //sprintf( treeMCName, "treeMCsignal_%dbtag", btagCategory );
+  //treeMC->SetName( treeMCName );
 
   //RooDataSet sidebandsMC("sidebandsMC","sidebandsMC",treeMC,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight");
   RooDataSet signalMC("signalMC","signalMC",treeMC,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_signal,"eventWeight");
@@ -187,13 +190,13 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   else
     sprintf( suffix, "" );
 
-  //char treeName_MC[200];
-  //sprintf( treeName_MC, "sidebandsMC_alpha%s", suffix );
-  //std::string treeName_MC_str(treeName_MC);
-  //std::cout << "Correcting sidebands (MC): " << std::endl;
-  //TTree* tree_sidebandsMC_alpha = correctTreeWithAlpha( treeMC, h1_alpha, btagCategory, treeName_MC_str );
-  ////tree_sidebandsMC_alpha->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ"); 
-  //RooDataSet sidebandsMC_alpha("sidebandsMC_alpha","sidebandsMC_alpha",tree_sidebandsMC_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight_alpha");
+  char treeName_MC[200];
+  sprintf( treeName_MC, "sidebandsMC_alpha%s", suffix );
+  std::string treeName_MC_str(treeName_MC);
+  std::cout << "Correcting sidebands (MC): " << std::endl;
+  TTree* tree_sidebandsMC_alpha = correctTreeWithAlpha( treeMC, h1_alpha, btagCategory, treeName_MC_str );
+  //tree_sidebandsMC_alpha->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ"); 
+  RooDataSet sidebandsMC_alpha("sidebandsMC_alpha","sidebandsMC_alpha",tree_sidebandsMC_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_sidebands,"eventWeight_alpha");
 
   
   RooDataSet signalDATA("signalDATA","signalDATA",treeDATA,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ,*nBTags,*mZjj),cut_signal);
@@ -542,7 +545,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
     file_alpha->cd();
     h1_alpha->Write();
     tree_sidebandsDATA_alpha->Write();
-    //tree_sidebandsMC_alpha->Write();
+    tree_sidebandsMC_alpha->Write();
     r_sidebandsDATA_alpha->Write();
     r_sidebandsDATA_alpha_decorr->Write();
     fitWorkspace->Write();
