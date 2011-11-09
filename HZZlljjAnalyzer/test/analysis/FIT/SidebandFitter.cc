@@ -668,7 +668,18 @@ TH1D* SidebandFitter::shuffle( TH1D* inhist, TRandom3* random, char *histName ) 
 
 
   
-float SidebandFitter::get_backgroundNormalization( int nbtags, const std::string& leptType, const std::string& data_mc ) {
+// this method returns only rate:
+Double_t SidebandFitter::get_backgroundNormalization( int nbtags, const std::string& leptType, const std::string& data_mc ) {
+
+  std::pair<float,float> rate_and_error = this->get_backgroundNormalizationAndError( nbtags, leptType, data_mc );
+
+  return rate_and_error.first;
+
+}
+
+
+// this method return both rate (first) and error on rate (second):
+std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError( int nbtags, const std::string& leptType, const std::string& data_mc ) {
 
   
   // open fit results file:
@@ -683,7 +694,8 @@ float SidebandFitter::get_backgroundNormalization( int nbtags, const std::string
   
 
   // compute expected BG yield from observed sideband events
-  float rate_background;
+  Double_t rate_background;
+  Double_t rate_background_error;
 
   // special treatment for 2 btag category:
   // fix relative ele/mu normalization by taking MC ratio
@@ -728,14 +740,18 @@ float SidebandFitter::get_backgroundNormalization( int nbtags, const std::string
     else
       sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d)", nbtags, SidebandFitter::convert_leptType(leptType) );
     treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
-    rate_background = h1_mZZ_sidebands_alpha->Integral();
+    rate_background = h1_mZZ_sidebands_alpha->IntegralAndError( h1_mZZ_sidebands_alpha->GetXaxis()->GetFirst(), h1_mZZ_sidebands_alpha->GetXaxis()->GetLast(), rate_background_error );
 
   //}
 
 
   fitResultsFile->Close();
 
-  return rate_background;
+  std::pair<Double_t,Double_t> rate_and_error;
+  rate_and_error.first = rate_background;
+  rate_and_error.second = rate_background_error;
+
+  return rate_and_error;
 
 }
 

@@ -258,7 +258,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   float rate_vbf  = eff*hp.CSvbf*hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
 
   // compute expected BG yield from observed sideband events:
-  float rate_background = sf->get_backgroundNormalization( nbtags, leptType_str );
+  Double_t rate_background = sf->get_backgroundNormalization( nbtags, leptType_str );
 
 
 
