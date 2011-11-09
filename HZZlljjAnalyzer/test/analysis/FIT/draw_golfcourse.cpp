@@ -98,7 +98,6 @@ int main( int argc, char* argv[] ) {
   legend->SetFillColor(0);
   legend->SetFillStyle(0);
   legend->SetTextSize(0.038);
-  legend->AddEntry( graphObserved, "Bayesian Observed", "P" ); 
   legend->AddEntry( graphExpected68, "Bayesian Expected", "L" ); 
   legend->AddEntry( graphExpected68_forLegend, "Expected #pm 1#sigma", "F" ); 
   legend->AddEntry( graphExpected95, "Expected #pm 2#sigma", "F" ); 
@@ -121,6 +120,30 @@ int main( int argc, char* argv[] ) {
   sprintf( canvasName, "upperLimitExpected_%s.eps", data_dataset.c_str() );
   c1->SaveAs(canvasName);
 
+
+  c1->Clear();
+
+  // now also observed:
+
+  TLegend* legend2 = new TLegend( 0.3, 0.6, 0.74, 0.91 );
+  legend2->SetFillColor(0);
+  legend2->SetFillStyle(0);
+  legend2->SetTextSize(0.038);
+  legend2->AddEntry( graphObserved, "Bayesian Observed", "P" ); 
+  legend2->AddEntry( graphExpected68, "Bayesian Expected", "L" ); 
+  legend2->AddEntry( graphExpected68_forLegend, "Expected #pm 1#sigma", "F" ); 
+  legend2->AddEntry( graphExpected95, "Expected #pm 2#sigma", "F" ); 
+  legend2->AddEntry( line_one, "SM", "L" ); 
+
+
+  axes->Draw();
+  labelCMS->Draw("same");
+  labelSqrt->Draw("same");
+  graphExpected95->Draw("3same");
+  graphExpected68->Draw("3same");
+  graphExpected68->Draw("LXsame");
+  line_one->Draw("same");
+  legend->Draw("same");
   graphObserved->Draw("PLsame");
   gPad->RedrawAxis();
 
@@ -235,9 +258,12 @@ std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::s
 
   std::vector<int> masses;
   masses.push_back(200);
+  masses.push_back(226);
+  masses.push_back(230);
   masses.push_back(250);
   masses.push_back(300);
   masses.push_back(350);
+  masses.push_back(370);
   masses.push_back(400);
   masses.push_back(440);
   masses.push_back(500);
