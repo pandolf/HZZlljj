@@ -25,6 +25,8 @@
 
 #include "PdfDiagonalizer.h"
 
+#include "SidebandFitter.h"
+
 
 
 struct HiggsParameters {
@@ -60,7 +62,7 @@ double sign( double x ) {
 }
 
 
-int convert_leptType( const std::string& leptType );
+//int convert_leptType( const std::string& leptType );
 std::string leptType_datacards( const std::string& leptType_str );
 
 void create_singleDatacard( const std::string& dataset, const std::string& PUType, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass );
@@ -115,6 +117,9 @@ int main( int argc, char* argv[] ) {
   } else if( dataset=="HR11" ) {
     lumi_ELE=4200.; //pb^-1
     lumi_MU =4200.; //pb^-1
+  } else if( dataset=="HR11_v2" ) {
+    lumi_ELE=4600.; //pb^-1
+    lumi_MU =4600.; //pb^-1
   } else {
     std::cout << "Unknown dataset '" << dataset << "'. Exiting." << std::endl;
     exit(333);
@@ -125,6 +130,8 @@ int main( int argc, char* argv[] ) {
   std::string PUType = "Run2011A";
   if( dataset=="HR11" )
     PUType = "HR11";
+  if( dataset=="HR11_v2" )
+    PUType = "HR11_73pb";
   if( dataset_tstr.Contains("Run2011B") )
     PUType = "2011B"; 
 
@@ -180,7 +187,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   }
 
 
-  int leptType_int = convert_leptType( leptType_str );
+  int leptType_int = SidebandFitter::convert_leptType( leptType_str );
 
   HiggsParameters hp = get_higgsParameters(mass);
 
@@ -249,13 +256,47 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   float rate_vbf  = eff*hp.CSvbf*hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
 
   // compute expected BG yield from observed sideband events:
-  TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, 150., 800.);
-  h1_mZZ_sidebands_alpha->Sumw2();
-  char sidebandsCut_alpha[500];
-  sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d)", nbtags, leptType_int);
-  treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
-  double rate_background = h1_mZZ_sidebands_alpha->Integral();
-  delete h1_mZZ_sidebands_alpha;
+  float rate_background;
+
+  // special treatment for 2 btag category:
+  // fix relative ele/mu normalization by taking MC ratio
+  // in order to minimize sideband fluctuations in data
+  if( nbtags==2 ) { 
+
+    TTree* treeMC = (TTree*)fitResultsFile->Get("sidebandsMC_alpha");
+
+    TH1D* h1_mZZ_signalMC_ELE = new TH1D("mZZ_signalMC_ELE", "", 65, 150., 800.);
+    TH1D* h1_mZZ_signalMC_MU = new TH1D("mZZ_signalMC_MU", "", 65, 150., 800.);
+
+    char signalCutMC[500];
+    sprintf( signalCutMC, "eventWeight*(mZjj>75. && mZjj<105. && leptType==0 && nBTags==%d", nbtags );
+    treeMC->Project("mZZ_signalMC_MU", "CMS_hzz2l2q_mZZ", signalCutMC);
+    sprintf( signalCutMC, "eventWeight*(mZjj>75. && mZjj<105. && leptType==1 && nBTags==%d", nbtags );
+    treeMC->Project("mZZ_signalMC_ELE", "CMS_hzz2l2q_mZZ", signalCutMC);
+
+    float eleMC = h1_mZZ_signalMC_ELE->Integral();
+    float muMC = h1_mZZ_signalMC_MU->Integral();
+    float ratioMC = (leptType_str=="MU") ? eleMC/muMC : muMC/eleMC;
+
+    TH1D* h1_mZZ_sidebandsDATA = new TH1D("mZZ_sidebandsDATA", "", 65, 150., 800.);
+    char sidebandsCut_alpha[500];
+    sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags ); //electrons+muons
+    treeSidebandsDATA_alphaCorr->Project("mZZ_sidebandsDATA", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
+    double sumDATA = h1_mZZ_sidebandsDATA->Integral();
+
+    rate_background = sumDATA / ( ratioMC+1.);
+
+  } else { //nbtags =0,1
+
+    TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, 150., 800.);
+    h1_mZZ_sidebands_alpha->Sumw2();
+    char sidebandsCut_alpha[500];
+    sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d)", nbtags, leptType_int);
+    treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
+    rate_background = h1_mZZ_sidebands_alpha->Integral();
+
+  }
+
 
 
   ofs << "rate               " << rate_gg << "\t\t" << rate_vbf << "\t\t" << rate_background << std::endl;
@@ -438,7 +479,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
 TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::string& PUType ) {
 
-  int leptType_int = convert_leptType(leptType_str);
+  int leptType_int = SidebandFitter::convert_leptType(leptType_str);
 
   ifstream ifsMC("massesMC.txt"); //the points at which we have MC samples
 
@@ -459,7 +500,10 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
 
 
     char signalfileName[800];
-    sprintf( signalfileName, "HZZlljjRM_GluGluToHToZZTo2L2Q_M-%.0f_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU%s_ALL.root", hp.mH, PUType.c_str() );
+    if( PUType=="HR11_73pb" )
+      sprintf( signalfileName, "HZZlljjRM_GluGluToHToZZTo2L2Q_M-%.0f_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PUHR11_ALL.root", hp.mH );
+    else
+      sprintf( signalfileName, "HZZlljjRM_GluGluToHToZZTo2L2Q_M-%.0f_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU%s_ALL.root", hp.mH, PUType.c_str() );
 
     TFile* signalFile = TFile::Open(signalfileName);
     TTree* signalTree = (TTree*)signalFile->Get("tree_passedEvents");
@@ -519,6 +563,7 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
 
 
 
+/*
 int convert_leptType( const std::string& leptType ) {
 
   if( leptType!="ELE" && leptType!="MU" ) {
@@ -531,6 +576,7 @@ int convert_leptType( const std::string& leptType ) {
   return leptType_int;
 
 }
+*/
 
 
 
@@ -645,7 +691,7 @@ double linear_interp( double x, double x_old, double mass, double mH, double mH_
 
 RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& dataset, const std::string& leptType_str, int nbtags ) {
 
-  int leptType_int = convert_leptType(leptType_str);
+  int leptType_int = SidebandFitter::convert_leptType(leptType_str);
 
   std::string dataFileName = "HZZlljjRM_DATA_" + dataset + "_optLD_looseBTags_v2_ALL.root";
   TFile* dataFile = TFile::Open(dataFileName.c_str());
@@ -940,7 +986,7 @@ std::pair<double,double> bTagEffSyst( const std::string& leptType_str, int nbtag
 
 double backgroundNorm( const std::string& dataset, const std::string& leptType_str, int nbtags ) {
 
-  int leptType_int = convert_leptType( leptType_str );
+  int leptType_int = SidebandFitter::convert_leptType( leptType_str );
 
   std::string fileName = "HZZlljjRM_DATA_" + dataset + "_optLD_looseBTags_v2_ALL.root";
   TFile* file_data = TFile::Open(fileName.c_str());

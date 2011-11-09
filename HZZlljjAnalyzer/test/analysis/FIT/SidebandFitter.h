@@ -31,7 +31,9 @@ class SidebandFitter {
 
   TH1D* shuffle( TH1D* inhist, TRandom3* random, char *histName );
 
-  void modifyFitResultError( const std::string& thisVar, double thisVarError, int nbtags );
+  static float get_backgroundNormalization( const std::string& data_dataset, const std::string& PUType, int nbtags, const std::string& leptType );
+
+  static int convert_leptType( const std::string& leptType );
 
 
  private:

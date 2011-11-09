@@ -666,3 +666,88 @@ TH1D* SidebandFitter::shuffle( TH1D* inhist, TRandom3* random, char *histName ) 
 }
 
 
+  
+float SidebandFitter::get_backgroundNormalization( const std::string& data_dataset, const std::string& PUType, int nbtags, const std::string&  leptType ) {
+
+  
+std::cout << "0" << std::endl;
+  // open fit results file:
+  char fitResultsFileName[200];
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s.root", data_dataset.c_str(), nbtags, PUType.c_str());
+  TFile* fitResultsFile = TFile::Open(fitResultsFileName);
+
+  // get alpha-corrected data tree:
+  TTree* treeSidebandsDATA_alphaCorr = (TTree*)fitResultsFile->Get("sidebandsDATA_alpha");
+  
+std::cout << "t: " << treeSidebandsDATA_alphaCorr << std::endl;
+std::cout << "nbtags: " << nbtags << " leptType: " << leptType << std::endl;
+
+  // compute expected BG yield from observed sideband events
+  float rate_background;
+
+  // special treatment for 2 btag category:
+  // fix relative ele/mu normalization by taking MC ratio
+  // in order to minimize sideband fluctuations in data
+  if( nbtags==2 && leptType!="ALL" ) { 
+std::cout << "here?" << std::endl;
+
+    TTree* treeMC = (TTree*)fitResultsFile->Get("sidebandsMC_alpha");
+
+    TH1D* h1_mZZ_signalMC_ELE = new TH1D("mZZ_signalMC_ELE", "", 65, 150., 800.);
+    TH1D* h1_mZZ_signalMC_MU = new TH1D("mZZ_signalMC_MU", "", 65, 150., 800.);
+    h1_mZZ_signalMC_ELE->Sumw2();
+    h1_mZZ_signalMC_MU->Sumw2();
+
+    char signalCutMC[500];
+    sprintf( signalCutMC, "eventWeight*(mZjj>75. && mZjj<105. && leptType==0 && nBTags==%d)", nbtags );
+    treeMC->Project("mZZ_signalMC_MU", "CMS_hzz2l2q_mZZ", signalCutMC);
+    sprintf( signalCutMC, "eventWeight*(mZjj>75. && mZjj<105. && leptType==1 && nBTags==%d)", nbtags );
+    treeMC->Project("mZZ_signalMC_ELE", "CMS_hzz2l2q_mZZ", signalCutMC);
+
+    float eleMC = h1_mZZ_signalMC_ELE->Integral();
+    float muMC = h1_mZZ_signalMC_MU->Integral();
+    float ratioMC = (leptType=="MU") ? eleMC/muMC : muMC/eleMC;
+
+    TH1D* h1_mZZ_sidebandsDATA = new TH1D("mZZ_sidebandsDATA", "", 65, 150., 800.);
+    char sidebandsCut_alpha[500];
+    sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags ); //electrons+muons
+    treeSidebandsDATA_alphaCorr->Project("mZZ_sidebandsDATA", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
+    double sumDATA = h1_mZZ_sidebandsDATA->Integral();
+
+    rate_background = sumDATA / ( ratioMC+1.);
+
+  } else { //nbtags =0,1 or 2-tag but ele+mu
+
+std::cout << "1" << std::endl;
+    TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, 150., 800.);
+    h1_mZZ_sidebands_alpha->Sumw2();
+std::cout << "2" << std::endl;
+    char sidebandsCut_alpha[500];
+    if( leptType=="ALL" )
+      sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags );
+    else
+      sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d)", nbtags, SidebandFitter::convert_leptType(leptType) );
+std::cout << "3" << std::endl;
+    treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
+    rate_background = h1_mZZ_sidebands_alpha->Integral();
+
+  }
+
+
+  return rate_background;
+
+}
+
+
+int SidebandFitter::convert_leptType( const std::string& leptType ) {
+  
+  if( leptType!="ELE" && leptType!="MU" ) {
+    std::cout << "WARNING!!! LeptType '" << leptType << "' is NOT supported!!! Returning -1." << std::endl;
+    return -1;
+  }
+  
+  int leptType_int = (leptType=="MU" ) ? 0 : 1;
+  
+  return leptType_int;
+    
+} 
