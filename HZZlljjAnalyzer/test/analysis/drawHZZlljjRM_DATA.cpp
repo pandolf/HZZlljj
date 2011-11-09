@@ -22,10 +22,6 @@ int main(int argc, char* argv[]) {
 
   std::string ZJetsMC = "madgraph";
 
-//if( argc>=3 ) {
-//  std::string PUType_str(argv[2]);
-//  PUType = PUType_str;
-//}
 
   std::string data_dataset = "HR11";
   if( argc>=3 ) {
@@ -63,8 +59,14 @@ int main(int argc, char* argv[]) {
   std::string PUType = "HR11";
   if( data_dataset=="LP11" || data_dataset=="Run2011A_FULL" )
     PUType = "Run2011A";
-  else if( data_dataset=="HR11" )
+  else if( data_dataset=="HR11" ) 
+    //PUType = "HR11_73pb";
     PUType = "HR11";
+  else if( data_dataset=="HR11_v2" )
+    //PUType = "HR11_v3";
+    //PUType = "HR11_73pb_DY";
+    PUType = "HR11_73pb";
+    //PUType = "HR11_v2";
   else if( data_dataset=="Run2011B_v1" )
     //PUType = "HR11";
     PUType = "Run2011B_73pb";
@@ -199,10 +201,12 @@ int main(int argc, char* argv[]) {
       db->set_lumiNormalization(1580.);
     else if( data_dataset=="Run2011A_FULL" )
       db->set_lumiNormalization(2100.);
-    else if( data_dataset=="HR11" )
-      db->set_lumiNormalization(4200.);
     else if( data_dataset=="Run2011B_v1" )
       db->set_lumiNormalization(2100.);
+    else if( data_dataset=="HR11" )
+      db->set_lumiNormalization(4200.);
+    else if( data_dataset=="HR11_v2" )
+      db->set_lumiNormalization(4600.);
 
   } else { //shape
 
