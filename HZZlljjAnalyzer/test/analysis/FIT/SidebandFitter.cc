@@ -701,7 +701,6 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
   // fix relative ele/mu normalization by taking MC ratio
   // in order to minimize sideband fluctuations in data
 
-/*
   if( nbtags==2 && leptType!="ALL" ) { 
 
     TTree* treeMC = (TTree*)fitResultsFile->Get("sidebandsMC_alpha");
@@ -730,7 +729,6 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
     rate_background = sumDATA / ( ratioMC+1.);
 
   } else { //nbtags =0,1 or 2-tag but ele+mu
-*/
 
     TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, 150., 800.);
     h1_mZZ_sidebands_alpha->Sumw2();
@@ -742,7 +740,7 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
     treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
     rate_background = h1_mZZ_sidebands_alpha->IntegralAndError( h1_mZZ_sidebands_alpha->GetXaxis()->GetFirst(), h1_mZZ_sidebands_alpha->GetXaxis()->GetLast(), rate_background_error );
 
-  //}
+  }
 
 
   fitResultsFile->Close();
