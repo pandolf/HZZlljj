@@ -32,7 +32,7 @@ class SidebandFitter {
 
   TH1D* shuffle( TH1D* inhist, TRandom3* random, char *histName );
 
-  float get_backgroundNormalization( int nbtags, const std::string& leptType );
+  float get_backgroundNormalization( int nbtags, const std::string& leptType, const std::string& data_mc="DATA" );
 
   RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& leptType_str, int nbtags );
 

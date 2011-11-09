@@ -668,7 +668,7 @@ TH1D* SidebandFitter::shuffle( TH1D* inhist, TRandom3* random, char *histName ) 
 
 
   
-float SidebandFitter::get_backgroundNormalization( int nbtags, const std::string&  leptType ) {
+float SidebandFitter::get_backgroundNormalization( int nbtags, const std::string& leptType, const std::string& data_mc ) {
 
   
   // open fit results file:
@@ -676,8 +676,10 @@ float SidebandFitter::get_backgroundNormalization( int nbtags, const std::string
   sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s.root", dataset_.c_str(), nbtags, PUType_.c_str());
   TFile* fitResultsFile = TFile::Open(fitResultsFileName);
 
-  // get alpha-corrected data tree:
-  TTree* treeSidebandsDATA_alphaCorr = (TTree*)fitResultsFile->Get("sidebandsDATA_alpha");
+
+  // get alpha-corrected tree:
+  std::string treeName = "sidebands" + data_mc + "_alpha"; 
+  TTree* treeSidebandsDATA_alphaCorr = (TTree*)fitResultsFile->Get(treeName.c_str());
   
 
   // compute expected BG yield from observed sideband events
