@@ -30,8 +30,6 @@ int DEBUG_EVENTNUMBER = 2164366984;
 
 
 int getNJets( int nPairs );
-float getWeight_adish( int nPU );
-float getWeight_oscar( int nPU );
 //float getMuonHLTSF( float eta );
 float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger, const std::string& runPeriod="" );
 
@@ -1417,7 +1415,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
   PUWeight* fPUWeight_ave = new PUWeight(-1, "2011A", puType_ave);
   std::string puFileName;
-  if( PUType_=="HR11" )
+  if( PUType_=="HR11" || PUType_=="HR11_v3")
     puFileName = "Pileup_DATA_up_to_178479_SiXie.root";
     //puFileName = "Pileup_DATA_up_to_178078.root";
   else if( PUType_=="Run2011A" )
@@ -1429,23 +1427,47 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
     //puFileName = "Pileup_DATA_173692_to_178078.root";
   else if( PUType_=="Run2011B_73pb" )
     puFileName = "all2011B.pileup_v2_73mb.root";
-  else if( PUType_=="HR11_73pb" )
+  else if( PUType_=="HR11_73pb" || PUType_=="HR11_73pb_DY" )
     puFileName = "all2011AB.pileup_v2_73mb.root";
-  else {
+  else if( PUType_!="HR11_v2" ) {
     std::cout << "-> Unknown PU Type: '" << PUType_ << "'. Will use HR11 default." << std::endl;
     puFileName = "Pileup_DATA_up_to_178078.root";
   }
 
-  std::cout << std::endl << "-> Using data pileup file: " << puFileName << std::endl;
-  TFile* filePU = TFile::Open(puFileName.c_str());
-  TH1F* h1_nPU_data = (TH1F*)filePU->Get("pileup");
-  fPUWeight->SetDataHistogram(h1_nPU_data);
-  fPUWeight_ave->SetDataHistogram(h1_nPU_data);
 
-  TFile* filePUMC = TFile::Open("PUemanuele/DY_PU.root");
-  TH1F* h1_nPU_mc = (TH1F*)filePUMC->Get("hNPU");
-  if( PUType_!="Run2011A" ) 
+  if( PUType_!="HR11_v2" ) {
+    std::cout << std::endl << "-> Using data pileup file: " << puFileName << std::endl;
+    TFile* filePU = TFile::Open(puFileName.c_str());
+    TH1F* h1_nPU_data = (TH1F*)filePU->Get("pileup");
+    fPUWeight->SetDataHistogram(h1_nPU_data);
+    fPUWeight_ave->SetDataHistogram(h1_nPU_data);
+  } else {  // HR11_v2: 4.6fb-1 = 2.1 (A) + 2.5 (B)
+    TFile* filePU_RunA = TFile::Open("all2011A.pileup_v2_73mb.root");
+    TFile* filePU_RunB = TFile::Open("all2011B.pileup_v2_73mb.root");
+    TH1F* h1_PURunA = (TH1F*)filePU_RunA->Get("pileup");
+    TH1F* h1_PURunB = (TH1F*)filePU_RunB->Get("pileup");
+    h1_PURunA->Scale(2.1/h1_PURunA->Integral());
+    h1_PURunB->Scale(2.3/h1_PURunB->Integral());
+    TH1F* h1_PU_weightedAverage = new TH1F(*h1_PURunA);
+    h1_PU_weightedAverage->Add(h1_PURunB);
+    fPUWeight->SetDataHistogram(h1_PU_weightedAverage);
+    fPUWeight_ave->SetDataHistogram(h1_PU_weightedAverage);
+  }
+    
+     
+
+
+  if( PUType_=="HR11_73pb_DY" ) {
+    TFile* filePUMC = TFile::Open("generatedpileup_Zjets_MADGRAPH_AOD423.root");
+    TH1F* h1_nPU_mc = (TH1F*)filePUMC->Get("GenLevelInfoModule/npileup");
+    std::cout << "-> Switching MC PU file to: generatedpileup_Zjets_MADGRAPH_AOD423.root" << std::endl;
     fPUWeight->SetMCHistogram(h1_nPU_mc);
+  } else if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") && PUType_!="HR11_v3" ) {
+    TFile* filePUMC = TFile::Open("Pileup_MC_Summer11_S4.root");
+    TH1F* h1_nPU_mc = (TH1F*)filePUMC->Get("hNPU");
+    std::cout << "-> Switching MC PU file to: Pileup_MC_Summer11_S4.root" << std::endl;
+    fPUWeight->SetMCHistogram(h1_nPU_mc);
+  }
 
   int maxBTag_found = -1;
   float mZZ, mZZ_nokinfit, mZjj, mZll;
@@ -1496,13 +1518,14 @@ ofstream ofs("run_event.txt");
 
 
   std::cout << std::endl << std::endl;
-  std::cout << "+++ BEGINNING ANALYSIS LOOP." << std::endl;
+  std::cout << "+++ BEGINNING ANALYSIS LOOP" << std::endl;
   std::cout << "----> DATASET: " << dataset_ << std::endl;
   std::cout << "----> SELECTION: " << selectionType_ << std::endl;
   if( isMC ) std::cout << "----> PU REWEIGHING: " << PUType_ << std::endl;
   std::cout << std::endl << std::endl;
 
-//nEntries=10000;
+
+
   for(int iEntry=0; iEntry<nEntries; ++iEntry) {
 
     if( (iEntry % 20000)==0 ) std::cout << "Entry: " << iEntry << " /" << nEntries << std::endl;
@@ -1546,6 +1569,10 @@ ofstream ofs("run_event.txt");
         float effSingle1_Run2011A3 = getMuonHLTSF( ptLept1, etaLept1, false, "Run2011A3");
         float effSingle2_Run2011A3 = getMuonHLTSF( ptLept2, etaLept2, false, "Run2011A3");
 
+        float effSingle1_Run2011B = getMuonHLTSF( ptLept1, etaLept1, false, "Run2011B");
+        float effSingle2_Run2011B = getMuonHLTSF( ptLept2, etaLept2, false, "Run2011B");
+
+
         float HLTSF_Run2011A1 = effDouble1 * effDouble2 +
                                 effSingle2_Run2011A1 * (1. - effDouble1 ) +
                                 effSingle1_Run2011A1 * (1. - effDouble2 );
@@ -1558,14 +1585,20 @@ ofstream ofs("run_event.txt");
                                 effSingle2_Run2011A3 * (1. - effDouble1 ) +
                                 effSingle1_Run2011A3 * (1. - effDouble2 );
 
+        float HLTSF_Run2011B = effDouble1 * effDouble2 +
+                                effSingle2_Run2011B * (1. - effDouble1 ) +
+                                effSingle1_Run2011B * (1. - effDouble2 );
+
 
         // weighted average over full run (weighted with lumi):
         // LP11:
         //HLTSF = (217.*HLTSF_Run2011A1 + 920.*HLTSF_Run2011A2 + 478.*HLTSF_Run2011A3)/(217.+920.+478.);
         if( PUType_=="Run2011A" || PUType_=="Run2011A_73pb" )
           HLTSF = (217.*HLTSF_Run2011A1 + 920.*HLTSF_Run2011A2 + 1000.*HLTSF_Run2011A3)/(217.+920.+1000.);
-        else if( PUType_=="HR11" || PUType_=="HR11_73pb" ) 
-          HLTSF = (217.*HLTSF_Run2011A1 + 920.*HLTSF_Run2011A2 + 3100.*HLTSF_Run2011A3)/(217.+920.+3100.);
+        else if( PUType_=="HR11" ) 
+          HLTSF = (217.*HLTSF_Run2011A1 + 920.*HLTSF_Run2011A2 + 1000.*HLTSF_Run2011A3 + 2100.*HLTSF_Run2011B)/(217.+920.+1000.+2100.);
+        else if( PUType_=="HR11_v2" || PUType_=="HR11_73pb" )
+          HLTSF = (217.*HLTSF_Run2011A1 + 920.*HLTSF_Run2011A2 + 1000.*HLTSF_Run2011A3 + 2500.*HLTSF_Run2011B)/(217.+920.+1000.+2500.);
 
         eventWeight *= HLTSF;
 
@@ -1584,7 +1617,6 @@ ofstream ofs("run_event.txt");
 //exit(1);
       eventWeight *= fPUWeight->GetWeight(nPU);
       //std::cout << event << " " << nPU << " " << nvertex << " " << fPUWeight->GetWeight(nPU) << std::endl;
-      //eventWeight *= getWeight_oscar(nPU);
 
     } // if is MC
 
@@ -4331,81 +4363,6 @@ float Ntp1Finalizer_HZZlljjRM::get_helicityLD_thresh(float mass, int nBTags) {
 
 
 
-float getWeight_adish( int nPU ) {
-
-  float weights[] = {0.110043,
-                     0.457365,
-                     0.98622,
-                     1.60429,
-                     2.06065,
-                     2.22437,
-                     2.1078,
-                     1.76987,
-                     1.37698,
-                     0.99556,
-                     0.693361,
-                     0.458662,
-                     0.295982,
-                     0.185586,
-                     0.113966,
-                     0.068645,
-                     0.041019,
-                     0.0239427,
-                     0.0139931,
-                     0.00810005,
-                     0.00473432,
-                     0.0026347,
-                     0.00152847,
-                     0.000864942,
-                     0.000756823};
-
-  float returnWeight;
-
-  if( nPU <=24 ) returnWeight = weights[nPU];
-  else returnWeight = 0.;
-
-  return returnWeight;
-
-}
-
-
-float getWeight_oscar( int nPU ) {
-
-   float weights[] = { 0.0579929,
-                       0.319603,
-                       0.706747,
-                       1.19213,
-                       1.60791,
-                       1.86333,
-                       1.92488,
-                       1.8056 ,
-                       1.61097,
-                       1.36005,
-                       1.12688,
-                       0.90004,
-                       0.710494,
-                       0.553097,
-                       0.424955,
-                       0.322064,
-                       0.24079,
-                       0.179072,
-                       0.13096,
-                       0.0945023,
-                       0.0676994,
-                       0.0472841,
-                       0.0335799,
-                       0.0234066,
-                       0.0281886,
-                       0.0103376};
-
-  float returnWeight;
-
-  if( nPU <=25 ) returnWeight = weights[nPU];
-  else returnWeight = weights[25];
-
-  return returnWeight;
-
-}
 
 
 
@@ -4418,7 +4375,7 @@ float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger, const std::string
   // for now: onw pt bin [1] and three eta bins [3]: 0->0.8->2.1->2.4
   double eff_Double[1][3]={{0.975, 0.955, 0.910}};
 
-  double eff_Single[1][3];
+  double eff_Single[1][3]; //three eta regions: 0-0.8-2.1-2.4
   if( !isDoubleTrigger ) {
     if( runPeriod=="Run2011A1" ) { //up to may10 technical stop
       eff_Single[0][0] = 0.896;
@@ -4432,6 +4389,10 @@ float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger, const std::string
       eff_Single[0][0] = 0.890;
       eff_Single[0][1] = 0.809;
       eff_Single[0][2] = 0.493;
+    } else if( runPeriod=="Run2011B" ) { //from EPS on to end of Run2011A
+      eff_Single[0][0] = 0.890;
+      eff_Single[0][1] = 0.809;
+      eff_Single[0][2] = 0.;  // using HLT_IsoMu24_eta2p1
     } else {
       std::cout << "----> WARNING!!! Unknown run period: '" << runPeriod << "'. Exiting. " << std::endl;
     }
