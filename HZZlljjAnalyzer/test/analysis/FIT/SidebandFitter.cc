@@ -370,7 +370,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   alpha.setConstant(kFALSE);
 
 
-  RooFitResult *r_sidebandsDATA_alpha = background.fitTo(sidebandsDATA_alpha, SumW2Error(kFALSE), Save(), Warnings(warnings), PrintLevel(warningLevel));
+  RooFitResult *r_sidebandsDATA_alpha = background.fitTo(sidebandsDATA_alpha, SumW2Error(kTRUE), Save(), Warnings(warnings), PrintLevel(warningLevel));
   char fitResultName[200];
   if( leptType!="ALL" )
     sprintf( fitResultName, "fitResults_%dbtag_%s", btagCategory, leptType.c_str() );
@@ -629,7 +629,8 @@ TTree* SidebandFitter::correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int bt
     if( nBTags!=btagCategory ) continue;
 
     int alphabin = h1_alpha->FindBin( mZZ );
-    float alpha = h1_alpha->GetBinContent( alphabin );
+    //float alpha = h1_alpha->GetBinContent( alphabin );
+    float alpha = 1.;
 
     // alpha correction
     newWeight = eventWeight;
@@ -670,7 +671,6 @@ TH1D* SidebandFitter::shuffle( TH1D* inhist, TRandom3* random, char *histName ) 
 float SidebandFitter::get_backgroundNormalization( const std::string& data_dataset, const std::string& PUType, int nbtags, const std::string&  leptType ) {
 
   
-std::cout << "0" << std::endl;
   // open fit results file:
   char fitResultsFileName[200];
   sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s.root", data_dataset.c_str(), nbtags, PUType.c_str());
@@ -679,8 +679,6 @@ std::cout << "0" << std::endl;
   // get alpha-corrected data tree:
   TTree* treeSidebandsDATA_alphaCorr = (TTree*)fitResultsFile->Get("sidebandsDATA_alpha");
   
-std::cout << "t: " << treeSidebandsDATA_alphaCorr << std::endl;
-std::cout << "nbtags: " << nbtags << " leptType: " << leptType << std::endl;
 
   // compute expected BG yield from observed sideband events
   float rate_background;
@@ -689,7 +687,6 @@ std::cout << "nbtags: " << nbtags << " leptType: " << leptType << std::endl;
   // fix relative ele/mu normalization by taking MC ratio
   // in order to minimize sideband fluctuations in data
   if( nbtags==2 && leptType!="ALL" ) { 
-std::cout << "here?" << std::endl;
 
     TTree* treeMC = (TTree*)fitResultsFile->Get("sidebandsMC_alpha");
 
@@ -718,21 +715,20 @@ std::cout << "here?" << std::endl;
 
   } else { //nbtags =0,1 or 2-tag but ele+mu
 
-std::cout << "1" << std::endl;
     TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, 150., 800.);
     h1_mZZ_sidebands_alpha->Sumw2();
-std::cout << "2" << std::endl;
     char sidebandsCut_alpha[500];
     if( leptType=="ALL" )
       sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags );
     else
       sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d)", nbtags, SidebandFitter::convert_leptType(leptType) );
-std::cout << "3" << std::endl;
     treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
     rate_background = h1_mZZ_sidebands_alpha->Integral();
 
   }
 
+
+  fitResultsFile->Close();
 
   return rate_background;
 
