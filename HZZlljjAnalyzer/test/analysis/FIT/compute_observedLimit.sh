@@ -6,7 +6,6 @@ cd datacards_${dataset}
 
 
 foreach i ( `ls -1 | grep "[0-9][0-9][0-9]" | grep -v r ` )
-  #setenv i 500
   cd $i
   echo "Computing observed limit for mass: $i"
   if ( $# > 1 ) then
@@ -15,6 +14,5 @@ foreach i ( `ls -1 | grep "[0-9][0-9][0-9]" | grep -v r ` )
     combine model.root -M MarkovChainMC -m $i -H ProfileLikelihood -U >&! log.txt
   endif
   cd -
-  #break
 end
 cd ..
