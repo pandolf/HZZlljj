@@ -72,7 +72,7 @@ HiggsParameters get_higgsParameters( float mass );
 double linear_interp( double x, double x_old, double mass, double mH, double mH_old );
 TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::string& PUType );
 
-RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& dataset, const std::string& leptType_str, int nbtags );
+//RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& dataset, const std::string& leptType_str, int nbtags );
 
 //RooAbsPdf* get_signalShape( RooRealVar* CMS_hzz2l2q_mZZ, int nbtags, float massH );
 double get_signalParameter(int btag, double massH, std::string varname);
@@ -187,6 +187,8 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   }
 
 
+  SidebandFitter* sf = new SidebandFitter( dataset, PUType );
+
   int leptType_int = SidebandFitter::convert_leptType( leptType_str );
 
   HiggsParameters hp = get_higgsParameters(mass);
@@ -239,7 +241,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   ofs << "bin         CMS_hzz2l2q_" << suffix << std::endl;
 
 
-  RooDataSet* dataset_obs = get_observedDataset( CMS_hzz2l2q_mZZ, dataset, leptType_str, nbtags );
+  RooDataSet* dataset_obs = sf->get_observedDataset( CMS_hzz2l2q_mZZ, leptType_str, nbtags );
   float observedYield = dataset_obs->sumEntries();
 
   ofs << "observation   " << observedYield << std::endl;
@@ -256,46 +258,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   float rate_vbf  = eff*hp.CSvbf*hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
 
   // compute expected BG yield from observed sideband events:
-  float rate_background;
-
-  // special treatment for 2 btag category:
-  // fix relative ele/mu normalization by taking MC ratio
-  // in order to minimize sideband fluctuations in data
-  if( nbtags==2 ) { 
-
-    TTree* treeMC = (TTree*)fitResultsFile->Get("sidebandsMC_alpha");
-
-    TH1D* h1_mZZ_signalMC_ELE = new TH1D("mZZ_signalMC_ELE", "", 65, 150., 800.);
-    TH1D* h1_mZZ_signalMC_MU = new TH1D("mZZ_signalMC_MU", "", 65, 150., 800.);
-
-    char signalCutMC[500];
-    sprintf( signalCutMC, "eventWeight*(mZjj>75. && mZjj<105. && leptType==0 && nBTags==%d", nbtags );
-    treeMC->Project("mZZ_signalMC_MU", "CMS_hzz2l2q_mZZ", signalCutMC);
-    sprintf( signalCutMC, "eventWeight*(mZjj>75. && mZjj<105. && leptType==1 && nBTags==%d", nbtags );
-    treeMC->Project("mZZ_signalMC_ELE", "CMS_hzz2l2q_mZZ", signalCutMC);
-
-    float eleMC = h1_mZZ_signalMC_ELE->Integral();
-    float muMC = h1_mZZ_signalMC_MU->Integral();
-    float ratioMC = (leptType_str=="MU") ? eleMC/muMC : muMC/eleMC;
-
-    TH1D* h1_mZZ_sidebandsDATA = new TH1D("mZZ_sidebandsDATA", "", 65, 150., 800.);
-    char sidebandsCut_alpha[500];
-    sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags ); //electrons+muons
-    treeSidebandsDATA_alphaCorr->Project("mZZ_sidebandsDATA", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
-    double sumDATA = h1_mZZ_sidebandsDATA->Integral();
-
-    rate_background = sumDATA / ( ratioMC+1.);
-
-  } else { //nbtags =0,1
-
-    TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, 150., 800.);
-    h1_mZZ_sidebands_alpha->Sumw2();
-    char sidebandsCut_alpha[500];
-    sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d)", nbtags, leptType_int);
-    treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
-    rate_background = h1_mZZ_sidebands_alpha->Integral();
-
-  }
+  float rate_background = sf->get_backgroundNormalization( nbtags, leptType_str );
 
 
 
@@ -465,6 +428,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   w->Write();
   outfile->Close();
 
+  delete sf;
 
 }
 
@@ -686,6 +650,7 @@ double linear_interp( double x, double x_old, double mass, double mH, double mH_
 
 
 
+/*
 RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& dataset, const std::string& leptType_str, int nbtags ) {
 
   int leptType_int = SidebandFitter::convert_leptType(leptType_str);
@@ -715,7 +680,7 @@ RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string&
   return dataset_obs;
 
 }
-
+*/
 
 
 

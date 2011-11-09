@@ -72,15 +72,19 @@ int main(int argc, char* argv[]) {
     selType = selType_tmp;
   }
 
-  //std::string ZJetsMC = "madgraph";
 
 
   TString dataset_tstr(data_prefix);
   std::string PUType = "Run2011A";
   if( data_prefix=="HR11" )
     PUType = "HR11";
+  if( data_prefix=="HR11_v2" )
+    PUType = "HR11_73pb";
   if( dataset_tstr.BeginsWith("Run2011B") )
     PUType = "2011B";
+
+
+
 
 
   DrawBase* db = new DrawBase("HZZlljjRM");
@@ -179,6 +183,8 @@ int main(int argc, char* argv[]) {
     db->set_lumiNormalization(2100.);
   else if( data_dataset=="DATA_HR11" )
     db->set_lumiNormalization(4200.);
+  else if( data_dataset=="DATA_HR11_v2" )
+    db->set_lumiNormalization(4600.);
 
 
 
@@ -243,22 +249,22 @@ int main(int argc, char* argv[]) {
   drawHistoWithCurve( db, data_prefix, PUType, 2, "ELE");
 
 
-  xMin = 160.;
-  xMax = 1350.;
-  nBins = (int)((xMax-xMin)/binWidth);
+  //xMin = 160.;
+  //xMax = 1350.;
+  //nBins = (int)((xMax-xMin)/binWidth);
 
-  // long range (up to 1300 gev):
-  db->set_legendTitle("0 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", nBins, xMin, xMax, "mZZ_0btag_longRange", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 0, "longRange");
+  //// long range (up to 1300 gev):
+  //db->set_legendTitle("0 b-tag Category");
+  //db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", nBins, xMin, xMax, "mZZ_0btag_longRange", "m_{ZZ}", "GeV");
+  //drawHistoWithCurve( db, data_prefix, PUType, 0, "longRange");
 
-  db->set_legendTitle("1 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", nBins, xMin, xMax, "mZZ_1btag_longRange", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 1, "longRange");
+  //db->set_legendTitle("1 b-tag Category");
+  //db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", nBins, xMin, xMax, "mZZ_1btag_longRange", "m_{ZZ}", "GeV");
+  //drawHistoWithCurve( db, data_prefix, PUType, 1, "longRange");
 
-  db->set_legendTitle("2 b-tag Category");
-  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", nBins, xMin, xMax, "mZZ_2btag_longRange", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 2, "longRange");
+  //db->set_legendTitle("2 b-tag Category");
+  //db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", nBins, xMin, xMax, "mZZ_2btag_longRange", "m_{ZZ}", "GeV");
+  //drawHistoWithCurve( db, data_prefix, PUType, 2, "longRange");
 
 
 //db->set_legendTitle("0 b-tag Sidebands");
@@ -332,10 +338,10 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
   if( leptType=="ELE" ) leptType_cut = "&& leptType==1";
 
 
+  SidebandFitter* sf = new SidebandFitter( data_dataset, PUType );
 
   // get bg normalization:
-  float expBkg = SidebandFitter::get_backgroundNormalization( data_dataset, PUType, nbtags, leptType );
-std::cout << "expBkg: " << expBkg << std::endl;
+  float expBkg = sf->get_backgroundNormalization( nbtags, leptType );
 
 
   //TTree* treeSidebandsDATA_alphaCorr = (TTree*)fitResultsFile->Get("sidebandsDATA_alpha");
@@ -436,6 +442,8 @@ std::cout << "expBkg: " << expBkg << std::endl;
 
   std::string canvasName_log_eps = canvasName_str+"_log.eps";
   c1->SaveAs(canvasName_log_eps.c_str());
+
+  delete sf;
 
 }
 

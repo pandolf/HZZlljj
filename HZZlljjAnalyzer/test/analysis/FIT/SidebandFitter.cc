@@ -16,7 +16,6 @@
 
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
-#include "RooDataSet.h"
 #include "RooPlot.h"
 #include "RooArgSet.h"
 #include "RooGaussian.h"
@@ -240,7 +239,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   c1->cd();
 
 
-/*
+
   std::cout << std::endl << std::endl;
   std::cout << "-----------------------------------------------" << std::endl;
   std::cout << "  FIT ALPHA-CORRECTED MC SIDEBANDS (" << btagCategory << " btags)" << std::endl;
@@ -291,10 +290,11 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
   } //if writeFile
 
-*/
 
 
 
+
+/*
   std::cout << std::endl << std::endl;
   std::cout << "-----------------------------------------------" << std::endl;
   std::cout << "  FIT MC SIGNAL (" << btagCategory << " btags)" << std::endl;
@@ -344,7 +344,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
   } //if writeFile
 
-
+*/
 
 
 
@@ -629,8 +629,8 @@ TTree* SidebandFitter::correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int bt
     if( nBTags!=btagCategory ) continue;
 
     int alphabin = h1_alpha->FindBin( mZZ );
-    //float alpha = h1_alpha->GetBinContent( alphabin );
-    float alpha = 1.;
+    float alpha = h1_alpha->GetBinContent( alphabin );
+    //float alpha = 1.;
 
     // alpha correction
     newWeight = eventWeight;
@@ -668,12 +668,12 @@ TH1D* SidebandFitter::shuffle( TH1D* inhist, TRandom3* random, char *histName ) 
 
 
   
-float SidebandFitter::get_backgroundNormalization( const std::string& data_dataset, const std::string& PUType, int nbtags, const std::string&  leptType ) {
+float SidebandFitter::get_backgroundNormalization( int nbtags, const std::string&  leptType ) {
 
   
   // open fit results file:
   char fitResultsFileName[200];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s.root", data_dataset.c_str(), nbtags, PUType.c_str());
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s.root", dataset_.c_str(), nbtags, PUType_.c_str());
   TFile* fitResultsFile = TFile::Open(fitResultsFileName);
 
   // get alpha-corrected data tree:
@@ -686,6 +686,8 @@ float SidebandFitter::get_backgroundNormalization( const std::string& data_datas
   // special treatment for 2 btag category:
   // fix relative ele/mu normalization by taking MC ratio
   // in order to minimize sideband fluctuations in data
+
+/*
   if( nbtags==2 && leptType!="ALL" ) { 
 
     TTree* treeMC = (TTree*)fitResultsFile->Get("sidebandsMC_alpha");
@@ -714,6 +716,7 @@ float SidebandFitter::get_backgroundNormalization( const std::string& data_datas
     rate_background = sumDATA / ( ratioMC+1.);
 
   } else { //nbtags =0,1 or 2-tag but ele+mu
+*/
 
     TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, 150., 800.);
     h1_mZZ_sidebands_alpha->Sumw2();
@@ -725,7 +728,7 @@ float SidebandFitter::get_backgroundNormalization( const std::string& data_datas
     treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
     rate_background = h1_mZZ_sidebands_alpha->Integral();
 
-  }
+  //}
 
 
   fitResultsFile->Close();
@@ -733,6 +736,42 @@ float SidebandFitter::get_backgroundNormalization( const std::string& data_datas
   return rate_background;
 
 }
+
+
+
+
+RooDataSet* SidebandFitter::get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& leptType_str, int nbtags ) {
+
+  int leptType_int = SidebandFitter::convert_leptType(leptType_str);
+
+  std::string dataFileName = "HZZlljjRM_DATA_" + dataset_ + "_optLD_looseBTags_v2_ALL.root";
+  TFile* dataFile = TFile::Open(dataFileName.c_str());
+  TTree* tree_data = (TTree*)dataFile->Get("tree_passedEvents");
+
+  
+
+  RooRealVar nBTags("nBTags","nBTags",-1.,3.);
+  RooRealVar eventWeight("eventWeight","eventWeight",0,100.);
+  RooRealVar mZjj("mZjj","mZjj",0,150.);
+  RooRealVar leptType("leptType","lepton type",-1,2);
+
+  char selection[900];
+  sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>160. && CMS_hzz2l2q_mZZ<800.", nbtags, leptType_int );
+
+
+  RooFormulaVar rooselection("selection", selection, RooArgList(*CMS_hzz2l2q_mZZ,nBTags,mZjj,leptType));
+  RooDataSet *dataset_obs = new RooDataSet("dataset_obs", "dataset_obs", tree_data,
+                                     RooArgSet(*CMS_hzz2l2q_mZZ, nBTags, mZjj, leptType, eventWeight),
+                                     rooselection, "eventWeight");
+
+
+  return dataset_obs;
+
+}
+
+
+
+ 
 
 
 int SidebandFitter::convert_leptType( const std::string& leptType ) {

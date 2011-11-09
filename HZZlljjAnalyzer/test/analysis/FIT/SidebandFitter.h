@@ -7,6 +7,7 @@
 #include "TRandom3.h"
 
 #include "RooFitResult.h"
+#include "RooDataSet.h"
 
 
 
@@ -17,7 +18,7 @@ class SidebandFitter {
  public:
 
   SidebandFitter( const std::string& dataset, const std::string PUType );
-  ~SidebandFitter();
+  ~SidebandFitter() {};
 
   TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* treeMC );
   
@@ -31,7 +32,9 @@ class SidebandFitter {
 
   TH1D* shuffle( TH1D* inhist, TRandom3* random, char *histName );
 
-  static float get_backgroundNormalization( const std::string& data_dataset, const std::string& PUType, int nbtags, const std::string& leptType );
+  float get_backgroundNormalization( int nbtags, const std::string& leptType );
+
+  RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& leptType_str, int nbtags );
 
   static int convert_leptType( const std::string& leptType );
 
