@@ -760,7 +760,6 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
 
 RooDataSet* SidebandFitter::get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& leptType_str, int nbtags ) {
 
-  int leptType_int = SidebandFitter::convert_leptType(leptType_str);
 
   std::string dataFileName = "HZZlljjRM_DATA_" + dataset_ + "_optLD_looseBTags_v2_ALL.root";
   TFile* dataFile = TFile::Open(dataFileName.c_str());
@@ -774,7 +773,12 @@ RooDataSet* SidebandFitter::get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, co
   RooRealVar leptType("leptType","lepton type",-1,2);
 
   char selection[900];
-  sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>160. && CMS_hzz2l2q_mZZ<800.", nbtags, leptType_int );
+  if( leptType_str=="ALL" )
+    sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && CMS_hzz2l2q_mZZ>160. && CMS_hzz2l2q_mZZ<800.", nbtags );
+  else {
+    int leptType_int = SidebandFitter::convert_leptType(leptType_str);
+    sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>160. && CMS_hzz2l2q_mZZ<800.", nbtags, leptType_int );
+  }
 
 
   RooFormulaVar rooselection("selection", selection, RooArgList(*CMS_hzz2l2q_mZZ,nBTags,mZjj,leptType));
