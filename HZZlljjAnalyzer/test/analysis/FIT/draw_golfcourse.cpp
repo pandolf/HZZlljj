@@ -39,6 +39,9 @@ int main( int argc, char* argv[] ) {
   if( data_dataset=="HR11" ) {
     PUType = "HR11";
     lumi = 4200.;
+  } else if( data_dataset=="HR11_v2" ) {
+    PUType = "HR11_73pb";
+    lumi = 4600.;
   } if( data_dataset_tstr.BeginsWith("Run2011B") ) {
     PUType = "Run2011B";
   }
@@ -75,7 +78,10 @@ int main( int argc, char* argv[] ) {
   float xmin = 180.;
   float xmax = 620.;
 
-  TH2D* axes = new TH2D("axes", "", 10, xmin, xmax, 10, 0., 10.);
+  float yMax = 8.;
+  if( data_dataset=="Run2011A_FULL" ) yMax = 10.;
+
+  TH2D* axes = new TH2D("axes", "", 10, xmin, xmax, 10, 0., yMax );
   axes->SetXTitle("m_{H} [GeV]");
   axes->SetYTitle("#sigma_{95%} / #sigma_{SM}");
 
@@ -116,12 +122,38 @@ int main( int argc, char* argv[] ) {
   c1->SaveAs(canvasName);
 
   graphObserved->Draw("PLsame");
-  line_one->Draw("same");
-  legend->Draw("same");
   gPad->RedrawAxis();
 
   sprintf( canvasName, "upperLimit_%s.eps", data_dataset.c_str() );
   c1->SaveAs(canvasName);
+
+
+  char expectedLimitFileName[300];
+  sprintf( expectedLimitFileName, "expectedLimit_%s.txt", data_dataset.c_str() );
+  ofstream ofs_expected(expectedLimitFileName);
+  ofs_expected << "mH\tmedian\tlow95\tlow68\tup68\tup95" << std::endl;
+  for( unsigned imass=0; imass<graphExpected95->GetN(); ++imass ) {
+    Double_t mass, expectedUL;
+    graphExpected95->GetPoint( imass, mass, expectedUL );
+    float up95 = graphExpected95->GetErrorYhigh( imass );
+    float up68 = graphExpected68->GetErrorYhigh( imass );
+    float low95 = graphExpected95->GetErrorYlow( imass );
+    float low68 = graphExpected68->GetErrorYlow( imass );
+    ofs_expected << mass << "\t" << expectedUL << "\t" << low95 << "\t" << low68 << "\t" << up68 << "\t" << up95 << std::endl;
+  }
+  ofs_expected.close();
+
+  char observedLimitFileName[300];
+  sprintf( observedLimitFileName, "observedLimit_%s.txt", data_dataset.c_str() );
+  ofstream ofs_observed(observedLimitFileName);
+  ofs_observed << "mH\tobservedLimit" << std::endl;
+  for( unsigned imass=0; imass<graphObserved->GetN(); ++imass ) {
+    Double_t mass, observedUL;
+    graphObserved->GetPoint( imass, mass, observedUL );
+    ofs_observed << mass << "\t" << observedUL << std::endl;
+  }
+  ofs_observed.close();
+
 
   return 0;
 
@@ -217,7 +249,7 @@ std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::s
   for( unsigned imass = 0; imass<masses.size(); ++imass ) {
 
 
-    std::string crab_suffix = "_4"; //crab submission suffix
+    std::string crab_suffix = ""; //crab submission suffix
 
     char fileName[400];
     sprintf( fileName, "%d_%s%s/res/mergedToys.root", masses[imass], data_dataset.c_str(), crab_suffix.c_str() );
