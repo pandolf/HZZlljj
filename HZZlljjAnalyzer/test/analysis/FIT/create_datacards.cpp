@@ -500,10 +500,7 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
 
 
     char signalfileName[800];
-    if( PUType=="HR11_73pb" )
-      sprintf( signalfileName, "HZZlljjRM_GluGluToHToZZTo2L2Q_M-%.0f_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PUHR11_ALL.root", hp.mH );
-    else
-      sprintf( signalfileName, "HZZlljjRM_GluGluToHToZZTo2L2Q_M-%.0f_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU%s_ALL.root", hp.mH, PUType.c_str() );
+    sprintf( signalfileName, "HZZlljjRM_GluGluToHToZZTo2L2Q_M-%.0f_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU%s_ALL.root", hp.mH, PUType.c_str() );
 
     TFile* signalFile = TFile::Open(signalfileName);
     TTree* signalTree = (TTree*)signalFile->Get("tree_passedEvents");
