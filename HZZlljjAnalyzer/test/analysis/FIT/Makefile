@@ -14,17 +14,20 @@ EXTRALIBS  :=  -L$(ROOTSYS)/lib -L$(ROOFIT_LIBDIR)/ -L$(CMSSW_BASE)/lib/slc5_amd
 
 
 
-fitSidebands: fitSidebands.cpp SidebandFitter.o 
-	$(CC) -Wall $(INCLUDES) -o fitSidebands fitSidebands.cpp SidebandFitter.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
+fitSidebands: fitSidebands.cpp SidebandFitter.o fitTools.o
+	$(CC) -Wall $(INCLUDES) -o fitSidebands fitSidebands.cpp SidebandFitter.o fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
-create_datacards: create_datacards.cpp 
-	$(CC) -Wall $(INCLUDES) -o create_datacards create_datacards.cpp $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
+create_datacards: create_datacards.cpp SidebandFitter.o fitTools.o
+	$(CC) -Wall $(INCLUDES) -o create_datacards create_datacards.cpp SidebandFitter.o fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
-drawMZZ_with_curve: drawMZZ_with_curve.cpp DrawBase.o fitTools.o
-	$(CC) -Wall $(INCLUDES) -o drawMZZ_with_curve drawMZZ_with_curve.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
+drawMZZ_with_curve: drawMZZ_with_curve.cpp DrawBase.o fitTools.o SidebandFitter.o 
+	$(CC) -Wall $(INCLUDES) -o drawMZZ_with_curve drawMZZ_with_curve.cpp DrawBase.o fitTools.o SidebandFitter.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
 draw_golfcourse: draw_golfcourse.cpp DrawBase.o fitTools.o
 	$(CC) -Wall $(INCLUDES) -o draw_golfcourse draw_golfcourse.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
+
+do_latexYieldTable: do_latexYieldTable.cpp SidebandFitter.o
+	$(CC) -Wall $(INCLUDES) -o do_latexYieldTable do_latexYieldTable.cpp SidebandFitter.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
 
 DrawBase.o: $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/DrawBase.C fitTools.o
@@ -34,8 +37,8 @@ fitTools.o: $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/fitTools.C
 	$(CC) $(CFLAGS) $(INCLUDES) $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/fitTools.C $(ROOTFLAG) $(EXTRALIBS)
 
 
-SidebandFitter.o: SidebandFitter.cc
-	$(CC) $(CFLAGS) $(INCLUDES) SidebandFitter.cc $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
+SidebandFitter.o: SidebandFitter.cc fitTools.o
+	$(CC) $(CFLAGS) $(INCLUDES) SidebandFitter.cc fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
 
 
