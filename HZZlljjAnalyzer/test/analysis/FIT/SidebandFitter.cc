@@ -558,7 +558,7 @@ void SidebandFitter::fitPseudo( TTree* treeMC, TTree* treeDATA, int btagCategory
   ofsMCName = get_fitResultsName( btagCategory, "DATADCORR" );
   workspace_->argSet(both).readFromFile(ofsMCName.c_str());// read nominal best fit value
 
-  RooFitResult* r_pseudo = workspace_->pdf("background_decorr")->fitTo(sidebandsDATA_alpha, SumW2Error(kTRUE),Save());
+  RooFitResult* r_pseudo = workspace_->pdf("background_decorr")->fitTo(sidebandsDATA_alpha, SumW2Error(kTRUE),Save(), PrintLevel(-1));
   
   char indexstring[200];
   sprintf(indexstring,"DATADCORR%d",seed);
