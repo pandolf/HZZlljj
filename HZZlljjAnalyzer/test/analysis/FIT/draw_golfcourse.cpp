@@ -117,7 +117,7 @@ int main( int argc, char* argv[] ) {
   gPad->RedrawAxis();
 
   char canvasName[500];
-  sprintf( canvasName, "upperLimitExpected_%s.eps", data_dataset.c_str() );
+  sprintf( canvasName, "datacards_%s/upperLimitExpected_%s.eps", data_dataset.c_str(), data_dataset.c_str() );
   c1->SaveAs(canvasName);
 
 
@@ -147,12 +147,12 @@ int main( int argc, char* argv[] ) {
   graphObserved->Draw("PLsame");
   gPad->RedrawAxis();
 
-  sprintf( canvasName, "upperLimit_%s.eps", data_dataset.c_str() );
+  sprintf( canvasName, "datacards_%s/upperLimit_%s.eps", data_dataset.c_str(), data_dataset.c_str() );
   c1->SaveAs(canvasName);
 
 
   char expectedLimitFileName[300];
-  sprintf( expectedLimitFileName, "expectedLimit_%s.txt", data_dataset.c_str() );
+  sprintf( expectedLimitFileName, "datacards_%s/expectedLimit_%s.txt", data_dataset.c_str(), data_dataset.c_str() );
   ofstream ofs_expected(expectedLimitFileName);
   ofs_expected << "mH\tmedian\tlow95\tlow68\tup68\tup95" << std::endl;
   for( unsigned imass=0; imass<graphExpected95->GetN(); ++imass ) {
@@ -167,7 +167,7 @@ int main( int argc, char* argv[] ) {
   ofs_expected.close();
 
   char observedLimitFileName[300];
-  sprintf( observedLimitFileName, "observedLimit_%s.txt", data_dataset.c_str() );
+  sprintf( observedLimitFileName, "datacards_%s/observedLimit_%s.txt", data_dataset.c_str(), data_dataset.c_str() );
   ofstream ofs_observed(observedLimitFileName);
   ofs_observed << "mH\tobservedLimit" << std::endl;
   for( unsigned imass=0; imass<graphObserved->GetN(); ++imass ) {
@@ -275,7 +275,7 @@ std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::s
   for( unsigned imass = 0; imass<masses.size(); ++imass ) {
 
 
-    std::string crab_suffix = ""; //crab submission suffix
+    std::string crab_suffix = "_SB"; //crab submission suffix
 
     char fileName[400];
     sprintf( fileName, "%d_%s%s/res/mergedToys.root", masses[imass], data_dataset.c_str(), crab_suffix.c_str() );
