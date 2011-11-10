@@ -26,6 +26,7 @@ int main( int argc, char* argv[] ) {
   TString dataset_tstr(dataset);
   std::string PUReweighing = "Run2011A";
   if( dataset=="HR11" ) PUReweighing = "HR11";
+  if( dataset=="HR11_v2" ) PUReweighing = "HR11_73pb";
   if( dataset_tstr.BeginsWith("Run2011B") ) PUReweighing = "Run2011B";
 
 
