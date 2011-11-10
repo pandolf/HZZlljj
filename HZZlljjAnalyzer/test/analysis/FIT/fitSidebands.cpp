@@ -1,7 +1,11 @@
 
 //////////////////////////////////////////////////////////////////////
 //
-//    USAGE: ./fitSidebands [data_dataset] 
+//    USAGE: ./fitSidebands [data_dataset] doPseudo
+//
+//    ( omit doPseudo in command line if you dont want to compute
+//      alpha-related errors. done for quick debug. doPseudo is
+//      needed in full analysis chain. )
 //
 //////////////////////////////////////////////////////////////////////
 
