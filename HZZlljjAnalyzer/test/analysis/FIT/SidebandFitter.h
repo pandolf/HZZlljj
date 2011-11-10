@@ -26,6 +26,7 @@ class SidebandFitter {
 
 
   TH1D* getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* treeMC );
+  TH1D* getAlphaHistoSmooth( int btagCategory, const std::string leptType_str, TTree* treeMC );
   
   //RooFitResult* fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha, int seed=-1 );
   

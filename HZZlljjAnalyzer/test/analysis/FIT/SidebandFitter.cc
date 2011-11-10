@@ -184,6 +184,63 @@ TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string leptTyp
 }
 
 
+TH1D* SidebandFitter::getAlphaHistoSmooth( int btagCategory, const std::string leptType, TTree* treeMC ) {
+
+  std::string leptType_cut="";
+  if( leptType=="MU" ) {
+    leptType_cut=" && leptType==0";
+  } else if( leptType=="ELE" ) {
+    leptType_cut=" && leptType==1";
+  } else if( leptType!="ALL" ) {
+    std::cout << "Unknown leptType: '" << leptType << "'. Exiting." << std::endl;
+    exit(109);
+  }
+
+  
+  TH1D* h1_alpha = new TH1D("h1_alpha", "", 500,150,800 );
+  h1_alpha->Sumw2();
+
+  char cut_base[500];
+  sprintf( cut_base, "nBTags==%d %s", btagCategory, leptType_cut.c_str());
+  char cut_sidebands[500];
+  sprintf( cut_sidebands, "%s && ( (mZjj>60. && mZjj<75.)||(mZjj>105. && mZjj<130.) )", cut_base);
+  char cut_signal[500];
+  sprintf( cut_signal, "%s && ( mZjj>75. && mZjj<105. )", cut_base);
+
+  RooDataSet signalMC("signalMC","signalMC",treeMC,*(workspace_->set("tree")),cut_signal,"eventWeight");
+  RooDataSet sidebandMC("sidebandMC","sidebandMC",treeMC,*(workspace_->set("tree")),cut_sidebands,"eventWeight");
+
+  std::string ofsMCName = get_fitResultsName( 0 , "FreeInitial" );
+  workspace_->argSet("cutOff,beta,m,wdth,n,alpha").readFromFile(ofsMCName.c_str());
+
+  RooPlot *plot_MCbkg = workspace_->var("CMS_hzz2l2q_mZZ")->frame(150,800,66);
+  RooFitResult *r = workspace_->pdf("background")->fitTo(sidebandMC,SumW2Error(kTRUE),Save());
+  workspace_->pdf("background")->plotOn(plot_MCbkg);
+  r =  workspace_->pdf("background")->fitTo(signalMC,SumW2Error(kTRUE),Save());
+  r->Print("v");
+  workspace_->pdf("background")->plotOn(plot_MCbkg);
+  double all_side=sidebandMC.sumEntries();
+  double all_sig=signalMC.sumEntries();
+  for(unsigned int x =1 ; x <= 500 ; x++  ){
+    double xval=h1_alpha->GetBinCenter(x);
+    float sideVal = all_side*(((RooCurve*)(plot_MCbkg->getObject(0)))->interpolate(xval));
+    float sigVal = all_sig*(((RooCurve*)(plot_MCbkg->getObject(1)))->interpolate(xval));
+    if(sideVal==0)
+      h1_alpha->SetBinContent(x,1.);
+    else
+      h1_alpha->SetBinContent(x,sigVal/sideVal);
+  }
+
+  std::string outdir = get_outdir();
+  TCanvas c_rot;
+  plot_MCbkg->Draw();
+  char canvasName_rot[200];
+  sprintf( canvasName_rot, "%s/smoothBkg_%db.eps", outdir.c_str(),btagCategory );
+  c_rot.SaveAs(canvasName_rot);
+
+  return h1_alpha;
+  
+}
 
 
 
