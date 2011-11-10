@@ -969,8 +969,8 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
 
     TTree* treeMC = (TTree*)fitResultsFile->Get("sidebandsMC_alpha");
 
-    TH1D* h1_mZZ_signalMC_ELE = new TH1D("mZZ_signalMC_ELE", "", 65, 150., 800.);
-    TH1D* h1_mZZ_signalMC_MU = new TH1D("mZZ_signalMC_MU", "", 65, 150., 800.);
+    TH1D* h1_mZZ_signalMC_ELE = new TH1D("mZZ_signalMC_ELE", "", 65, mZZmin_, mZZmax_ );
+    TH1D* h1_mZZ_signalMC_MU = new TH1D("mZZ_signalMC_MU", "", 65, mZZmin_, mZZmax_ );
     h1_mZZ_signalMC_ELE->Sumw2();
     h1_mZZ_signalMC_MU->Sumw2();
 
@@ -984,17 +984,19 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
     float muMC = h1_mZZ_signalMC_MU->Integral();
     float ratioMC = (leptType=="MU") ? eleMC/muMC : muMC/eleMC;
 
-    TH1D* h1_mZZ_sidebandsDATA = new TH1D("mZZ_sidebandsDATA", "", 65, 150., 800.);
+    TH1D* h1_mZZ_sidebandsDATA = new TH1D("mZZ_sidebandsDATA", "", 65, mZZmin_, mZZmax_ );
+    h1_mZZ_sidebandsDATA->Sumw2();
     char sidebandsCut_alpha[500];
     sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags ); //electrons+muons
     treeSidebandsDATA_alphaCorr->Project("mZZ_sidebandsDATA", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
-    double sumDATA = h1_mZZ_sidebandsDATA->Integral();
+    double sumDATA = h1_mZZ_sidebandsDATA->IntegralAndError( h1_mZZ_sidebandsDATA->GetXaxis()->GetFirst(), h1_mZZ_sidebandsDATA->GetXaxis()->GetLast(), rate_background_error );
 
     rate_background = sumDATA / ( ratioMC+1.);
+    rate_background_error /= ( ratioMC+1.);
 
   } else { //nbtags =0,1 or 2-tag but ele+mu
 
-    TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, 150., 800.);
+    TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, mZZmin_, mZZmax_ );
     h1_mZZ_sidebands_alpha->Sumw2();
     char sidebandsCut_alpha[500];
     if( leptType=="ALL" )
@@ -1036,10 +1038,10 @@ RooDataSet* SidebandFitter::get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, co
 
   char selection[900];
   if( leptType_str=="ALL" )
-    sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && CMS_hzz2l2q_mZZ>160. && CMS_hzz2l2q_mZZ<800.", nbtags );
+    sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f", nbtags, mZZmin_, mZZmax_ );
   else {
     int leptType_int = SidebandFitter::convert_leptType(leptType_str);
-    sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>160. && CMS_hzz2l2q_mZZ<800.", nbtags, leptType_int );
+    sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f", nbtags, leptType_int, mZZmin_, mZZmax_ );
   }
 
 
