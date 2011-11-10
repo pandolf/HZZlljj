@@ -1,3 +1,11 @@
+
+//////////////////////////////////////////////////////////////////////
+//
+//    USAGE: ./fitSidebands [data_dataset] 
+//
+//////////////////////////////////////////////////////////////////////
+
+
 #include <cstdlib>
 #include <fstream>
 #include <string>
@@ -11,8 +19,8 @@
 
 #include "SidebandFitter.h"
 
-TTree* getTreeData(std::string whichPeriod, bool AnaFlag);// anaflag=false => Franceescos trees
-TTree* getTreeBckg(std::string whichPeriod, bool AnaFlag);// anaflag=true  => CMG         trees
+TTree* getTreeData(std::string whichPeriod, bool useCMG);// useCMG=false => Franceescos trees
+TTree* getTreeBckg(std::string whichPeriod, bool useCMG);// useCMG=true  => CMG         trees
 TTree* conditionTree(std::string whichPeriod,TTree* inTree);
 
 int main( int argc, char* argv[] ) {
@@ -25,16 +33,16 @@ int main( int argc, char* argv[] ) {
   }
   TString dataset_tstr(dataset);
 
-  bool AnaFlag=false;
+  bool useCMG=false;
   std::string init("MCSignal");
   bool doPseudo=false;
   for(int i = 1 ; i< argc ; i++){
     std::string par(argv[i]);
     if(par == "CMG")
-      AnaFlag=true;
+      useCMG=true;
     if(par == "FixToSide")
       init="MC";
-    if(par=="DoPseudo")
+    if(par=="DoPseudo"||par=="doPseudo")
       doPseudo=true;
   }
   
@@ -48,10 +56,10 @@ int main( int argc, char* argv[] ) {
 
 
 
-  TTree* treeDATA = getTreeData(dataset,AnaFlag);
-  TTree* chainMC = getTreeBckg(PUReweighing,AnaFlag);
+  TTree* treeDATA = getTreeData(dataset,useCMG);
+  TTree* chainMC = getTreeBckg(PUReweighing,useCMG);
 
-  if(AnaFlag){
+  if(useCMG){
     treeDATA=conditionTree(PUReweighing,treeDATA);
     chainMC=conditionTree(PUReweighing,chainMC);
   }
@@ -94,10 +102,10 @@ int main( int argc, char* argv[] ) {
 
 }
 
-TTree* getTreeData(std::string whichPeriod, bool AnaFlag){
+TTree* getTreeData(std::string whichPeriod, bool useCMG){
   std::vector<std::string> filenames;
 
-  if(AnaFlag){ //CMG files
+  if(useCMG){ //CMG files
     if(whichPeriod=="Run2011A_FULL"){
       filenames.push_back(std::string("summer11_data_highmass.root/AngularInfo"));
     }
@@ -126,10 +134,10 @@ TTree* getTreeData(std::string whichPeriod, bool AnaFlag){
 
 }
 
-TTree* getTreeBckg(std::string whichPeriod, bool AnaFlag){
+TTree* getTreeBckg(std::string whichPeriod, bool useCMG){
   std::vector<std::string> filenames;
 
-  if(AnaFlag){ //CMG files
+  if(useCMG){ //CMG files
     filenames.push_back(std::string("summer11_TTbarIncl_highmass.root/AngularInfo"));
     filenames.push_back(std::string("summer11_WZ_highmass.root/AngularInfo"));
     filenames.push_back(std::string("summer11_ZZ_highmass.root/AngularInfo"));
