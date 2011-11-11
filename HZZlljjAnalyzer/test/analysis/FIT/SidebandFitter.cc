@@ -1097,6 +1097,7 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
 
 RooDataSet* SidebandFitter::get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& leptType_str, int nbtags ) {
 
+std::cout << "min: " << CMS_hzz2l2q_mZZ->getMin() << " max: " << CMS_hzz2l2q_mZZ->getMax() << std::endl;
 
   std::string dataFileName = "HZZlljjRM_DATA_" + dataset_ + "_optLD_looseBTags_v2_ALL.root";
   TFile* dataFile = TFile::Open(dataFileName.c_str());
@@ -1111,10 +1112,10 @@ RooDataSet* SidebandFitter::get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, co
 
   char selection[900];
   if( leptType_str=="ALL" )
-    sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f", nbtags, mZZmin_, mZZmax_ );
+    sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f", nbtags, CMS_hzz2l2q_mZZ->getMin(), CMS_hzz2l2q_mZZ->getMax() );
   else {
     int leptType_int = SidebandFitter::convert_leptType(leptType_str);
-    sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f", nbtags, leptType_int, mZZmin_, mZZmax_ );
+    sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f", nbtags, leptType_int, CMS_hzz2l2q_mZZ->getMin(), CMS_hzz2l2q_mZZ->getMax() );
   }
 
 
