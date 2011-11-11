@@ -1100,7 +1100,6 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
 
 RooDataSet* SidebandFitter::get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& leptType_str, int nbtags ) {
 
-std::cout << "min: " << CMS_hzz2l2q_mZZ->getMin() << " max: " << CMS_hzz2l2q_mZZ->getMax() << std::endl;
 
   std::string dataFileName = "HZZlljjRM_DATA_" + dataset_ + "_optLD_looseBTags_v2_ALL.root";
   TFile* dataFile = TFile::Open(dataFileName.c_str());
