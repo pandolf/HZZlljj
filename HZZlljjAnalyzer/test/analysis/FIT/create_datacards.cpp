@@ -305,7 +305,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
   double alpha = rate_background/bgNorm;
   char alpha_char[100];
-  sprintf( alpha_char, "%f", alpha);
+  sprintf( alpha_char, "%lf", alpha);
   std::string alpha_str(alpha_char);
 
   char bgNormName[200];
