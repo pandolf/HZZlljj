@@ -62,7 +62,6 @@ double sign( double x ) {
 }
 
 
-//int convert_leptType( const std::string& leptType );
 std::string leptType_datacards( const std::string& leptType_str );
 
 void create_singleDatacard( const std::string& dataset, const std::string& PUType, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass );
@@ -72,9 +71,7 @@ HiggsParameters get_higgsParameters( float mass );
 double linear_interp( double x, double x_old, double mass, double mH, double mH_old );
 TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::string& PUType );
 
-//RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& dataset, const std::string& leptType_str, int nbtags );
 
-//RooAbsPdf* get_signalShape( RooRealVar* CMS_hzz2l2q_mZZ, int nbtags, float massH );
 double get_signalParameter(int btag, double massH, std::string varname);
 
 std::string systString( std::pair<double,double> systPair, double maxDiff=0.01 );
@@ -303,7 +300,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
   double bgNorm = backgroundNorm(dataset,leptType_str,nbtags);
   char bgNorm_char[100];
-  sprintf( bgNorm_char, "%.0f", bgNorm);
+  sprintf( bgNorm_char, "%.0lf", bgNorm);
   std::string bgNorm_str(bgNorm_char);
 
   double alpha = rate_background/bgNorm;
@@ -333,7 +330,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
   
   std::cout << std::endl << std::endl;
-  std::cout << "+++ DATACARD FOR MASS " << mass << " IS DONE." << std::endl;
+  std::cout << "+++ DATACARD FOR MASS " << mass << " ( " << nbtags << " B-TAGS, " << leptType_str << " CHANNEL ) IS DONE." << std::endl;
   std::cout << std::endl;
 
   // datacard is done. now create output workspace and write it to rootfile
