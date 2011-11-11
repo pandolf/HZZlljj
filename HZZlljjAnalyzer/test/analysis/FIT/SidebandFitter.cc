@@ -1006,9 +1006,9 @@ RooPlot* SidebandFitter::ContourPlot(std::string var1, std::string var2, RooFitR
 
   
 // this method returns only rate:
-Double_t SidebandFitter::get_backgroundNormalization( int nbtags, const std::string& leptType, const std::string& data_mc ) {
+Double_t SidebandFitter::get_backgroundNormalization( int nbtags, const std::string& leptType, const std::string& data_mc, float mZZmin, float mZZmax ) {
 
-  std::pair<float,float> rate_and_error = this->get_backgroundNormalizationAndError( nbtags, leptType, data_mc );
+  std::pair<float,float> rate_and_error = this->get_backgroundNormalizationAndError( nbtags, leptType, data_mc, mZZmin, mZZmax );
 
   return rate_and_error.first;
 
@@ -1016,8 +1016,11 @@ Double_t SidebandFitter::get_backgroundNormalization( int nbtags, const std::str
 
 
 // this method return both rate (first) and error on rate (second):
-std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError( int nbtags, const std::string& leptType, const std::string& data_mc ) {
+std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError( int nbtags, const std::string& leptType, const std::string& data_mc, float mZZmin, float mZZmax ) {
 
+  // use fit ranges as default
+  if( mZZmin < 0. ) mZZmin = mZZmin_;
+  if( mZZmax < 0. ) mZZmax = mZZmax_;
   
   // open fit results file:
   char fitResultsFileName[200];
@@ -1042,8 +1045,8 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
 
     TTree* treeMC = (TTree*)fitResultsFile->Get("sidebandsMC_alpha");
 
-    TH1D* h1_mZZ_signalMC_ELE = new TH1D("mZZ_signalMC_ELE", "", 65, mZZmin_, mZZmax_ );
-    TH1D* h1_mZZ_signalMC_MU = new TH1D("mZZ_signalMC_MU", "", 65, mZZmin_, mZZmax_ );
+    TH1D* h1_mZZ_signalMC_ELE = new TH1D("mZZ_signalMC_ELE", "", 65, mZZmin, mZZmax );
+    TH1D* h1_mZZ_signalMC_MU = new TH1D("mZZ_signalMC_MU", "", 65, mZZmin, mZZmax );
     h1_mZZ_signalMC_ELE->Sumw2();
     h1_mZZ_signalMC_MU->Sumw2();
 
@@ -1057,10 +1060,10 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
     float muMC = h1_mZZ_signalMC_MU->Integral();
     float ratioMC = (leptType=="MU") ? eleMC/muMC : muMC/eleMC;
 
-    TH1D* h1_mZZ_sidebandsDATA = new TH1D("mZZ_sidebandsDATA", "", 65, mZZmin_, mZZmax_ );
+    TH1D* h1_mZZ_sidebandsDATA = new TH1D("mZZ_sidebandsDATA", "", 65, mZZmin, mZZmax );
     h1_mZZ_sidebandsDATA->Sumw2();
     char sidebandsCut_alpha[500];
-    sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f)", nbtags, mZZmin_, mZZmax_ ); //electrons+muons
+    sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f)", nbtags, mZZmin, mZZmax ); //electrons+muons
     treeSidebandsDATA_alphaCorr->Project("mZZ_sidebandsDATA", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
     double sumDATA = h1_mZZ_sidebandsDATA->IntegralAndError( h1_mZZ_sidebandsDATA->GetXaxis()->GetFirst(), h1_mZZ_sidebandsDATA->GetXaxis()->GetLast(), rate_background_error );
 
@@ -1069,13 +1072,13 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
 
   } else { //nbtags =0,1 or 2-tag but ele+mu
 
-    TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, mZZmin_, mZZmax_ );
+    TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, mZZmin, mZZmax );
     h1_mZZ_sidebands_alpha->Sumw2();
     char sidebandsCut_alpha[500];
     if( leptType=="ALL" )
-      sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f)", nbtags, mZZmin_, mZZmax_ );
+      sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f)", nbtags, mZZmin, mZZmax );
     else
-      sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f)", nbtags, SidebandFitter::convert_leptType(leptType), mZZmin_, mZZmax_ );
+      sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f)", nbtags, SidebandFitter::convert_leptType(leptType), mZZmin, mZZmax );
     treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
     rate_background = h1_mZZ_sidebands_alpha->IntegralAndError( h1_mZZ_sidebands_alpha->GetXaxis()->GetFirst(), h1_mZZ_sidebands_alpha->GetXaxis()->GetLast(), rate_background_error );
 
