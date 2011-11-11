@@ -29,6 +29,9 @@
 
 
 
+float mZZmin_ = 183.;
+
+
 struct HiggsParameters {
 
   float mH;
@@ -69,7 +72,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 HiggsParameters get_higgsParameters( float mass );
 
 double linear_interp( double x, double x_old, double mass, double mH, double mH_old );
-TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::string& PUType );
+TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::string& PUType, float mZZmin );
 
 
 double get_signalParameter(int btag, double massH, std::string varname);
@@ -133,13 +136,13 @@ int main( int argc, char* argv[] ) {
     PUType = "2011B"; 
 
   //first loop over available signal MC files to fit efficiency:
-  TF1* f1_eff_vs_mass_MU_0btag = get_eff_vs_mass("MU", 0, PUType);
-  TF1* f1_eff_vs_mass_MU_1btag = get_eff_vs_mass("MU", 1, PUType);
-  TF1* f1_eff_vs_mass_MU_2btag = get_eff_vs_mass("MU", 2, PUType);
+  TF1* f1_eff_vs_mass_MU_0btag = get_eff_vs_mass("MU", 0, PUType, mZZmin_);
+  TF1* f1_eff_vs_mass_MU_1btag = get_eff_vs_mass("MU", 1, PUType, mZZmin_);
+  TF1* f1_eff_vs_mass_MU_2btag = get_eff_vs_mass("MU", 2, PUType, mZZmin_);
 
-  TF1* f1_eff_vs_mass_ELE_0btag = get_eff_vs_mass("ELE", 0, PUType);
-  TF1* f1_eff_vs_mass_ELE_1btag = get_eff_vs_mass("ELE", 1, PUType);
-  TF1* f1_eff_vs_mass_ELE_2btag = get_eff_vs_mass("ELE", 2, PUType);
+  TF1* f1_eff_vs_mass_ELE_0btag = get_eff_vs_mass("ELE", 0, PUType, mZZmin_);
+  TF1* f1_eff_vs_mass_ELE_1btag = get_eff_vs_mass("ELE", 1, PUType, mZZmin_);
+  TF1* f1_eff_vs_mass_ELE_2btag = get_eff_vs_mass("ELE", 2, PUType, mZZmin_);
 
 
 
@@ -213,7 +216,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
   //// get main variable from input workspace:
   RooRealVar* CMS_hzz2l2q_mZZ = bgws->var("CMS_hzz2l2q_mZZ");
-  CMS_hzz2l2q_mZZ->setMin(183.); 
+  CMS_hzz2l2q_mZZ->setMin(mZZmin_); 
 
 
   //// redefine mZZ variable, so that we can change its range to 183-800:
@@ -437,7 +440,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
 
 
-TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::string& PUType ) {
+TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::string& PUType, float mZZmin ) {
 
   int leptType_int = SidebandFitter::convert_leptType(leptType_str);
 
@@ -454,10 +457,6 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
 
     HiggsParameters hp = get_higgsParameters(mass);
 
-    //std::pair<double,double> massWindow = get_massWindow(hp);
-    //double fitRangeLow = massWindow.first;
-    //double fitRangeHigh = massWindow.second;
-
 
     char signalfileName[800];
     sprintf( signalfileName, "HZZlljjRM_GluGluToHToZZTo2L2Q_M-%.0f_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU%s_ALL.root", hp.mH, PUType.c_str() );
@@ -466,13 +465,10 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
     TTree* signalTree = (TTree*)signalFile->Get("tree_passedEvents");
 
     char signalCut[500];
-    sprintf( signalCut, "HLTSF*PUWeight*( mZjj>75. && mZjj<105. && mZZ>160. && mZZ<800. && nBTags==%d && leptType==%d)", nbtags, leptType_int);
+    sprintf( signalCut, "HLTSF*PUWeight*( mZjj>75. && mZjj<105. && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<800. && nBTags==%d && leptType==%d)", mZZmin_, nbtags, leptType_int);
     TH1D* h1_mZZ_signal = new TH1D("mZZ_signal", "", 65, 150., 800.);
     h1_mZZ_signal->Sumw2();
-    if( mass==400. )
-      signalTree->Project( "mZZ_signal", "CMS_hzz2l2q_mZZ", signalCut );
-    else 
-      signalTree->Project( "mZZ_signal", "mZZ", signalCut );
+    signalTree->Project( "mZZ_signal", "CMS_hzz2l2q_mZZ", signalCut );
 
     float signalYield = h1_mZZ_signal->Integral();
 
@@ -517,23 +513,6 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
 
 }
 
-
-
-
-/*
-int convert_leptType( const std::string& leptType ) {
-
-  if( leptType!="ELE" && leptType!="MU" ) {
-    std::cout << "WARNING!!! LeptType '" << leptType << "' is NOT supported!!! Returning -1." << std::endl;
-    return -1;
-  }
-
-  int leptType_int = (leptType=="MU" ) ? 0 : 1;
-
-  return leptType_int;
-
-}
-*/
 
 
 
@@ -647,41 +626,6 @@ double linear_interp( double x, double x_old, double mass, double mH, double mH_
 
 
 /*
-RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& dataset, const std::string& leptType_str, int nbtags ) {
-
-  int leptType_int = SidebandFitter::convert_leptType(leptType_str);
-
-  std::string dataFileName = "HZZlljjRM_DATA_" + dataset + "_optLD_looseBTags_v2_ALL.root";
-  TFile* dataFile = TFile::Open(dataFileName.c_str());
-  TTree* tree_data = (TTree*)dataFile->Get("tree_passedEvents");
-  //tree_data->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ");
-
-  
-
-  RooRealVar nBTags("nBTags","nBTags",-1.,3.);
-  RooRealVar eventWeight("eventWeight","eventWeight",0,100.);
-  RooRealVar mZjj("mZjj","mZjj",0,150.);
-  RooRealVar leptType("leptType","lepton type",-1,2);
-
-  char selection[900];
-  sprintf( selection, "mZjj>75. && mZjj<105. && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>160. && CMS_hzz2l2q_mZZ<800.", nbtags, leptType_int );
-
-
-  RooFormulaVar rooselection("selection", selection, RooArgList(*CMS_hzz2l2q_mZZ,nBTags,mZjj,leptType));
-  RooDataSet *dataset_obs = new RooDataSet("dataset_obs", "dataset_obs", tree_data,
-                                     RooArgSet(*CMS_hzz2l2q_mZZ, nBTags, mZjj, leptType, eventWeight),
-                                     rooselection, "eventWeight");
-
-
-  return dataset_obs;
-
-}
-*/
-
-
-
-
-/*
 RooAbsPdf* get_signalShape( RooRealVar* CMS_hzz2l2q_mZZ, int nbtags, float massH ) {
 
 
@@ -734,7 +678,6 @@ RooAbsPdf* get_signalShape( RooRealVar* CMS_hzz2l2q_mZZ, int nbtags, float massH
 double get_signalParameter(int btag, double massH, std::string varname) {
 
   int masses[18] = {190,200,210,230,250,275,300,325,350,375,400,425,475,500,525,550,575,600};
-  //int nsamples= 18;
 
   RooRealVar var(varname.c_str(),varname.c_str(),0.);
   RooArgSet paramsup, paramslow;
