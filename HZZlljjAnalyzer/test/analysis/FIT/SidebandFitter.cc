@@ -576,7 +576,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   file_alpha->cd();
   tree_sidebandsDATA_alpha->Write();
   r_sidebandsDATA_alpha->Write(); // << this one is final
-  //r_sidebandsDATA_alpha_decorr->Write(); // this one needs to get adjusted errors
+  r_sidebandsDATA_alpha_decorr->Write(); // this one needs to get adjusted errors (write it now but then overwrite)
   char wnam[50];
   sprintf(wnam,"fitWorkspace_%dbtag",btagCategory);
   workspace_->SetName(wnam);
@@ -915,7 +915,7 @@ void SidebandFitter::pseudoMassge(int btagCategory , const std::string& leptType
   sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str());
   file_alpha = TFile::Open(fitResultsFileName, "UPDATE");
   file_alpha->cd();
-  r_nominal->Write();
+  r_nominal->Write(); //will over-write the old one
   file_alpha->Close();
 
 
