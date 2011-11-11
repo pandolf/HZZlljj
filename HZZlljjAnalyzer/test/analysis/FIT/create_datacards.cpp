@@ -211,8 +211,13 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
 
 
-  // get main variable from input workspace:
+  //// get main variable from input workspace:
   RooRealVar* CMS_hzz2l2q_mZZ = bgws->var("CMS_hzz2l2q_mZZ");
+  CMS_hzz2l2q_mZZ->setMin(183.); 
+
+
+  //// redefine mZZ variable, so that we can change its range to 183-800:
+  //RooRealVar* CMS_hzz2l2q_mZZ = new RooRealVar("CMS_hzz2l2q_mZZ", "CMS_hzz2l2q_mZZ", 183., 800.);
 
 
   
@@ -345,13 +350,6 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   w->addClassDeclImportDir("/afs/cern.ch/cms/slc5_amd64_gcc434/lcg/roofit/5.28.00a-cms3/include/");
   //w->addClassDeclImportDir("/cmsrm/pc18/pandolf/CMSSW_4_2_3_patch1/src/HZZlljj/HZZlljjAnalyzer/test/analysis/FIT/PDFs");
 
-  //w->importClassCode(RooFermi::Class(),kTRUE);
-  //w->importClassCode("RooFermi",kTRUE);
-  //w->importClassCode(RooRelBW::Class(),kTRUE);
-  //w->importClassCode("RooRelBW",kTRUE);
-  //w->importClassCode(RooDoubleCB::Class(),kTRUE);
-  //w->importClassCode("RooDoubleCB",kTRUE);
-
 
 
   // import variable in output workspace:
@@ -365,6 +363,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
  
   // and import it:
   w->import(*background_decorr, RooFit::RecycleConflictNodes());
+
 
 
 //// now define signal shape:
