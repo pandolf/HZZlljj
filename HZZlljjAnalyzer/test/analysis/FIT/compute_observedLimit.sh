@@ -13,4 +13,3 @@ foreach i ( `less masses.txt | grep "[0-9][0-9][0-9]" | grep -v r ` )
   endif
   cd -
 end
-cd ..
