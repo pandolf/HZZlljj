@@ -45,9 +45,9 @@ class SidebandFitter {
   void pseudoMassge(int btagCategory , const std::string& leptType, std::string init, RooFitResult* r_nominal);
 
   // this method returns only rate:
-  Double_t get_backgroundNormalization( int nbtags, const std::string& leptType, const std::string& data_mc="DATA" );
+  Double_t get_backgroundNormalization( int nbtags, const std::string& leptType, const std::string& data_mc="DATA", float mZZmin=-1., float mZZmax=-1. );
   // this one returns both rate (first) and error on rate (second):
-  std::pair<Double_t, Double_t> get_backgroundNormalizationAndError( int nbtags, const std::string& leptType, const std::string& data_mc="DATA");
+  std::pair<Double_t, Double_t> get_backgroundNormalizationAndError( int nbtags, const std::string& leptType, const std::string& data_mc="DATA", float mZZmin=-1., float mZZmax=-1.);
 
   RooDataSet* get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, const std::string& leptType_str, int nbtags );
 
