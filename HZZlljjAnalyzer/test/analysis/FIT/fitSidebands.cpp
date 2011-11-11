@@ -37,7 +37,7 @@ int main( int argc, char* argv[] ) {
   }
   TString dataset_tstr(dataset);
 
-  int nToys = 500;
+  int nToys = 350;
 
   bool useCMG=false;
   std::string init("MCSignal");
@@ -52,7 +52,7 @@ int main( int argc, char* argv[] ) {
       std::cout << "-> Will fix fit params on MC sidebands." << std::endl;
       init="MC";
     }
-    if(par=="DoPseudo"||par=="doPseudo") {
+    if(par=="DoPseudo"||par=="doPseudo"||par=="dopseudo") {
       std::cout << "-> Will compute alpha-error with " << nToys << " toys." << std::endl;
       doPseudo=true;
     }
@@ -88,7 +88,8 @@ int main( int argc, char* argv[] ) {
     
     TH1D* alpha_Xbtag = sf->getAlphaHisto( b, "ALL", treeMC_Xbtag );
 
-    sf->generateFixedPars(treeMC_Xbtag, b , "ALL", alpha_Xbtag );
+    // not needed anymore if fitting data (?)
+    //sf->generateFixedPars(treeMC_Xbtag, b , "ALL", alpha_Xbtag );
 
     RooFitResult* fr_Xbtag = sf->fitSidebands( treeMC_Xbtag, treeDATA_Xbtag, b, "ALL", alpha_Xbtag,-1,init);
 
