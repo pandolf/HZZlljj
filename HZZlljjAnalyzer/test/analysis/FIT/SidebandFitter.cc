@@ -69,10 +69,10 @@ SidebandFitter::SidebandFitter( const std::string& dataset, const std::string PU
   workspace_->import(fermi);
 
   // -------------------- crystal ball ---------------------------
-  workspace_->factory("m[200.17,190.,300.]");
-  workspace_->factory("wdth[85.7,-200.,200.]");
+  workspace_->factory("m[200.17,160.,300.]");
+  workspace_->factory("wdth[85.7,0.,200.]");
   workspace_->factory("n[13.067,0.,100.]");
-  workspace_->factory("alpha[-1.395,-200.,200.]"); 
+  workspace_->factory("alpha[-1.395,-10.,10.]"); 
   
   workspace_->factory("RooCBShape::CB(CMS_hzz2l2q_mZZ,m,wdth,alpha,n)");
   workspace_->factory("PROD::background({fermi,CB})");
@@ -423,7 +423,6 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   std::string treeName_DATA_str(treeName_DATA);
   std::cout << "Correcting sidebands (DATA): " << std::endl;
   TTree* tree_sidebandsDATA_alpha = correctTreeWithAlpha( treeDATA, h1_alpha, btagCategory, treeName_DATA_str );
-  //tree_sidebandsDATA_alpha->GetBranch("mZZ")->SetName("CMS_hzz2l2q_mZZ"); 
   RooDataSet sidebandsDATA_alpha("sidebandsDATA_alpha","sidebandsDATA_alpha",tree_sidebandsDATA_alpha,*(workspace_->set("treeAlpha")),cut_sidebands,"eventWeight_alpha");
 
 
@@ -441,15 +440,32 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   std::string ofsMCName = get_fitResultsName( btagCategory, init );
   workspace_->argSet("cutOff,beta,m,wdth,n,alpha").readFromFile(ofsMCName.c_str());
 
-  RooFitResult *r_sidebandsDATA_alpha;
+  // lets try this:
+  workspace_->var("wdth")->setConstant(kFALSE);
+  workspace_->var("alpha")->setConstant(kFALSE);
+  workspace_->var("cutOff")->setConstant(kFALSE);
+  workspace_->var("beta")->setConstant(kFALSE);
+  workspace_->var("m")->setConstant(kFALSE);
+  workspace_->var("n")->setConstant(kFALSE);
+  
+  RooFitResult *r_sidebandsDATA_alpha = workspace_->pdf("background")->fitTo(sidebandsDATA_alpha, SumW2Error(kTRUE), Save());
+
+  // then fix these:
+  workspace_->var("cutOff")->setConstant(kTRUE);
+  workspace_->var("beta")->setConstant(kTRUE);
+  workspace_->var("m")->setConstant(kTRUE);
+  workspace_->var("n")->setConstant(kTRUE);
+
+  // and re-fit:
   r_sidebandsDATA_alpha = workspace_->pdf("background")->fitTo(sidebandsDATA_alpha, SumW2Error(kTRUE), Save());
+
   char fitResultName[200];
   if( leptType!="ALL" )
     sprintf( fitResultName, "fitResults_%dbtag_%s", btagCategory, leptType.c_str() );
   else 
     sprintf( fitResultName, "fitResults_%dbtag", btagCategory );
   r_sidebandsDATA_alpha->SetName(fitResultName);
-  
+
   
   RooPlot *plot_sidebandsDATA_alpha = workspace_->var("CMS_hzz2l2q_mZZ")->frame();
   
@@ -1044,7 +1060,7 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
     TH1D* h1_mZZ_sidebandsDATA = new TH1D("mZZ_sidebandsDATA", "", 65, mZZmin_, mZZmax_ );
     h1_mZZ_sidebandsDATA->Sumw2();
     char sidebandsCut_alpha[500];
-    sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags ); //electrons+muons
+    sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f)", nbtags, mZZmin_, mZZmax_ ); //electrons+muons
     treeSidebandsDATA_alphaCorr->Project("mZZ_sidebandsDATA", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
     double sumDATA = h1_mZZ_sidebandsDATA->IntegralAndError( h1_mZZ_sidebandsDATA->GetXaxis()->GetFirst(), h1_mZZ_sidebandsDATA->GetXaxis()->GetLast(), rate_background_error );
 
@@ -1057,9 +1073,9 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
     h1_mZZ_sidebands_alpha->Sumw2();
     char sidebandsCut_alpha[500];
     if( leptType=="ALL" )
-      sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d)", nbtags );
+      sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f)", nbtags, mZZmin_, mZZmax_ );
     else
-      sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d)", nbtags, SidebandFitter::convert_leptType(leptType) );
+      sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>%f && CMS_hzz2l2q_mZZ<%f)", nbtags, SidebandFitter::convert_leptType(leptType), mZZmin_, mZZmax_ );
     treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
     rate_background = h1_mZZ_sidebands_alpha->IntegralAndError( h1_mZZ_sidebands_alpha->GetXaxis()->GetFirst(), h1_mZZ_sidebands_alpha->GetXaxis()->GetLast(), rate_background_error );
 
