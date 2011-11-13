@@ -194,9 +194,8 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   HiggsParameters hp = get_higgsParameters(mass);
 
   // open fitResults file:
-  char fitResultsFileName[500];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s.root", dataset.c_str(), nbtags, PUType.c_str() );
-  TFile* fitResultsFile = TFile::Open(fitResultsFileName);
+  std::string fitResultsFileName = sf->get_fitResultsRootFileName( nbtags, leptType_str );
+  TFile* fitResultsFile = TFile::Open(fitResultsFileName.c_str());
 
   // get fit result:
   char fitResultName[200];
