@@ -37,11 +37,12 @@ int main( int argc, char* argv[] ) {
   }
   TString dataset_tstr(dataset);
 
-  int nToys = 350;
+  int nToys = 500;
 
   bool useCMG=false;
   std::string init("MCSignal");
   bool doPseudo=false;
+  bool fitData=false;
   for(int i = 1 ; i< argc ; i++){
     std::string par(argv[i]);
     if(par == "CMG") {
@@ -51,6 +52,10 @@ int main( int argc, char* argv[] ) {
     if(par == "FixToSide") {
       std::cout << "-> Will fix fit params on MC sidebands." << std::endl;
       init="MC";
+    }
+    if(par=="fixtodata") { 
+      std::cout << "-> Will fix fit params on DATA sidebands." << std::endl;
+      fitData=true;
     }
     if(par=="DoPseudo"||par=="doPseudo"||par=="dopseudo") {
       std::cout << "-> Will compute alpha-error with " << nToys << " toys." << std::endl;
@@ -88,8 +93,7 @@ int main( int argc, char* argv[] ) {
     
     TH1D* alpha_Xbtag = sf->getAlphaHisto( b, "ALL", treeMC_Xbtag );
 
-    // not needed anymore if fitting data (?)
-    //sf->generateFixedPars(treeMC_Xbtag, b , "ALL", alpha_Xbtag );
+    if( !fitData ) sf->generateFixedPars(treeMC_Xbtag, b , "ALL", alpha_Xbtag );
 
     RooFitResult* fr_Xbtag = sf->fitSidebands( treeMC_Xbtag, treeDATA_Xbtag, b, "ALL", alpha_Xbtag,-1,init);
 
@@ -97,7 +101,10 @@ int main( int argc, char* argv[] ) {
       for(int i = 0 ; i <nToys ; i++) {
         std::cout << std::endl << "[ " << b << " b-tags ]  Toy: " << i << "/" << nToys << std::endl;
         TH1D* variedHisto = sf->shuffle(alpha_Xbtag, random ,"tmp");
-        sf->fitPseudo( treeMC_Xbtag, treeDATA_Xbtag, b, "ALL", variedHisto,i,init);
+        if( fitData )
+          sf->fitPseudo( treeMC_Xbtag, treeDATA_Xbtag, b, "ALL", variedHisto,i,"DATA");
+        else
+          sf->fitPseudo( treeMC_Xbtag, treeDATA_Xbtag, b, "ALL", variedHisto,i,init);
         delete variedHisto;
       }
       sf->pseudoMassge(b,"ALL",init,fr_Xbtag);
