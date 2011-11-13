@@ -42,7 +42,7 @@ class SidebandFitter {
 
   TH1D* shuffle( TH1D* inhist, TRandom3* random, char *histName );
 
-  void pseudoMassge(int btagCategory , const std::string& leptType, std::string init, RooFitResult* r_nominal);
+  void pseudoMassge(int ntoys, int btagCategory , const std::string& leptType, std::string init, RooFitResult* r_nominal);
 
   // this method returns only rate:
   Double_t get_backgroundNormalization( int nbtags, const std::string& leptType, const std::string& data_mc="DATA", float mZZmin=-1., float mZZmax=-1. );

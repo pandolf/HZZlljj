@@ -107,7 +107,7 @@ int main( int argc, char* argv[] ) {
           sf->fitPseudo( treeMC_Xbtag, treeDATA_Xbtag, b, "ALL", variedHisto,i,init);
         delete variedHisto;
       }
-      sf->pseudoMassge(b,"ALL",init,fr_Xbtag);
+      sf->pseudoMassge(nToys, b,"ALL",init,fr_Xbtag);
     }
 
     delete treeDATA_Xbtag;

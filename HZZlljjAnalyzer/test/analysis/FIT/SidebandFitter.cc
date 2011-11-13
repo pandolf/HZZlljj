@@ -70,9 +70,9 @@ SidebandFitter::SidebandFitter( const std::string& dataset, const std::string PU
 
   // -------------------- crystal ball ---------------------------
   workspace_->factory("m[200.17,160.,300.]");
-  workspace_->factory("wdth[85.7,0.,200.]");
+  workspace_->factory("wdth[85.7,-200.,200.]");
   workspace_->factory("n[13.067,0.,100.]");
-  workspace_->factory("alpha[-1.395,-10.,10.]"); 
+  workspace_->factory("alpha[-1.395,-100.,100.]"); 
   
   workspace_->factory("RooCBShape::CB(CMS_hzz2l2q_mZZ,m,wdth,alpha,n)");
   workspace_->factory("PROD::background({fermi,CB})");
@@ -744,7 +744,7 @@ TH1D* SidebandFitter::shuffle( TH1D* inhist, TRandom3* random, char *histName ) 
 
 
 
-void SidebandFitter::pseudoMassge(int btagCategory , const std::string& leptType, std::string init, RooFitResult* r_nominal){
+void SidebandFitter::pseudoMassge(int ntoys, int btagCategory , const std::string& leptType, std::string init, RooFitResult* r_nominal){
 
   std::string outdir = get_outdir();
   
@@ -781,7 +781,7 @@ void SidebandFitter::pseudoMassge(int btagCategory , const std::string& leptType
   vals2.reserve(500);
 
   char indexstring[200];
-  for(int i =0 ; i < 500 ; i++){
+  for(int i =0 ; i < ntoys ; i++){
     sprintf(indexstring,"DATADCORR%d",i);
     ofsMCName = get_fitResultsName( btagCategory, indexstring );
     workspace_->argSet(both).readFromFile(ofsMCName.c_str());
