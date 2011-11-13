@@ -93,7 +93,7 @@ int main( int argc, char* argv[] ) {
     
     TH1D* alpha_Xbtag = sf->getAlphaHisto( b, "ALL", treeMC_Xbtag );
 
-    if( !fitData ) sf->generateFixedPars(treeMC_Xbtag, b , "ALL", alpha_Xbtag );
+    sf->generateFixedPars(treeMC_Xbtag, b , "ALL", alpha_Xbtag );
 
     RooFitResult* fr_Xbtag = sf->fitSidebands( treeMC_Xbtag, treeDATA_Xbtag, b, "ALL", alpha_Xbtag,-1,init);
 
