@@ -275,10 +275,10 @@ std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::s
   for( unsigned imass = 0; imass<masses.size(); ++imass ) {
 
 
-    std::string crab_suffix = "_SB"; //crab submission suffix
+    //std::string crab_suffix = "_SB_2"; //crab submission suffix
 
     char fileName[400];
-    sprintf( fileName, "%d_%s%s/res/mergedToys.root", masses[imass], data_dataset.c_str(), crab_suffix.c_str() );
+    sprintf( fileName, "UpperLimitToys_%s/%d/res/mergedToys.root", data_dataset.c_str(), masses[imass]);
     TFile* file = TFile::Open(fileName);
     TTree* limitTree = (TTree*)file->Get("limit");
 
