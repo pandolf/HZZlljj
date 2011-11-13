@@ -1030,7 +1030,7 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
   if( mZZmax < 0. ) mZZmax = mZZmax_;
   
   // open fit results file:
-  std::string fitResultsFileName = get_fitResultsRootFileName( nbtags, leptType );
+  std::string fitResultsFileName = get_fitResultsRootFileName( nbtags, "ALL" );
   TFile* fitResultsFile = TFile::Open(fitResultsFileName.c_str());
 
 

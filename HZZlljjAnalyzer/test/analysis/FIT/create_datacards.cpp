@@ -193,8 +193,8 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
   HiggsParameters hp = get_higgsParameters(mass);
 
-  // open fitResults file:
-  std::string fitResultsFileName = sf->get_fitResultsRootFileName( nbtags, leptType_str );
+  // open fitResults file (all lept types):
+  std::string fitResultsFileName = sf->get_fitResultsRootFileName( nbtags, "ALL" );
   TFile* fitResultsFile = TFile::Open(fitResultsFileName.c_str());
 
   // get fit result:
