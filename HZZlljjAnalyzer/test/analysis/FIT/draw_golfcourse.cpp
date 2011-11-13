@@ -143,7 +143,7 @@ int main( int argc, char* argv[] ) {
   graphExpected68->Draw("3same");
   graphExpected68->Draw("LXsame");
   line_one->Draw("same");
-  legend->Draw("same");
+  legend2->Draw("same");
   graphObserved->Draw("PLsame");
   gPad->RedrawAxis();
 
@@ -258,8 +258,8 @@ std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::s
 
   std::vector<int> masses;
   masses.push_back(200);
-  masses.push_back(226);
-  masses.push_back(230);
+  //masses.push_back(226);
+  //masses.push_back(230);
   masses.push_back(250);
   masses.push_back(300);
   masses.push_back(350);
