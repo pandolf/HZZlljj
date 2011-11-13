@@ -27,14 +27,15 @@
 
 
 
+struct TriggerMask {
 
-struct GenEventParameters{
-
-  Float_t crossSection;
-  Float_t ptHatMin;
-  Float_t ptHatMax;
+  std::string HLTName;
+  int runMin;
+  int runMax;
 
 };
+
+
 
 
 class Ntp1Analyzer {
@@ -579,9 +580,9 @@ public :
    LSRange::const_iterator goodLSCache_; // ptr to list of good LS for last run
    bool filterGoodRuns_;
 
-   std::vector<std::string> requiredTriggers_;
+   std::vector<TriggerMask> requiredTriggers_;
    std::vector<int> index_requiredTriggers_;
-   std::vector<std::string> notTriggers_;
+   std::vector<TriggerMask> notTriggers_;
    std::vector<int> index_notTriggers_;
 
    typedef std::pair< int, int > RunLumiPair;
@@ -1183,9 +1184,9 @@ public :
    virtual ~Ntp1Analyzer();
 
    virtual void SetFlags( const std::string& flags ) { flags_ = flags; };
-   virtual void SetRequiredTriggers( const std::vector<std::string>& reqTrigz ) { requiredTriggers_ = reqTrigz; };
-   virtual void AddRequiredTrigger( const std::string& trigger ) { requiredTriggers_.push_back(trigger); };
-   virtual void AddRequiredTriggerNOT( const std::string& trigger ) { notTriggers_.push_back(trigger); };
+   virtual void SetRequiredTriggers( const std::vector<TriggerMask>& reqTrigz ) { requiredTriggers_ = reqTrigz; };
+   virtual void AddRequiredTrigger( const std::string& trigger, int runMin=-1, int runMax=-1 );
+   virtual void AddRequiredTriggerNOT( const std::string& trigger, int runMin=-1, int runMax=-1 );
    virtual bool PassedHLT( int iEntry, const std::string& HLTName="" );
 
    virtual Int_t    Cut(Long64_t entry);
@@ -1203,7 +1204,6 @@ public :
    virtual void     ReadCSVFile(const std::string& csv);
    virtual void     UpdateCache();
    virtual bool     isGoodEvent( int iEntry );
-   virtual GenEventParameters     getGenEventParameters ();
    double           trackDxyPV(float PVx, float PVy, float PVz, float eleVx, float eleVy, float eleVz, float elePx, float elePy, float elePz);
 
 

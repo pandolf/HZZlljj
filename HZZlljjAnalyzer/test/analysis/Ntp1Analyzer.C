@@ -30,6 +30,12 @@ Ntp1Analyzer::Ntp1Analyzer(const std::string& analyzerType, const std::string& d
 
    rand_ = new TRandom();
 
+   index_requiredTriggers_.clear();
+   index_notTriggers_.clear();
+
+   requiredTriggers_.clear();
+   notTriggers_.clear();
+
 }
 
 
@@ -141,6 +147,32 @@ void Ntp1Analyzer::LoadInputFromFile( const std::string& fileName ) {
 
 
 
+void Ntp1Analyzer::AddRequiredTrigger( const std::string& trigger, int runMin, int runMax ) { 
+
+  TriggerMask newTriggerMask;
+  newTriggerMask.HLTName = trigger;
+  newTriggerMask.runMin = runMin;
+  newTriggerMask.runMax = runMax;
+  
+  requiredTriggers_.push_back(newTriggerMask); 
+
+}
+
+
+
+void Ntp1Analyzer::AddRequiredTriggerNOT( const std::string& trigger, int runMin, int runMax ) { 
+
+  TriggerMask newTriggerMask;
+  newTriggerMask.HLTName = trigger;
+  newTriggerMask.runMin = runMin;
+  newTriggerMask.runMax = runMax;
+  
+  notTriggers_.push_back(newTriggerMask); 
+
+}
+
+
+
 
 void Ntp1Analyzer::LoadTrigger( int iEntry, bool verbose, TFile* condFile ) {
 
@@ -157,87 +189,95 @@ void Ntp1Analyzer::LoadTrigger( int iEntry, bool verbose, TFile* condFile ) {
     //fChain->GetEntry(0);
 
     // required triggers:
-    std::vector<int> triggerMask_required;
-    for (std::vector< std::string >::const_iterator fIter=requiredTriggers_.begin();fIter!=requiredTriggers_.end();++fIter)
+    std::vector<int> index_requiredTriggers_found;
+    for (unsigned int iTriggerMask=0; iTriggerMask<requiredTriggers_.size(); ++iTriggerMask)
       {
+        if( runNumber<requiredTriggers_[iTriggerMask].runMin ) continue;
+        if( requiredTriggers_[iTriggerMask].runMax>0 && runNumber>requiredTriggers_[iTriggerMask].runMax ) continue; 
+        std::string thisTrigger = requiredTriggers_[iTriggerMask].HLTName;
         bool foundThisTrigger = false;
-//std::cout << "looking for: " << (*fIter) << std::endl;
+//std::cout << std::cout << "looking for: " << thisTrigger << std::endl;
         for(unsigned int i=0; i<nameHLT->size(); i++) 
           {
 //std::cout << std::endl << indexHLT[i] << " " << nameHLT->at(i);
             TString nameHLT_tstr(nameHLT->at(i));
-            if( nameHLT_tstr.Contains((*fIter)) )
-            //if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) ) 
+            if( nameHLT_tstr.BeginsWith((thisTrigger)) )
               {
 //std::cout << " <----- HERE IT IS!" << std::endl;
                 foundThisTrigger = true;
-                triggerMask_required.push_back( indexHLT[i] ) ;
+                index_requiredTriggers_found.push_back( indexHLT[i] ) ;
                 foundTriggers.push_back( nameHLT->at(i) ) ;
                 break;
               }
           }
-          if( !foundThisTrigger && verbose ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+          if( !foundThisTrigger && verbose ) std::cout << "-> WARNING!! Didn't find HLT path: " << thisTrigger << ". Ignoring it." << std::endl;
       }
-    index_requiredTriggers_ = triggerMask_required;
+    index_requiredTriggers_ = index_requiredTriggers_found;
 
     // NOT triggers
-    std::vector<int> triggerMask_NOT;
-    for (std::vector< std::string >::const_iterator fIter=notTriggers_.begin();fIter!=notTriggers_.end();++fIter)
+    std::vector<int> index_requiredTriggersNOT_found;
+    for (unsigned int iTriggerMask=0; iTriggerMask<notTriggers_.size(); ++iTriggerMask)
       {
+        if( runNumber<notTriggers_[iTriggerMask].runMin ) continue;
+        if( notTriggers_[iTriggerMask].runMax>0 && runNumber>notTriggers_[iTriggerMask].runMax ) continue; 
+        std::string thisTrigger = notTriggers_[iTriggerMask].HLTName;
         bool foundThisTrigger = false;
         for(unsigned int i=0; i<nameHLT->size(); i++) 
           {
 //std::cout << std::endl << nameHLT->at(i);
             TString nameHLT_tstr(nameHLT->at(i));
-            if( nameHLT_tstr.Contains((*fIter)) )
+            if( nameHLT_tstr.BeginsWith(thisTrigger) )
             //if( !strcmp ((*fIter).c_str(), nameHLT->at(i).c_str() ) ) 
               {
 //std::cout << " <----- HERE IT IS!" << std::endl;
                 foundThisTrigger = true;
-                triggerMask_NOT.push_back( indexHLT[i] ) ;
+                index_requiredTriggersNOT_found.push_back( indexHLT[i] ) ;
                 foundTriggersNOT.push_back( nameHLT->at(i) ) ;
                 break;
               }
           }
-          if( !foundThisTrigger && verbose ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+          if( !foundThisTrigger && verbose ) std::cout << "-> WARNING!! Didn't find HLT path: " << thisTrigger << ". Ignoring it." << std::endl;
       }
-    index_notTriggers_ = triggerMask_NOT;
-
-  } else { //old version: Conditions
-
-    int           nHLT_;
-    std::vector<std::string>  *nameHLT_;
-    std::vector<unsigned int> *indexHLT_;
-
-    //To get the pointers for the vectors
-    nameHLT_=0;
-    indexHLT_=0;
-
-    treeCond->SetBranchAddress("nHLT", &nHLT_);
-    treeCond->SetBranchAddress("nameHLT", &nameHLT_);
-    treeCond->SetBranchAddress("indexHLT", &indexHLT_);
-    treeCond->GetEntry(0);
-
-    std::vector<int> triggerMask;
-    for (std::vector< std::string >::const_iterator fIter=requiredTriggers_.begin();fIter!=requiredTriggers_.end();++fIter)
-      {
-        bool foundThisTrigger = false;
-        for(unsigned int i=0; i<nameHLT_->size(); i++) 
-          {
-            TString nameHLT_tstr(nameHLT_->at(i));
-            //if( !strcmp ((*fIter).c_str(), nameHLT_->at(i).c_str() ) ) 
-            if( nameHLT_tstr.Contains((*fIter).c_str()) ) 
-              {
-                foundThisTrigger = true;
-                triggerMask.push_back( indexHLT_->at(i) ) ;
-                break;
-              }
-          }
-          if( !foundThisTrigger && verbose ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
-      }
-    index_requiredTriggers_ = triggerMask;
+    index_notTriggers_ = index_requiredTriggersNOT_found;
 
   }
+
+  // old version now deprecated:
+//} else { //old version: Conditions
+
+//  int           nHLT_;
+//  std::vector<std::string>  *nameHLT_;
+//  std::vector<unsigned int> *indexHLT_;
+
+//  //To get the pointers for the vectors
+//  nameHLT_=0;
+//  indexHLT_=0;
+
+//  treeCond->SetBranchAddress("nHLT", &nHLT_);
+//  treeCond->SetBranchAddress("nameHLT", &nameHLT_);
+//  treeCond->SetBranchAddress("indexHLT", &indexHLT_);
+//  treeCond->GetEntry(0);
+
+//  std::vector<int> triggerMask;
+//  for (std::vector< std::string >::const_iterator fIter=requiredTriggers_.begin();fIter!=requiredTriggers_.end();++fIter)
+//    {
+//      bool foundThisTrigger = false;
+//      for(unsigned int i=0; i<nameHLT_->size(); i++) 
+//        {
+//          TString nameHLT_tstr(nameHLT_->at(i));
+//          //if( !strcmp ((*fIter).c_str(), nameHLT_->at(i).c_str() ) ) 
+//          if( nameHLT_tstr.BeginsWith((*fIter).c_str()) ) 
+//            {
+//              foundThisTrigger = true;
+//              triggerMask.push_back( indexHLT_->at(i) ) ;
+//              break;
+//            }
+//        }
+//        if( !foundThisTrigger && verbose ) std::cout << "-> WARNING!! Didn't find HLT path: " << (*fIter).c_str() << ". Ignoring it." << std::endl;
+//    }
+//  index_requiredTriggers_ = triggerMask;
+
+//}
 
 
   if( requiredTriggers_.size()==0 && notTriggers_.size()==0 && verbose )
@@ -263,11 +303,15 @@ bool Ntp1Analyzer::PassedHLT( int iEntry, const std::string& HLTName ) { //defau
 
   bool rememberToReset = false;
   std::vector<int> index_requiredTriggers_tmp = index_requiredTriggers_;
-  std::vector<std::string> requiredTriggers_tmp = requiredTriggers_;
+  std::vector<TriggerMask> requiredTriggers_tmp = requiredTriggers_;
   if( HLTName!="" ) {
     index_requiredTriggers_.clear();
     requiredTriggers_.clear();
-    requiredTriggers_.push_back(HLTName);
+    TriggerMask newTriggerMask;
+    newTriggerMask.HLTName = HLTName;
+    newTriggerMask.runMin = -1;
+    newTriggerMask.runMax = -1;
+    requiredTriggers_.push_back(newTriggerMask);
     this->LoadTrigger(iEntry, false);
     rememberToReset = true;
   }
@@ -295,7 +339,7 @@ bool Ntp1Analyzer::PassedHLT( int iEntry, const std::string& HLTName ) { //defau
   // now required triggers:
   for( int i=0; i<index_requiredTriggers_.size(); i++ ) {
 
-    if( HLTName=="" || requiredTriggers_[i]==HLTName ) {
+    if( HLTName=="" || requiredTriggers_[i].HLTName==HLTName ) {
 
       int block_required =  index_requiredTriggers_[i]/30;
       int pos_required = index_requiredTriggers_[i]%30;
@@ -400,15 +444,7 @@ void Ntp1Analyzer::Init(TTree *tree)
    fChain->GetEntry(0);
    isMC_ = (runNumber < 10);
 
-   GenEventParameters genPars = this->getGenEventParameters();
-   ptHatMin_ = genPars.ptHatMin;
-   ptHatMax_ = genPars.ptHatMax;
-
-   //will cut on pt_hat, so have to divide only by correct number of events:
-   char cutOnPtHat[70];
-   sprintf( cutOnPtHat, "genPtHat>%lf && genPtHat<%lf", (Double_t)ptHatMin_, (Double_t)ptHatMax_);
-   Int_t nEntries_cut = (isMC_) ? fChain->GetEntries(cutOnPtHat) : fChain->GetEntries();
-   h1_nCounter_->SetBinContent( 1, nEntries_cut );
+   h1_nCounter_->SetBinContent( 1, fChain->GetEntries() );
 
 
 
@@ -1059,193 +1095,6 @@ bool Ntp1Analyzer::isGoodEvent( int iEntry ) {
 }
 
 
-GenEventParameters Ntp1Analyzer::getGenEventParameters() {
-
-   GenEventParameters returnGenPars;
-   returnGenPars.ptHatMin = -1.;
-
-   if( dataset_=="PhotonJet_Summer09_Pt15" ) {
-     returnGenPars.crossSection = 288813. - 32203.8;
-     returnGenPars.ptHatMax = 30.;
-   } else if( dataset_=="PhotonJet_Summer09_Pt30" ) {
-     returnGenPars.crossSection = 32203.8 - 1012.08;
-     returnGenPars.ptHatMax = 80.;
-   } else if( dataset_=="PhotonJet_Summer09_Pt80" ) {
-     returnGenPars.crossSection = 1012.08 - 51.36;
-     returnGenPars.ptHatMax = 170.;
-   } else if( dataset_=="PhotonJet_Summer09_Pt170" ) {
-     returnGenPars.crossSection = 51.36 - 4.193;
-     returnGenPars.ptHatMax = 300.;
-   } else if( dataset_=="PhotonJet_Summer09_Pt300" ) {
-     returnGenPars.crossSection =  4.193 - 0.45125;
-     returnGenPars.ptHatMax = 470.;
-   } else if( dataset_=="PhotonJet_Summer09_Pt470" ) {
-     returnGenPars.crossSection =  0.45125 - 0.02;
-     returnGenPars.ptHatMax = 800.;
-   } else if( dataset_=="PhotonJet_Summer09_Pt800" ) {
-     returnGenPars.crossSection = 0.02 - 0.000268;
-     returnGenPars.ptHatMax = 1400.;
-   } else if( dataset_=="PhotonJet_Summer09_Pt1400" ) {
-     returnGenPars.crossSection = 0.000268;
-     returnGenPars.ptHatMax = 14000.;
-   } else if( dataset_=="QCD_Summer09_Pt15" ) {
-     returnGenPars.crossSection = 1458126879.8;
-     returnGenPars.ptHatMax = 30.;
-   } else if( dataset_=="QCD_Summer09_Pt30" ) {
-     returnGenPars.crossSection = 109005537.31;
-     returnGenPars.ptHatMax = 80.;
-   } else if( dataset_=="QCD_Summer09_Pt80" ) {
-     returnGenPars.crossSection = 1936120.4893;
-     returnGenPars.ptHatMax = 170.;
-   } else if( dataset_=="QCD_Summer09_Pt170" ) {
-     returnGenPars.crossSection = 62508.776856;
-     returnGenPars.ptHatMax = 300.;
-   } else if( dataset_=="QCD_Summer09_Pt300" ) {
-     returnGenPars.crossSection = 3669.4197667;
-     returnGenPars.ptHatMax = 470.;
-   } else if( dataset_=="QCD_Summer09_Pt470" ) {
-     returnGenPars.crossSection = 315.32221016;
-     returnGenPars.ptHatMax = 800.;
-   } else if( dataset_=="QCD_Summer09_Pt800" ) {
-     returnGenPars.crossSection = 11.94070485;
-     returnGenPars.ptHatMax = 1400.;
-   } else if( dataset_=="QCD_Summer09_Pt1400" ) {
-     returnGenPars.crossSection = 0.17207350709;
-     returnGenPars.ptHatMax = 2200.;
-   } else if( dataset_=="MC_PhotonJet_Summer09_Pt0to15" ) {
-     returnGenPars.crossSection = 84460000.;
-     returnGenPars.ptHatMax = 15.;
-   } else if( dataset_=="MC_PhotonJet_Summer09_Pt15to20" ) {
-     returnGenPars.crossSection = 114700.;
-     returnGenPars.ptHatMax = 20.;
-   } else if( dataset_=="MC_PhotonJet_Summer09_Pt20to30" ) {
-     returnGenPars.crossSection = 57180.;
-     returnGenPars.ptHatMax = 30.;
-   } else if( dataset_=="MinBias_Spring10-START3X_V26A_356ReReco-v1"||dataset_=="MinBias_Spring10-START3X_V26A_357ReReco-v3"||dataset_=="MinBias_357ReReco_v3"||dataset_=="MinBias_357ReReco_v3_Pt0to15" ) {
-     returnGenPars.crossSection = 71260000000.;
-     returnGenPars.ptHatMax = ( dataset_=="MinBias_357ReReco_v3_Pt0to15" ) ? 15. : 7000.;
-   } else if( dataset_=="PhotonJet_Spring10_Pt0to15" || dataset_ == "PhotonJet_Summer1036X_Pt0to15" ) {
-     returnGenPars.crossSection = 84460000.;
-     returnGenPars.ptHatMax = 15.;
-   } else if( dataset_=="PhotonJet_Spring10_Pt5to15" || dataset_=="PhotonJet_Summer1036X_Pt5to15" ) {
-     returnGenPars.crossSection = 4030000.;
-     returnGenPars.ptHatMax = 5.;
-     returnGenPars.ptHatMax = 15.;
-   } else if( dataset_=="PhotonJet_Spring10_Pt15" ) {
-     returnGenPars.crossSection = 192200.-20070.;
-     returnGenPars.ptHatMax = 30.;
-   } else if( dataset_=="PhotonJet_Spring10_Pt30" ) {
-     returnGenPars.crossSection = 20070.-556.5;
-     returnGenPars.ptHatMax = 80.;
-   } else if( dataset_=="PhotonJet_Spring10_Pt80" ) {
-     returnGenPars.crossSection = 556.5-24.37;
-     returnGenPars.ptHatMax = 170.;
-   } else if( dataset_=="PhotonJet_Spring10_Pt170" ) {
-     returnGenPars.crossSection = 24.37-1.636;
-     returnGenPars.ptHatMax = 300.;
-   } else if( dataset_=="PhotonJet_Spring10_Pt300" ) {
-     returnGenPars.crossSection = 1.636-0.136;
-     returnGenPars.ptHatMax = 470.;
-   } else if( dataset_=="PhotonJet_Spring10_Pt470" ) {
-     returnGenPars.crossSection = 0.136-0.003477;
-     returnGenPars.ptHatMax = 800.;
-   } else if( dataset_=="PhotonJet_Spring10_Pt800" ) {
-     returnGenPars.crossSection = 0.003477-0.00001286;
-     returnGenPars.ptHatMax = 1400.;
-   } else if( dataset_=="PhotonJet_Spring10_Pt1400" ) {
-     returnGenPars.crossSection = 0.00001286;
-     returnGenPars.ptHatMax = 7000.;
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt15to20" ) {
-     returnGenPars.crossSection = 114700.;
-     returnGenPars.ptHatMin = 15.;
-     returnGenPars.ptHatMax = 20.;
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt20to30" ) {
-     returnGenPars.crossSection = 57180.;
-     returnGenPars.ptHatMin = 20.;
-     returnGenPars.ptHatMax = 30.;
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt30to50" ) {
-     returnGenPars.crossSection = 16520.;
-     returnGenPars.ptHatMin = 30.;
-     returnGenPars.ptHatMax = 50.;
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt50to80" ) {
-     returnGenPars.crossSection = 2723.;
-     returnGenPars.ptHatMin = 50.;
-     returnGenPars.ptHatMax = 80.;
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt80to120" ) {
-     returnGenPars.crossSection = 446.2;
-     returnGenPars.ptHatMin = 80.;
-     returnGenPars.ptHatMax = 120.;
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt120to170" ) {
-     returnGenPars.crossSection = 84.43;
-     returnGenPars.ptHatMin = 120.;
-     returnGenPars.ptHatMax = 170.;
-   } else if( dataset_=="PhotonJet_Summer1036X_Pt170to300" ) {
-     returnGenPars.crossSection = 22.55;
-     returnGenPars.ptHatMin = 170.;
-     returnGenPars.ptHatMax = 300.;
-   } else if( dataset_=="QCD_Spring10_Pt0to15" ) {
-     returnGenPars.crossSection = 48445000000.;
-     returnGenPars.ptHatMax = 15.;
-   } else if( dataset_=="QCD_Spring10_Pt5to15" ) {
-     returnGenPars.crossSection = 36640000000.;
-     returnGenPars.ptHatMin = 5.;
-     returnGenPars.ptHatMax = 15.;
-   } else if( dataset_=="QCD_Spring10_Pt15" ) {
-     returnGenPars.crossSection = 876215000.-60411000.;
-     returnGenPars.ptHatMax = 30.;
-   } else if( dataset_=="QCD_Spring10_Pt15to20" ) {
-     returnGenPars.crossSection = 579411000.;
-     returnGenPars.ptHatMin = 15.;
-     returnGenPars.ptHatMax = 20.;
-   } else if( dataset_=="QCD_Spring10_Pt20to30" ) {
-     returnGenPars.crossSection = 236051000.;
-     returnGenPars.ptHatMin = 20.;
-     returnGenPars.ptHatMax = 30.;
-   } else if( dataset_=="QCD_Spring10_Pt30" ) {
-     returnGenPars.crossSection = 60411000.-923821.;
-     returnGenPars.ptHatMax = 80.;
-   } else if( dataset_=="QCD_Spring10_Pt30to50" ) {
-     returnGenPars.crossSection = 53114800.;
-     returnGenPars.ptHatMin = 30.;
-     returnGenPars.ptHatMax = 50.;
-   } else if( dataset_=="QCD_Spring10_Pt50to80" ) {
-     returnGenPars.crossSection = 6358210.;
-     returnGenPars.ptHatMin = 50.;
-     returnGenPars.ptHatMax = 80.;
-   } else if( dataset_=="QCD_Spring10_Pt80" ) {
-     returnGenPars.crossSection = 923821.-25474.9;
-     returnGenPars.ptHatMax = 170.;
-   } else if( dataset_=="QCD_Spring10_Pt170" ) {
-     returnGenPars.crossSection = 25474.9-1255.87;
-     returnGenPars.ptHatMax = 300.;
-   } else if( dataset_=="QCD_Spring10_Pt300" ) {
-     returnGenPars.crossSection = 1255.87-87.9799;
-     returnGenPars.ptHatMax = 470.;
-   } else if( dataset_=="QCD_Spring10_Pt470" ) {
-     returnGenPars.crossSection = 87.9799-2.18608;
-     returnGenPars.ptHatMax = 800.;
-   } else if( dataset_=="QCD_Spring10_Pt800" ) {
-     returnGenPars.crossSection = 2.18608-0.0112233;
-     returnGenPars.ptHatMax = 1400.;
-   } else if( dataset_=="QCD_Spring10_Pt1400" ) {
-     returnGenPars.crossSection = 0.0112233;
-     returnGenPars.ptHatMax = 10000.;
-   } else if( dataset_=="Wenu_Summer10_START37_V5_S09_v1" ) {
-     returnGenPars.crossSection = 7899.;
-     returnGenPars.ptHatMax = 10000.;
-   } else {
-     std::cout << "-> (No ptHat cuts introduced.)" << std::endl;
-     returnGenPars.crossSection = -1.;
-     returnGenPars.ptHatMin = 0.;
-     returnGenPars.ptHatMax = 10000.;
-   }
-
-//   if( returnGenPars.crossSection != -1 ) 
-//     std::cout << "-> Dataset was in database. Cross-section correctly set." << std::endl;
-
-   return returnGenPars;
-
-}
 
 
 
