@@ -34,6 +34,9 @@ class SidebandFitter {
   void generateFixedPars(TTree* treeMC,int btagCategory, const std::string& leptType, TH1D* h1_alpha);
   void fitPseudo( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha, int seed , std::string init="MCSignal");
 
+
+  std::string get_fitResultsRootFileName( int btagCategory, const std::string& leptType );
+
   std::string get_fitResultsName( int nbtags, const std::string& data_mc="DATA" );
 
   std::string get_outdir();

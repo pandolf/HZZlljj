@@ -376,10 +376,8 @@ void SidebandFitter::generateFixedPars(TTree* treeMC,int btagCategory, const std
   c1->Clear();
   c1->SetLogy(false);
 
-  TFile* file_alpha = 0;
-  char fitResultsFileName[500];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str());
-  file_alpha = TFile::Open(fitResultsFileName, "recreate");
+  std::string fitResultsFileName = get_fitResultsRootFileName( btagCategory, leptType );
+  TFile* file_alpha = TFile::Open(fitResultsFileName.c_str(), "recreate");
   file_alpha->cd();
   h1_alpha->Write();
   tree_sidebandsMC_alpha->Write();
@@ -570,9 +568,8 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   //dynamic_cast<RooRealVar*>(r_sidebandsDATA_alpha->floatParsFinal().find("wdth"))->setError(10.);
   
   
-  char fitResultsFileName[500];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str());
-  file_alpha = TFile::Open(fitResultsFileName, "UPDATE");
+  std::string fitResultsFileName = get_fitResultsRootFileName( btagCategory, leptType );
+  file_alpha = TFile::Open(fitResultsFileName.c_str(), "UPDATE");
   file_alpha->cd();
   tree_sidebandsDATA_alpha->Write();
   r_sidebandsDATA_alpha->Write(); // << this one is final
@@ -644,6 +641,18 @@ void SidebandFitter::fitPseudo( TTree* treeMC, TTree* treeDATA, int btagCategory
 
 }
 
+
+
+std::string SidebandFitter::get_fitResultsRootFileName( int btagCategory, const std::string& leptType ) {
+
+  char fitResultsFileName[500];
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str());
+
+  std::string fitResultsFileName_str(fitResultsFileName);
+
+  return fitResultsFileName_str;
+
+}
 
 
 
@@ -910,10 +919,8 @@ void SidebandFitter::pseudoMassge(int ntoys, int btagCategory , const std::strin
   std::cout << "to " << dynamic_cast<RooRealVar*>(r_nominal->floatParsFinal().find(var1))->getError() << " : " << dynamic_cast<RooRealVar*>(r_nominal->floatParsFinal().find(var2))->getError() << std::endl;
 
   std::cout << " writing adjusted fitresult "<< std::endl;
-  TFile* file_alpha = 0;
-  char fitResultsFileName[500];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str());
-  file_alpha = TFile::Open(fitResultsFileName, "UPDATE");
+  std::string fitResultsFileName = get_fitResultsRootFileName( btagCategory, leptType );
+  TFile* file_alpha = TFile::Open(fitResultsFileName.c_str(), "UPDATE");
   file_alpha->cd();
   r_nominal->Write(); //will over-write the old one
   file_alpha->Close();
@@ -1023,9 +1030,8 @@ std::pair<Double_t,Double_t> SidebandFitter::get_backgroundNormalizationAndError
   if( mZZmax < 0. ) mZZmax = mZZmax_;
   
   // open fit results file:
-  char fitResultsFileName[200];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s.root", dataset_.c_str(), nbtags, PUType_.c_str());
-  TFile* fitResultsFile = TFile::Open(fitResultsFileName);
+  std::string fitResultsFileName = get_fitResultsRootFileName( nbtags, leptType );
+  TFile* fitResultsFile = TFile::Open(fitResultsFileName.c_str());
 
 
   // get alpha-corrected tree:
