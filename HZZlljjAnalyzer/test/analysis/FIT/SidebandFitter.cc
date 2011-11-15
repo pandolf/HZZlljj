@@ -14,6 +14,7 @@
 #include "TPaveText.h"
 #include "TMatrixDSym.h"
 #include "TRandom3.h"
+#include "TROOT.h"
 
 #include "RooRealVar.h"
 #include "RooFormulaVar.h"
@@ -697,6 +698,8 @@ TTree* SidebandFitter::correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int bt
   tree->SetBranchAddress( "isSidebands", &isSidebands );
 
 
+  gROOT->cd();
+
   TTree* newTree = tree->CloneTree(0);
   newTree->SetName(name.c_str());
 
@@ -725,7 +728,7 @@ TTree* SidebandFitter::correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int bt
 
   }
 
-  return newTree;
+  return (TTree*)(newTree->Clone());
 
 }
 
