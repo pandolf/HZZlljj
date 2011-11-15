@@ -17,7 +17,9 @@
 #include "TFile.h"
 #include "TChain.h"
 #include "TH1D.h"
+#include "TH2D.h"
 #include "TString.h"
+#include "TCanvas.h"
 #include "TROOT.h"
 #include <iostream>
 
@@ -26,6 +28,7 @@
 TTree* getTreeData(std::string whichPeriod, bool useCMG);// useCMG=false => Franceescos trees
 TTree* getTreeBckg(std::string whichPeriod, bool useCMG);// useCMG=true  => CMG         trees
 TTree* conditionTree(std::string whichPeriod,TTree* inTree);
+void draw_checkAlpha( SidebandFitter* sf, TH1D* alpha, TTree* tree, int nbtags, const std::string& name );
 
 int main( int argc, char* argv[] ) {
 
@@ -67,9 +70,8 @@ int main( int argc, char* argv[] ) {
   std::string PUReweighing = "Run2011A";
   if( dataset=="HR11" ) PUReweighing = "HR11";
   if( dataset=="HR11_v2" ) PUReweighing = "HR11_73pb";
-  if( dataset_tstr.BeginsWith("Run2011B") ) PUReweighing = "Run2011B";
+  if( dataset_tstr.BeginsWith("Run2011B") ) PUReweighing = "HR11_73pb";
   if( dataset_tstr.BeginsWith("All11") ) PUReweighing = "All11";
-
 
 
 
@@ -83,15 +85,20 @@ int main( int argc, char* argv[] ) {
 
   TRandom3* random = new TRandom3(0);
   
-  for( int b=0 ; b < 3 ; b++){
+  // loop on btag categories
+  for( int b=0 ; b < 3 ; b++) {
+
     SidebandFitter *sf = new SidebandFitter(dataset,PUReweighing );
     char cutstring[200];
     sprintf(cutstring,"nBTags==%d",b);
     TTree* treeDATA_Xbtag = treeDATA->CopyTree(cutstring);
-
     TTree* treeMC_Xbtag = chainMC->CopyTree(cutstring);
     
     TH1D* alpha_Xbtag = sf->getAlphaHisto( b, "ALL", treeMC_Xbtag );
+
+    draw_checkAlpha( sf, alpha_Xbtag, treeMC_Xbtag, b, "MC");
+    draw_checkAlpha( sf, alpha_Xbtag, treeDATA_Xbtag, b, "DATA");
+
 
     sf->generateFixedPars(treeMC_Xbtag, b , "ALL", alpha_Xbtag );
 
@@ -240,3 +247,52 @@ TTree* conditionTree(std::string whichPeriod,TTree* inTree){
 }
 
 
+
+void draw_checkAlpha( SidebandFitter* sf, TH1D* alpha, TTree* tree, int nbtags, const std::string& name ) {
+
+    TTree* tree_alpha_tmp = sf->correctTreeWithAlpha( tree, alpha, nbtags, "tmp");
+    TH1D* h1_mZZ_signal_tmp = new TH1D("mZZ_signal_tmp", "", 60, 150., 750.);
+    h1_mZZ_signal_tmp->Sumw2();
+    TH1D* h1_mZZ_sidebands_tmp = new TH1D("mZZ_sidebands_tmp", "", 60, 150., 750.);
+    h1_mZZ_sidebands_tmp->Sumw2();
+    TH1D* h1_mZZ_sidebands_alpha_tmp = new TH1D("mZZ_sidebands_alpha_tmp", "", 60, 150., 750.);
+    h1_mZZ_sidebands_alpha_tmp->Sumw2();
+    tree_alpha_tmp->Project("mZZ_signal_tmp", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105.)");
+    tree_alpha_tmp->Project("mZZ_sidebands_tmp", "CMS_hzz2l2q_mZZ", "eventWeight*(isSidebands)");
+    tree_alpha_tmp->Project("mZZ_sidebands_alpha_tmp", "CMS_hzz2l2q_mZZ", "eventWeight_alpha*(isSidebands)");
+
+    h1_mZZ_signal_tmp->SetLineWidth(2);
+    h1_mZZ_sidebands_tmp->SetMarkerStyle(24);
+    h1_mZZ_sidebands_alpha_tmp->SetMarkerStyle(20);
+    h1_mZZ_sidebands_alpha_tmp->SetMarkerColor(kRed);
+
+
+    TH2D* axes = new TH2D("axes", "", 10, 150., 750., 10, 0., 1.2*h1_mZZ_signal_tmp->GetMaximum() );
+    axes->SetXTitle("m_{ZZ} [GeV]");
+
+    TCanvas* c1_tmp = new TCanvas("c1_tmp", "c1_tmp", 600, 600);
+    c1_tmp->cd();
+    axes->Draw();
+    h1_mZZ_signal_tmp->Draw("histo same");
+    h1_mZZ_sidebands_tmp->Draw("P same");
+    h1_mZZ_sidebands_alpha_tmp->Draw("P same");
+    char canvasName_tmp[300];
+    sprintf( canvasName_tmp, "%s/checkAlpha%s_%dbtag.eps", (sf->get_outdir()).c_str(), name.c_str(), nbtags );
+    c1_tmp->SaveAs(canvasName_tmp);
+    c1_tmp->Clear();
+    c1_tmp->SetLogy();
+    axes->Draw();
+    h1_mZZ_signal_tmp->Draw("histo same");
+    h1_mZZ_sidebands_tmp->Draw("P same");
+    h1_mZZ_sidebands_alpha_tmp->Draw("P same");
+    sprintf( canvasName_tmp, "%s/checkAlpha%s_%dbtag_log.eps", (sf->get_outdir()).c_str(), name.c_str(), nbtags );
+    c1_tmp->SaveAs(canvasName_tmp);
+
+    delete c1_tmp;
+    delete h1_mZZ_signal_tmp;
+    delete h1_mZZ_sidebands_tmp;
+    delete h1_mZZ_sidebands_alpha_tmp;
+    delete tree_alpha_tmp;
+    delete axes;
+
+}
