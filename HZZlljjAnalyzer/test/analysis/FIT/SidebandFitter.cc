@@ -180,7 +180,7 @@ TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string leptTyp
      } //if over thresh
   } //for bins
 
-  return h1_alpha;
+  return (TH1D*)(h1_alpha->Clone());
   
 }
 
