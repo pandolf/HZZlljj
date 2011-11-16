@@ -10,4 +10,4 @@ end
 hadd -f mergedToys.root outputToy/higgsCombineTest.MarkovChainMC.*.root
 cd -
 end
-cd ../../../
+cd ..
