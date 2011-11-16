@@ -1,0 +1,10 @@
+cp HZZlljjRMPlots_DATA_LP11_madgraph_presel_ALL/helicityLD.eps ~/scratch0/tdr2/notes/HIG-11-017/trunk/plots/data_loose_ld.eps
+cp HZZlljjRMPlots_DATA_LP11_madgraph_presel_ALL/nEventsCategories_presel_log.eps ~/scratch0/tdr2/notes/HIG-11-017/trunk/plots/data_loose_tag.eps
+cp HZZlljjRMPlots_DATA_LP11_madgraph_presel_ALL/QGLikelihoodProd.eps ~/scratch0/tdr2/notes/HIG-11-017/trunk/plots/data_loose_qg.eps
+cp HZZlljjRMPlots_DATA_LP11_madgraph_presel_ALL/mZjj.eps ~/scratch0/tdr2/notes/HIG-11-017/trunk/plots/data_loose_mjj.eps
+#cp HZZlljjRMPlots_DATA_LP11_madgraph_presel_ALL/mZZ_kinfit_hiMass_2btag.eps ~/scratch0/tdr2/notes/HIG-11-017/trunk/plots/mZZ_kinfit_hiMass_2btag.eps
+#cp HZZlljjRMPlots_DATA_LP11_madgraph_presel_ALL/mZZ_kinfit_hiMass_1btag.eps ~/scratch0/tdr2/notes/HIG-11-017/trunk/plots/mZZ_kinfit_hiMass_1btag.eps
+#cp HZZlljjRMPlots_DATA_LP11_madgraph_presel_ALL/mZZ_kinfit_hiMass_0btag.eps ~/scratch0/tdr2/notes/HIG-11-017/trunk/plots/mZZ_kinfit_hiMass_0btag.eps
+#cp HZZlljjRMPlots_DATA_LP11_madgraph_presel_ALL/mZZ_kinfit_hiMass_sidebands_2btag.eps ~/scratch0/tdr2/notes/HIG-11-017/trunk/plots/mZZ_kinfit_hiMass_sidebands_2btag.eps
+#cp HZZlljjRMPlots_DATA_LP11_madgraph_presel_ALL/mZZ_kinfit_hiMass_sidebands_1btag.eps ~/scratch0/tdr2/notes/HIG-11-017/trunk/plots/mZZ_kinfit_hiMass_sidebands_1btag.eps
+#cp HZZlljjRMPlots_DATA_LP11_madgraph_presel_ALL/mZZ_kinfit_hiMass_sidebands_0btag.eps ~/scratch0/tdr2/notes/HIG-11-017/trunk/plots/mZZ_kinfit_hiMass_sidebands_0btag.eps
