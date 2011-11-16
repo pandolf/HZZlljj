@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
   if( data_prefix=="HR11_v2" )
     PUType = "HR11_73pb";
   if( dataset_tstr.BeginsWith("Run2011B") )
-    PUType = "2011B";
+    PUType = "HR11_73pb";
 
 
 
@@ -90,6 +90,7 @@ int main(int argc, char* argv[]) {
   DrawBase* db = new DrawBase("HZZlljjRM");
   db->set_pdf_aussi((bool)false);
 
+  db->set_isCMSArticle(true);
 
 
   std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset;
@@ -123,7 +124,7 @@ int main(int argc, char* argv[]) {
     else
       sprintf( signalLegendText, "H(400) #times %.0f", signalScaleFactor);
     std::string signalLegendText_str(signalLegendText);
-    db->add_mcFile( signalFile, signalScaleFactor, "H400", signalLegendText_str, kRed+2, 3004);
+    db->add_mcFile( signalFile, signalScaleFactor, "H400", signalLegendText_str, kYellow, 3004);
   }
 
   std::string mcZJetsFileName;
@@ -185,6 +186,8 @@ int main(int argc, char* argv[]) {
     db->set_lumiNormalization(4200.);
   else if( data_dataset=="DATA_HR11_v2" )
     db->set_lumiNormalization(4600.);
+  else if( data_dataset=="DATA_Run2011B_v2" )
+    db->set_lumiNormalization(2500.);
 
 
 
@@ -227,24 +230,30 @@ int main(int argc, char* argv[]) {
   db->set_legendTitle("0 b-tag Category");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", nBins, xMin, xMax, "mZZ_0btag", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 0 );
+  db->set_legendTitle("0 b-tag Category (Muons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0 && leptType==0)", nBins, xMin, xMax, "mZZ_0btag_mm", "m_{#mu#mujj}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 0, "MU");
+  db->set_legendTitle("0 b-tag Category (Electrons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0 && leptType==1)", nBins, xMin, xMax, "mZZ_0btag_ee", "m_{eejj}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 0, "ELE");
 
   db->set_legendTitle("1 b-tag Category");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", nBins, xMin, xMax, "mZZ_1btag", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 1 );
+  db->set_legendTitle("1 b-tag Category (Muons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1 && leptType==0)", nBins, xMin, xMax, "mZZ_0btag_mm", "m_{#mu#mujj}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 1, "MU");
+  db->set_legendTitle("1 b-tag Category (Electrons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1 && leptType==1)", nBins, xMin, xMax, "mZZ_0btag_ee", "m_{eejj}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 1, "ELE");
 
   db->set_legendTitle("2 b-tag Category");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", nBins, xMin, xMax, "mZZ_2btag", "m_{ZZ}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 2 );
+  db->set_legendTitle("2 b-tag Category (Muons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2 && leptType==0)", nBins, xMin, xMax, "mZZ_0btag_mm", "m_{#mu#mujj}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 2, "MU");
+  db->set_legendTitle("2 b-tag Category (Electrons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2 && leptType==1)", nBins, xMin, xMax, "mZZ_0btag_ee", "m_{eejj}", "GeV");
   drawHistoWithCurve( db, data_prefix, PUType, 2, "ELE");
 
@@ -444,6 +453,9 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
   c1->SaveAs(canvasName_log_eps.c_str());
 
   delete sf;
+  delete h2_axes;
+  delete h2_axes_log;
+  delete c1;
 
 }
 
