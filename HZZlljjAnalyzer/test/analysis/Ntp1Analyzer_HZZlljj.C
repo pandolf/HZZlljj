@@ -493,6 +493,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
 
      if( !isGoodEvent(jentry) ) continue; //this takes care also of trigger
 
+
      if( nPV==0 ) continue;
      bool goodVertex = (ndofPV[0] >= 4.0 && sqrt(PVxPV[0]*PVxPV[0]+PVyPV[0]*PVyPV[0]) < 2. && fabs(PVzPV[0]) < 24. );
      if( !goodVertex ) continue;
@@ -528,7 +529,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      passed_HLT_Mu13_Mu8_ = this->PassedHLT( jentry, "HLT_Mu13_Mu8");
      passed_HLT_Mu17_Mu8_ = this->PassedHLT( jentry, "HLT_Mu17_Mu8");
      passed_HLT_IsoMu17_ = this->PassedHLT( jentry, "HLT_IsoMu17");
-     passed_HLT_IsoMu24_ = this->PassedHLT( jentry, "HLT_IsoMu24");
+     passed_HLT_IsoMu24_ = this->PassedHLT( jentry, "HLT_IsoMu24_v");
+     passed_HLT_IsoMu24_eta2p1_ = this->PassedHLT( jentry, "HLT_IsoMu24_eta2p1_v");
      passed_HLT_Mu8_Jet40_ = this->PassedHLT( jentry, "HLT_Mu8_Jet40");
      passed_HLT_L2DoubleMu23_NoVertex_ = this->PassedHLT( jentry, "HLT_L2DoubleMu23_NoVertex");
      passed_HLT_L2DoubleMu30_NoVertex_ = this->PassedHLT( jentry, "HLT_L2DoubleMu30_NoVertex");
