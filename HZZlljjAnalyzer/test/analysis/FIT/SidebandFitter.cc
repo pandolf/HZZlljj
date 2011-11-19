@@ -35,10 +35,11 @@
 using namespace RooFit;
 
 
-SidebandFitter::SidebandFitter( const std::string& dataset, const std::string PUType ) {
+SidebandFitter::SidebandFitter( const std::string& dataset, const std::string& PUType, const std::string& init ) {
 
   dataset_ = dataset;
   PUType_ = PUType;
+  init_ = init;
 
   mZZmin_ = 160.;
   mZZmax_ = 800.;
@@ -70,7 +71,7 @@ SidebandFitter::SidebandFitter( const std::string& dataset, const std::string PU
 
 
 
-TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string leptType_str, TTree* treeMC ) {
+TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string& leptType_str, TTree* treeMC ) {
 
 
   std::string leptType_text;
@@ -151,7 +152,7 @@ TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string leptTyp
 
 
 
-RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha, const std::string& init ) {
+RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha ) {
 
 
   std::string leptType_cut="";
@@ -165,8 +166,8 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   }
   
 
-  if( init!="MCSignal" && init!="MC" && init!="DATA" ) {
-    std::cout << "Can't initialize on '" << init << "'. (Don't know what it is.) Exiting." << std::endl;
+  if( init_!="MCSignal" && init_!="MC" && init_!="DATA" ) {
+    std::cout << "Can't initialize on '" << init_ << "'. (Don't know what it is.) Exiting." << std::endl;
     exit(311);
   }
 
@@ -204,22 +205,18 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
   RooDataSet *fitDataset;
  
-  if( init=="MCSignal" ) {
+  if( init_=="MCSignal" ) {
 
     fitDataset = new RooDataSet("signalMC","signalMC",treeMC,RooArgSet(*eventWeight,*CMS_hzz2l2q_mZZ_,*nBTags,*mZjj),cut_signal,"eventWeight");
 
-  } else if( init=="MC" ) {
+  } else if( init_=="MC" ) {
 
     fitDataset = new RooDataSet("sidebandsMC_alpha","sidebandsMC_alpha",tree_sidebandsMC_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*CMS_hzz2l2q_mZZ_,*nBTags,*mZjj),cut_sidebands,"eventWeight_alpha");
-  } else if( init=="DATA" ) {
+  } else if( init_=="DATA" ) {
     
     fitDataset = sidebandsDATA_alpha;
 
   }
-
-
-  TFile* file_alpha = 0;
-
 
 
 
@@ -232,7 +229,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
   std::cout << std::endl << std::endl;
   std::cout << "-----------------------------------------------" << std::endl;
-  std::cout << "  FIXING PARAMETERS WITH A FIT TO " << init << " (" << btagCategory << " btags)" << std::endl;
+  std::cout << "  FIXING PARAMETERS WITH A FIT TO " << init_ << " (" << btagCategory << " btags)" << std::endl;
   std::cout << "-----------------------------------------------" << std::endl;
   std::cout << std::endl << std::endl;
 
@@ -244,7 +241,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   RooFitResult *r_sidebandsMC_alpha = background_->fitTo(*fitDataset, SumW2Error(kTRUE), Save());
 
 
-  std::string ofsMCName = get_fitResultsName( btagCategory, init );
+  std::string ofsMCName = get_fitResultsName( btagCategory, init_ );
   ofstream ofsMC(ofsMCName.c_str());
 
   ofsMC << "beta " << beta_->getVal() << " " << beta_->getError() << std::endl;
@@ -266,7 +263,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   fitPlot->Draw();
 
   char canvasName[400];
-  sprintf( canvasName, "%s/mZZ_%s_alpha_%dbtag_%s", outdir.c_str(), init.c_str(), btagCategory, leptType.c_str());
+  sprintf( canvasName, "%s/mZZ_%s_alpha_%dbtag_%s", outdir.c_str(), init_.c_str(), btagCategory, leptType.c_str());
   std::string* canvasName_str = new std::string(canvasName);
   std::string canvasName_eps = *canvasName_str + ".eps";
   c1->SaveAs(canvasName_eps.c_str());
@@ -460,9 +457,8 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
 
 
-  char fitResultsFileName[500];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str());
-  file_alpha = TFile::Open(fitResultsFileName, "recreate");
+  std::string fitResultsFileName = get_fitResultsRootFileName( btagCategory, leptType );
+  TFile* file_alpha = TFile::Open(fitResultsFileName.c_str(), "recreate");
   file_alpha->cd();
   h1_alpha->Write();
   tree_sidebandsDATA_alpha->Write();
@@ -492,12 +488,12 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
 
 
-std::string SidebandFitter::get_fitResultsName( int nbtags, const std::string& data_mc ) {
+std::string SidebandFitter::get_fitResultsName( int nbtags, const std::string& init ) {
 
   std::string outdir = get_outdir();
 
   char fitResultsName[600];
-  sprintf( fitResultsName, "%s/fitresults%s_%dbtag.txt", outdir.c_str(), data_mc.c_str(), nbtags);
+  sprintf( fitResultsName, "%s/fitresults%s_%dbtag.txt", outdir.c_str(), init.c_str(), nbtags);
   std::string returnString(fitResultsName);
 
   return returnString;
@@ -795,7 +791,7 @@ RooDataSet* SidebandFitter::get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, co
 std::string SidebandFitter::get_fitResultsRootFileName( int btagCategory, const std::string& leptType ) {
 
   char fitResultsFileName[500];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str());
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s_fit%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str(), init_.c_str() );
 
   std::string fitResultsFileName_str(fitResultsFileName);
 
@@ -842,7 +838,7 @@ RooPlot* SidebandFitter::ContourPlot(RooRealVar* var1,RooRealVar* var2, RooFitRe
   return plot;
 
 }
-void SidebandFitter::fitPseudo( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha, int seed , std::string init) {
+void SidebandFitter::fitPseudo( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha, int seed) {
 
   std::string outdir = get_outdir();
 
@@ -875,7 +871,7 @@ void SidebandFitter::fitPseudo( TTree* treeMC, TTree* treeDATA, int btagCategory
   TTree* tree_sidebandsDATA_alpha = correctTreeWithAlpha( treeDATA, h1_alpha, btagCategory, treeName_DATA_str );
   RooDataSet sidebandsDATA_alpha("sidebandsDATA_alpha","sidebandsDATA_alpha",tree_sidebandsDATA_alpha,RooArgSet(*eventWeight,*eventWeight_alpha,*CMS_hzz2l2q_mZZ_,*nBTags,*mZjj),cut_sidebands,"eventWeight_alpha");
 
-  std::string ofsMCName = get_fitResultsName( btagCategory, init );
+  std::string ofsMCName = get_fitResultsName( btagCategory, init_ );
   //workspace_->argSet("cutOff,beta,m,n").readFromFile(ofsMCName.c_str());// we assume that these are still correct
 
   char var1[50];
@@ -904,7 +900,7 @@ void SidebandFitter::fitPseudo( TTree* treeMC, TTree* treeDATA, int btagCategory
 
 }
 
-void SidebandFitter::pseudoMassge(int ntoys, int btagCategory , const std::string& leptType, std::string init, RooFitResult* r_nominal){
+void SidebandFitter::pseudoMassge(int ntoys, int btagCategory , const std::string& leptType, RooFitResult* r_nominal){
 
   std::string outdir = get_outdir();
   std::string ofsMCName;

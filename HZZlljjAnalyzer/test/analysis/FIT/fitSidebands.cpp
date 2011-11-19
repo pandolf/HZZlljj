@@ -16,11 +16,24 @@
 int main( int argc, char* argv[] ) {
 
 
-  std::string dataset = "LP11";
+  if( argc!=1 && argc!=2 && argc!=3 ) {
+    std::cout << "USAGE: ./fitSidebands [data_dataset] [init]" << std::endl;
+    exit(1111);
+  }
+ 
+
+  std::string dataset = "HR11_v2";
   if( argc==2 ) {
     std::string dataset_str(argv[1]);
     dataset = dataset_str;
   }
+
+  std::string init="MC";
+  if( argc==3 ) {
+    std::string init_str(argv[2]);
+    init = init_str;
+  }
+
 
   int nToys = 500;
   TRandom3* random = new TRandom3(0);
@@ -55,9 +68,10 @@ int main( int argc, char* argv[] ) {
   gROOT->cd(); //magic!
 
 
+
   for( unsigned ibtag=0; ibtag<3; ++ibtag ) {
 
-    SidebandFitter *sf = new SidebandFitter(dataset, PUReweighing);
+    SidebandFitter *sf = new SidebandFitter(dataset, PUReweighing, init);
 
     char btagCut[100];
     sprintf( btagCut, "nBTags==%d", ibtag );
@@ -68,15 +82,15 @@ int main( int argc, char* argv[] ) {
 
     TH1D* alpha_Xbtag = sf->getAlphaHisto( ibtag, "ALL", treeMC_Xbtag );
 
-    RooFitResult* fr = sf->fitSidebands( treeMC_Xbtag, treeDATA_Xbtag, ibtag, "ALL", alpha_Xbtag, "MC" );
+    RooFitResult* fr = sf->fitSidebands( treeMC_Xbtag, treeDATA_Xbtag, ibtag, "ALL", alpha_Xbtag );
 
     for(int i = 0 ; i <nToys ; i++) {
       std::cout << std::endl << "[ " << ibtag << " b-tags ]  Toy: " << i << "/" << nToys << std::endl;
       TH1D* variedHisto = sf->shuffle(alpha_Xbtag, random ,"tmp");
-      sf->fitPseudo( treeMC_Xbtag, treeDATA_Xbtag, ibtag, "ALL", variedHisto,i,"MC");
+      sf->fitPseudo( treeMC_Xbtag, treeDATA_Xbtag, ibtag, "ALL", variedHisto,i);
       delete variedHisto;
     }
-    sf->pseudoMassge(nToys, ibtag,"ALL","MC",fr);
+    sf->pseudoMassge(nToys, ibtag,"ALL",fr);
 
     delete fr;
     delete sf;
