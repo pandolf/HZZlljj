@@ -10,15 +10,15 @@ dataset = sys.argv[1]
 data_mc = sys.argv[2]
 
 nbtags = "ALL"
-if len(sys.argv) == 3:
-    nbtags = sys.argv[2]
+if len(sys.argv) == 4:
+    nbtags = sys.argv[3]
 
 
 queue="8nh"
 
 pwd = os.environ['PWD']
 
-datacards_dir = "datacards_" + dataset + "_" + data_mc
+datacards_dir = "datacards_" + dataset + "_fit" + data_mc
 
 
 massesFile = open('masses.txt', 'r')
