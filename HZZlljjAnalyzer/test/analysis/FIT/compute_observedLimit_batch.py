@@ -3,10 +3,11 @@ import os
 import sys
 import re
 
-if ( (len(sys.argv) != 2) and (len(sys.argv) != 3) ) :
-    print "usage compute_observedLimit_batch.py [dataset] [nbtags=\"ALL\"]"
+if ( (len(sys.argv) != 3) and (len(sys.argv) != 4) ) :
+    print "usage compute_observedLimit_batch.py [dataset] [data_mc] [nbtags=\"ALL\"]"
     sys.exit(1)
 dataset = sys.argv[1]
+data_mc = sys.argv[2]
 
 nbtags = "ALL"
 if len(sys.argv) == 3:
@@ -17,7 +18,7 @@ queue="8nh"
 
 pwd = os.environ['PWD']
 
-datacards_dir = "datacards_" + dataset
+datacards_dir = "datacards_" + dataset + "_" + data_mc
 
 
 massesFile = open('masses.txt', 'r')
