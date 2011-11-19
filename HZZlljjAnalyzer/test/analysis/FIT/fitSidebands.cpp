@@ -34,6 +34,8 @@ int main( int argc, char* argv[] ) {
     init = init_str;
   }
 
+  std::cout << "-> Going to fix fit parameters on : " << init << std::endl;
+
 
   int nToys = 500;
   TRandom3* random = new TRandom3(0);
