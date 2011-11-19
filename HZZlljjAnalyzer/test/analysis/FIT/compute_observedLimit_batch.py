@@ -37,7 +37,7 @@ for line in massesFile:
   scriptFile.write('cd /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_4_2_3_patch5/ ; eval `scramv1 runtime -sh` ; cd -\n')
   scriptFile.write('cp '+pwd+"/"+massDir+'/model*.root $WORKDIR\n')
   scriptFile.write('cd $WORKDIR\n')
-  scriptFile.write('echo "Computing upper limit for mass: ' + str(mass) + '\n')
+  scriptFile.write('echo "Computing upper limit for mass: ' + str(mass) + '"\n')
   scriptFile.write('combine model.root -M MarkovChainMC -m ' + str(mass) + ' -H ProfileLikelihood -U >& log.txt\n')
   scriptFile.write('ls log*.txt | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm22:'+diskoutputmain+'/{}\n') 
   scriptFile.close
