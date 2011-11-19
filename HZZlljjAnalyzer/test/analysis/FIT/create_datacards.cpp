@@ -120,6 +120,9 @@ int main( int argc, char* argv[] ) {
   } else if( dataset=="HR11_v2" ) {
     lumi_ELE=4600.; //pb^-1
     lumi_MU =4600.; //pb^-1
+  } else if( dataset=="Run2011B_v2" ) {
+    lumi_ELE=2500.; //pb^-1
+    lumi_MU =2500.; //pb^-1
   } else {
     std::cout << "Unknown dataset '" << dataset << "'. Exiting." << std::endl;
     exit(333);
@@ -133,7 +136,7 @@ int main( int argc, char* argv[] ) {
   if( dataset=="HR11_v2" )
     PUType = "HR11_73pb";
   if( dataset_tstr.Contains("Run2011B") )
-    PUType = "2011B"; 
+    PUType = "HR11_73pb"; 
 
   //first loop over available signal MC files to fit efficiency:
   TF1* f1_eff_vs_mass_MU_0btag = get_eff_vs_mass("MU", 0, PUType, mZZmin_);
@@ -262,7 +265,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   float rate_vbf  = eff*hp.CSvbf*hp.BRHZZ*hp.BRZZ2l2q*lumi*0.5; //xsect has both ee and mm
 
   // compute expected BG yield from observed sideband events:
-  Double_t rate_background = sf->get_backgroundNormalization( nbtags, leptType_str );
+  Double_t rate_background = sf->get_backgroundNormalization( nbtags, leptType_str, "DATA", 183., 800. );
 
 
 
