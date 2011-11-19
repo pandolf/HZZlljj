@@ -29,7 +29,7 @@ for line in massesFile:
   massDir = datacards_dir + "/" + str(mass)
   scriptName = massDir + "/batchScript.src"
   diskoutputmain = '/cmsrm/pc18/pandolf/CMSSW_4_2_8/src/HZZlljj/HZZlljjAnalyzer/test/analysis/FIT/' + massDir
-  os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm22 mkdir -p "+diskoutputmain)
+  #os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm22 mkdir -p "+diskoutputmain)
   scriptFile = open(scriptName,'w')
   scriptFile.write('#!/bin/bash\n')
   scriptFile.write('export SCRAM_ARCH=slc5_amd64_gcc434\n')
@@ -40,7 +40,7 @@ for line in massesFile:
   scriptFile.write('cd $WORKDIR\n')
   scriptFile.write('echo "Computing upper limit for mass: ' + str(mass) + '"\n')
   scriptFile.write('combine model.root -M MarkovChainMC -m ' + str(mass) + ' -H ProfileLikelihood -U >& log.txt\n')
-  scriptFile.write('ls log*.txt | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm22:'+diskoutputmain+'/{}\n') 
+  #scriptFile.write('ls log*.txt | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm22:'+diskoutputmain+'/{}\n') 
   scriptFile.write('cp log*.txt '+pwd+"/"+massDir+'/\n') 
   scriptFile.close
   os.system("echo bsub -q "+queue+" -o "+pwd+"/log.log source "+pwd+"/"+scriptName)
