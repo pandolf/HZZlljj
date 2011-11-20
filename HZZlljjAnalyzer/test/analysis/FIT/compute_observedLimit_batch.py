@@ -51,7 +51,10 @@ for line in massesFile:
   #scriptFile.write('ls log*.txt | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm22:'+diskoutputmain+'/{}\n') 
   scriptFile.write('cp log*.txt '+pwd+"/"+massDir+'/\n') 
   scriptFile.close
-  os.system("echo bsub -q "+queue+" -o "+pwd+"/log.log source "+pwd+"/"+scriptName)
+  if nbtags=="ALL":
+    os.system("echo bsub -q "+queue+" -o /tmp/pandolf/log_" + str(mass) + ".log source "+pwd+"/"+scriptName)
+  else:
+    os.system("echo bsub -q "+queue+" -o /tmp/pandolf/log_" + str(mass) + "_" + str(nbtags) + "btag.log source "+pwd+"/"+scriptName)
   os.system("bsub -q "+queue+" -o "+pwd+"/log.log source "+pwd+"/"+scriptName)
   continue
 
