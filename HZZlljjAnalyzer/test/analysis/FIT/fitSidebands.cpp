@@ -16,8 +16,8 @@
 int main( int argc, char* argv[] ) {
 
 
-  if( argc!=1 && argc!=2 && argc!=3 ) {
-    std::cout << "USAGE: ./fitSidebands [data_dataset] [init]" << std::endl;
+  if( argc!=1 && argc!=2 && argc!=3 && argc!=4 ) {
+    std::cout << "USAGE: ./fitSidebands [data_dataset=\"HR11_v2\"] [init=\"MC\"] [ntoys=\"500\"]" << std::endl;
     exit(1111);
   }
  
@@ -34,10 +34,17 @@ int main( int argc, char* argv[] ) {
     init = init_str;
   }
 
-  std::cout << "-> Going to fix fit parameters on : " << init << std::endl;
-
-
   int nToys = 500;
+  if( argc==4 ) {
+    nToys = atoi(argv[3]);
+  }
+
+  
+  std::cout << "-> Dataset: " << dataset << std::endl;
+  std::cout << "-> Going to fix fit parameters on : " << init << std::endl;
+  std::cout << "-> N Toys: " << nToys << std::endl;
+
+
   TRandom3* random = new TRandom3(0);
 
 
@@ -92,7 +99,9 @@ int main( int argc, char* argv[] ) {
       sf->fitPseudo( treeMC_Xbtag, treeDATA_Xbtag, ibtag, "ALL", variedHisto,i);
       delete variedHisto;
     }
-    sf->pseudoMassge(nToys, ibtag,"ALL",fr);
+
+    if( nToys > 0 )
+      sf->pseudoMassge(nToys, ibtag,"ALL",fr);
 
     delete fr;
     delete sf;
