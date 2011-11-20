@@ -504,7 +504,7 @@ std::string SidebandFitter::get_fitResultsName( int nbtags, const std::string& i
 
 std::string SidebandFitter::get_outdir() {
 
-  std::string returnString = "FitSidebands_" + dataset_;
+  std::string returnString = "FitSidebands_" + dataset_ + "_fit" + init_;
 
   return returnString;
 
