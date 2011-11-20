@@ -11,8 +11,8 @@
 
 
 
-TGraph* get_observedLimit( const std::string& dataset );
-std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::string& data_dataset );
+TGraph* get_observedLimit( const std::string& dataset, const std::string& data_mc, int nbtags );
+std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::string& data_dataset, const std::string& data_mc, int nbtags );
 float getMedian( TH1D* h1 );
 float get_lowBound( TH1D* h1, float frac );
 float get_upBound( TH1D* h1, float frac );
@@ -25,13 +25,21 @@ TPaveText* get_labelCMS( DrawBase* db );
 
 int main( int argc, char* argv[] ) {
 
-  if( argc!=2 ) {
-    std::cout << "USAGE: ./draw_golfcourse [(string)data_dataset]" << std::endl;
+  if( argc!=3 && argc!=4 ) {
+    std::cout << "USAGE: ./draw_golfcourse [(string)data_dataset] [data_mc] [nbtags=\"ALL\"]" << std::endl;
     exit(23);
   }
   
 
   std::string data_dataset(argv[1]);
+
+  std::string data_mc(argv[2]);
+
+  int nbtags=-1;
+  if( argc==4 ) {
+    nbtags = atoi(argv[3]);
+  }
+
 
   TString data_dataset_tstr(data_dataset);
   std::string PUType = "Run2011A";
@@ -53,13 +61,13 @@ int main( int argc, char* argv[] ) {
   db->add_dataFile( file_data, "data" );
 
 
-  TGraph* graphObserved = get_observedLimit( data_dataset );
+  TGraph* graphObserved = get_observedLimit( data_dataset, data_mc, nbtags );
 
   graphObserved->SetMarkerStyle(21);
   //graphObserved->SetMarkerColor(kGreen+4);
   //graphObserved->SetMarkerSize(1.);
 
-  std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> graphs_expected = get_expectedLimit( data_dataset );
+  std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> graphs_expected = get_expectedLimit( data_dataset, data_mc, nbtags );
   TGraphAsymmErrors* graphExpected68 = graphs_expected.first;
   TGraphAsymmErrors* graphExpected95 = graphs_expected.second;
 
@@ -94,7 +102,7 @@ int main( int argc, char* argv[] ) {
   line_one->SetLineColor(kRed);
   line_one->SetLineWidth(2);
 
-  TLegend* legend = new TLegend( 0.3, 0.6, 0.74, 0.91 );
+  TLegend* legend = new TLegend( 0.28, 0.6, 0.74, 0.91 );
   legend->SetFillColor(0);
   legend->SetFillStyle(0);
   legend->SetTextSize(0.038);
@@ -117,7 +125,10 @@ int main( int argc, char* argv[] ) {
   gPad->RedrawAxis();
 
   char canvasName[500];
-  sprintf( canvasName, "datacards_%s/upperLimitExpected_%s.eps", data_dataset.c_str(), data_dataset.c_str() );
+  if( nbtags>=0 )
+    sprintf( canvasName, "datacards_%s_fit%s/upperLimitExpected_%s_%dbtag.eps", data_dataset.c_str(), data_mc.c_str(), data_dataset.c_str(), nbtags );
+  else
+    sprintf( canvasName, "datacards_%s_fit%s/upperLimitExpected_%s.eps", data_dataset.c_str(), data_mc.c_str(), data_dataset.c_str() );
   c1->SaveAs(canvasName);
 
 
@@ -125,7 +136,7 @@ int main( int argc, char* argv[] ) {
 
   // now also observed:
 
-  TLegend* legend2 = new TLegend( 0.3, 0.6, 0.74, 0.91 );
+  TLegend* legend2 = new TLegend( 0.28, 0.6, 0.74, 0.91 );
   legend2->SetFillColor(0);
   legend2->SetFillStyle(0);
   legend2->SetTextSize(0.038);
@@ -147,12 +158,18 @@ int main( int argc, char* argv[] ) {
   graphObserved->Draw("PLsame");
   gPad->RedrawAxis();
 
-  sprintf( canvasName, "datacards_%s/upperLimit_%s.eps", data_dataset.c_str(), data_dataset.c_str() );
+  if( nbtags>=0 )
+    sprintf( canvasName, "datacards_%s_fit%s/upperLimit_%s_%dbtag.eps", data_dataset.c_str(), data_mc.c_str(), data_dataset.c_str(), nbtags );
+  else
+    sprintf( canvasName, "datacards_%s_fit%s/upperLimit_%s.eps", data_dataset.c_str(), data_mc.c_str(), data_dataset.c_str() );
   c1->SaveAs(canvasName);
 
 
   char expectedLimitFileName[300];
-  sprintf( expectedLimitFileName, "datacards_%s/expectedLimit_%s.txt", data_dataset.c_str(), data_dataset.c_str() );
+  if( nbtags>=0 )
+    sprintf( expectedLimitFileName, "datacards_%s_fit%s/expectedLimit_%s_%dbtag.txt", data_dataset.c_str(), data_mc.c_str(), data_dataset.c_str(), nbtags );
+  else
+    sprintf( expectedLimitFileName, "datacards_%s_fit%s/expectedLimit_%s.txt", data_dataset.c_str(), data_mc.c_str(), data_dataset.c_str() );
   ofstream ofs_expected(expectedLimitFileName);
   ofs_expected << "mH\tmedian\tlow95\tlow68\tup68\tup95" << std::endl;
   for( unsigned imass=0; imass<graphExpected95->GetN(); ++imass ) {
@@ -167,7 +184,10 @@ int main( int argc, char* argv[] ) {
   ofs_expected.close();
 
   char observedLimitFileName[300];
-  sprintf( observedLimitFileName, "datacards_%s/observedLimit_%s.txt", data_dataset.c_str(), data_dataset.c_str() );
+  if( nbtags>=0 )
+    sprintf( observedLimitFileName, "datacards_%s_fit%s/observedLimit_%s_%dbtag.txt", data_dataset.c_str(), data_mc.c_str(), data_dataset.c_str(), nbtags );
+  else
+    sprintf( observedLimitFileName, "datacards_%s_fit%s/observedLimit_%s.txt", data_dataset.c_str(), data_mc.c_str(), data_dataset.c_str() );
   ofstream ofs_observed(observedLimitFileName);
   ofs_observed << "mH\tobservedLimit" << std::endl;
   for( unsigned imass=0; imass<graphObserved->GetN(); ++imass ) {
@@ -185,7 +205,7 @@ int main( int argc, char* argv[] ) {
 
 
 
-TGraph* get_observedLimit( const std::string& dataset ) { 
+TGraph* get_observedLimit( const std::string& dataset, const std::string& data_mc, int nbtags ) { 
 
 
   TGraph* graphObserved = new TGraph(0);
@@ -205,7 +225,10 @@ TGraph* get_observedLimit( const std::string& dataset ) {
     if( mass<200 ) continue;
 
     char limitLogFile[300];
-    sprintf( limitLogFile, "datacards_%s/%d/log.txt", dataset.c_str(), mass );
+    if( nbtags>=0 )
+      sprintf( limitLogFile, "datacards_%s_fit%s/%d/log_%dbtag.txt", dataset.c_str(), data_mc.c_str(), mass, nbtags );
+    else
+      sprintf( limitLogFile, "datacards_%s_fit%s/%d/log.txt", dataset.c_str(), data_mc.c_str(), mass );
 
     ifstream logFile(limitLogFile);
 
@@ -249,7 +272,7 @@ TGraph* get_observedLimit( const std::string& dataset ) {
 
 
 
-std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::string& data_dataset ) {
+std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::string& data_dataset, const std::string& data_mc, int nbtags ) {
 
 
   TGraphAsymmErrors* graph68 = new TGraphAsymmErrors(0);
@@ -278,7 +301,10 @@ std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::s
     //std::string crab_suffix = "_SB_2"; //crab submission suffix
 
     char fileName[400];
-    sprintf( fileName, "UpperLimitToys_%s/%d/res/mergedToys.root", data_dataset.c_str(), masses[imass]);
+    if( nbtags>=0 )
+      sprintf( fileName, "UpperLimitToys_%s_%dbtag_fit%s/%d/res/mergedToys.root", data_dataset.c_str(), nbtags, data_mc.c_str(), masses[imass]);
+    else
+      sprintf( fileName, "UpperLimitToys_%s_fit%s/%d/res/mergedToys.root", data_dataset.c_str(), data_mc.c_str(), masses[imass]);
     TFile* file = TFile::Open(fileName);
     TTree* limitTree = (TTree*)file->Get("limit");
 
@@ -378,7 +404,7 @@ TPaveText* get_labelCMS( DrawBase* db ) {
   cmslabel->SetTextAlign(11);
   cmslabel->SetTextSize(0.038);
   cmslabel->SetTextFont(62);
-  std::string leftText = "CMS Preliminary 2011";
+  std::string leftText = "CMS 2011";
   cmslabel->SetTextAlign(11); // align left
   std::string lumiText = db->get_lumiText();
   cmslabel->AddText(Form("%s, %s", leftText.c_str(), lumiText.c_str()));
