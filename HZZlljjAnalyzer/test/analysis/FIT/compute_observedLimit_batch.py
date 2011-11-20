@@ -23,6 +23,8 @@ datacards_dir = "datacards_" + dataset + "_fit" + data_mc
 
 massesFile = open('masses.txt', 'r')
 
+maindir = "/cmsrm/pc18/pandolf/CMSSW_4_2_8/src/HZZlljj/HZZlljjAnalyzer/test/analysis/FIT/"
+os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm18 mkdir -p "+maindir)
 
 for line in massesFile:
 
@@ -32,8 +34,7 @@ for line in massesFile:
     scriptName = massDir + "/batchScript.src"
   else:
     scriptName = massDir + "/batchScript_"+str(nbtags)+"btags.src"
-  diskoutputmain = '/cmsrm/pc18/pandolf/CMSSW_4_2_8/src/HZZlljj/HZZlljjAnalyzer/test/analysis/FIT/' + massDir
-  #os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm22 mkdir -p "+diskoutputmain)
+  diskoutputmain = maindir + massDir
   scriptFile = open(scriptName,'w')
   scriptFile.write('#!/bin/bash\n')
   scriptFile.write('export SCRAM_ARCH=slc5_amd64_gcc434\n')
@@ -48,14 +49,15 @@ for line in massesFile:
   else:
     scriptFile.write('echo "Computing upper limit for mass: ' + str(mass) + ' NBtags: ' + str(nbtags) + '"\n')
     scriptFile.write('combine model_' + str(nbtags) + 'btag.root -M MarkovChainMC -m ' + str(mass) + ' -H ProfileLikelihood -U >& log_' + str(nbtags) + 'btag.txt\n')
-  #scriptFile.write('ls log*.txt | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm22:'+diskoutputmain+'/{}\n') 
+  scriptFile.write('ls log*.txt | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm18:'+diskoutputmain+'/{}\n') 
   scriptFile.write('cp log*.txt '+pwd+"/"+massDir+'/\n') 
   scriptFile.close
   if nbtags=="ALL":
     os.system("echo bsub -q "+queue+" -o /tmp/pandolf/log_" + str(mass) + ".log source "+pwd+"/"+scriptName)
+    os.system("bsub -q "+queue+" -o /tmp/pandolf/log_" + str(mass) + ".log source "+pwd+"/"+scriptName)
   else:
     os.system("echo bsub -q "+queue+" -o /tmp/pandolf/log_" + str(mass) + "_" + str(nbtags) + "btag.log source "+pwd+"/"+scriptName)
-  os.system("bsub -q "+queue+" -o "+pwd+"/log.log source "+pwd+"/"+scriptName)
+    os.system("bsub -q "+queue+" -o /tmp/pandolf/log_" + str(mass) + "_" + str(nbtags) + "btag.log source "+pwd+"/"+scriptName)
   continue
 
 
