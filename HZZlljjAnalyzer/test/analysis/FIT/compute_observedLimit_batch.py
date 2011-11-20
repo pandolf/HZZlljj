@@ -21,7 +21,7 @@ pwd = os.environ['PWD']
 datacards_dir = "datacards_" + dataset + "_fit" + data_mc
 
 
-massesFile = open('masses.txt', 'r')
+massesFile = open('masses_tmp.txt', 'r')
 
 maindir = "/cmsrm/pc18/pandolf/CMSSW_4_2_8/src/HZZlljj/HZZlljjAnalyzer/test/analysis/FIT/"
 os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm18 mkdir -p "+maindir)
@@ -53,11 +53,11 @@ for line in massesFile:
   scriptFile.write('cp log*.txt '+pwd+"/"+massDir+'/\n') 
   scriptFile.close
   if nbtags=="ALL":
-    os.system("echo bsub -q "+queue+" -o /tmp/pandolf/log_" + str(mass) + ".log source "+pwd+"/"+scriptName)
-    os.system("bsub -q "+queue+" -o /tmp/pandolf/log_" + str(mass) + ".log source "+pwd+"/"+scriptName)
+    os.system("echo bsub -q "+queue+" -o " + pwd+"/"+massDir +"/STDOUT_" + str(mass) + ".log source "+pwd+"/"+scriptName)
+    os.system("bsub -q "+queue+" -o " + pwd+"/"+massDir +"/STDOUT_" + str(mass) + ".log source "+pwd+"/"+scriptName)
   else:
-    os.system("echo bsub -q "+queue+" -o /tmp/pandolf/log_" + str(mass) + "_" + str(nbtags) + "btag.log source "+pwd+"/"+scriptName)
-    os.system("bsub -q "+queue+" -o /tmp/pandolf/log_" + str(mass) + "_" + str(nbtags) + "btag.log source "+pwd+"/"+scriptName)
+    os.system("echo bsub -q "+queue+" -o " + pwd+"/"+massDir +"/STDOUT_" + str(mass) + "_" + str(nbtags) + "btag.log source "+pwd+"/"+scriptName)
+    os.system("bsub -q "+queue+" -o " + pwd+"/"+massDir +"/STDOUT_" + str(mass) + "_" + str(nbtags) + "btag.log source "+pwd+"/"+scriptName)
   continue
 
 
