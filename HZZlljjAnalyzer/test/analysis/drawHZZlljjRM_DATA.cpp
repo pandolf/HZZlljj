@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
     PUType = "Run2011B_73pb";
     //PUType = "Run2011B";
   else {
-    std::cout << "Don't knwo what PUType to choose for data dataset '" << data_dataset << "'. Choosing HR11 default." << std::endl;
+    std::cout << "Don't know what PUType to choose for data dataset '" << data_dataset << "'. Choosing HR11 default." << std::endl;
     PUType = "HR11";
   }
 
@@ -132,7 +132,7 @@ int main(int argc, char* argv[]) {
   mcZJetsFileName += ".root";
   TFile* mcZJetsFile = TFile::Open(mcZJetsFileName.c_str());
   //db->add_mcFile( mcZJetsFile, "ZJets", "Z + Jets", 38, 3001);
-  db->add_mcFile( mcZJetsFile, "ZJets", "Z + Jets", 30, 3001);
+  db->add_mcFile( mcZJetsFile, "ZJets", "Z + jets", 30, 3001);
 
 
   if( ZJetsMC=="alpgen" ) {
@@ -260,8 +260,9 @@ int main(int argc, char* argv[]) {
 
   db->set_rebin(2);
   db->drawHisto("deltaRjj", "#DeltaR Between Jets (p_{T} > 30 GeV)", "", "Jet Pairs");
-  db->set_rebin(1);
+  db->set_rebin(5);
   db->drawHisto("deltaRjj_all_presel", "#DeltaR Between Jets (p_{T} > 30 GeV)", "", "Jet Pairs");
+  db->set_rebin(1);
   db->drawHisto("deltaRll_presel", "#DeltaR Between Leptons", "", "Lepton Pairs");
   db->set_yAxisMaxScale( 1.6 );
   db->drawHisto("etaLept1_presel", "Lead Lepton Pseudorapidity", "", "Events");
