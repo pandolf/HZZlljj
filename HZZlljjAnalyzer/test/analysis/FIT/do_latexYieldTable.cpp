@@ -69,14 +69,14 @@ EventYields getYields( const std::string& dataset, const std::string& PUType, in
 
   EventYields returnYields;
   
-  SidebandFitter* sf = new SidebandFitter( dataset, PUType );
+  SidebandFitter* sf = new SidebandFitter( dataset, PUType, "MC" );
 
 
-  std::pair<Double_t,Double_t> rate_backgroundDATA = sf->get_backgroundNormalizationAndError( nbtags, "ALL", "DATA" );
+  std::pair<Double_t,Double_t> rate_backgroundDATA = sf->get_backgroundNormalizationAndError( nbtags, "ALL", "DATA", 183., 800. );
   returnYields.expectedDATA = rate_backgroundDATA.first;
   returnYields.expectedDATA_error = rate_backgroundDATA.second;
 
-  std::pair<Double_t,Double_t> rate_backgroundMC = sf->get_backgroundNormalizationAndError( nbtags, "ALL", "MC" );
+  std::pair<Double_t,Double_t> rate_backgroundMC = sf->get_backgroundNormalizationAndError( nbtags, "ALL", "MC", 183., 800. );
   returnYields.expectedMC = rate_backgroundMC.first;
   returnYields.expectedMC_error = rate_backgroundMC.second;
 
@@ -84,7 +84,7 @@ EventYields getYields( const std::string& dataset, const std::string& PUType, in
   returnYields.expectedMC_error *= LUMI_;
 
 
-  RooRealVar* CMS_hzz2l2q_mZZ = new RooRealVar("CMS_hzz2l2q_mZZ", "m_{lljj}", 160., 800., "GeV");
+  RooRealVar* CMS_hzz2l2q_mZZ = new RooRealVar("CMS_hzz2l2q_mZZ", "m_{lljj}", 183., 800., "GeV");
   RooDataSet* observed = sf->get_observedDataset( CMS_hzz2l2q_mZZ, "ALL", nbtags );
   returnYields.observed = observed->sumEntries();
 
