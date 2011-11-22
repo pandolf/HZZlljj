@@ -23,19 +23,19 @@ int main( int argc, char* argv[] ) {
  
 
   std::string dataset = "HR11_v2";
-  if( argc==2 ) {
+  if( argc>1 ) {
     std::string dataset_str(argv[1]);
     dataset = dataset_str;
   }
 
   std::string init="MC";
-  if( argc==3 ) {
+  if( argc>2 ) {
     std::string init_str(argv[2]);
     init = init_str;
   }
 
   int nToys = 500;
-  if( argc==4 ) {
+  if( argc>3 ) {
     nToys = atoi(argv[3]);
   }
 
