@@ -234,12 +234,6 @@ int main(int argc, char* argv[]) {
   db->drawHisto("nvertex", "Number of Reconstructed Vertexes", "", "Events", log);
   db->drawHisto("nvertex_PUW", "Number of Reconstructed Vertexes", "", "Events", log);
   db->drawHisto("nvertex_PUW_ave", "Number of Reconstructed Vertexes", "", "Events", log);
-  db->set_legendTitle("0 b-tag Category");
-  db->drawHisto("nvertex_PUW_0btag", "Number of Reconstructed Vertexes", "", "Events", log);
-  db->set_legendTitle("1 b-tag Category");
-  db->drawHisto("nvertex_PUW_1btag", "Number of Reconstructed Vertexes", "", "Events", log);
-  db->set_legendTitle("2 b-tag Category");
-  db->drawHisto("nvertex_PUW_2btag", "Number of Reconstructed Vertexes", "", "Events", log);
   db->set_xAxisMax();
 
   db->set_getBinLabels(true);
