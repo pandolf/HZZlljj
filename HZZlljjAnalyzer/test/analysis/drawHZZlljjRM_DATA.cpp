@@ -20,6 +20,7 @@ int main(int argc, char* argv[]) {
 
   std::string selType(argv[1]);
 
+  //std::string ZJetsMC = "madgraphFall11";
   std::string ZJetsMC = "madgraph";
 
 
@@ -44,6 +45,7 @@ int main(int argc, char* argv[]) {
   DrawBase* db = new DrawBase("HZZlljjRM");
   db->set_pdf_aussi((bool)false);
 
+  //db->set_isCMSArticle(true);
 
   //std::string data_dataset = "DATA_Run2011A_v2_Sub2";
   //std::string data_dataset = "DATA_1fb";
@@ -63,7 +65,7 @@ int main(int argc, char* argv[]) {
     //PUType = "HR11_73pb";
     PUType = "HR11";
   else if( data_dataset=="HR11_v2" )
-    //PUType = "HR11_v3";
+    //PUType = "HR11";
     //PUType = "HR11_73pb_DY";
     PUType = "HR11_73pb";
     //PUType = "HR11_v2";
@@ -118,7 +120,8 @@ int main(int argc, char* argv[]) {
     mcZJetsFileName = "HZZlljjRM_ZJets_alpgen_TuneZ2_Spring11_v2";
   else if( ZJetsMC=="madgraph" )
     mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1";
-    //mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1_OLDPU";
+  else if( ZJetsMC=="madgraphFall11" )
+    mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Fall11";
   else {
     std::cout << "Unknown ZJetsMC '" << ZJetsMC << "'. Exiting." << std::endl;
     exit(13);
@@ -231,6 +234,12 @@ int main(int argc, char* argv[]) {
   db->drawHisto("nvertex", "Number of Reconstructed Vertexes", "", "Events", log);
   db->drawHisto("nvertex_PUW", "Number of Reconstructed Vertexes", "", "Events", log);
   db->drawHisto("nvertex_PUW_ave", "Number of Reconstructed Vertexes", "", "Events", log);
+  db->set_legendTitle("0 b-tag Category");
+  db->drawHisto("nvertex_PUW_0btag", "Number of Reconstructed Vertexes", "", "Events", log);
+  db->set_legendTitle("1 b-tag Category");
+  db->drawHisto("nvertex_PUW_1btag", "Number of Reconstructed Vertexes", "", "Events", log);
+  db->set_legendTitle("2 b-tag Category");
+  db->drawHisto("nvertex_PUW_2btag", "Number of Reconstructed Vertexes", "", "Events", log);
   db->set_xAxisMax();
 
   db->set_getBinLabels(true);
@@ -351,7 +360,7 @@ int main(int argc, char* argv[]) {
   db->set_yAxisMaxScale(1.6);
   db->drawHisto("QGLikelihoodJet1", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodJet2", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
-  db->drawHisto("QGLikelihoodProd", "Q-G Likelihood Product", "", "Events");
+  db->drawHisto("QGLikelihoodProd", "Quark-Gluon LD", "", "Events");
   db->set_legendTitle("282 < m_{lljj} < 330 GeV");
   db->drawHisto("QGLikelihoodJet1_MW300", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodJet2_MW300", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
@@ -375,7 +384,7 @@ int main(int argc, char* argv[]) {
   db->drawHisto("phi", "#phi", "rad", "Events");
   db->drawHisto("phi1", "#phi_{1}", "rad", "Events");
   db->set_yAxisMaxScale( 1.6 );
-  db->drawHisto("helicityLD", "Angular Likelihood Discriminant", "", "Events");
+  db->drawHisto("helicityLD", "Angular LD", "", "Events");
   //db->drawHisto("helicityLD_nogluetag", "Angular Likelihood Discriminant", "", "Events");
   db->set_yAxisMaxScale();
 
