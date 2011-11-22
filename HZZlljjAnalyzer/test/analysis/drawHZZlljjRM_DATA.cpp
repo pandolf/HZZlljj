@@ -172,7 +172,7 @@ int main(int argc, char* argv[]) {
   mcTTbarFileName += ".root";
   TFile* mcTTbarFile = TFile::Open(mcTTbarFileName.c_str());
   //db->add_mcFile( mcTTbarFile, "TTtW", "tt/tW", 30, 3002);
-  db->add_mcFile( mcTTbarFile, "TTtW", "tt/tW", 39, 3002);
+  db->add_mcFile( mcTTbarFile, "TTtW", "t#bar{t}/tW", 39, 3002);
 
 
 
