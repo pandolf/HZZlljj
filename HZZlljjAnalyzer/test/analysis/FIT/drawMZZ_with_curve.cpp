@@ -19,39 +19,17 @@ bool withSignal_=true;
 
 
 
-/*
-struct BGFitParameters {
-
-  float fermi_cutoff;
-  float fermi_beta;
-  float CB_m;
-  float CB_wdth;
-  float CB_alpha;
-  float CB_n;
-  float CB_theta;
-
-  float fermi_cutoff_err;
-  float fermi_beta_err;
-  float CB_m_err;
-  float CB_wdth_err;
-  float CB_alpha_err;
-  float CB_n_err;
-  float CB_theta_err;
-
-};
-*/
 
 
-
-void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, int nbtags, const std::string& leptType="ALL", string flags="" );
+void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, const std::string& data_mc, int nbtags, const std::string& leptType="ALL", string flags="" );
 
 
 
 
 int main(int argc, char* argv[]) {
 
-  if( argc!=2 && argc!=3 && argc!=4 ) {
-    std::cout << "USAGE: ./drawMZZ_with_curve [(string)data_dataset] [(int)signalScaleFactor] [(string)selType=\"optLD_looseBTags_v2\"]" << std::endl;
+  if( argc!=3 && argc!=4 && argc!=5 ) {
+    std::cout << "USAGE: ./drawMZZ_with_curve [(string)data_dataset] [(int)signalScaleFactor] [(string)data_mc] [(string)selType=\"optLD_looseBTags_v2\"]" << std::endl;
     exit(23);
   }
 
@@ -66,9 +44,16 @@ int main(int argc, char* argv[]) {
     signalScaleFactor = (float)atoi(signalScaleFactor_str.c_str());;
   }
 
-  std::string selType = "optLD_looseBTags_v2";
+  std::string data_mc="MC";
   if( argc>3 ) {
-    std::string selType_tmp(argv[3]);
+    std::string data_mc_tmp(argv[3]);
+    data_mc = data_mc_tmp;
+  }
+
+
+  std::string selType = "optLD_looseBTags_v2";
+  if( argc>4 ) {
+    std::string selType_tmp(argv[4]);
     selType = selType_tmp;
   }
 
@@ -90,7 +75,7 @@ int main(int argc, char* argv[]) {
   DrawBase* db = new DrawBase("HZZlljjRM");
   db->set_pdf_aussi((bool)false);
 
-  db->set_isCMSArticle(true);
+  //db->set_isCMSArticle(true);
 
 
   std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset;
@@ -103,7 +88,7 @@ int main(int argc, char* argv[]) {
       outputdir_str += scaleFactorText_str;
     }
   }
-  outputdir_str += "_" + selType + "_PU" + PUType + "_" + leptType;
+  outputdir_str += "_" + selType + "_PU" + PUType + "_" + leptType + "_fit" + data_mc;
   db->set_outputdir(outputdir_str);
 
 
@@ -120,9 +105,9 @@ int main(int argc, char* argv[]) {
   if( withSignal_ ) {
     char signalLegendText[400];
     if( signalScaleFactor==1. ) 
-      sprintf( signalLegendText, "H(400)" );
+      sprintf( signalLegendText, "SM Higgs (400 GeV)" );
     else
-      sprintf( signalLegendText, "H(400) #times %.0f", signalScaleFactor);
+      sprintf( signalLegendText, "SM Higgs (400 GeV) #times %.0f", signalScaleFactor);
     std::string signalLegendText_str(signalLegendText);
     db->add_mcFile( signalFile, signalScaleFactor, "H400", signalLegendText_str, kYellow, 3004);
   }
@@ -153,7 +138,7 @@ int main(int argc, char* argv[]) {
   mcTTbarFileName += "_" + leptType;
   mcTTbarFileName += ".root";
   TFile* mcTTbarFile = TFile::Open(mcTTbarFileName.c_str());
-  db->add_mcFile( mcTTbarFile, "TTtW", "tt/tW", 39, 3002);
+  db->add_mcFile( mcTTbarFile, "TTtW", "t#bar{t}/tW", 39, 3002);
 
 
 
@@ -194,23 +179,6 @@ int main(int argc, char* argv[]) {
 
   bool log = true;
 
-  //db->set_rebin(20);
-  //db->set_xAxisMax(750.);
-
-  //db->set_legendTitle("0 b-tag Category");
-  //db->drawHisto("mZZ_kinfit_hiMass_0btag", "m_{lljj}", "GeV", "Events", log);
-  //drawHistoWithCurve( db, data_prefix, PUType, 0);
-
-  //db->set_legendTitle("1 b-tag Category");
-  //db->drawHisto("mZZ_kinfit_hiMass_1btag", "m_{lljj}", "GeV", "Events", log);
-  //drawHistoWithCurve( db, data_prefix, PUType, 1);
-
-  //db->set_legendTitle("2 b-tag Category");
-  //db->drawHisto("mZZ_kinfit_hiMass_2btag", "m_{lljj}", "GeV", "Events", log);
-  //drawHistoWithCurve( db, data_prefix, PUType, 2);
-
-  //db->set_xAxisMax();
-  //db->set_rebin(1);
 
   db->set_legendTitle("Gluon- and 0 b-tag");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags<=0)", 30, 150., 750., "mZZ_g0btag", "m_{ZZ}", "GeV");
@@ -221,41 +189,41 @@ int main(int argc, char* argv[]) {
 
 
   float binWidth = 20.;
-  float xMin = 160.;
-  float xMax = 800.;
+  float xMin = 183.;
+  float xMax = 803.;
   int nBins = (int)((xMax-xMin)/binWidth);
 
 
   // signal box plots:
   db->set_legendTitle("0 b-tag Category");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", nBins, xMin, xMax, "mZZ_0btag", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 0 );
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 0);
   db->set_legendTitle("0 b-tag Category (Muons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0 && leptType==0)", nBins, xMin, xMax, "mZZ_0btag_mm", "m_{#mu#mujj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 0, "MU");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 0, "MU");
   db->set_legendTitle("0 b-tag Category (Electrons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0 && leptType==1)", nBins, xMin, xMax, "mZZ_0btag_ee", "m_{eejj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 0, "ELE");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 0, "ELE");
 
   db->set_legendTitle("1 b-tag Category");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", nBins, xMin, xMax, "mZZ_1btag", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 1 );
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 1 );
   db->set_legendTitle("1 b-tag Category (Muons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1 && leptType==0)", nBins, xMin, xMax, "mZZ_0btag_mm", "m_{#mu#mujj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 1, "MU");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 1, "MU");
   db->set_legendTitle("1 b-tag Category (Electrons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1 && leptType==1)", nBins, xMin, xMax, "mZZ_0btag_ee", "m_{eejj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 1, "ELE");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 1, "ELE");
 
   db->set_legendTitle("2 b-tag Category");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", nBins, xMin, xMax, "mZZ_2btag", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 2 );
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 2 );
   db->set_legendTitle("2 b-tag Category (Muons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2 && leptType==0)", nBins, xMin, xMax, "mZZ_0btag_mm", "m_{#mu#mujj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 2, "MU");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 2, "MU");
   db->set_legendTitle("2 b-tag Category (Electrons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2 && leptType==1)", nBins, xMin, xMax, "mZZ_0btag_ee", "m_{eejj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, 2, "ELE");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 2, "ELE");
 
 
   //xMin = 160.;
@@ -296,7 +264,7 @@ int main(int argc, char* argv[]) {
 
 
 
-void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, int nbtags, const std::string& leptType, std::string flags ) {
+void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, const std::string& data_mc, int nbtags, const std::string& leptType, std::string flags ) {
 
   if( flags!="" ) flags = "_" + flags;
 
@@ -327,7 +295,8 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
 
   // open fit results file:
   char fitResultsFileName[200];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s.root", data_dataset.c_str(), nbtags, PUType.c_str());
+  //sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s_fit%s.root", data_dataset.c_str(), nbtags, PUType.c_str(), data_mc.c_str());
+  sprintf( fitResultsFileName, "fitResultsFile_HR11_v2_%dbtag_ALL_PUHR11_73pb_fit%s.root", nbtags, data_mc.c_str());
   TFile* fitResultsFile = TFile::Open(fitResultsFileName);
 
   // get bg workspace:
@@ -347,10 +316,10 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
   if( leptType=="ELE" ) leptType_cut = "&& leptType==1";
 
 
-  SidebandFitter* sf = new SidebandFitter( data_dataset, PUType );
+  SidebandFitter* sf = new SidebandFitter( data_dataset, PUType, data_mc );
 
   // get bg normalization:
-  float expBkg = sf->get_backgroundNormalization( nbtags, leptType );
+  float expBkg = sf->get_backgroundNormalization( nbtags, leptType, "DATA" );
 
 
   //TTree* treeSidebandsDATA_alphaCorr = (TTree*)fitResultsFile->Get("sidebandsDATA_alpha");
@@ -380,7 +349,7 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
   else
     h2_axes->SetXTitle("m_{ZZ} [GeV]");
 
-  float legend_xMin = 0.42;
+  float legend_xMin = 0.38;
   float legend_yMax = 0.91;
   float legend_yMin = legend_yMax - 0.07*6.;
   float legend_xMax = 0.92;
