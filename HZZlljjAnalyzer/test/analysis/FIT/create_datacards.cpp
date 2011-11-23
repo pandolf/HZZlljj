@@ -79,7 +79,7 @@ double get_signalParameter(int btag, double massH, std::string varname);
 
 std::string systString( std::pair<double,double> systPair, double maxDiff=0.01 );
 std::pair<double,double> theorSyst( double errMinus, double errPlus, double addMinus=0., double addPlus=0. );
-
+std::pair<double,double> theorSyst_HighmH( double mHVal );
 std::pair<double,double> leptTriggerSyst( const std::string& leptType_str);
 std::pair<double,double> leptEffSyst( const std::string& leptType_str);
 std::pair<double,double> leptScaleSyst( const std::string& leptType_str);
@@ -296,6 +296,9 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
   std::pair<double,double> QCDscale_qqH = theorSyst( hp.CSvbf_m, hp.CSvbf_p);
   ofs << "QCDscale_qqH\tlnN\t1.0\t\t\t" << systString(QCDscale_qqH) << "\t1.0" << std::endl;
+
+  std::pair<double,double>theoryUncXS_HighmH  = theorSyst_HighmH( hp.mH);
+  ofs << "theoryUncXS_HighMH\tlnN\t"<<systString(theoryUncXS_HighmH)<<"\t\t"<<systString(theoryUncXS_HighmH)<<" \t1.0"<<std::endl;
 
 
   ofs << "CMS_trigger_" << leptType_datacards(leptType_str) << "\tlnN\t" << systString(leptTriggerSyst(leptType_str)) << "\t" << systString(leptTriggerSyst(leptType_str)) << "\t1.0" << std::endl;
@@ -762,15 +765,11 @@ std::string systString( std::pair<double,double> systPair, double maxDiff ) {
 }
  
 
+
 std::pair<double,double> theorSyst( double errMinus, double errPlus, double addMinus, double addPlus ) {
 
   float systPlus  = sign(errPlus) *sqrt(errPlus*errPlus   + addPlus*addPlus);
   float systMinus = sign(errMinus)*sqrt(errMinus*errMinus + addMinus*addMinus);
-
-  //extra error due to Higgs width
-  float theoryHighMass = 1.5*(mHVal/1000)*(mHVal/1000.0)*(mHVal/1000.0);//mHVal=Higgs mass in GeV
-  systPlus=systPlus+theoryHighMass;
-  systMinus=systMinus-theoryHighMass;
 
   systPlus  += 1.;
   systMinus += 1.;
@@ -783,6 +782,23 @@ std::pair<double,double> theorSyst( double errMinus, double errPlus, double addM
 
 }
 
+std::pair<double,double> theorSyst_HighmH( double mHVal){
+
+ //extra error due to Higgs width
+  double theoryHighMass = 1.5*(mHVal/1000)*(mHVal/1000.0)*(mHVal/1000.0);//mHVal=Higgs mass in GeV
+  double systPlus=1.0*theoryHighMass;
+  double systMinus=-1.0*theoryHighMass;
+
+  systPlus  += 1.;
+  systMinus += 1.;
+  
+  std::pair<double,double> returnPair;
+  returnPair.first = systMinus;
+  returnPair.second = systPlus;
+
+  return returnPair;
+
+}
 
 std::pair<double,double> leptTriggerSyst( const std::string& leptType_str) {
 
