@@ -767,6 +767,11 @@ std::pair<double,double> theorSyst( double errMinus, double errPlus, double addM
   float systPlus  = sign(errPlus) *sqrt(errPlus*errPlus   + addPlus*addPlus);
   float systMinus = sign(errMinus)*sqrt(errMinus*errMinus + addMinus*addMinus);
 
+  //extra error due to Higgs width
+  float theoryHighMass = 1.5*(mHVal/1000)*(mHVal/1000.0)*(mHVal/1000.0);//mHVal=Higgs mass in GeV
+  systPlus=systPlus+theoryHighMass;
+  systMinus=systMinus-theoryHighMass;
+
   systPlus  += 1.;
   systMinus += 1.;
 
