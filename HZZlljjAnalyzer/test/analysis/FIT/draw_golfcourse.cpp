@@ -16,7 +16,7 @@ std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::s
 float getMedian( TH1D* h1 );
 float get_lowBound( TH1D* h1, float frac );
 float get_upBound( TH1D* h1, float frac );
-TPaveText* get_labelCMS( DrawBase* db );
+//TPaveText* get_labelCMS( DrawBase* db );
 
 
 
@@ -60,6 +60,7 @@ int main( int argc, char* argv[] ) {
   TFile* file_data = TFile::Open(dataFileName.c_str());
   db->add_dataFile( file_data, "data" );
 
+  //db->set_isCMSArticle(true);
 
   TGraph* graphObserved = get_observedLimit( data_dataset, data_mc, nbtags );
 
@@ -88,6 +89,7 @@ int main( int argc, char* argv[] ) {
 
   float yMax = 8.;
   if( data_dataset=="Run2011A_FULL" ) yMax = 10.;
+  if( nbtags!=-1 ) yMax=12.;
 
   TH2D* axes = new TH2D("axes", "", 10, xmin, xmax, 10, 0., yMax );
   axes->SetXTitle("m_{H} [GeV]");
@@ -102,7 +104,14 @@ int main( int argc, char* argv[] ) {
   line_one->SetLineColor(kRed);
   line_one->SetLineWidth(2);
 
-  TLegend* legend = new TLegend( 0.28, 0.6, 0.74, 0.91 );
+  char legendTitle[200];
+  sprintf( legendTitle, "%d b-tag Category", nbtags );
+
+  TLegend* legend;
+  if( nbtags!=-1 ) 
+    legend = new TLegend( 0.28, 0.6, 0.74, 0.91, legendTitle );
+  else
+    legend = new TLegend( 0.28, 0.6, 0.74, 0.91);
   legend->SetFillColor(0);
   legend->SetFillStyle(0);
   legend->SetTextSize(0.038);
@@ -136,7 +145,11 @@ int main( int argc, char* argv[] ) {
 
   // now also observed:
 
-  TLegend* legend2 = new TLegend( 0.28, 0.6, 0.74, 0.91 );
+  TLegend* legend2;
+  if( nbtags!=-1 ) 
+    legend2 = new TLegend( 0.28, 0.6, 0.74, 0.91, legendTitle );
+  else
+    legend2 = new TLegend( 0.28, 0.6, 0.74, 0.91);
   legend2->SetFillColor(0);
   legend2->SetFillStyle(0);
   legend2->SetTextSize(0.038);
@@ -284,13 +297,18 @@ std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::s
   //masses.push_back(226);
   //masses.push_back(230);
   masses.push_back(250);
-  masses.push_back(300);
+  if( !( data_mc=="MC" && nbtags==1) )
+    masses.push_back(300);
   masses.push_back(350);
-  masses.push_back(370);
+  if( !( data_mc=="DATA" && nbtags==0) )
+    masses.push_back(370);
   masses.push_back(400);
   masses.push_back(440);
-  masses.push_back(500);
-  masses.push_back(540);
+  if( !( data_mc=="DATA" && nbtags==0) )
+    masses.push_back(500);
+  if( !( data_mc=="MC" && nbtags==0) )
+    masses.push_back(540);
+  if( !( data_mc=="MC" && nbtags==2) )
   masses.push_back(600);
 
   TH1F::AddDirectory(kTRUE);
@@ -390,6 +408,7 @@ float get_lowBound( TH1D* h1, float frac ) {
 
 
 
+/*
 TPaveText* get_labelCMS( DrawBase* db ) {
 
   float x1 = 0.145;
@@ -404,7 +423,7 @@ TPaveText* get_labelCMS( DrawBase* db ) {
   cmslabel->SetTextAlign(11);
   cmslabel->SetTextSize(0.038);
   cmslabel->SetTextFont(62);
-  std::string leftText = "CMS 2011";
+  std::string leftText = "CMS 2011 sblearch";
   cmslabel->SetTextAlign(11); // align left
   std::string lumiText = db->get_lumiText();
   cmslabel->AddText(Form("%s, %s", leftText.c_str(), lumiText.c_str()));
@@ -412,3 +431,4 @@ TPaveText* get_labelCMS( DrawBase* db ) {
   return cmslabel;
 
 }
+*/
