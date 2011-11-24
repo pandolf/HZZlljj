@@ -15,8 +15,8 @@
 
 
 
-bool withSignal_=true;
-
+bool withSignal_ = true;
+bool use_sherpa = false;
 
 
 
@@ -89,6 +89,7 @@ int main(int argc, char* argv[]) {
     }
   }
   outputdir_str += "_" + selType + "_PU" + PUType + "_" + leptType + "_fit" + data_mc;
+  if( use_sherpa ) outputdir_str += "_sherpa";
   db->set_outputdir(outputdir_str);
 
 
@@ -105,9 +106,9 @@ int main(int argc, char* argv[]) {
   if( withSignal_ ) {
     char signalLegendText[400];
     if( signalScaleFactor==1. ) 
-      sprintf( signalLegendText, "SM Higgs (400 GeV)" );
+      sprintf( signalLegendText, "H(400 GeV)" );
     else
-      sprintf( signalLegendText, "SM Higgs (400 GeV) #times %.0f", signalScaleFactor);
+      sprintf( signalLegendText, "H(400 GeV) #times %.0f", signalScaleFactor);
     std::string signalLegendText_str(signalLegendText);
     db->add_mcFile( signalFile, signalScaleFactor, "H400", signalLegendText_str, kYellow, 3004);
   }
@@ -188,7 +189,7 @@ int main(int argc, char* argv[]) {
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==-1)", 30, 150., 750., "mZZ_gtag", "m_{ZZ}", "GeV");
 
 
-  float binWidth = 20.;
+  float binWidth = 10.;
   float xMin = 183.;
   float xMax = 803.;
   int nBins = (int)((xMax-xMin)/binWidth);
@@ -291,12 +292,12 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
 
 
 
+  std::string sherpa_suffix = (use_sherpa) ? "_sherpa" : "";
 
 
   // open fit results file:
   char fitResultsFileName[200];
-  //sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s_fit%s.root", data_dataset.c_str(), nbtags, PUType.c_str(), data_mc.c_str());
-  sprintf( fitResultsFileName, "fitResultsFile_HR11_v2_%dbtag_ALL_PUHR11_73pb_fit%s.root", nbtags, data_mc.c_str());
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s_fit%s%s.root", data_dataset.c_str(), nbtags, PUType.c_str(), data_mc.c_str(), sherpa_suffix.c_str() );
   TFile* fitResultsFile = TFile::Open(fitResultsFileName);
 
   // get bg workspace:

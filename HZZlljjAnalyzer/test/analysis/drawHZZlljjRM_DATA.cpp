@@ -110,10 +110,10 @@ int main(int argc, char* argv[]) {
   signalFileName += ".root";
   TFile* signalFile = TFile::Open(signalFileName.c_str());
   if( selType=="presel" )
-    db->add_mcFile_superimp( signalFile, "H400", "H(400) #times 100", 100., kRed-1);
+    db->add_mcFile_superimp( signalFile, "H400", "H(400 GeV) #times 100", 100., kRed-1);
 
   if( withSignal_ )
-    db->add_mcFile( signalFile, "H400", "H(400)", kRed+2, 3004);
+    db->add_mcFile( signalFile, "H400", "H(400 GeV)", kRed+2, 3004);
 
   std::string mcZJetsFileName;
   if( ZJetsMC=="alpgen" )
