@@ -11,6 +11,7 @@
 #include "SidebandFitter.h"
 
 
+bool use_sherpa=false;
 
 
 int main( int argc, char* argv[] ) {
@@ -43,16 +44,19 @@ int main( int argc, char* argv[] ) {
   std::cout << "-> Dataset: " << dataset << std::endl;
   std::cout << "-> Going to fix fit parameters on : " << init << std::endl;
   std::cout << "-> N Toys: " << nToys << std::endl;
+  if( use_sherpa )
+    std::cout << "-> Going to use alpha from SHERPA." << std::endl;
 
 
-  TRandom3* random = new TRandom3(0);
+  TRandom3* random = new TRandom3(13);
 
 
   TString dataset_tstr(dataset);
   std::string PUReweighing = "Run2011A";
   if( dataset=="HR11" ) PUReweighing = "HR11";
   if( dataset=="HR11_v2" ) PUReweighing = "HR11_73pb";
-  if( dataset_tstr.BeginsWith("Run2011B") ) PUReweighing = "Run2011B";
+  //if( dataset_tstr.BeginsWith("Run2011B") ) PUReweighing = "Run2011B";
+  if( dataset_tstr.BeginsWith("Run2011B") ) PUReweighing = "HR11_73pb";
 
 
 
@@ -80,7 +84,8 @@ int main( int argc, char* argv[] ) {
 
   for( unsigned ibtag=0; ibtag<3; ++ibtag ) {
 
-    SidebandFitter *sf = new SidebandFitter(dataset, PUReweighing, init);
+    std::string flags = (use_sherpa) ? "_sherpa" : "";
+    SidebandFitter *sf = new SidebandFitter(dataset, PUReweighing, init, flags);
 
     char btagCut[100];
     sprintf( btagCut, "nBTags==%d", ibtag );
@@ -89,7 +94,15 @@ int main( int argc, char* argv[] ) {
 
     TTree* treeMC_Xbtag = chainMC->CopyTree(btagCut);
 
-    TH1D* alpha_Xbtag = sf->getAlphaHisto( ibtag, "ALL", treeMC_Xbtag );
+    TH1D* alpha_Xbtag;
+    if( use_sherpa ) {
+      char alphaSherpaName[300];
+      sprintf( alphaSherpaName, "alpha_Sherpa_%dbtag.root", ibtag );
+      TFile* alphaFileSherpa = TFile::Open(alphaSherpaName);
+      alpha_Xbtag = (TH1D*)alphaFileSherpa->Get("h_alpha_TOT_sherpa");
+    } else {
+      alpha_Xbtag = sf->getAlphaHisto( ibtag, "ALL", treeMC_Xbtag );
+    }
 
     RooFitResult* fr = sf->fitSidebands( treeMC_Xbtag, treeDATA_Xbtag, ibtag, "ALL", alpha_Xbtag );
 
