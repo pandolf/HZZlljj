@@ -149,15 +149,15 @@ TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string& leptTy
   } //for bins
 
 
-  // put bin values in pathological region equal to sherpa values:
-  if( btagCategory==0 ) {
-    double err4 = h1_alpha->GetBinError(4);
-    double err5 = h1_alpha->GetBinError(5);
-    h1_alpha->SetBinContent(4, 1.09979);
-    h1_alpha->SetBinContent(5, 0.9638);
-    h1_alpha->SetBinError(4, err4+0.0574);
-    h1_alpha->SetBinError(5, err5+0.0412);
-  }
+//   // put bin values in pathological region equal to sherpa values:
+//   if( btagCategory==0 ) {
+//     double err4 = h1_alpha->GetBinError(4);
+//     double err5 = h1_alpha->GetBinError(5);
+//     h1_alpha->SetBinContent(4, 1.09979);
+//     h1_alpha->SetBinContent(5, 0.9638);
+//     h1_alpha->SetBinError(4, err4+0.0574);
+//     h1_alpha->SetBinError(5, err5+0.0412);
+//   }
 
   return (TH1D*)(h1_alpha->Clone());
   
