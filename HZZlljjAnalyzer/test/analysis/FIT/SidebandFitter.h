@@ -24,7 +24,10 @@ class SidebandFitter {
   ~SidebandFitter() {};
 
   TH1D* getAlphaHisto( int btagCategory, const std::string& leptType_str, TTree* treeMC );
+  TF1* getAlphaFunction( int btagCategory, const std::string& leptType_str, TTree* treeMC );
+
   
+  //RooFitResult* fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TF1* f1_alpha );
   RooFitResult* fitSidebands( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha );
 
   std::string get_fitResultsName( int nbtags, const std::string& init );
@@ -33,6 +36,8 @@ class SidebandFitter {
   std::string get_outdir();
  
   TTree* correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int btagCategory, const std::string& name );
+  TTree* correctTreeWithAlpha( TTree* tree, TF1* f1_alpha, int btagCategory, const std::string& name );
+
 
   TH1D* shuffle( TH1D* inhist, TRandom3* random, char *histName );
   RooPlot* ContourPlot(RooRealVar* var1,RooRealVar* var2, RooFitResult* r);
@@ -47,6 +52,7 @@ class SidebandFitter {
   static int convert_leptType( const std::string& leptType );
 
   void fitPseudo( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TH1D* h1_alpha, int seed );
+  //void fitPseudo( TTree* treeMC, TTree* treeDATA, int btagCategory, const std::string& leptType, TF1* f1_alpha, int seed );
   void pseudoMassge(int ntoys, int btagCategory , const std::string& leptType, RooFitResult* r_nominal);
 
 
