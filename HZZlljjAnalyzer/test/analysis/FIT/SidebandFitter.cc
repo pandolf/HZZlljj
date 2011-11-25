@@ -256,7 +256,7 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
     // set "good" inital values:
     cutOff_->setVal(187.383);
     beta_->setVal(3.43718);
-    m_->setVal(218.161);
+    m_->setVal(218.161);m_->setRange(190,275);
   }
   RooFitResult *r_sidebandsMC_alpha = background_->fitTo(*fitDataset, SumW2Error(kTRUE), Save());
 
