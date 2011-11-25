@@ -35,11 +35,12 @@
 using namespace RooFit;
 
 
-SidebandFitter::SidebandFitter( const std::string& dataset, const std::string& PUType, const std::string& init ) {
+SidebandFitter::SidebandFitter( const std::string& dataset, const std::string& PUType, const std::string& init, const std::string& flags ) {
 
   dataset_ = dataset;
   PUType_ = PUType;
   init_ = init;
+  flags_ = flags;
 
   mZZmin_ = 160.;
   mZZmax_ = 800.;
@@ -50,6 +51,7 @@ SidebandFitter::SidebandFitter( const std::string& dataset, const std::string& P
 
 
   CMS_hzz2l2q_mZZ_ = new RooRealVar("CMS_hzz2l2q_mZZ", "m_{lljj}", mZZmin_, mZZmax_, "GeV");
+
 
   // ------------------------ fermi ------------------------------
   cutOff_ = new RooRealVar("cutOff","position of fermi",191.12,175.,220.);
@@ -146,6 +148,17 @@ TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string& leptTy
      } //if over thresh
   } //for bins
 
+
+  // put bin values in pathological region equal to sherpa values:
+  if( btagCategory==0 ) {
+    double err4 = h1_alpha->GetBinError(4);
+    double err5 = h1_alpha->GetBinError(5);
+    h1_alpha->SetBinContent(4, 1.09979);
+    h1_alpha->SetBinContent(5, 0.9638);
+    h1_alpha->SetBinError(4, err4+0.0574);
+    h1_alpha->SetBinError(5, err5+0.0412);
+  }
+
   return (TH1D*)(h1_alpha->Clone());
   
 }
@@ -238,6 +251,13 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   c1->SetLogy(false);
   fitDataset->write("test.txt");
   
+  // lets try this:
+  if( btagCategory==2 ) {
+    // set "good" inital values:
+    cutOff_->setVal(187.383);
+    beta_->setVal(3.43718);
+    m_->setVal(218.161);
+  }
   RooFitResult *r_sidebandsMC_alpha = background_->fitTo(*fitDataset, SumW2Error(kTRUE), Save());
 
 
@@ -316,6 +336,8 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
   sidebandsDATA_alpha->plotOn(plot_sidebandsDATA_alpha, Binning(nBins));
 
+  //background_->plotOn(plot_sidebandsDATA_alpha,VisualizeError(*r_sidebandsDATA_alpha,2.0,kFALSE),FillColor(kYellow), Normalization(sidebandsDATA_alpha->sumEntries()));
+  //background_->plotOn(plot_sidebandsDATA_alpha,VisualizeError(*r_sidebandsDATA_alpha,1.0,kFALSE),FillColor(kGreen), Normalization(sidebandsDATA_alpha->sumEntries()));
   background_->plotOn(plot_sidebandsDATA_alpha, LineColor(kRed));
   sidebandsDATA_alpha->plotOn(plot_sidebandsDATA_alpha, Binning(nBins));
 
@@ -504,7 +526,7 @@ std::string SidebandFitter::get_fitResultsName( int nbtags, const std::string& i
 
 std::string SidebandFitter::get_outdir() {
 
-  std::string returnString = "FitSidebands_" + dataset_ + "_fit" + init_;
+  std::string returnString = "FitSidebands_" + dataset_ + "_fit" + init_ + flags_;
 
   return returnString;
 
@@ -791,7 +813,7 @@ RooDataSet* SidebandFitter::get_observedDataset( RooRealVar* CMS_hzz2l2q_mZZ, co
 std::string SidebandFitter::get_fitResultsRootFileName( int btagCategory, const std::string& leptType ) {
 
   char fitResultsFileName[500];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s_fit%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str(), init_.c_str() );
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_%s_PU%s_fit%s%s.root", dataset_.c_str(), btagCategory, leptType.c_str(), PUType_.c_str(), init_.c_str(), flags_.c_str() );
 
   std::string fitResultsFileName_str(fitResultsFileName);
 
