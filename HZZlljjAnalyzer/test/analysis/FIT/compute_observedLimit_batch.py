@@ -21,7 +21,7 @@ pwd = os.environ['PWD']
 datacards_dir = "datacards_" + dataset + "_fit" + data_mc
 
 
-massesFile = open('masses_tmp.txt', 'r')
+massesFile = open('masses.txt', 'r')
 
 maindir = "/cmsrm/pc18/pandolf/CMSSW_4_2_8/src/HZZlljj/HZZlljjAnalyzer/test/analysis/FIT/"
 os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm18 mkdir -p "+maindir)
