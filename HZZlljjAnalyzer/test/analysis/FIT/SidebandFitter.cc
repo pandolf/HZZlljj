@@ -74,33 +74,6 @@ SidebandFitter::SidebandFitter( const std::string& dataset, const std::string& P
 }
 
 
-TF1* SidebandFitter::getAlphaFunction( int btagCategory, const std::string& leptType_str, TTree* treeMC ) {
-
-  TH1D* h1_alpha = this->getAlphaHisto( btagCategory, leptType_str, treeMC );
-
-  TF1* f1_alpha = new TF1("f1_alpha", "[0] + [1]*x + [2]*x*x + [3]*x*x*x");
-  f1_alpha->SetRange(183., 800.);
-
-  h1_alpha->Fit(f1_alpha, "R");
-
-  TCanvas* c1 = new TCanvas("c1", "", 600, 600);
-  c1->cd();
-  h1_alpha->Draw();
-
-  char canvasName[200];
-  sprintf( canvasName, "fitAlpha_%dbtag.eps", btagCategory );
-  c1->SaveAs(canvasName);
-
-  char fileName[200];
-  sprintf( fileName, "alphaFile_%dbtag.root", btagCategory );
-  TFile* file = TFile::Open(fileName, "recreate");
-  file->cd();
-  h1_alpha->Write();
-  file->Close();
-
-  return (TF1*)(f1_alpha->Clone());
-
-}
 
 
 TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string& leptType_str, TTree* treeMC ) {
@@ -246,10 +219,8 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
 
 
   std::cout << "Correcting sidebands (MC): " << std::endl;
-  //TTree* tree_sidebandsMC_alpha = correctTreeWithAlpha( treeMC, f1_alpha, btagCategory, "sidebandsMC_alpha" );
   TTree* tree_sidebandsMC_alpha = correctTreeWithAlpha( treeMC, h1_alpha, btagCategory, "sidebandsMC_alpha" );
   std::cout << "Correcting sidebands (DATA): " << std::endl;
-  //TTree* tree_sidebandsDATA_alpha = correctTreeWithAlpha( treeDATA, f1_alpha, btagCategory, "sidebandsDATA_alpha" );
   TTree* tree_sidebandsDATA_alpha = correctTreeWithAlpha( treeDATA, h1_alpha, btagCategory, "sidebandsDATA_alpha" );
 
 
@@ -623,52 +594,6 @@ TTree* SidebandFitter::correctTreeWithAlpha( TTree* tree, TH1D* h1_alpha, int bt
 }
 
 
-TTree* SidebandFitter::correctTreeWithAlpha( TTree* tree, TF1* f1_alpha, int btagCategory, const std::string& name ) {
-
-  Int_t leptType;
-  tree->SetBranchAddress( "leptType", &leptType );
-  Int_t nBTags;
-  tree->SetBranchAddress( "nBTags", &nBTags );
-  Float_t mZZ;
-  tree->SetBranchAddress( "CMS_hzz2l2q_mZZ", &mZZ );
-  Float_t mZjj;
-  tree->SetBranchAddress( "mZjj", &mZjj );
-  Float_t eventWeight;
-  tree->SetBranchAddress( "eventWeight", &eventWeight );
-  Bool_t isSidebands;
-  tree->SetBranchAddress( "isSidebands", &isSidebands );
-
-
-  TTree* newTree = tree->CloneTree(0);
-  newTree->SetName(name.c_str());
-
-  Float_t newWeight;
-  newTree->Branch( "eventWeight_alpha", &newWeight, "newWeight/F" );
-
-  
-  int nentries = tree->GetEntries();
-
-  for( unsigned iEntry=0; iEntry<nentries; ++iEntry ) {
-
-    tree->GetEntry( iEntry );
-    if( (iEntry % 10000)==0 ) std::cout << "Entry: " << iEntry << "/" << nentries << std::endl;
-
-    if( nBTags!=btagCategory ) continue;
-
-    float alpha = f1_alpha->Eval( mZZ );
-    if( alpha<0. ) alpha=0.;
-
-    // alpha correction
-    newWeight = eventWeight;
-    if( isSidebands && mZZ>mZZmin_ && mZZ<mZZmax_ ) newWeight *= alpha;
-
-    newTree->Fill();
-
-  }
-
-  return (TTree*)(newTree->Clone());
-
-}
 
 
 
