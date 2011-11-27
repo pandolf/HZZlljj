@@ -65,6 +65,8 @@ int main( int argc, char* argv[] ) {
 
   // and now set the weights
   tree->SetBranchStatus( "eventWeight", 0 );
+  int run;
+  tree->SetBranchAddress("run", &run);
   Bool_t passed_HLT_DoubleMu7;
   tree->SetBranchAddress("passed_HLT_DoubleMu7", &passed_HLT_DoubleMu7);
   Bool_t passed_HLT_Mu13_Mu8;
@@ -73,6 +75,8 @@ int main( int argc, char* argv[] ) {
   tree->SetBranchAddress("passed_HLT_Mu17_Mu8", &passed_HLT_Mu17_Mu8);
   Bool_t passed_HLT_IsoMu24;
   tree->SetBranchAddress("passed_HLT_IsoMu24", &passed_HLT_IsoMu24);
+  Bool_t passed_HLT_IsoMu24_eta2p1;
+  //tree->SetBranchAddress("passed_HLT_IsoMu24_eta2p1", &passed_HLT_IsoMu24_eta2p1);
   Bool_t passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL;
   tree->SetBranchAddress("passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL", &passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL);
   Bool_t passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
@@ -108,25 +112,32 @@ int main( int argc, char* argv[] ) {
 
     newWeight = weight;
 
+    bool passedDoubleMu = false;
+    if( run<=163869 && passed_HLT_DoubleMu7 ) passedDoubleMu=true;
+    if( run>163869 && run<178411 && passed_HLT_Mu13_Mu8 ) passedDoubleMu=true;
+    if( run>=178411 && passed_HLT_Mu17_Mu8 ) passedDoubleMu=true;
+
+    bool passedDoubleElectron = passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL
+      || passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;    
+
+    bool passedSingleMu = passed_HLT_IsoMu24;
+    
+
     if( dataset_tstr.BeginsWith("SingleMu") ) {
 
-      bool passedHLT = passed_HLT_IsoMu24
-                    && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8 && !passed_HLT_Mu17_Mu8
-                    && !passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL && !passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
+      bool passedHLT = passedSingleMu && !passedDoubleMu && !passedDoubleElectron;
 
       if( !passedHLT ) continue;
 
     } else if( dataset_tstr.BeginsWith("DoubleMu") ) {
 
-      bool passedHLT = passed_HLT_DoubleMu7 || passed_HLT_Mu13_Mu8 || passed_HLT_Mu17_Mu8;
+      bool passedHLT = passedDoubleMu;
 
       if( !passedHLT ) continue;
 
     } else if( dataset_tstr.BeginsWith("DoubleElectron") ) {
 
-      //bool passedHLT = passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL || passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL;
-      bool passedHLT = (passed_HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL || passed_HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL)
-                       && !passed_HLT_DoubleMu7 && !passed_HLT_Mu13_Mu8 && !passed_HLT_Mu17_Mu8;
+      bool passedHLT = passedDoubleElectron && !passedDoubleMu;
 
       if( !passedHLT ) continue;
 
@@ -308,7 +319,7 @@ float getWeight( const std::string& dataset, int nEvents ) {
   bool isAlpgenZJets = false;
 
   // all cross sections in pb-1:
-  if( dataset=="ZJets_madgraph" || dataset_tstr.Contains("DYJetsToLL_TuneZ2_M-50_7TeV-madgraph") || dataset_tstr.BeginsWith("DY_madgraph") ) {
+  if( dataset=="ZJets_madgraph" || dataset_tstr.Contains("DYJetsToLL_TuneZ2_M-50_7TeV-madgraph") || dataset_tstr.BeginsWith("DY_madgraph") || dataset_tstr.BeginsWith("DYToLL") ) {
     xSection = 3048.; //NNLO see https://twiki.cern.ch/twiki/pub/CMS/GeneratorMain/ShortXsec.pdf
   } else if( dataset=="Z0Jets_Pt0to100-alpgen_Spring10" ) {
     xSection = 2350.*0.853 ; // sigma x filter efficiency taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/ProductionReProcessingSpring10#ALPGEN
