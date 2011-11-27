@@ -22,16 +22,17 @@
 bool ANALYZE_SIDEBANDS_=true;
 bool USE_MC_MASS=false;
 
-int DEBUG_EVENTNUMBER = 2164366984;
+int DEBUG_EVENTNUMBER = 98901397;
 
-//HelicityLikelihoodDiscriminant::HelicityAngles computeHelicityAngles(TLorentzVector leptMinus, TLorentzVector leptPlus, TLorentzVector jet1, TLorentzVector jet2 );
 
 
 
 
 int getNJets( int nPairs );
-//float getMuonHLTSF( float eta );
-float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger, const std::string& runPeriod="" );
+
+float getMuonHLTSF_DoubleTrigger( float pt, float eta, const std::string& runPeriod );
+float getMuonHLTSF_SingleTrigger( float pt, float eta, const std::string& runPeriod );
+float getEventHLTSF( float effSingle1, float effSingle2, float effDouble1, float effDouble2 );
 
 std::vector<TH1D*> getHistoVector(int nPtBins, Double_t *ptBins, std::string histoName, int nBins, float xMin, float xMax );
 
@@ -1411,6 +1412,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") ) {
     puType = "Summer11_S4";
     puType_ave = "Summer11_S4_ave";
+  } else if( dataset_tstr.Contains("Fall11") ) {
+    puType = "Fall11";
   }
   PUWeight* fPUWeight = new PUWeight(-1, "2011A", puType);
   PUWeight* fPUWeight_ave = new PUWeight(-1, "2011A", puType_ave);
@@ -1447,7 +1450,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
     TH1F* h1_PURunA = (TH1F*)filePU_RunA->Get("pileup");
     TH1F* h1_PURunB = (TH1F*)filePU_RunB->Get("pileup");
     h1_PURunA->Scale(2.1/h1_PURunA->Integral());
-    h1_PURunB->Scale(2.3/h1_PURunB->Integral());
+    h1_PURunB->Scale(2.5/h1_PURunB->Integral());
     TH1F* h1_PU_weightedAverage = new TH1F(*h1_PURunA);
     h1_PU_weightedAverage->Add(h1_PURunB);
     fPUWeight->SetDataHistogram(h1_PU_weightedAverage);
@@ -1466,6 +1469,11 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
     TFile* filePUMC = TFile::Open("Pileup_MC_Summer11_S4.root");
     TH1F* h1_nPU_mc = (TH1F*)filePUMC->Get("hNPU");
     std::cout << "-> Switching MC PU file to: Pileup_MC_Summer11_S4.root" << std::endl;
+    fPUWeight->SetMCHistogram(h1_nPU_mc);
+  } else if( dataset_tstr.Contains("Fall11") ) {
+    TFile* filePUMC = TFile::Open("s6MCPileUp.root");
+    TH1F* h1_nPU_mc = (TH1F*)filePUMC->Get("pileup");
+    std::cout << "-> Switching MC PU file to: s6MCPileUp.root" << std::endl;
     fPUWeight->SetMCHistogram(h1_nPU_mc);
   }
 
@@ -1557,37 +1565,29 @@ ofstream ofs("run_event.txt");
       // scale factor for double mu triggers:
       if( leptType==0 ) {
 
-        float effDouble1 = getMuonHLTSF( ptLept1, etaLept1, true );
-        float effDouble2 = getMuonHLTSF( ptLept2, etaLept2, true );
+        float effDouble1_Run2011A = getMuonHLTSF_DoubleTrigger( ptLept1, etaLept1, "Run2011A" );
+        float effDouble2_Run2011A = getMuonHLTSF_DoubleTrigger( ptLept2, etaLept2, "Run2011A" );
 
-        float effSingle1_Run2011A1 = getMuonHLTSF( ptLept1, etaLept1, false, "Run2011A1");
-        float effSingle2_Run2011A1 = getMuonHLTSF( ptLept2, etaLept2, false, "Run2011A1");
+        float effDouble1_Run2011B = getMuonHLTSF_DoubleTrigger( ptLept1, etaLept1, "Run2011B" );
+        float effDouble2_Run2011B = getMuonHLTSF_DoubleTrigger( ptLept2, etaLept2, "Run2011B" );
 
-        float effSingle1_Run2011A2 = getMuonHLTSF( ptLept1, etaLept1, false, "Run2011A2");
-        float effSingle2_Run2011A2 = getMuonHLTSF( ptLept2, etaLept2, false, "Run2011A2");
+        float effSingle1_Run2011A1 = getMuonHLTSF_SingleTrigger( ptLept1, etaLept1, "Run2011A1");
+        float effSingle2_Run2011A1 = getMuonHLTSF_SingleTrigger( ptLept2, etaLept2, "Run2011A1");
 
-        float effSingle1_Run2011A3 = getMuonHLTSF( ptLept1, etaLept1, false, "Run2011A3");
-        float effSingle2_Run2011A3 = getMuonHLTSF( ptLept2, etaLept2, false, "Run2011A3");
+        float effSingle1_Run2011A2 = getMuonHLTSF_SingleTrigger( ptLept1, etaLept1, "Run2011A2");
+        float effSingle2_Run2011A2 = getMuonHLTSF_SingleTrigger( ptLept2, etaLept2, "Run2011A2");
 
-        float effSingle1_Run2011B = getMuonHLTSF( ptLept1, etaLept1, false, "Run2011B");
-        float effSingle2_Run2011B = getMuonHLTSF( ptLept2, etaLept2, false, "Run2011B");
+        float effSingle1_Run2011A3 = getMuonHLTSF_SingleTrigger( ptLept1, etaLept1, "Run2011A3");
+        float effSingle2_Run2011A3 = getMuonHLTSF_SingleTrigger( ptLept2, etaLept2, "Run2011A3");
+
+        float effSingle1_Run2011B = getMuonHLTSF_SingleTrigger( ptLept1, etaLept1, "Run2011B");
+        float effSingle2_Run2011B = getMuonHLTSF_SingleTrigger( ptLept2, etaLept2, "Run2011B");
 
 
-        float HLTSF_Run2011A1 = effDouble1 * effDouble2 +
-                                effSingle2_Run2011A1 * (1. - effDouble1 ) +
-                                effSingle1_Run2011A1 * (1. - effDouble2 );
-
-        float HLTSF_Run2011A2 = effDouble1 * effDouble2 +
-                                effSingle2_Run2011A2 * (1. - effDouble1 ) +
-                                effSingle1_Run2011A2 * (1. - effDouble2 );
-
-        float HLTSF_Run2011A3 = effDouble1 * effDouble2 +
-                                effSingle2_Run2011A3 * (1. - effDouble1 ) +
-                                effSingle1_Run2011A3 * (1. - effDouble2 );
-
-        float HLTSF_Run2011B = effDouble1 * effDouble2 +
-                                effSingle2_Run2011B * (1. - effDouble1 ) +
-                                effSingle1_Run2011B * (1. - effDouble2 );
+        float HLTSF_Run2011A1 = getEventHLTSF( effSingle1_Run2011A1, effSingle2_Run2011A1, effDouble1_Run2011A, effDouble2_Run2011A );
+        float HLTSF_Run2011A2 = getEventHLTSF( effSingle1_Run2011A2, effSingle2_Run2011A2, effDouble1_Run2011A, effDouble2_Run2011A );
+        float HLTSF_Run2011A3 = getEventHLTSF( effSingle1_Run2011A3, effSingle2_Run2011A3, effDouble1_Run2011A, effDouble2_Run2011A );
+        float HLTSF_Run2011B  = getEventHLTSF( effSingle1_Run2011B, effSingle2_Run2011B, effDouble1_Run2011B, effDouble2_Run2011B );
 
 
         // weighted average over full run (weighted with lumi):
@@ -2060,9 +2060,9 @@ ofstream ofs("run_event.txt");
       else                hangles = LD->computeHelicityAngles(lept2, lept1, jet1, jet2);
     
       LD->setMeasurables(hangles);
-      double sProb=LD->getSignalProbability();
-      double bProb=LD->getBkgdProbability();
-      double helicityLD=sProb/(sProb+bProb);
+      double sProb = LD->getSignalProbability();
+      double bProb = LD->getBkgdProbability();
+      double helicityLD = sProb/(sProb+bProb);
     
       HelicityLikelihoodDiscriminant::HelicityAngles hangles_nokinfit;
       if( chargeLept1<0 ) hangles_nokinfit = LD->computeHelicityAngles(lept1, lept2, jet1_nokinfit, jet2_nokinfit);
@@ -4368,55 +4368,109 @@ float Ntp1Finalizer_HZZlljjRM::get_helicityLD_thresh(float mass, int nBTags) {
 
 
 
-float getMuonHLTSF( float pt, float eta, bool isDoubleTrigger, const std::string& runPeriod ) {
+float getMuonHLTSF_DoubleTrigger( float pt, float eta, const std::string& runPeriod ) {
 
-  if( !isDoubleTrigger && pt<25. ) return 0.;
+  float hltsf = 0.;
 
-  // for now: onw pt bin [1] and three eta bins [3]: 0->0.8->2.1->2.4
-  double eff_Double[1][3]={{0.975, 0.955, 0.910}};
+  if( runPeriod=="Run2011A" ) {
 
-  double eff_Single[1][3]; //three eta regions: 0-0.8-2.1-2.4
-  if( !isDoubleTrigger ) {
-    if( runPeriod=="Run2011A1" ) { //up to may10 technical stop
-      eff_Single[0][0] = 0.896;
-      eff_Single[0][1] = 0.807;
-      eff_Single[0][2] = 0.608;
-    } else if( runPeriod=="Run2011A2" ) { //from may10 to EPS
-      eff_Single[0][0] = 0.895;
-      eff_Single[0][1] = 0.838;
-      eff_Single[0][2] = 0.738;
-    } else if( runPeriod=="Run2011A3" ) { //from EPS on to end of Run2011A
-      eff_Single[0][0] = 0.890;
-      eff_Single[0][1] = 0.809;
-      eff_Single[0][2] = 0.493;
-    } else if( runPeriod=="Run2011B" ) { //from EPS on to end of Run2011A
-      eff_Single[0][0] = 0.890;
-      eff_Single[0][1] = 0.809;
-      eff_Single[0][2] = 0.;  // using HLT_IsoMu24_eta2p1
-    } else {
-      std::cout << "----> WARNING!!! Unknown run period: '" << runPeriod << "'. Exiting. " << std::endl;
+    if( fabs(eta)<0.8 ) 
+      hltsf = 0.975;
+    else if( fabs(eta)<2.1 )
+      hltsf = 0.955;
+    else 
+      hltsf = 0.910;
+
+  } else if( runPeriod=="Run2011B" ) {
+
+    if( fabs(eta)<0.8 ) 
+      hltsf = 0.972;
+    else if( fabs(eta)<2.1 )
+      hltsf = 0.945;
+    else { // eta 2.1 -> 2.4
+      if( pt<40. ) {
+        hltsf = 0.85;
+      } else {
+        hltsf = 0.87;
+      }
     }
-  }
-  
-  double w(1.);
-  int index=-1; 
-  
-  if (TMath::Abs(eta)<=0.8) {
-    index = 0;
-  } else if (TMath::Abs(eta)>0.8 && TMath::Abs(eta)<=2.1) {   
-    index = 1;
+
   } else {
-    index = 2;
+
+    std::cout << "WARNING! Unknown run period: " << runPeriod << "! Returning HLTSF=0." << std::endl;
+
   }
 
-  
-  if( index >=0 ) {
-    if(isDoubleTrigger) w =  eff_Double[0][index];
-    else w= eff_Single[0][index];
-  }
-
-  return w;
+  return hltsf;
 
 }
 
 
+
+
+float getMuonHLTSF_SingleTrigger( float pt, float eta, const std::string& runPeriod ) {
+
+  if( pt<25. ) return 0.;
+
+  float hltsf = 0.;
+
+  if( runPeriod=="Run2011A1" ) { //up to may10 technical stop
+
+    if( fabs(eta)<0.8 ) 
+      hltsf = 0.896;
+    else if( fabs(eta)<2.1 )
+      hltsf = 0.807;
+    else 
+      hltsf = 0.608;
+
+  } else if( runPeriod=="Run2011A2" ) { //from may10 to EPS
+
+    if( fabs(eta)<0.8 ) 
+      hltsf = 0.895;
+    else if( fabs(eta)<2.1 )
+      hltsf = 0.838;
+    else 
+      hltsf = 0.738;
+
+  } else if( runPeriod=="Run2011A3" ) { //from EPS to end of Run2011A
+
+    if( fabs(eta)<0.8 ) 
+      hltsf = 0.890;
+    else if( fabs(eta)<2.1 )
+      hltsf = 0.809;
+    else 
+      hltsf = 0.493;
+
+  } else if( runPeriod=="Run2011B" ) {
+
+    if( fabs(eta)<0.8 ) 
+      hltsf = 0.87;
+    else if( fabs(eta)<2.1 )
+      hltsf = 0.79;
+    else  //using HLT_IsoMu24_eta2p1
+      hltsf = 0.;
+
+  } else {
+
+    std::cout << "WARNING! Unknown run period: " << runPeriod << "! Returning HLTSF=0." << std::endl;
+
+  }
+
+  return hltsf;
+
+}
+
+
+float getEventHLTSF( float effSingle1, float effSingle2, float effDouble1, float effDouble2 ) {
+
+  float HLTSF = effDouble1 * effDouble2 +
+                effSingle2 * (1. - effDouble2 ) +
+                effSingle1 * (1. - effDouble1 );
+
+//float HLTSF = effDouble1 * effDouble2 +
+//              effSingle2 * (1. - effDouble1*effDouble2 ) +
+//              effSingle1 * (1. - effDouble1*effDouble2 ) * (1. - effSingle2);
+
+  return HLTSF;
+
+}
