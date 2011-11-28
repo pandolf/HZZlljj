@@ -65,9 +65,10 @@ double sign( double x ) {
 }
 
 
+std::string get_datacardDir( const std::string& dataset, const std::string& init, const std::string& flags );
 std::string leptType_datacards( const std::string& leptType_str );
 
-void create_singleDatacard( const std::string& dataset, const std::string& PUType, const std::string& init, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass );
+void create_singleDatacard( const std::string& dataset, const std::string& PUType, const std::string& init, const std::string& flags, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass );
 
 HiggsParameters get_higgsParameters( float mass );
 
@@ -98,8 +99,8 @@ double backgroundNorm( const std::string& dataset, const std::string& leptType_s
 
 int main( int argc, char* argv[] ) {
 
-  if( argc!=2 && argc!=3 ) {
-    std::cout << "USAGE: ./create_datacards [dataset] [init=\"MC\"]" << std::endl;
+  if( argc!=2 && argc!=3 && argc!=4 ) {
+    std::cout << "USAGE: ./create_datacards [dataset] [init=\"MC\"] [flags=\"\"]" << std::endl;
     exit(113);
   }
 
@@ -133,6 +134,13 @@ int main( int argc, char* argv[] ) {
   if( argc==3 ) {
     std::string init_str(argv[2]);
     init = init_str;
+  }
+
+
+  std::string flags = "";
+  if( argc==4 ) {
+    std::string flags_str(argv[3]);
+    flags = "_" + flags_str;
   }
 
 
@@ -171,16 +179,17 @@ int main( int argc, char* argv[] ) {
     std::cout << "++++++++++++++++++++++" << std::endl;
     std::cout << std::endl;
 
+    std::string datacardDir = get_datacardDir( dataset, init, flags );
     char mkdir_command[100];
-    sprintf( mkdir_command, "mkdir -p datacards_%s_fit%s/%.0f", dataset.c_str(), init.c_str(), mass);
+    sprintf( mkdir_command, "mkdir -p %s/%.0f", datacardDir.c_str(), mass);
     system(mkdir_command);
 
-    create_singleDatacard( dataset, PUType, init, mass, lumi_ELE, "ELE", 0, f1_eff_vs_mass_ELE_0btag);
-    create_singleDatacard( dataset, PUType, init, mass, lumi_ELE, "ELE", 1, f1_eff_vs_mass_ELE_1btag);
-    create_singleDatacard( dataset, PUType, init, mass, lumi_ELE, "ELE", 2, f1_eff_vs_mass_ELE_2btag);
-    create_singleDatacard( dataset, PUType, init, mass, lumi_MU,   "MU", 0, f1_eff_vs_mass_MU_0btag);
-    create_singleDatacard( dataset, PUType, init, mass, lumi_MU,   "MU", 1, f1_eff_vs_mass_MU_1btag);
-    create_singleDatacard( dataset, PUType, init, mass, lumi_MU,   "MU", 2, f1_eff_vs_mass_MU_2btag);
+    create_singleDatacard( dataset, PUType, init, flags, mass, lumi_ELE, "ELE", 0, f1_eff_vs_mass_ELE_0btag);
+    create_singleDatacard( dataset, PUType, init, flags, mass, lumi_ELE, "ELE", 1, f1_eff_vs_mass_ELE_1btag);
+    create_singleDatacard( dataset, PUType, init, flags, mass, lumi_ELE, "ELE", 2, f1_eff_vs_mass_ELE_2btag);
+    create_singleDatacard( dataset, PUType, init, flags, mass, lumi_MU,   "MU", 0, f1_eff_vs_mass_MU_0btag);
+    create_singleDatacard( dataset, PUType, init, flags, mass, lumi_MU,   "MU", 1, f1_eff_vs_mass_MU_1btag);
+    create_singleDatacard( dataset, PUType, init, flags, mass, lumi_MU,   "MU", 2, f1_eff_vs_mass_MU_2btag);
 
   } //while masses
 
@@ -190,7 +199,7 @@ int main( int argc, char* argv[] ) {
 
 
 
-void create_singleDatacard( const std::string& dataset, const std::string& PUType, const std::string& init, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass ) {
+void create_singleDatacard( const std::string& dataset, const std::string& PUType, const std::string& init, const std::string& flags, float mass, float lumi, const std::string& leptType_str, int nbtags, TF1* f1_eff_vs_mass ) {
 
   if( leptType_str!="ELE" && leptType_str!="MU" ) {
     std::cout << "Unkown Lept Type '" << leptType_str << "'. Exiting." << std::endl;
@@ -198,7 +207,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   }
 
 
-  SidebandFitter* sf = new SidebandFitter( dataset, PUType, init );
+  SidebandFitter* sf = new SidebandFitter( dataset, PUType, init, flags );
 
   int leptType_int = SidebandFitter::convert_leptType( leptType_str );
 
@@ -238,8 +247,10 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   sprintf( suffix, "%s%s%db", (leptType_datacards(leptType_str)).c_str(), (leptType_datacards(leptType_str)).c_str(), nbtags);
   std::string suffix_str(suffix);
 
+  std::string datacardDir = get_datacardDir( dataset, init, flags );
+
   char datacardName[400];
-  sprintf( datacardName, "datacards_%s_fit%s/%.0f/hzz2l2q_%s.%.0f.txt", dataset.c_str(), init.c_str(), mass, suffix, mass);
+  sprintf( datacardName, "%s/%.0f/hzz2l2q_%s.%.0f.txt", datacardDir.c_str(), mass, suffix, mass);
 
 
   std::ofstream ofs(datacardName);
@@ -357,7 +368,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
   // datacard is done. now create output workspace and write it to rootfile
 
   char outfileName[900];
-  sprintf( outfileName, "datacards_%s_fit%s/%.0f/hzz2l2q_%s.input.root", dataset.c_str(), init.c_str(), mass, suffix);
+  sprintf( outfileName, "%s/%.0f/hzz2l2q_%s.input.root", datacardDir.c_str(), mass, suffix);
   TFile* outfile = TFile::Open( outfileName, "RECREATE");
   outfile->cd();
 
@@ -933,3 +944,13 @@ double backgroundNorm( const std::string& dataset, const std::string& leptType_s
 }
 
 
+std::string get_datacardDir( const std::string& dataset, const std::string& init, const std::string& flags ) {
+
+  char datacardDir[400];
+  sprintf( datacardDir, "datacards_%s_fit%s%s", dataset.c_str(), init.c_str(), flags.c_str());
+
+  std::string datacardDir_str(datacardDir);
+
+  return datacardDir_str;
+
+}
