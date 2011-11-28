@@ -612,6 +612,7 @@ public :
    Float_t ptHat_;
    Float_t ptHatMin_;
    Float_t ptHatMax_;
+   Float_t genWeight_;
    Float_t eventWeight_;
    Float_t eventWeightPU_;
    Float_t eventWeightPU_ave_;

@@ -129,6 +129,7 @@ void Ntp1Analyzer_HZZlljj::CreateOutputFile() {
   reducedTree_->Branch("nPU",&nPU_,"nPU_/I");
   reducedTree_->Branch("nvertex",&nvertex_,"nvertex_/I");
   reducedTree_->Branch("rhoPF",&rhoPF_,"rhoPF_/F");
+  reducedTree_->Branch("genWeight",&genWeight_,"genWeight_/F");
   reducedTree_->Branch("eventWeight",&eventWeight_,"eventWeight_/F");
   reducedTree_->Branch("eventWeightPU",&eventWeightPU_,"eventWeightPU_/F");
   reducedTree_->Branch("eventWeightPU_ave",&eventWeightPU_ave_,"eventWeightPU_ave_/F");
@@ -485,6 +486,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      run_ = runNumber;
      LS_ = lumiBlock;
      event_ = eventNumber;
+     genWeight_ = genWeight; //default
      eventWeight_ = -1.; //default
      leptTypeMC_ = -1;
 
