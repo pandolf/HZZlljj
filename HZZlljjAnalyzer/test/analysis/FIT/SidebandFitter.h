@@ -23,6 +23,8 @@ class SidebandFitter {
   SidebandFitter( const std::string& dataset, const std::string& PUType, const std::string& init, const std::string& flags="" );
   ~SidebandFitter() {};
 
+  void set_turnOnShift( float shift );
+
   TH1D* getAlphaHisto( int btagCategory, const std::string& leptType_str, TTree* treeMC );
 
   
@@ -61,6 +63,8 @@ class SidebandFitter {
 
   float mZZmin_;
   float mZZmax_;
+
+  float turnOnShift_;
 
   RooRealVar* CMS_hzz2l2q_mZZ_;
   

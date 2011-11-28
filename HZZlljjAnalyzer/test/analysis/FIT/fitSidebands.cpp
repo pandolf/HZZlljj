@@ -12,6 +12,11 @@
 
 
 bool use_sherpa=false;
+float turnOnShift=1.;
+
+
+
+TH1D* getHistoMean( TH1D* h1, TH1D* h2 );
 
 
 int main( int argc, char* argv[] ) {
@@ -46,6 +51,8 @@ int main( int argc, char* argv[] ) {
   std::cout << "-> N Toys: " << nToys << std::endl;
   if( use_sherpa )
     std::cout << "-> Going to use alpha from SHERPA." << std::endl;
+  if( turnOnShift!=0. )
+    std::cout << "-> Going to shift Fermi turn-on by " << turnOnShift*0.5 << " GeV." << std::endl;
 
 
   TRandom3* random = new TRandom3(13);
@@ -78,6 +85,14 @@ int main( int argc, char* argv[] ) {
   bgTreeName = "HZZlljjRM_VV_TuneZ2_7TeV-pythia6-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU" + PUReweighing + "_ALL.root/tree_passedEvents";
   chainMC->Add(bgTreeName.c_str());
 
+  TChain* chainMC_sherpa = new TChain("tree_passedEvents");
+  bgTreeName = "HZZlljjRM_DYToLL_M-50_1jEnh2_2jEnh35_3jEnh40_4jEnh50_7TeV-sherpa_Summer11-PU_S4_START42_V11-v1_PU" + PUReweighing + "_ALL.root/tree_passedEvents";
+  chainMC_sherpa->Add(bgTreeName.c_str());
+  bgTreeName = "HZZlljjRM_TT_TW_TuneZ2_7TeV-powheg-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU" + PUReweighing + "_ALL.root/tree_passedEvents";
+  chainMC_sherpa->Add(bgTreeName.c_str());
+  bgTreeName = "HZZlljjRM_VV_TuneZ2_7TeV-pythia6-tauola_Summer11-PU_S4_START42_V11-v1_optLD_looseBTags_v2_PU" + PUReweighing + "_ALL.root/tree_passedEvents";
+  chainMC_sherpa->Add(bgTreeName.c_str());
+
   gROOT->cd(); //magic!
 
 
@@ -86,6 +101,7 @@ int main( int argc, char* argv[] ) {
 
     std::string flags = (use_sherpa) ? "_sherpa" : "";
     SidebandFitter *sf = new SidebandFitter(dataset, PUReweighing, init, flags);
+    sf->set_turnOnShift(turnOnShift);
 
     char btagCut[100];
     sprintf( btagCut, "nBTags==%d", ibtag );
@@ -96,10 +112,11 @@ int main( int argc, char* argv[] ) {
 
     TH1D* alpha_Xbtag;
     if( use_sherpa ) {
-      char alphaSherpaName[300];
-      sprintf( alphaSherpaName, "alpha_Sherpa_%dbtag.root", ibtag );
-      TFile* alphaFileSherpa = TFile::Open(alphaSherpaName);
-      alpha_Xbtag = (TH1D*)alphaFileSherpa->Get("h_alpha_TOT_sherpa");
+      TTree* treeMC_sherpa = chainMC_sherpa->CopyTree(btagCut);
+      TH1D* alpha = sf->getAlphaHisto( ibtag, "ALL", treeMC_Xbtag );
+      TH1D* alpha_sherpa = sf->getAlphaHisto( ibtag, "ALL", treeMC_sherpa );
+      alpha_sherpa->SetName("alpha_sherpa");
+      alpha_Xbtag = getHistoMean( alpha, alpha_sherpa );
     } else {
       alpha_Xbtag = sf->getAlphaHisto( ibtag, "ALL", treeMC_Xbtag );
     }
@@ -122,5 +139,23 @@ int main( int argc, char* argv[] ) {
   } //for btags
 
   return 0;
+
+}
+
+
+
+TH1D* getHistoMean( TH1D* h1, TH1D* h2 ) {
+
+  TH1D* returnHisto = new TH1D(*h1);
+
+  for(unsigned ibin=0; ibin<h1->GetNbinsX(); ++ibin ) {
+    returnHisto->SetBinContent( ibin, 0.5*(h1->GetBinContent(ibin)+h2->GetBinContent(ibin)) );
+    float err1 = h1->GetBinError(ibin);
+    float err2 = h2->GetBinError(ibin);
+    returnHisto->SetBinError( ibin, 0.5*( err1 + err2 ) );
+    //returnHisto->SetBinError( ibin, sqrt( err1*err1 + err2*err2 ) );
+  }
+
+  return (TH1D*)(returnHisto->Clone());
 
 }

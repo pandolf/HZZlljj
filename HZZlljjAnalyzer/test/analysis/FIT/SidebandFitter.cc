@@ -28,10 +28,11 @@
 
 //#include "HiggsAnalysis/CombinedLimit/interface/HZZ2L2QRooPdfs.h"
 
-//#include "fitTools.h"
+#include "fitTools.h"
 
 #include "PdfDiagonalizer.h"
 #include <algorithm>
+
 
 
 using namespace RooFit;
@@ -47,6 +48,7 @@ SidebandFitter::SidebandFitter( const std::string& dataset, const std::string& P
   mZZmin_ = 160.;
   mZZmax_ = 800.;
 
+  turnOnShift_ = 0.;
 
   double a0 = -1.395;
   double w0 = 85.73;
@@ -73,6 +75,21 @@ SidebandFitter::SidebandFitter( const std::string& dataset, const std::string& P
  
 }
 
+
+
+void SidebandFitter::set_turnOnShift( float shift ) {
+
+  if( shift!=0. && shift!=1. && shift!=-1. ) {
+    std::cout << "Please use only shifts equal to -1, 0 or 1. Exiting." << std::endl;
+    exit(777);
+  }
+
+  turnOnShift_ = shift;
+
+  if( turnOnShift_==1. ) flags_ += "_turnOnPlusSigma";
+  if( turnOnShift_==-1. ) flags_ += "_turnOnMinusSigma";
+
+}
 
 
 
@@ -102,17 +119,18 @@ TH1D* SidebandFitter::getAlphaHisto( int btagCategory, const std::string& leptTy
   treeMC->SetBranchAddress("leptType",&leptType);
 
   
-  float bins0[26]={150,165,180,195,210,225,240,255,270,285,300,320,340,360,380,400,430,460,490,520,550,600,650,700,750,800};
-  //const int nbins(20);
-  //Double_t bins[nbins];
-  //fitTools::getBins( nbins, bins, 150., 800.);
+  TString flags_tstr(flags_);
 
-   
+
+  float bins0[26]={150,165,180,195,210,225,240,255,270,285,300,320,340,360,380,400,430,460,490,520,550,600,650,700,750,800};
    
   TH1D* h1_mZZ_signalRegion = new TH1D("mZZ_signalRegion", "", 25, bins0);
   h1_mZZ_signalRegion->Sumw2();
   TH1D* h1_mZZ_sidebands = new TH1D("mZZ_sidebands", "", 25, bins0);
   h1_mZZ_sidebands->Sumw2();
+ 
+  
+
 
 
   for( unsigned iEntry=0; iEntry<treeMC->GetEntries(); ++iEntry ) {
@@ -270,6 +288,10 @@ RooFitResult* SidebandFitter::fitSidebands( TTree* treeMC, TTree* treeDATA, int 
   }
   RooFitResult *r_sidebandsMC_alpha = background_->fitTo(*fitDataset, SumW2Error(kTRUE), Save());
 
+  if( turnOnShift_!=0. ) {
+    float fitVal = cutOff_->getVal();
+    cutOff_->setVal( fitVal + 0.5*turnOnShift_ ); //0.5 GeV shifts
+  }
 
   std::string ofsMCName = get_fitResultsName( btagCategory, init_ );
   ofstream ofsMC(ofsMCName.c_str());
