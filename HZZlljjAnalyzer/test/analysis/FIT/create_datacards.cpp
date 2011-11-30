@@ -27,6 +27,7 @@
 
 #include "SidebandFitter.h"
 
+#include "DrawBase.h"
 
 
 float mZZmin_ = 183.;
@@ -466,6 +467,9 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
 TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::string& PUType, float mZZmin ) {
 
+
+  TH1F::AddDirectory(kTRUE);
+
   int leptType_int = SidebandFitter::convert_leptType(leptType_str);
 
   ifstream ifsMC("massesMC.txt"); //the points at which we have MC samples
@@ -511,14 +515,42 @@ TF1* get_eff_vs_mass( const std::string& leptType_str, int nbtags, const std::st
   char functName[200];
   sprintf( functName, "eff_vs_mass_%s_%dbtag", leptType_str.c_str(), nbtags );
   TF1* f1_eff_vs_mass = new TF1(functName, "[0] + [1]*x + [2]*x*x + [3]*x*x*x", 150., 700.);
-  gr_eff_vs_mass->Fit(f1_eff_vs_mass, "RQ");
+  gr_eff_vs_mass->Fit(f1_eff_vs_mass, "RQN");
+  f1_eff_vs_mass->SetLineStyle(2);
+  f1_eff_vs_mass->SetLineColor(38);
 
+  // define an instance of DrawBase to set the style
+  DrawBase* db = new DrawBase("eff");
 
   TCanvas* c1 = new TCanvas("c1", "", 600, 600);
   c1->cd();
+
+  TH2D* axes = new TH2D("axes", "", 10, 160., 640., 10, 0., 0.115);
+  axes->SetXTitle("m_{H} [GeV]");
+  axes->SetYTitle("Efficiency");
+  axes->Draw();
+
   gr_eff_vs_mass->SetMarkerStyle(20);
   gr_eff_vs_mass->SetMarkerSize(1.3);
-  gr_eff_vs_mass->Draw("APE");
+  gr_eff_vs_mass->SetMarkerColor(46);
+  f1_eff_vs_mass->Draw("same");
+  gr_eff_vs_mass->Draw("Psame");
+
+  TPaveText* labelCMS = db->get_labelCMS();
+  TPaveText* labelSqrt = db->get_labelSqrt();
+
+  labelCMS->Draw("same");
+  labelSqrt->Draw("same");
+
+  std::string leptType_forlabel = (leptType_str=="ELE") ? "electron" : "muon";
+  char channelLabelText[300];
+  sprintf(channelLabelText, "%d b-tag category (%s channel)", nbtags, leptType_forlabel.c_str() );
+
+  TPaveText* labelChannel = new TPaveText( 0.4, 0.2, 0.85, 0.25, "brNDC");
+  labelChannel->SetTextSize(0.035);
+  labelChannel->SetFillColor(0);
+  labelChannel->AddText(channelLabelText);
+  labelChannel->Draw("same");
 
   char effDirName[200];
   sprintf( effDirName, "EfficiencyFits_PU%s", PUType.c_str() );
