@@ -322,7 +322,7 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
   ofs << "CMS_eff_b\t\tlnN\t" << systString(bTagEffSyst(leptType_str, nbtags, hp.mH)) << "\t" << systString(bTagEffSyst(leptType_str, nbtags, hp.mH)) << "\t1.0" << std::endl;
 
-  ofs << "CMS_hzz2l2q_pu\t\tlnN\t1.02\t\t\t1.02\t\t\t1.0" << std::endl;
+  ofs << "CMS_hzz2l2q_pu\t\tlnN\t1.04\t\t\t1.04\t\t\t1.0" << std::endl;
 
   ofs << "CMS_hzz2l2q_qgsep0b\t\tlnN\t1.046\t\t\t1.046\t\t\t1.0" << std::endl;
 
