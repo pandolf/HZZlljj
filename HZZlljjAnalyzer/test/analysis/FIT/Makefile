@@ -17,14 +17,20 @@ EXTRALIBS  :=  -L$(ROOTSYS)/lib -L$(ROOFIT_LIBDIR)/ -L$(CMSSW_BASE)/lib/slc5_amd
 fitSidebands: fitSidebands.cpp SidebandFitter.o fitTools.o
 	$(CC) -Wall $(INCLUDES) -o fitSidebands fitSidebands.cpp SidebandFitter.o fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
-create_datacards: create_datacards.cpp SidebandFitter.o fitTools.o
-	$(CC) -Wall $(INCLUDES) -o create_datacards create_datacards.cpp SidebandFitter.o fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
+checkAlpha: checkAlpha.cpp SidebandFitter.o fitTools.o DrawBase.o
+	$(CC) -Wall $(INCLUDES) -o checkAlpha checkAlpha.cpp SidebandFitter.o fitTools.o DrawBase.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
+
+create_datacards: create_datacards.cpp SidebandFitter.o fitTools.o DrawBase.o
+	$(CC) -Wall $(INCLUDES) -o create_datacards create_datacards.cpp SidebandFitter.o fitTools.o DrawBase.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
 drawMZZ_with_curve: drawMZZ_with_curve.cpp DrawBase.o fitTools.o SidebandFitter.o 
 	$(CC) -Wall $(INCLUDES) -o drawMZZ_with_curve drawMZZ_with_curve.cpp DrawBase.o fitTools.o SidebandFitter.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
 draw_golfcourse: draw_golfcourse.cpp DrawBase.o fitTools.o
 	$(CC) -Wall $(INCLUDES) -o draw_golfcourse draw_golfcourse.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
+
+drawAlpha: drawAlpha.cpp DrawBase.o fitTools.o
+	$(CC) -Wall $(INCLUDES) -o drawAlpha drawAlpha.cpp DrawBase.o fitTools.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
 
 do_latexYieldTable: do_latexYieldTable.cpp SidebandFitter.o
 	$(CC) -Wall $(INCLUDES) -o do_latexYieldTable do_latexYieldTable.cpp SidebandFitter.o $(ROOTFLAG) $(EXTRALIBS) -lHiggsAnalysisCombinedLimit
