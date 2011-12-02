@@ -65,6 +65,8 @@ int main( int argc, char* argv[] ) {
   TGraph* graphObserved = get_observedLimit( data_dataset, data_mc, nbtags );
 
   graphObserved->SetMarkerStyle(21);
+  graphObserved->SetMarkerSize(.85);
+  graphObserved->SetLineWidth(3.);
   //graphObserved->SetMarkerColor(kGreen+4);
   //graphObserved->SetMarkerSize(1.);
 
@@ -109,29 +111,31 @@ int main( int argc, char* argv[] ) {
 
   TLegend* legend;
   if( nbtags!=-1 ) 
-    legend = new TLegend( 0.28, 0.6, 0.74, 0.91, legendTitle );
+    legend = new TLegend( 0.35, 0.6, 0.85, 0.90, legendTitle );
   else
-    legend = new TLegend( 0.28, 0.6, 0.74, 0.91);
-  legend->SetFillColor(0);
-  legend->SetFillStyle(0);
-  legend->SetTextSize(0.038);
+    legend = new TLegend( 0.35, 0.6, 0.85, 0.90);
+  legend->SetFillColor(10);
+  legend->SetFillStyle(1001);
+  legend->SetBorderSize(1);
+  legend->SetTextSize(0.034);
+  legend->SetTextFont(42);
   legend->AddEntry( graphExpected68, "Bayesian Expected", "L" ); 
   legend->AddEntry( graphExpected68_forLegend, "Expected #pm 1#sigma", "F" ); 
   legend->AddEntry( graphExpected95, "Expected #pm 2#sigma", "F" ); 
   legend->AddEntry( line_one, "SM", "L" ); 
 
-
-  TCanvas* c1 = new TCanvas("c1", "", 600, 600);
+  TCanvas* c1 = new TCanvas("c1", "", 630, 600);
+  c1->SetGrid(true);
   c1->cd();
-  axes->Draw();
+  axes->Draw("AXIS");
   labelCMS->Draw("same");
   labelSqrt->Draw("same");
   graphExpected95->Draw("3same");
   graphExpected68->Draw("3same");
   graphExpected68->Draw("LXsame");
+  gPad->RedrawAxis();
   line_one->Draw("same");
   legend->Draw("same");
-  gPad->RedrawAxis();
 
   char canvasName[500];
   if( nbtags>=0 )
@@ -147,13 +151,15 @@ int main( int argc, char* argv[] ) {
 
   TLegend* legend2;
   if( nbtags!=-1 ) 
-    legend2 = new TLegend( 0.28, 0.6, 0.74, 0.91, legendTitle );
+    legend2 = new TLegend( 0.35, 0.6, 0.85, 0.90, legendTitle );
   else
-    legend2 = new TLegend( 0.28, 0.6, 0.74, 0.91);
-  legend2->SetFillColor(0);
-  legend2->SetFillStyle(0);
-  legend2->SetTextSize(0.038);
-  legend2->AddEntry( graphObserved, "Bayesian Observed", "P" ); 
+    legend2 = new TLegend( 0.35, 0.6, 0.85, 0.90);
+  legend2->SetFillColor(10);
+  legend2->SetFillStyle(1001);
+  legend2->SetBorderSize(1);
+  legend2->SetTextSize(0.034);
+  legend2->SetTextFont(42);
+  legend2->AddEntry( graphObserved, "Bayesian Observed", "LP" ); 
   legend2->AddEntry( graphExpected68, "Bayesian Expected", "L" ); 
   legend2->AddEntry( graphExpected68_forLegend, "Expected #pm 1#sigma", "F" ); 
   legend2->AddEntry( graphExpected95, "Expected #pm 2#sigma", "F" ); 
@@ -166,10 +172,10 @@ int main( int argc, char* argv[] ) {
   graphExpected95->Draw("3same");
   graphExpected68->Draw("3same");
   graphExpected68->Draw("LXsame");
-  line_one->Draw("same");
-  legend2->Draw("same");
-  graphObserved->Draw("PLsame");
   gPad->RedrawAxis();
+  line_one->Draw("same");
+  graphObserved->Draw("PLsame");
+  legend2->Draw("same");
 
   if( nbtags>=0 )
     sprintf( canvasName, "datacards_%s_fit%s/upperLimit_%s_%dbtag.eps", data_dataset.c_str(), data_mc.c_str(), data_dataset.c_str(), nbtags );
@@ -300,11 +306,11 @@ std::pair<TGraphAsymmErrors*,TGraphAsymmErrors*> get_expectedLimit( const std::s
   if( !( data_mc=="MC" && nbtags==1) )
     masses.push_back(300);
   masses.push_back(350);
-  if( !( data_mc=="DATA" && nbtags==0) )
-    masses.push_back(370);
+//   if( !( data_mc=="DATA" && nbtags==0) )
+//     masses.push_back(370);
   masses.push_back(400);
   masses.push_back(440);
-  if( !( data_mc=="DATA" && nbtags==0) )
+  //  if( !( data_mc=="DATA" && nbtags==0) )
     masses.push_back(500);
   if( !( data_mc=="MC" && nbtags==0) )
     masses.push_back(540);
