@@ -297,20 +297,21 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
   ofs << "lumi\t\t\tlnN\t1.045\t\t\t1.045\t\t\t1.0" << std::endl;
 
-  std::pair<double,double> pdf_gg  = theorSyst( hp.CSpdfgg_m, hp.CSpdfgg_p, 0.04, 0.015 );
-  ofs << "pdf_gg\t\tlnN\t" << systString(pdf_gg) << "\t1.0\t\t\t1.0" << std::endl;
-
-  std::pair<double,double> pdf_vbf = theorSyst( hp.CSpdfvbf_m, hp.CSpdfvbf_p, 0.04, 0.015 );
-  ofs << "pdf_qqbar\t\tlnN\t1.0\t\t\t" << systString(pdf_vbf) << "\t1.0" << std::endl;
-
-  std::pair<double,double> QCDscale_ggH = theorSyst( hp.CSgg_m, hp.CSgg_p);
-  ofs << "QCDscale_ggH\tlnN\t" << systString(QCDscale_ggH) << "\t1.0\t\t\t1.0" << std::endl;
-
-  std::pair<double,double> QCDscale_qqH = theorSyst( hp.CSvbf_m, hp.CSvbf_p);
-  ofs << "QCDscale_qqH\tlnN\t1.0\t\t\t" << systString(QCDscale_qqH) << "\t1.0" << std::endl;
-
-  std::pair<double,double>theoryUncXS_HighmH  = theorSyst_HighmH( hp.mH);
-  ofs << "theoryUncXS_HighMH\tlnN\t"<<systString(theoryUncXS_HighmH)<<"\t\t"<<systString(theoryUncXS_HighmH)<<" \t1.0"<<std::endl;
+ 
+    std::pair<double,double> pdf_gg  = theorSyst( hp.CSpdfgg_m, hp.CSpdfgg_p, 0.04, 0.015 );
+    ofs << "pdf_gg\t\tlnN\t" << systString(pdf_gg) << "\t1.0\t\t\t1.0" << std::endl;
+    
+    std::pair<double,double> pdf_vbf = theorSyst( hp.CSpdfvbf_m, hp.CSpdfvbf_p, 0.04, 0.015 );
+    ofs << "pdf_qqbar\t\tlnN\t1.0\t\t\t" << systString(pdf_vbf) << "\t1.0" << std::endl;
+    
+    std::pair<double,double> QCDscale_ggH = theorSyst( hp.CSgg_m, hp.CSgg_p);
+    ofs << "QCDscale_ggH\tlnN\t" << systString(QCDscale_ggH) << "\t1.0\t\t\t1.0" << std::endl;
+    
+    std::pair<double,double> QCDscale_qqH = theorSyst( hp.CSvbf_m, hp.CSvbf_p);
+    ofs << "QCDscale_qqH\tlnN\t1.0\t\t\t" << systString(QCDscale_qqH) << "\t1.0" << std::endl;
+    
+    std::pair<double,double>theoryUncXS_HighmH  = theorSyst_HighmH( hp.mH);
+    ofs << "theoryUncXS_HighMH\tlnN\t"<<systString(theoryUncXS_HighmH)<<"\t\t"<<systString(theoryUncXS_HighmH)<<" \t1.0"<<std::endl;
 
 
   ofs << "CMS_trigger_" << leptType_datacards(leptType_str) << "\tlnN\t" << systString(leptTriggerSyst(leptType_str)) << "\t" << systString(leptTriggerSyst(leptType_str)) << "\t1.0" << std::endl;
@@ -352,7 +353,11 @@ void create_singleDatacard( const std::string& dataset, const std::string& PUTyp
 
   for( unsigned iVar=0; iVar<bgPars.getSize(); ++iVar ) {
     RooRealVar* thisVar = dynamic_cast<RooRealVar*>(bgPars.at(iVar));
-    ofs << thisVar->GetName() << "\tparam\t\t" << thisVar->getVal() << "\t" << thisVar->getError() << std::endl;
+//     std::string varn(thisVar->GetName());
+//     if(varn=="CMS_hzz2l2q_bkg_1b_eig1" )
+//       ofs << thisVar->GetName() << "\tparam\t\t" << thisVar->getVal() << "\t" << thisVar->getError()*2 << std::endl;
+//     else
+      ofs << thisVar->GetName() << "\tparam\t\t" << thisVar->getVal() << "\t" << thisVar->getError() << std::endl;
   }
 
 
@@ -910,42 +915,42 @@ std::pair<double,double> bTagEffSyst( const std::string& leptType_str, int nbtag
 
   if( leptType_str=="ELE" ) {
     if(nbtags==0){
-      p0=0.983256647923;
-      p1=-0.0000883532570978;
-      m0=1.02907356239;
-      m1=0.0000713061639147;
+      p0=0.98644 ;//0.983256647923;
+      p1=-0.000100716 ;//-0.0000883532570978;
+      m0= 1.0176 ;//1.02907356239;
+      m1=8.12716e-05 ;//0.0000713061639147;
     }
     else if(nbtags==1){
-      p0=1.04446110956;
-      p1=-0.0000195508160829;
-      m0=0.940063743731;
-      m1=0.0000737044467898;
+      p0=1.04847 ;//1.04446110956;
+      p1=-1.47685e-05 ;//-0.0000195508160829;
+      m0=0.943369 ;//0.940063743731;
+      m1=4.63272e-05 ;//0.0000737044467898;
     }
     else if(nbtags==2){
-      p0=1.13365470372;
-      p1=0.00000584572717646;
-      m0=0.82161771535;
-      m1=-0.0000161054152592;
+      p0=1.1035 ;//1.13365470372;
+      p1=1.74066e-05 ;//0.00000584572717646;
+      m0=0.885855 ;//0.82161771535;
+      m1=-4.08034e-07 ;//-0.0000161054152592;
     }
   }
   else if(leptType_str=="MU" ) {
     if(nbtags==0){
-      p0=0.984636818312;
-      p1=-0.0000898705296203;
-      m0=1.02836905579;
-      m1= 0.0000726807344479;
+      p0=0.990292 ;//0.984636818312;
+      p1=-0.000108687;//-0.0000898705296203;
+      m0= 1.02153;//1.02836905579;
+      m1= 7.44788e-05 ;//0.0000726807344479;
     }
     else if(nbtags==1){
-      p0=1.04385580002;
-      p1=0.0000206096278947;
-      m0=0.942713582987;
-      m1=0.0000719882385098;
+      p0=1.04438 ;//1.04385580002;
+      p1=-9.26161e-06 ;//0.0000206096278947;
+      m0=1.02153 ;//0.938029 ;//0.942713582987;
+      m1=5.95741e-05 ;//0.0000719882385098;
     }
     else if(nbtags==2){
-      p0=1.1333366687;
-      p1=0.00000462542786413;
-      m0=0.813316607701;
-      m1=-0.00000205840248842;
+      p0=1.11229;//1.1333366687;
+      p1=6.55678e-07 ;//0.00000462542786413;
+      m0=0.897045 ;//0.813316607701;
+      m1=-2.25839e-05;//-0.00000205840248842;
     }
   }
 
