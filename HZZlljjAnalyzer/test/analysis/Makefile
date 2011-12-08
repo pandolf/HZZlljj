@@ -182,8 +182,8 @@ fitSidebands: fitSidebands.cpp DrawBase.o fitTools.o RooFermi.o RooCruijffPdf.o
 
 
 
-Ntp1Analyzer.o: Ntp1Analyzer.C
-	$(CC) $(CFLAGS) Ntp1Analyzer.C $(ROOTFLAG)
+Ntp1Analyzer.o: $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/Ntp1Analyzer.C
+	$(CC) $(CFLAGS) $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/Ntp1Analyzer.C $(ROOTFLAG)
 
 Ntp1Analyzer_HZZlljj.o: Ntp1Analyzer_HZZlljj.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools -I$(CMSSW_BASE)/src/UserCode/emanuele/CommonTools Ntp1Analyzer_HZZlljj.C $(ROOTFLAG)
