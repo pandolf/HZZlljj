@@ -336,20 +336,20 @@ PUWeight.o: PUWeight.C
 	$(CC) $(CFLAGS) PUWeight.C $(ROOTFLAG)
 
 
-AnalysisJet.o: AnalysisJet.cc 
-	$(CC) $(CFLAGS) AnalysisJet.cc $(ROOTFLAG)
+AnalysisJet.o: $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/AnalysisJet.cc 
+	$(CC) $(CFLAGS) $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/AnalysisJet.cc $(ROOTFLAG)
 
-AnalysisElectron.o: AnalysisElectron.cc AnalysisLepton.o
-	$(CC) $(CFLAGS) AnalysisElectron.cc $(ROOTFLAG)
+AnalysisElectron.o: $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/AnalysisElectron.cc AnalysisLepton.o
+	$(CC) $(CFLAGS) $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/AnalysisElectron.cc $(ROOTFLAG)
 
-AnalysisMuon.o: AnalysisMuon.cc AnalysisLepton.o
-	$(CC) $(CFLAGS) AnalysisMuon.cc $(ROOTFLAG)
+AnalysisMuon.o: $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/AnalysisMuon.cc AnalysisLepton.o
+	$(CC) $(CFLAGS) $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/AnalysisMuon.cc $(ROOTFLAG)
 
-AnalysisLepton.o: AnalysisLepton.cc
-	$(CC) $(CFLAGS) AnalysisLepton.cc $(ROOTFLAG)
+AnalysisLepton.o: $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/AnalysisLepton.cc
+	$(CC) $(CFLAGS) $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/AnalysisLepton.cc $(ROOTFLAG)
 
-AnalysisNeutrino.o: AnalysisNeutrino.h
-	$(CC) $(CFLAGS) AnalysisNeutrino.h $(ROOTFLAG)
+AnalysisNeutrino.o: $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/AnalysisNeutrino.h
+	$(CC) $(CFLAGS) $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/AnalysisNeutrino.h $(ROOTFLAG)
 
 
 
