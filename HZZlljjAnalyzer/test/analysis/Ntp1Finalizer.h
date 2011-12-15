@@ -29,7 +29,7 @@ class Ntp1Finalizer {
   virtual ~Ntp1Finalizer();
 
   void createOutputFile( const std::string& additionalFlags="" );
-  virtual void addFile(const std::string& dataset);
+  virtual void addFile(const std::string& dataseti, const std::string& selection="");
 
   std::vector<TH1F*> getResponseHistos(const std::string& name, unsigned binArraySize, Double_t* ptBins);
   void writeResponseHistos( TFile* file, std::vector<TH1F*> h1_response, std::string dirName );
@@ -51,6 +51,7 @@ class Ntp1Finalizer {
 
   float nCounter_;
   float nCounterW_;
+  float nCounterPU_;
 
   std::string analyzerType_;
   std::string inputAnalyzerType_;

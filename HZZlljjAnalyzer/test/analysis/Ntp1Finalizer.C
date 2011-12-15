@@ -1,5 +1,6 @@
 #include "Ntp1Finalizer.h"
 #include <iostream>
+#include "TROOT.h"
 
 
 
@@ -7,8 +8,8 @@ Ntp1Finalizer::Ntp1Finalizer( const std::string& analyzerType, const std::string
 
   DEBUG_ = false;
 
-  tree_ = new TChain("reducedTree");
 
+  tree_ = new TChain("reducedTree");
 
   analyzerType_ = analyzerType;
   inputAnalyzerType_ = analyzerType;
@@ -19,6 +20,7 @@ Ntp1Finalizer::Ntp1Finalizer( const std::string& analyzerType, const std::string
 
   nCounter_ = 0.;
   nCounterW_ = 0.;
+  nCounterPU_ = 0.;
 
 } //constructor
 
@@ -37,7 +39,7 @@ Ntp1Finalizer::~Ntp1Finalizer() {
 
 
 
-void Ntp1Finalizer::createOutputFile( const std::string& additionalFlags) {
+void Ntp1Finalizer::createOutputFile( const std::string& additionalFlags ) {
 
    std::string outfileName;
 
@@ -59,42 +61,15 @@ void Ntp1Finalizer::createOutputFile( const std::string& additionalFlags) {
    
    outFile_->cd();
 
-}
-
-
-/*
-void Ntp1Finalizer::set_outFile( const std::string& fileName, const std::string& suffix ) {
-
-  std::string outfileName;
-
-  if( fileName!="" ) {
-
-    outfileName = fileName;
-
-  } else {
-
-    if( DEBUG_ ) outfileName = "provaHZZlljj_"+dataset_;
-    else {
-     if(dataset_!="") outfileName = "HZZlljj_"+dataset_;
-     else outfileName = "HZZlljj";
-    }
-
-    if( suffix!="" ) outfileName += "_"+suffix;
-
-    outfileName += ".root";
-
-  }
-
-  outFile_ = new TFile(outfileName.c_str(), "RECREATE");
-  outFile_->cd();
 
 }
-*/
 
 
 
 
-void Ntp1Finalizer::addFile(const std::string& dataset) {
+
+
+void Ntp1Finalizer::addFile(const std::string& dataset, const std::string& selection) {
 
   std::string infileName = inputAnalyzerType_ + "_2ndLevelTreeW_" + dataset + ".root"; //the W is important: means that files have passed treatment (merging and weights)
   TFile* infile = TFile::Open(infileName.c_str(), "READ");
@@ -103,16 +78,19 @@ void Ntp1Finalizer::addFile(const std::string& dataset) {
     std::cout << "---> Exiting!!" << std::endl;
     exit(11);
   }
+  infile->cd();
   std::string treeName = infileName +"/reducedTree";
   tree_->Add(treeName.c_str());
-  std::cout << "-> Added " << treeName << ". Tree has " << tree_->GetEntries() << " entries." << std::endl;
+  std::cout << "-> Added " << treeName << ". Tree now has " << tree_->GetEntries() << " entries." << std::endl;
   TH1F* h1_nCounter = (TH1F*)infile->Get("nCounter");
   TH1F* h1_nCounterW = (TH1F*)infile->Get("nCounterW");
-  if( h1_nCounter!= 0 && h1_nCounterW != 0 ) {
+  TH1F* h1_nCounterPU = (TH1F*)infile->Get("nCounterPU");
+  if( h1_nCounter!= 0 && h1_nCounterW != 0 && h1_nCounterPU ) {
     nCounter_ += h1_nCounter->GetBinContent(1);
     nCounterW_ += h1_nCounterW->GetBinContent(1);
+    nCounterPU_ += h1_nCounterPU->GetBinContent(1);
   } else {
-    std::cout << "WARNING!! Dataset '" << dataset << "' has no nCounter information!!!" << std::endl;
+    std::cout << std::endl << std::endl << "WARNING!! Dataset '" << dataset << "' has no nCounter information!!!" << std::endl;
   }
   infile->Close();
 
@@ -163,8 +141,8 @@ int Ntp1Finalizer::get_nBTags( const AnalysisJet& jet1, const AnalysisJet& jet2,
   bool jet2_tagged_medium = jet2.btag_medium();
   bool jet2_tagged_loose  = jet2.btag_loose();
 
-  btsfutil->modifyBTagsWithSF( jet1_tagged_loose, jet1_tagged_medium, jet1.Pt(), jet1.Eta(), jet1.pdgIdPart );
-  btsfutil->modifyBTagsWithSF( jet2_tagged_loose, jet2_tagged_medium, jet2.Pt(), jet2.Eta(), jet2.pdgIdPart );
+//btsfutil->modifyBTagsWithSF( jet1_tagged_loose, jet1_tagged_medium, jet1.Pt(), jet1.Eta(), jet1.pdgIdPart );
+//btsfutil->modifyBTagsWithSF( jet2_tagged_loose, jet2_tagged_medium, jet2.Pt(), jet2.Eta(), jet2.pdgIdPart );
 
   if( loosebtags ) {
 
