@@ -15,7 +15,7 @@
 
 
 bool QUICK_ = true;
-
+bool root_aussi_ = true;
 
 bool withSignal_ = true;
 bool use_sherpa = false;
@@ -430,6 +430,11 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
   std::string canvasName_str(canvasName);
   std::string canvasName_eps = canvasName_str+".eps";
   c1->SaveAs(canvasName_eps.c_str());
+  std::string canvasName_root = canvasName_str+".root";
+  if( root_aussi_ ) {
+    c1->SetFixedAspectRatio(true);
+    c1->SaveAs(canvasName_root.c_str());
+  }
 
   c1->Clear();
 
