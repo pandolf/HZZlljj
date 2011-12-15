@@ -34,7 +34,7 @@ int main( int argc, char* argv[] ) {
   std::string dataset(argv[1]);
   std::string selectionType(argv[2]);
 
-  std::string PUType="HR11";
+  std::string PUType="HR11_73pb";
   if( argc>3 ) {
     std::string PUType_str(argv[3]);
     PUType = PUType_str;
@@ -139,6 +139,12 @@ int main( int argc, char* argv[] ) {
     nf->addFile("SingleMu_Run2011B_v1"); //first muons! important!
     nf->addFile("DoubleElectron_Run2011B_v1");
 
+  } else if( dataset=="DATA_Run2011B_Oct21JSON" ) {
+
+    nf->addFile("DoubleMu_Run2011B_Oct21JSON"); //first muons! important!
+    nf->addFile("SingleMu_Run2011B_Oct21JSON"); //first muons! important!
+    nf->addFile("DoubleElectron_Run2011B_Oct21JSON");
+
   } else if( dataset=="DATA_HR11" ) {
 
     nf->addFile("DoubleMu_Run2011A_FULL"); //first muons! important!
@@ -147,6 +153,21 @@ int main( int argc, char* argv[] ) {
     nf->addFile("SingleMu_Run2011B_v1"); //first muons! important!
     nf->addFile("DoubleElectron_Run2011A_FULL");
     nf->addFile("DoubleElectron_Run2011B_v1");
+
+  } else if( dataset=="DATA_HR11_v2" ) {
+
+    nf->addFile("DoubleMu_Run2011A_FULL"); //first muons! important!
+    nf->addFile("DoubleMu_Run2011B_v2"); //first muons! important!
+    nf->addFile("SingleMu_Run2011A_FULL"); //first muons! important!
+    nf->addFile("SingleMu_Run2011B_v2"); //first muons! important!
+    nf->addFile("DoubleElectron_Run2011A_FULL");
+    nf->addFile("DoubleElectron_Run2011B_v2");
+
+  } else if( dataset=="DATA_Run2011B_v2" ) {
+
+    nf->addFile("DoubleMu_Run2011B_v2"); //first muons! important!
+    nf->addFile("SingleMu_Run2011B_v2"); //first muons! important!
+    nf->addFile("DoubleElectron_Run2011B_v2");
 
   } else if( dataset=="DATA_EPS_FINAL_plusSingleMu" ) {
 
