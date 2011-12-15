@@ -71,6 +71,8 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   this->createOutputFile();
 
 
+  TString dataset_tstr(dataset_);
+
 
   TTree* tree_passedEvents = new TTree("tree_passedEvents", "Unbinned data for statistical treatment");
 
@@ -485,24 +487,24 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_deltaRll_presel = new TH1D("deltaRll_presel", "", 100, 0., 5.);
   h1_deltaRll_presel->Sumw2();
 
-  TH1D* h1_mZll = new TH1D("mZll", "", 60, 60., 120.);
+  TH1D* h1_mZll = new TH1D("mZll", "", 120, 60., 120.);
   h1_mZll->Sumw2();
-  TH1D* h1_mZll_presel = new TH1D("mZll_presel", "", 60, 60., 120.);
+  TH1D* h1_mZll_presel = new TH1D("mZll_presel", "", 120, 60., 120.);
   h1_mZll_presel->Sumw2();
-  TH1D* h1_mZll_presel_0jets = new TH1D("mZll_presel_0jets", "", 60, 60., 120.);
+  TH1D* h1_mZll_presel_0jets = new TH1D("mZll_presel_0jets", "", 120, 60., 120.);
   h1_mZll_presel_0jets->Sumw2();
 
-  TH1D* h1_mZmumu = new TH1D("mZmumu", "", 60, 60., 120.);
+  TH1D* h1_mZmumu = new TH1D("mZmumu", "", 120, 60., 120.);
   h1_mZmumu->Sumw2();
-  TH1D* h1_mZmumu_presel = new TH1D("mZmumu_presel", "", 60, 60., 120.);
+  TH1D* h1_mZmumu_presel = new TH1D("mZmumu_presel", "", 120, 60., 120.);
   h1_mZmumu_presel->Sumw2();
-  TH1D* h1_mZmumu_presel_0jets = new TH1D("mZmumu_presel_0jets", "", 60, 60., 120.);
+  TH1D* h1_mZmumu_presel_0jets = new TH1D("mZmumu_presel_0jets", "", 120, 60., 120.);
   h1_mZmumu_presel_0jets->Sumw2();
-  TH1D* h1_mZee = new TH1D("mZee", "", 60, 60., 120.);
+  TH1D* h1_mZee = new TH1D("mZee", "", 120, 60., 120.);
   h1_mZee->Sumw2();
-  TH1D* h1_mZee_presel = new TH1D("mZee_presel", "", 60, 60., 120.);
+  TH1D* h1_mZee_presel = new TH1D("mZee_presel", "", 120, 60., 120.);
   h1_mZee_presel->Sumw2();
-  TH1D* h1_mZee_presel_0jets = new TH1D("mZee_presel_0jets", "", 60, 60., 120.);
+  TH1D* h1_mZee_presel_0jets = new TH1D("mZee_presel_0jets", "", 120, 60., 120.);
   h1_mZee_presel_0jets->Sumw2();
 
 
@@ -676,7 +678,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   TH1D* h1_ptZjj = new TH1D("ptZjj", "", 400, 0., 400.);
   h1_ptZjj->Sumw2();
 
-  TH1D* h1_deltaRjj= new TH1D("deltaRjj", "", 500, 0.5, 5.);
+  TH1D* h1_deltaRjj= new TH1D("deltaRjj", "", 450, 0.5, 5.);
   h1_deltaRjj->Sumw2();
   TH1D* h1_deltaRjj_prekin= new TH1D("deltaRjj_prekin", "", 50, 0.5, 5.);
   h1_deltaRjj_prekin->Sumw2();
@@ -966,6 +968,9 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_->SetBranchAddress("LS", &LS);
   unsigned int event;
   tree_->SetBranchAddress("event", &event);
+  Float_t genWeight=1.;
+  if( dataset_tstr.Contains("sherpa") )
+    tree_->SetBranchAddress("genWeight", &genWeight);
   Float_t eventWeight;
   tree_->SetBranchAddress("eventWeight", &eventWeight);
   Float_t eventWeightPU;
@@ -1408,7 +1413,6 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
 
   std::string puType = "Spring11_Flat10";
   std::string puType_ave = "Spring11_Flat10";
-  TString dataset_tstr(dataset_);
   if( dataset_tstr.Contains("Summer11") && dataset_tstr.Contains("PU_S4") ) {
     puType = "Summer11_S4";
     puType_ave = "Summer11_S4_ave";
@@ -1504,6 +1508,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_passedEvents->Branch( "CMS_hzz2l2q_mZZ", &mZZ, "mZZ/F" );
   tree_passedEvents->Branch( "mZZ_nokinfit", &mZZ_nokinfit, "mZZ_nokinfit/F" );
   tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
+  tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
   tree_passedEvents->Branch( "HLTSF", &HLTSF, "HLTSF/F" );
   tree_passedEvents->Branch( "PUWeight", &eventWeightPU, "eventWeightPU/F" );
   tree_passedEvents->Branch( "nBTags", &maxBTag_found, "maxBTag_found/I" );
@@ -1542,6 +1547,9 @@ ofstream ofs("run_event.txt");
 
 
     if( eventWeight <= 0. ) eventWeight = 1.;
+
+    eventWeight *= genWeight; //=1 for every dataset except sherpa (for now)
+
 
     if( leptType_!="ALL" ) {
       if( leptType_=="ELE" && leptType==0 ) continue;
