@@ -14,6 +14,8 @@
 #include "SidebandFitter.h"
 
 
+bool QUICK_ = true;
+
 
 bool withSignal_ = true;
 bool use_sherpa = false;
@@ -21,7 +23,8 @@ bool use_sherpa = false;
 
 
 
-void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, const std::string& data_mc, int nbtags, const std::string& leptType="ALL", string flags="" );
+void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, const std::string& data_mc, const std::string& flags, int nbtags, const std::string& leptType="ALL", string suffix="" );
+void drawSidebandsWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, const std::string& data_mc, const std::string& flags, int nbtags, const std::string& leptType="ALL", std::string suffix="" );
 
 
 
@@ -29,7 +32,7 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
 int main(int argc, char* argv[]) {
 
   if( argc!=3 && argc!=4 && argc!=5 ) {
-    std::cout << "USAGE: ./drawMZZ_with_curve [(string)data_dataset] [(int)signalScaleFactor] [(string)data_mc] [(string)selType=\"optLD_looseBTags_v2\"]" << std::endl;
+    std::cout << "USAGE: ./drawMZZ_with_curve [(string)data_dataset] [(int)signalScaleFactor] [(string)data_mc] [(string)flags=\"\"]" << std::endl;
     exit(23);
   }
 
@@ -51,13 +54,14 @@ int main(int argc, char* argv[]) {
   }
 
 
-  std::string selType = "optLD_looseBTags_v2";
+  std::string flags = "";
   if( argc>4 ) {
-    std::string selType_tmp(argv[4]);
-    selType = selType_tmp;
+    std::string flags_tmp(argv[4]);
+    flags = "_" + flags_tmp;
   }
 
 
+  std::string selType = "optLD_looseBTags_v2";
 
   TString dataset_tstr(data_prefix);
   std::string PUType = "Run2011A";
@@ -75,7 +79,8 @@ int main(int argc, char* argv[]) {
   DrawBase* db = new DrawBase("HZZlljjRM");
   db->set_pdf_aussi((bool)false);
 
-  //db->set_isCMSArticle(true);
+  db->set_isCMSArticle(true);
+  db->set_lumiOnRightSide(true);
 
 
   std::string outputdir_str = "HZZlljjRMPlots_" + data_dataset;
@@ -90,6 +95,7 @@ int main(int argc, char* argv[]) {
   }
   outputdir_str += "_" + selType + "_PU" + PUType + "_" + leptType + "_fit" + data_mc;
   if( use_sherpa ) outputdir_str += "_sherpa";
+  outputdir_str += flags;
   db->set_outputdir(outputdir_str);
 
 
@@ -98,6 +104,7 @@ int main(int argc, char* argv[]) {
   db->add_dataFile( dataFile, "THEDATA" );
 
   std::string signalFileName = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-400_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1";
+  //std::string signalFileName = "HZZlljjRM_GluGluToHToZZTo2L2Q_M-230_7TeV-powheg-pythia6_Summer11-PU_S4_START42_V11-v1";
   signalFileName += "_" + selType;
   signalFileName += "_PU" + PUType;
   signalFileName += "_" + leptType;
@@ -111,6 +118,7 @@ int main(int argc, char* argv[]) {
       sprintf( signalLegendText, "H(400 GeV) #times %.0f", signalScaleFactor);
     std::string signalLegendText_str(signalLegendText);
     db->add_mcFile( signalFile, signalScaleFactor, "H400", signalLegendText_str, kYellow, 3004);
+    //db->add_mcFile_superimp( signalFile, "H400", signalLegendText_str, 5., kRed+3, 2 );
   }
 
   std::string mcZJetsFileName;
@@ -120,7 +128,8 @@ int main(int argc, char* argv[]) {
   mcZJetsFileName += "_" + leptType;
   mcZJetsFileName += ".root";
   TFile* mcZJetsFile = TFile::Open(mcZJetsFileName.c_str());
-  db->add_mcFile( mcZJetsFile, "ZJets", "Z + jets", 30, 3001);
+  db->add_mcFile( mcZJetsFile, "ZJets", "Z + jets", 29, 3001);
+  //db->add_mcFile( mcZJetsFile, "ZJets", "Z + jets", 10, 0);
 
 
 
@@ -189,7 +198,7 @@ int main(int argc, char* argv[]) {
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==-1)", 30, 150., 750., "mZZ_gtag", "m_{ZZ}", "GeV");
 
 
-  float binWidth = 10.;
+  float binWidth = 20.;
   float xMin = 183.;
   float xMax = 803.;
   int nBins = (int)((xMax-xMin)/binWidth);
@@ -198,33 +207,45 @@ int main(int argc, char* argv[]) {
   // signal box plots:
   db->set_legendTitle("0 b-tag category");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", nBins, xMin, xMax, "mZZ_0btag", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 0);
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 0);
+  drawSidebandsWithCurve( db, data_prefix, PUType, data_mc, flags, 0, "ALL");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0)", 14, 183., 253., "mZZ_0btag_turnOnZOOM", "m_{ZZ}", "GeV");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 0, "ALL", "turnOnZOOM");
+  drawSidebandsWithCurve( db, data_prefix, PUType, data_mc, flags, 0, "ALL", "turnOnZOOM");
   db->set_legendTitle("0 b-tag category (muons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0 && leptType==0)", nBins, xMin, xMax, "mZZ_0btag_mm", "m_{#mu#mujj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 0, "MU");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 0, "MU");
   db->set_legendTitle("0 b-tag category (electrons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==0 && leptType==1)", nBins, xMin, xMax, "mZZ_0btag_ee", "m_{eejj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 0, "ELE");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 0, "ELE");
 
   db->set_legendTitle("1 b-tag category");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", nBins, xMin, xMax, "mZZ_1btag", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 1 );
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 1 );
+  drawSidebandsWithCurve( db, data_prefix, PUType, data_mc, flags, 1, "ALL");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1)", 14, 183., 253., "mZZ_1btag_turnOnZOOM", "m_{ZZ}", "GeV");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 1, "ALL", "turnOnZOOM");
+  drawSidebandsWithCurve( db, data_prefix, PUType, data_mc, flags, 1, "ALL", "turnOnZOOM");
   db->set_legendTitle("1 b-tag category (muons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1 && leptType==0)", nBins, xMin, xMax, "mZZ_0btag_mm", "m_{#mu#mujj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 1, "MU");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 1, "MU");
   db->set_legendTitle("1 b-tag category (electrons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==1 && leptType==1)", nBins, xMin, xMax, "mZZ_0btag_ee", "m_{eejj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 1, "ELE");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 1, "ELE");
 
   db->set_legendTitle("2 b-tag category");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", nBins, xMin, xMax, "mZZ_2btag", "m_{ZZ}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 2 );
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 2 );
+  drawSidebandsWithCurve( db, data_prefix, PUType, data_mc, flags, 2, "ALL");
+  db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2)", 14, 183., 253., "mZZ_2btag_turnOnZOOM", "m_{ZZ}", "GeV");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 2, "ALL", "turnOnZOOM");
+  drawSidebandsWithCurve( db, data_prefix, PUType, data_mc, flags, 2, "ALL", "turnOnZOOM");
   db->set_legendTitle("2 b-tag category (muons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2 && leptType==0)", nBins, xMin, xMax, "mZZ_0btag_mm", "m_{#mu#mujj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 2, "MU");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 2, "MU");
   db->set_legendTitle("2 b-tag category (electrons)");
   db->drawHisto_fromTree("tree_passedEvents", "CMS_hzz2l2q_mZZ", "eventWeight*(mZjj>75. && mZjj<105. && nBTags==2 && leptType==1)", nBins, xMin, xMax, "mZZ_0btag_ee", "m_{eejj}", "GeV");
-  drawHistoWithCurve( db, data_prefix, PUType, data_mc, 2, "ELE");
+  drawHistoWithCurve( db, data_prefix, PUType, data_mc, flags, 2, "ELE");
 
 
   //xMin = 160.;
@@ -265,9 +286,11 @@ int main(int argc, char* argv[]) {
 
 
 
-void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, const std::string& data_mc, int nbtags, const std::string& leptType, std::string flags ) {
 
-  if( flags!="" ) flags = "_" + flags;
+
+void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, const std::string& data_mc, const std::string& flags, int nbtags, const std::string& leptType, std::string suffix ) {
+
+  if( suffix!="" ) suffix = "_" + suffix;
 
   TH1F::AddDirectory(kTRUE);
 
@@ -275,6 +298,7 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
 
   std::vector< TH1D* > lastHistos_data = db->get_lastHistos_data();
   std::vector< TH1D* > lastHistos_mc   = db->get_lastHistos_mc();
+  std::vector< TH1D* > lastHistos_mc_superimp   = db->get_lastHistos_mc_superimp();
 
 
   TH1D* h1_data = new TH1D(*(lastHistos_data[0]));
@@ -297,13 +321,16 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
 
   // open fit results file:
   char fitResultsFileName[200];
-  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s_fit%s%s.root", data_dataset.c_str(), nbtags, PUType.c_str(), data_mc.c_str(), sherpa_suffix.c_str() );
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s_fit%s%s%s.root", data_dataset.c_str(), nbtags, PUType.c_str(), data_mc.c_str(), sherpa_suffix.c_str(), flags.c_str() );
   TFile* fitResultsFile = TFile::Open(fitResultsFileName);
 
   // get bg workspace:
   char workspaceName[200];
   sprintf( workspaceName, "fitWorkspace_%dbtag", nbtags );
   RooWorkspace* bgws = (RooWorkspace*)fitResultsFile->Get(workspaceName);
+  char fitResultsName[200];
+  sprintf( fitResultsName, "fitResults_%dbtag_decorr", nbtags );
+  RooFitResult* bgfr = (RooFitResult*)fitResultsFile->Get(fitResultsName);
 
   // get mZZ variable:
   RooRealVar* CMS_hzz2l2q_mZZ = (RooRealVar*)bgws->var("CMS_hzz2l2q_mZZ");
@@ -317,10 +344,13 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
   if( leptType=="ELE" ) leptType_cut = "&& leptType==1";
 
 
-  SidebandFitter* sf = new SidebandFitter( data_dataset, PUType, data_mc );
+  SidebandFitter* sf = new SidebandFitter( data_dataset, PUType, data_mc, flags );
 
   // get bg normalization:
-  float expBkg = sf->get_backgroundNormalization( nbtags, leptType, "DATA" );
+  //float expBkg = sf->get_backgroundNormalization( nbtags, leptType, "DATA" );
+  std::pair<Double_t, Double_t> bgNormAndError = sf->get_backgroundNormalizationAndError( nbtags, leptType, "DATA" );
+  float expBkg = bgNormAndError.first;
+  float expBkg_err = bgNormAndError.second;
 
 
   //TTree* treeSidebandsDATA_alphaCorr = (TTree*)fitResultsFile->Get("sidebandsDATA_alpha");
@@ -333,6 +363,13 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
 
   RooPlot *plot_MCbkg = CMS_hzz2l2q_mZZ->frame(xMin,xMax,(int)(xMax-xMin)/h1_data->GetXaxis()->GetBinWidth(1));
   background->plotOn(plot_MCbkg,RooFit::Normalization(expBkg));
+  if( suffix == "_turnOnZOOM" && !QUICK_ ) {
+    background->plotOn(plot_MCbkg,RooFit::VisualizeError(*bgfr,2.0,kFALSE),RooFit::FillColor(kYellow), RooFit::Normalization(expBkg));
+    background->plotOn(plot_MCbkg,RooFit::VisualizeError(*bgfr,1.0,kFALSE),RooFit::FillColor(kGreen), RooFit::Normalization(expBkg));
+    background->plotOn(plot_MCbkg,RooFit::Normalization(expBkg));
+    background->plotOn(plot_MCbkg,RooFit::LineStyle(2),RooFit::Normalization(expBkg+expBkg_err));
+    background->plotOn(plot_MCbkg,RooFit::LineStyle(2),RooFit::Normalization(expBkg-expBkg_err));
+  }
 
   TF1* f1_bgForLegend = new TF1("bgForLegend", "[0]");
   f1_bgForLegend->SetLineColor(kBlue);
@@ -373,8 +410,11 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
   h2_axes->Draw();
   cmsLabel->Draw("same");
   sqrtLabel->Draw("same");
-  legend->Draw("same");
+  if( suffix != "_turnOnZOOM" )
+    legend->Draw("same");
   mc_stack->Draw("histo same");
+  for( unsigned imc=0; imc<lastHistos_mc_superimp.size(); ++imc ) 
+    lastHistos_mc_superimp[imc]->Draw("same");
   plot_MCbkg->Draw("same");
   graph_data_poisson->Draw("P same");
 
@@ -384,14 +424,58 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
   
   char canvasName[1000];
   if( leptType=="ALL" )
-    sprintf( canvasName, "%s/mZZ_%dbtag_withCurve%s", (db->get_outputdir()).c_str(), nbtags, flags.c_str() );
+    sprintf( canvasName, "%s/mZZ_%dbtag_withCurve%s", (db->get_outputdir()).c_str(), nbtags, suffix.c_str() );
   else 
-    sprintf( canvasName, "%s/mZZ_%dbtag_withCurve%s_%s", (db->get_outputdir()).c_str(), nbtags, flags.c_str(), leptType.c_str() );
+    sprintf( canvasName, "%s/mZZ_%dbtag_withCurve%s_%s", (db->get_outputdir()).c_str(), nbtags, suffix.c_str(), leptType.c_str() );
   std::string canvasName_str(canvasName);
   std::string canvasName_eps = canvasName_str+".eps";
   c1->SaveAs(canvasName_eps.c_str());
 
   c1->Clear();
+
+
+  legend_yMin = legend_yMax - 0.07*4.;
+
+  TLegend* legend2 = new TLegend(legend_xMin, legend_yMin, legend_xMax, legend_yMax, (db->get_legendTitle()).c_str());
+  legend2->SetTextSize(0.04);
+  legend2->SetFillColor(0);
+  legend2->AddEntry( graph_data_poisson, "Data", "P");
+  legend2->AddEntry( f1_bgForLegend, "Expected background", "L");
+  for( unsigned imc=0; imc<lastHistos_mc.size(); ++imc ) {
+    if( db->get_mcFile(imc).fillColor==kYellow ) //signal only
+      legend2->AddEntry( lastHistos_mc[imc], (db->get_mcFile(imc).legendName).c_str(), "F");
+  }
+
+  h2_axes->Draw();
+  cmsLabel->Draw("same");
+  sqrtLabel->Draw("same");
+  legend2->Draw("same");
+  for( unsigned imc=0; imc<lastHistos_mc.size(); ++imc ) {
+    if( db->get_mcFile(imc).fillColor==kYellow ) //signal only
+      lastHistos_mc[imc]->Draw("same");
+  }
+  plot_MCbkg->Draw("same");
+  graph_data_poisson->Draw("P same");
+
+  gPad->RedrawAxis();
+
+
+  
+  if( leptType=="ALL" )
+    sprintf( canvasName, "%s/mZZ_%dbtag_withCurve_noMC%s", (db->get_outputdir()).c_str(), nbtags, suffix.c_str() );
+  else 
+    sprintf( canvasName, "%s/mZZ_%dbtag_withCurve_noMC%s_%s", (db->get_outputdir()).c_str(), nbtags, suffix.c_str(), leptType.c_str() );
+  std::string canvasName2_str(canvasName);
+  std::string canvasName2_eps = canvasName2_str+".eps";
+  c1->SaveAs(canvasName2_eps.c_str());
+
+  c1->Clear();
+
+
+
+
+
+
   c1->SetLogy();
 
   TLegend* legend_log = new TLegend(0.6, legend_yMin, legend_xMax, legend_yMax, (db->get_legendTitle()).c_str());
@@ -421,6 +505,198 @@ void drawHistoWithCurve( DrawBase* db, const std::string& data_dataset, const st
 
   std::string canvasName_log_eps = canvasName_str+"_log.eps";
   c1->SaveAs(canvasName_log_eps.c_str());
+
+  delete sf;
+  delete h2_axes;
+  delete h2_axes_log;
+  delete c1;
+
+}
+
+
+
+void drawSidebandsWithCurve( DrawBase* db, const std::string& data_dataset, const std::string& PUType, const std::string& data_mc, const std::string& flags, int nbtags, const std::string& leptType, std::string suffix ) {
+
+  if( suffix!="" ) suffix = "_" + suffix;
+
+  TH1F::AddDirectory(kTRUE);
+
+  // get histograms:
+
+  std::vector< TH1D* > lastHistos_data = db->get_lastHistos_data();
+
+
+  TH1D* h1_data = new TH1D(*(lastHistos_data[0]));
+  float xMin = (db->get_xAxisMin()!=9999.) ? db->get_xAxisMin() : h1_data->GetXaxis()->GetXmin();
+  float xMax = (db->get_xAxisMax()!=9999.) ? db->get_xAxisMax() : h1_data->GetXaxis()->GetXmax();
+  int nBins = (int)(xMax-xMin)/h1_data->GetXaxis()->GetBinWidth(1);
+
+
+
+
+  std::string sherpa_suffix = (use_sherpa) ? "_sherpa" : "";
+
+
+  // open fit results file:
+  char fitResultsFileName[200];
+  sprintf( fitResultsFileName, "fitResultsFile_%s_%dbtag_ALL_PU%s_fit%s%s%s.root", data_dataset.c_str(), nbtags, PUType.c_str(), data_mc.c_str(), sherpa_suffix.c_str(), flags.c_str() );
+  TFile* fitResultsFile = TFile::Open(fitResultsFileName);
+
+  // get bg workspace:
+  char workspaceName[200];
+  sprintf( workspaceName, "fitWorkspace_%dbtag", nbtags );
+  RooWorkspace* bgws = (RooWorkspace*)fitResultsFile->Get(workspaceName);
+  char fitResultsName[200];
+  sprintf( fitResultsName, "fitResults_%dbtag_decorr", nbtags );
+  RooFitResult* bgfr = (RooFitResult*)fitResultsFile->Get(fitResultsName);
+
+  // get mZZ variable:
+  RooRealVar* CMS_hzz2l2q_mZZ = (RooRealVar*)bgws->var("CMS_hzz2l2q_mZZ");
+
+  // get bg shape:
+  RooAbsPdf* background = (RooAbsPdf*)bgws->pdf("background_decorr");
+
+
+  // get data sidebands:
+  TTree* tree_sidebands = (TTree*)fitResultsFile->Get("sidebandsDATA_alpha");
+  TH1D* h1_dataSidebands = new TH1D("dataSidebands", "", nBins, xMin, xMax);
+  h1_dataSidebands->Sumw2();
+
+  char selection[900];
+  if( leptType=="ALL" )
+    sprintf( selection, "eventWeight_alpha*(((mZjj>60.&&mZjj<75.)||(mZjj>105.&&mZjj<130.)) && nBTags==%d && CMS_hzz2l2q_mZZ>183. && CMS_hzz2l2q_mZZ<800.)", nbtags);
+  else {
+    int leptType_int = SidebandFitter::convert_leptType(leptType);
+    sprintf( selection, "eventWeight_alpha*(((mZjj>60.&&mZjj<75.)||(mZjj>105.&&mZjj<130.)) && nBTags==%d && leptType==%d && CMS_hzz2l2q_mZZ>183. && CMS_hzz2l2q_mZZ<800.)", nbtags, leptType_int);
+  }
+  tree_sidebands->Project("dataSidebands", "CMS_hzz2l2q_mZZ", selection);
+
+
+
+  // create data graph (poisson asymm errors):
+  TGraphAsymmErrors* graph_data_poisson = new TGraphAsymmErrors(0);
+  graph_data_poisson = fitTools::getGraphPoissonErrors(h1_dataSidebands);
+  graph_data_poisson->SetMarkerStyle(20);
+
+
+  std::string leptType_cut;
+  if( leptType=="MU" ) leptType_cut = "&& leptType==0";
+  if( leptType=="ELE" ) leptType_cut = "&& leptType==1";
+
+
+  SidebandFitter* sf = new SidebandFitter( data_dataset, PUType, data_mc, flags );
+
+  // get bg normalization:
+  //float expBkg = sf->get_backgroundNormalization( nbtags, leptType, "DATA" );
+  std::pair<Double_t, Double_t> bgNormAndError = sf->get_backgroundNormalizationAndError( nbtags, leptType, "DATA" );
+  float expBkg = bgNormAndError.first;
+  float expBkg_err = bgNormAndError.second;
+
+
+  //TTree* treeSidebandsDATA_alphaCorr = (TTree*)fitResultsFile->Get("sidebandsDATA_alpha");
+  //TH1D* h1_mZZ_sidebands_alpha = new TH1D("mZZ_sidebands_alpha", "", 65, xMin, xMax);
+  //char sidebandsCut_alpha[500];
+  //sprintf(sidebandsCut_alpha, "eventWeight_alpha*(isSidebands && nBTags==%d %s)", nbtags, leptType_cut.c_str());
+  //treeSidebandsDATA_alphaCorr->Project("mZZ_sidebands_alpha", "CMS_hzz2l2q_mZZ", sidebandsCut_alpha);
+  //float expBkg = h1_mZZ_sidebands_alpha->Integral();
+
+
+  RooPlot *plot_MCbkg = CMS_hzz2l2q_mZZ->frame(xMin,xMax,nBins);
+  background->plotOn(plot_MCbkg,RooFit::Normalization(expBkg));
+  if( !QUICK_ ) {
+    background->plotOn(plot_MCbkg,RooFit::VisualizeError(*bgfr,2.0,kFALSE),RooFit::FillColor(kYellow), RooFit::Normalization(expBkg));
+    background->plotOn(plot_MCbkg,RooFit::VisualizeError(*bgfr,1.0,kFALSE),RooFit::FillColor(kGreen), RooFit::Normalization(expBkg));
+    background->plotOn(plot_MCbkg,RooFit::Normalization(expBkg));
+  }
+
+  TF1* f1_bgForLegend = new TF1("bgForLegend", "[0]");
+  f1_bgForLegend->SetLineColor(kBlue);
+  f1_bgForLegend->SetLineWidth(3);
+  
+
+  TH2D* h2_axes = new TH2D("axes", "", 10, xMin, xMax, 10, 0., 1.3*h1_data->GetMaximum());
+  char yTitle[200];
+  sprintf( yTitle, "Events / (%.0f GeV)", h1_data->GetXaxis()->GetBinWidth(1) );
+  h2_axes->SetYTitle(yTitle);
+  if( leptType=="MU" )
+    h2_axes->SetXTitle("m_{#mu#mujj} [GeV]");
+  else if( leptType=="ELE" )
+    h2_axes->SetXTitle("m_{eejj} [GeV]");
+  else
+    h2_axes->SetXTitle("m_{ZZ} [GeV]");
+
+  float legend_xMin = 0.5;
+  float legend_yMax = 0.85;
+  float legend_yMin = legend_yMax - 0.12*2.;
+  float legend_xMax = 0.92;
+
+  char legendTitle[300];
+  sprintf( legendTitle, "%d b-tag sidebands", nbtags );
+
+  TLegend* legend = new TLegend(legend_xMin, legend_yMin, legend_xMax, legend_yMax, legendTitle);
+  legend->SetTextSize(0.04);
+  legend->SetFillColor(0);
+  legend->AddEntry( graph_data_poisson, "Data", "P");
+  legend->AddEntry( f1_bgForLegend, "Fit", "L");
+
+  TPaveText* cmsLabel = db->get_labelCMS();
+  TPaveText* sqrtLabel = db->get_labelSqrt();
+
+
+  TCanvas* c1 = new TCanvas( "c1", "", 600, 600);
+  c1->cd();
+
+  h2_axes->Draw();
+  cmsLabel->Draw("same");
+  sqrtLabel->Draw("same");
+  if( suffix != "_turnOnZOOM" )
+    legend->Draw("same");
+  plot_MCbkg->Draw("same");
+  graph_data_poisson->Draw("P same");
+
+  gPad->RedrawAxis();
+
+
+  
+  char canvasName[1000];
+  if( leptType=="ALL" )
+    sprintf( canvasName, "%s/mZZsidebands_%dbtag_withCurve%s", (db->get_outputdir()).c_str(), nbtags, suffix.c_str() );
+  else 
+    sprintf( canvasName, "%s/mZZsidebands_%dbtag_withCurve%s_%s", (db->get_outputdir()).c_str(), nbtags, suffix.c_str(), leptType.c_str() );
+  std::string canvasName_str(canvasName);
+  std::string canvasName_eps = canvasName_str+".eps";
+  c1->SaveAs(canvasName_eps.c_str());
+
+  c1->Clear();
+
+  c1->SetLogy();
+
+
+  TLegend* legend_log = new TLegend(0.6, legend_yMin, legend_xMax, legend_yMax, (db->get_legendTitle()).c_str());
+  legend_log->SetTextSize(0.04);
+  legend_log->SetFillColor(0);
+  legend_log->AddEntry( graph_data_poisson, "Data", "P");
+  legend_log->AddEntry( f1_bgForLegend, "Exp. BG", "L");
+
+
+
+  TH2D* h2_axes_log = new TH2D("axes_log", "", 10, xMin, xMax, 10, 0.05, 200.*h1_data->GetMaximum());
+  h2_axes_log->SetYTitle(yTitle);
+  h2_axes_log->SetXTitle("m_{ZZ} [GeV]");
+
+  h2_axes_log->Draw();
+  cmsLabel->Draw("same");
+  sqrtLabel->Draw("same");
+  //legend_log->Draw("same");
+  legend->Draw("same");
+  plot_MCbkg->Draw("same");
+  graph_data_poisson->Draw("P same");
+
+  gPad->RedrawAxis();
+
+  std::string canvasName_log_eps = canvasName_str+"_log.eps";
+  c1->SaveAs(canvasName_log_eps.c_str());
+
 
   delete sf;
   delete h2_axes;
