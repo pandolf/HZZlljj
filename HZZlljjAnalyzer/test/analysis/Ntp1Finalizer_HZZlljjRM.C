@@ -1485,6 +1485,7 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   float mZZ, mZZ_nokinfit, mZjj, mZll;
   float ptLept1_t, ptLept2_t, etaLept1_t, etaLept2_t;
   float ptJet1_t, ptJet2_t, etaJet1_t, etaJet2_t;
+  float QGLikelihoodJet1_t, QGLikelihoodJet2_t;
   float HLTSF;
   bool isSidebands=false;
   bool isSignalRegion=false;
@@ -1495,12 +1496,15 @@ void Ntp1Finalizer_HZZlljjRM::finalize() {
   tree_passedEvents->Branch( "LS", &LS, "LS/I" );
   tree_passedEvents->Branch( "event", &event, "event/I" );
   tree_passedEvents->Branch( "leptType", &leptType, "leptType/I" );
+  tree_passedEvents->Branch( "helicityLD", &helicityLD_selected, "helicityLD_selected/F" );
   tree_passedEvents->Branch( "ptLept1", &ptLept1_t, "ptLept1_t/F" );
   tree_passedEvents->Branch( "ptLept2", &ptLept2_t, "ptLept2_t/F" );
   tree_passedEvents->Branch( "etaLept1", &etaLept1_t, "etaLept1_t/F" );
   tree_passedEvents->Branch( "etaLept2", &etaLept2_t, "etaLept2_t/F" );
   tree_passedEvents->Branch( "ptJet1", &ptJet1_t, "ptJet1_t/F" );
   tree_passedEvents->Branch( "ptJet2", &ptJet2_t, "ptJet2_t/F" );
+  tree_passedEvents->Branch( "QGLikelihoodJet1", &QGLikelihoodJet1_t, "QGLikelihoodJet1_t/F" );
+  tree_passedEvents->Branch( "QGLikelihoodJet2", &QGLikelihoodJet2_t, "QGLikelihoodJet2_t/F" );
   tree_passedEvents->Branch( "etaJet1", &etaJet1_t, "etaJet1_t/F" );
   tree_passedEvents->Branch( "etaJet2", &etaJet2_t, "etaJet2_t/F" );
   tree_passedEvents->Branch( "mZjj", &mZjj, "mZjj/F" );
@@ -2187,6 +2191,8 @@ ofstream ofs("run_event.txt");
     etaLept2_t = etaLept2;
     ptJet1_t = jet1_selected.Pt();
     ptJet2_t = jet2_selected.Pt();
+    QGLikelihoodJet1_t = jet1_selected.QGLikelihood;
+    QGLikelihoodJet2_t = jet2_selected.QGLikelihood;
     etaJet1_t = jet1_selected.Pt();
     etaJet2_t = jet2_selected.Eta();
 
