@@ -22,6 +22,7 @@ int main(int argc, char* argv[]) {
 
   //std::string ZJetsMC = "madgraphFall11";
   std::string ZJetsMC = "madgraph";
+  //std::string ZJetsMC = "sherpa";
 
 
   std::string data_dataset = "HR11";
@@ -122,6 +123,8 @@ int main(int argc, char* argv[]) {
     mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Summer11-PU_S4_START42_V11-v1";
   else if( ZJetsMC=="madgraphFall11" )
     mcZJetsFileName = "HZZlljjRM_DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola_Fall11";
+  else if( ZJetsMC=="sherpa" )
+    mcZJetsFileName = "HZZlljjRM_DYToLL_M-50_1jEnh2_2jEnh35_3jEnh40_4jEnh50_7TeV-sherpa_Summer11-PU_S4_START42_V11-v1";
   else {
     std::cout << "Unknown ZJetsMC '" << ZJetsMC << "'. Exiting." << std::endl;
     exit(13);
@@ -132,7 +135,7 @@ int main(int argc, char* argv[]) {
   mcZJetsFileName += ".root";
   TFile* mcZJetsFile = TFile::Open(mcZJetsFileName.c_str());
   //db->add_mcFile( mcZJetsFile, "ZJets", "Z + Jets", 38, 3001);
-  db->add_mcFile( mcZJetsFile, "ZJets", "Z + jets", 30, 3001);
+  db->add_mcFile( mcZJetsFile, "ZJets", "Z + jets", 29, 3001);
 
 
   if( ZJetsMC=="alpgen" ) {
@@ -252,7 +255,7 @@ int main(int argc, char* argv[]) {
   db->set_rebin(10);
   db->drawHisto("mZjj_all_presel", "DiJet Invariant Mass", "GeV", "Jet Pairs", log);
 
-  db->set_rebin(2);
+  db->set_rebin(45);
   db->drawHisto("deltaRjj", "#DeltaR Between Jets (p_{T} > 30 GeV)", "", "Jet Pairs");
   db->set_rebin(5);
   db->drawHisto("deltaRjj_all_presel", "#DeltaR Between Jets (p_{T} > 30 GeV)", "", "Jet Pairs");
@@ -264,18 +267,18 @@ int main(int argc, char* argv[]) {
   db->drawHisto("etaJet_all_presel", "Jet Pseudorapidity", "", "Jets");
 
   db->set_yAxisMaxScale( 1.1 );
-  db->set_rebin(5);
-  db->set_xAxisMax(250.);
+  db->set_rebin(2);
+  db->set_xAxisMax(200.);
   db->drawHisto("ptLept1_presel", "Lead Lepton p_{T}", "GeV", "Events", log);
   db->drawHisto("ptLept1", "Lead Lepton p_{T}", "GeV", "Events", log);
-  db->set_xAxisMax(150.);
+  db->set_xAxisMax(100.);
   db->drawHisto("ptLept2_presel", "Sublead Lepton p_{T}", "GeV", "Events", log);
   db->drawHisto("ptLept2", "Sublead Lepton p_{T}", "GeV", "Events", log);
 
-  db->set_xAxisMax(250.);
+  db->set_xAxisMax(200.);
   db->drawHisto("ptJet1", "Lead Jet p_{T}", "GeV", "Events", log);
   db->drawHisto("ptJet1_prekin", "Lead Jet p_{T}", "GeV", "Events", log);
-  db->set_xAxisMax(150.);
+  db->set_xAxisMax(100.);
   db->drawHisto("ptJet2", "Sublead Jet p_{T}", "GeV", "Events", log);
   db->drawHisto("ptJet2_prekin", "Sublead Jet p_{T}", "GeV", "Events", log);
   db->set_xAxisMax();
@@ -286,11 +289,14 @@ int main(int argc, char* argv[]) {
   db->drawHisto("tcheJet1", "Lead Jet TCHE", "", "Events", log);
   db->drawHisto("tcheJet2", "Sublead Jet TCHE", "", "Events", log);
 
-  db->set_rebin(10);
+  db->set_rebin(5);
+  db->set_yAxisMaxScale( 1.1 );
+  db->set_xAxisMax( 300. );
   db->drawHisto("ptZll_presel", "Dilepton Transverse Momentum", "GeV", "Events", log);
   db->drawHisto("ptZjj_all_presel", "Dijet Transverse Momentum", "GeV", "Events", log);
   db->drawHisto("ptZll", "Dilepton Transverse Momentum", "GeV", "Events", log);
   db->drawHisto("ptZjj", "Dijet Transverse Momentum", "GeV", "Events", log);
+  db->set_xAxisMax();
 
   db->set_rebin(5);
   db->drawHisto("mZll", "m_{ll}", "GeV", "Events", log);
@@ -337,11 +343,11 @@ int main(int argc, char* argv[]) {
   db->set_legendTitle("");
   db->set_xAxisMax();
 
-  db->set_rebin(1);
+  db->set_rebin(2);
   db->drawHisto("pfMet", "Particle Flow Missing E_{T}", "GeV", "Events", log);
   db->drawHisto("mEtSig", "ME_{T} / Sum E_{T}", "", "Events", log);
-  db->drawHisto("metSignificance", "ME_{T} Significance", "", "Events", log);
-  db->drawHisto("metSignificance_2btag", "ME_{T} Significance", "", "Events", log);
+  db->drawHisto("metSignificance", "2 ln#lambda (#slash{E}_{T})", "", "Events", log);
+  db->drawHisto("metSignificance_2btag", "2 ln#lambda (#slash{E}_{T})", "", "Events", log);
 
   db->set_rebin(1);
   db->drawHisto("nChargedJet1", "Leading Jet Charged Multiplicity", "", "Events");
@@ -354,7 +360,9 @@ int main(int argc, char* argv[]) {
   db->set_rebin(4);
   db->set_yAxisMaxScale(1.6);
   db->drawHisto("QGLikelihoodJet1", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
+  db->set_yAxisMaxScale(1.7);
   db->drawHisto("QGLikelihoodJet2", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
+  db->set_yAxisMaxScale(1.6);
   db->drawHisto("QGLikelihoodProd", "Quark-Gluon LD", "", "Events");
   db->set_legendTitle("282 < m_{lljj} < 330 GeV");
   db->drawHisto("QGLikelihoodJet1_MW300", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
@@ -416,6 +424,7 @@ int main(int argc, char* argv[]) {
   db->set_legendTitle("2 b-tag Category");
   db->drawHisto("mZZ_kinfit_hiMass_2btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
 
+  db->set_yAxisMaxScale( 1.1 );
   db->set_legendTitle("0 b-tag Sidebands");
   db->drawHisto("mZZ_kinfit_hiMass_sidebands_0btag_MU", "m_{#mu#mujj}", "GeV", "Events", log);
   db->set_legendTitle("1 b-tag Sidebands");
