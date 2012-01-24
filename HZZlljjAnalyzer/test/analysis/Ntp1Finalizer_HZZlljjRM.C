@@ -14,7 +14,7 @@
 #include "HelicityLikelihoodDiscriminant/HelicityLikelihoodDiscriminant.h"
 #include "KinematicFit/DiJetKinFitter.h"
 
-#include "PUWeight.h"
+#include "CommonTools/PUWeight.h"
 
 
 
