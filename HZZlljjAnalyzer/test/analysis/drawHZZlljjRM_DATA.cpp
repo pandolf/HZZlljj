@@ -7,6 +7,7 @@
 
 bool withSignal_=false;
 
+void drawHistoFromTree_sidebands( DrawBase* db, const std::string& treeName, const std::string& varName, int nBins, float xMin, float xMax, const std::string& name, const std::string& axisName, const std::string& units="", const std::string& instanceName="Events", bool log_aussi=false );
 
 
 int main(int argc, char* argv[]) {
@@ -46,7 +47,8 @@ int main(int argc, char* argv[]) {
   DrawBase* db = new DrawBase("HZZlljjRM");
   db->set_pdf_aussi((bool)false);
 
-  //db->set_isCMSArticle(true);
+  db->set_isCMSArticle(true);
+  db->set_lumiOnRightSide(true);
 
   //std::string data_dataset = "DATA_Run2011A_v2_Sub2";
   //std::string data_dataset = "DATA_1fb";
@@ -241,6 +243,7 @@ int main(int argc, char* argv[]) {
 
   db->set_getBinLabels(true);
   db->set_yAxisMaxScaleLog(50.);
+  db->add_label( "(d)", 0.2, 0.85, 0.23, 0.88 ) ;
   db->drawHisto("nEventsCategories_presel", "", "", "Events", log);
   db->set_yAxisMaxScaleLog(5.);
   db->set_getBinLabels(false);
@@ -285,7 +288,9 @@ int main(int argc, char* argv[]) {
   db->set_yAxisMaxScale( 1.6 );
   db->drawHisto("etaJet1", "Lead Jet Pseudorapidity", "", "Events", log);
   db->drawHisto("etaJet2", "Sublead Jet Pseudorapidity", "", "Events", log);
+  db->add_label( "(c)", 0.2, 0.85, 0.23, 0.88 ) ;
   db->drawHisto("tcheJet", "TCHE", "", "Events", log);
+  db->delete_label();
   db->drawHisto("tcheJet1", "Lead Jet TCHE", "", "Events", log);
   db->drawHisto("tcheJet2", "Sublead Jet TCHE", "", "Events", log);
 
@@ -302,7 +307,9 @@ int main(int argc, char* argv[]) {
   db->drawHisto("mZll", "m_{ll}", "GeV", "Events", log);
   db->set_yAxisMaxScale( 1.3 );
   db->set_rebin(10);
+  db->add_label( "(a)", 0.2, 0.85, 0.23, 0.88 ) ;
   db->drawHisto("mZjj", "m_{jj}", "GeV", "Events", log);
+  db->delete_label();
   //db->drawHisto("mZjj_nogluetag", "m_{jj}", "GeV", "Events", log);
   db->set_legendTitle("0 b-tag Category");
   db->drawHisto("mZjj_0btag", "m_{jj}", "GeV", "Events", log);
@@ -346,8 +353,10 @@ int main(int argc, char* argv[]) {
   db->set_rebin(2);
   db->drawHisto("pfMet", "Particle Flow Missing E_{T}", "GeV", "Events", log);
   db->drawHisto("mEtSig", "ME_{T} / Sum E_{T}", "", "Events", log);
+  db->add_label( "(f)", 0.2, 0.85, 0.23, 0.88 ) ;
   db->drawHisto("metSignificance", "2 ln#lambda (#slash{E}_{T})", "", "Events", log);
   db->drawHisto("metSignificance_2btag", "2 ln#lambda (#slash{E}_{T})", "", "Events", log);
+  db->delete_label();
 
   db->set_rebin(1);
   db->drawHisto("nChargedJet1", "Leading Jet Charged Multiplicity", "", "Events");
@@ -363,7 +372,10 @@ int main(int argc, char* argv[]) {
   db->set_yAxisMaxScale(1.7);
   db->drawHisto("QGLikelihoodJet2", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
   db->set_yAxisMaxScale(1.6);
+  db->add_label( "(e)", 0.2, 0.85, 0.23, 0.88 ) ;
   db->drawHisto("QGLikelihoodProd", "Quark-Gluon LD", "", "Events");
+  db->delete_label();
+  drawHistoFromTree_sidebands( db, "tree_passedEvents", "QGLikelihoodJet1*QGLikelihoodJet2", 15, 0., 1.0001, "QGLikelihoodProd", "Quark-Gluon LD", "");
   db->set_legendTitle("282 < m_{lljj} < 330 GeV");
   db->drawHisto("QGLikelihoodJet1_MW300", "Leading Jet Q-G Likelihood", "", "Events", false, 2);
   db->drawHisto("QGLikelihoodJet2_MW300", "Subleading Jet Q-G Likelihood", "", "Events", false, 2);
@@ -387,7 +399,10 @@ int main(int argc, char* argv[]) {
   db->drawHisto("phi", "#phi", "rad", "Events");
   db->drawHisto("phi1", "#phi_{1}", "rad", "Events");
   db->set_yAxisMaxScale( 1.6 );
+  db->add_label( "(b)", 0.2, 0.85, 0.23, 0.88 ) ;
   db->drawHisto("helicityLD", "Angular LD", "", "Events");
+  db->delete_label();
+  drawHistoFromTree_sidebands( db, "tree_passedEvents", "helicityLD", 20, 0., 1.0001, "helicityLD", "Angular LD", "");
   //db->drawHisto("helicityLD_nogluetag", "Angular Likelihood Discriminant", "", "Events");
   db->set_yAxisMaxScale();
 
@@ -486,3 +501,114 @@ int main(int argc, char* argv[]) {
 }  
 
 
+void drawHistoFromTree_sidebands( DrawBase* db, const std::string& treeName, const std::string& varName, int nBins, float xMin, float xMax, const std::string& name, const std::string& axisName, const std::string& units, const std::string& instanceName, bool log_aussi ) {
+
+  TH1F::AddDirectory(kTRUE);
+
+  TFile* dataFile = db->get_dataFile(0).file;
+  TTree* tree = (TTree*)dataFile->Get(treeName.c_str());
+
+  TH1D* h1_signal = new TH1D("signal", "", nBins, xMin, xMax); 
+  h1_signal->Sumw2();
+  TH1D* h1_sidebands = new TH1D("sidebands", "", nBins, xMin, xMax); 
+  h1_sidebands->Sumw2();
+
+
+  std::string signalSelection = "eventWeight*isSignalRegion";
+  std::string sidebandsSelection = "eventWeight*isSidebands";
+
+  //tree->Project("signal", name.c_str(), signalSelection.c_str());
+  //tree->Project("sidebands", name.c_str(), sidebandsSelection.c_str());
+
+  tree->Project("signal", varName.c_str(), signalSelection.c_str());
+  tree->Project("sidebands", varName.c_str(), sidebandsSelection.c_str());
+
+  h1_signal->SetMarkerStyle(20);
+  h1_sidebands->SetFillColor(29);
+
+  h1_sidebands->Scale( h1_signal->Integral()/h1_sidebands->Integral() );
+
+  Float_t yAxisMaxScale = db->get_yAxisMaxScale();
+  Float_t yMax_signal = h1_signal->GetMaximum();
+  Float_t yMax_sidebands = h1_sidebands->GetMaximum();
+  Float_t yMax = (yMax_signal>yMax_sidebands) ? yAxisMaxScale*yMax_signal : yAxisMaxScale*yMax_sidebands;
+  Float_t yMin = 0.;
+
+  TH2D* h2_axes = new TH2D("axes", "", nBins, xMin, xMax, 10, yMin, yMax);
+  if( yMax>1000. ) {
+    h2_axes->GetYaxis()->SetTitleOffset(1.55);
+  }
+  if( yMax>10000. ) {
+    h2_axes->GetYaxis()->SetTitleOffset(1.55);
+    h2_axes->GetYaxis()->SetLabelSize(0.04);
+  }
+
+  // create data graph (poisson asymm errors):
+  TGraphAsymmErrors* graph_data_poisson = new TGraphAsymmErrors(0);
+//if( noBinLabels )
+    graph_data_poisson = fitTools::getGraphPoissonErrors(h1_signal);
+//else 
+//  graph_data_poisson = fitTools::getGraphPoissonErrors(h1_signal, "binWidth");
+  graph_data_poisson->SetMarkerStyle(20);
+
+
+
+  // legend
+
+  TLegend* legend = new TLegend(0.4, 0.88-0.07*2, 0.73, 0.88);
+  legend->SetFillColor(kWhite);
+  legend->SetTextSize(0.035);
+  legend->AddEntry( graph_data_poisson, "Data", "P" );
+  legend->AddEntry( h1_sidebands, "Expected background", "F" );
+
+
+
+  // axis titles:
+
+  std::string xAxis = axisName;
+  if( units!="" ) xAxis += " [" + units + "]";
+
+  std::string yAxis = instanceName;
+
+  char yAxis_char[150];
+
+  std::string units_text = (units!="") ? (" "+units) : "";
+  if( (h1_signal->GetBinWidth(1)) < 0.1 )
+    sprintf( yAxis_char, "%s / (%.2f%s)", instanceName.c_str(), h1_signal->GetBinWidth(1), units_text.c_str() );
+  else if( ((int)(10.*h1_signal->GetBinWidth(1)) % 10) == 0 )
+    sprintf( yAxis_char, "%s / (%.0f%s)", instanceName.c_str(), h1_signal->GetBinWidth(1), units_text.c_str() );
+  else
+    sprintf( yAxis_char, "%s / (%.1f%s)", instanceName.c_str(), h1_signal->GetBinWidth(1), units_text.c_str() );
+  std::string yAxis_str_tmp(yAxis_char);
+  yAxis = yAxis_str_tmp;
+
+
+  h2_axes->SetXTitle(xAxis.c_str());
+  h2_axes->SetYTitle(yAxis.c_str());
+
+  TPaveText* label_cms = db->get_labelCMS(0);
+  TPaveText* label_sqrt = db->get_labelSqrt(0);
+
+  TCanvas* c1 = new TCanvas("c1", "c1", 800, 800);
+  c1->cd();
+  h2_axes->Draw("");
+  legend->Draw("same");
+  h1_sidebands->Draw("histo same");
+  //graph_data_poisson->Draw("P same");
+  h1_signal->Draw("P same");
+  label_cms->Draw("same");
+  label_sqrt->Draw("same");
+
+  gPad->RedrawAxis();
+
+  std::string plotName = db->get_outputdir() + "/" + name + "_sidebands.eps";
+
+  c1->SaveAs(plotName.c_str());
+
+  delete h2_axes;
+  delete legend;
+  delete c1;
+  delete h1_signal;
+  delete h1_sidebands;
+
+}
