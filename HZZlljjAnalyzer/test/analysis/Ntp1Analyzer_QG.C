@@ -32,10 +32,11 @@ class AnalysisJet : public TLorentzVector {
 
 
 
-Ntp1Analyzer_QG::Ntp1Analyzer_QG( const std::string& dataset, bool requireLeptons, const std::string& flags, TTree* tree ) :
+Ntp1Analyzer_QG::Ntp1Analyzer_QG( const std::string& dataset, bool chargedHadronSubtraction, bool requireLeptons, const std::string& flags, TTree* tree ) :
      Ntp1Analyzer( "QG", dataset, flags, tree ) {
 
 
+  chargedHadronSubtraction_ = chargedHadronSubtraction;
   requireLeptons_ = requireLeptons;
 
 
@@ -44,6 +45,7 @@ Ntp1Analyzer_QG::Ntp1Analyzer_QG( const std::string& dataset, bool requireLepton
 
 
 void Ntp1Analyzer_QG::CreateOutputFile() {
+
 
   Ntp1Analyzer::CreateOutputFile();
 
@@ -483,35 +485,68 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      std::vector<AnalysisJet> leadJets;
      std::vector<int> leadJetsIndex; //index in the event collection (needed afterwards for PFCandidates)
 
-     for( unsigned int iJet=0; iJet<nAK5PFPUcorrJet; ++iJet ) {
 
-       AnalysisJet thisJet( pxAK5PFPUcorrJet[iJet], pyAK5PFPUcorrJet[iJet], pzAK5PFPUcorrJet[iJet], energyAK5PFPUcorrJet[iJet] );
+     if( chargedHadronSubtraction_ ) {
 
-       // save at least 3 lead jets (if event has them) and all jets with pt>thresh:
-       if( leadJets.size()>=3 && thisJet.Pt()<jetPt_thresh ) break;
+       for( unsigned int iJet=0; iJet<nAK5PFNoPUJet; ++iJet ) {
 
-       // far away from leptons:
-       if( leptons.size()>0 )
-         if( thisJet.DeltaR( leptons[0] ) <= 0.5 ) continue;
-       if( leptons.size()>1 )
-         if( thisJet.DeltaR( leptons[1] ) <= 0.5 ) continue;
+         AnalysisJet thisJet( pxAK5PFNoPUJet[iJet], pyAK5PFNoPUJet[iJet], pzAK5PFNoPUJet[iJet], energyAK5PFNoPUJet[iJet] );
 
-       thisJet.nCharged = chargedHadronMultiplicityAK5PFPUcorrJet[iJet] +
-                          electronMultiplicityAK5PFPUcorrJet[iJet] + 
-                          muonMultiplicityAK5PFPUcorrJet[iJet];
-       thisJet.nNeutral = neutralHadronMultiplicityAK5PFPUcorrJet[iJet] +
-                          photonMultiplicityAK5PFPUcorrJet[iJet] + 
-                          HFHadronMultiplicityAK5PFPUcorrJet[iJet] +
-                          HFEMMultiplicityAK5PFPUcorrJet[iJet];
-       thisJet.ptD = ptDAK5PFPUcorrJet[iJet];
-       thisJet.rmsCand = rmsCandAK5PFPUcorrJet[iJet];
+         // save at least 3 lead jets (if event has them) and all jets with pt>thresh:
+         if( leadJets.size()>=3 && thisJet.Pt()<jetPt_thresh ) break;
 
-       leadJets.push_back(thisJet);
-       leadJetsIndex.push_back(iJet);
+         // far away from leptons:
+         if( leptons.size()>0 )
+           if( thisJet.DeltaR( leptons[0] ) <= 0.5 ) continue;
+         if( leptons.size()>1 )
+           if( thisJet.DeltaR( leptons[1] ) <= 0.5 ) continue;
 
-     }
+         thisJet.nCharged = chargedHadronMultiplicityAK5PFNoPUJet[iJet] +
+                            electronMultiplicityAK5PFNoPUJet[iJet] + 
+                            muonMultiplicityAK5PFNoPUJet[iJet];
+         thisJet.nNeutral = neutralHadronMultiplicityAK5PFNoPUJet[iJet] +
+                            photonMultiplicityAK5PFNoPUJet[iJet] + 
+                            HFHadronMultiplicityAK5PFNoPUJet[iJet] +
+                            HFEMMultiplicityAK5PFNoPUJet[iJet];
+         thisJet.ptD = ptDAK5PFNoPUJet[iJet];
+         thisJet.rmsCand = rmsCandAK5PFNoPUJet[iJet];
 
+         leadJets.push_back(thisJet);
+         leadJetsIndex.push_back(iJet);
 
+       } //for jets
+
+     } else { // 'normal' PFJets:
+
+       for( unsigned int iJet=0; iJet<nAK5PFPUcorrJet; ++iJet ) {
+
+         AnalysisJet thisJet( pxAK5PFPUcorrJet[iJet], pyAK5PFPUcorrJet[iJet], pzAK5PFPUcorrJet[iJet], energyAK5PFPUcorrJet[iJet] );
+
+         // save at least 3 lead jets (if event has them) and all jets with pt>thresh:
+         if( leadJets.size()>=3 && thisJet.Pt()<jetPt_thresh ) break;
+
+         // far away from leptons:
+         if( leptons.size()>0 )
+           if( thisJet.DeltaR( leptons[0] ) <= 0.5 ) continue;
+         if( leptons.size()>1 )
+           if( thisJet.DeltaR( leptons[1] ) <= 0.5 ) continue;
+
+         thisJet.nCharged = chargedHadronMultiplicityAK5PFPUcorrJet[iJet] +
+                            electronMultiplicityAK5PFPUcorrJet[iJet] + 
+                            muonMultiplicityAK5PFPUcorrJet[iJet];
+         thisJet.nNeutral = neutralHadronMultiplicityAK5PFPUcorrJet[iJet] +
+                            photonMultiplicityAK5PFPUcorrJet[iJet] + 
+                            HFHadronMultiplicityAK5PFPUcorrJet[iJet] +
+                            HFEMMultiplicityAK5PFPUcorrJet[iJet];
+         thisJet.ptD = ptDAK5PFPUcorrJet[iJet];
+         thisJet.rmsCand = rmsCandAK5PFPUcorrJet[iJet];
+
+         leadJets.push_back(thisJet);
+         leadJetsIndex.push_back(iJet);
+
+       } //for jets
+
+     } //if/else CHS
 
 
      nJet_ = 0;

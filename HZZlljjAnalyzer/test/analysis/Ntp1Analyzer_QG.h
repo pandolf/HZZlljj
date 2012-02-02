@@ -18,7 +18,7 @@ class Ntp1Analyzer_QG : public Ntp1Analyzer {
 
  public:
 
-   Ntp1Analyzer_QG( const std::string& dataset, bool requireLeptons=true, const std::string& flags="", TTree* tree=0);
+   Ntp1Analyzer_QG( const std::string& dataset, bool chargedHadronSubtraction=false, bool requireLeptons=true, const std::string& flags="", TTree* tree=0);
    virtual ~Ntp1Analyzer_QG();
 
    virtual void CreateOutputFile();
@@ -64,6 +64,8 @@ class Ntp1Analyzer_QG : public Ntp1Analyzer {
 
 
    bool DEBUG_VERBOSE_;
+
+   bool chargedHadronSubtraction_;
    bool requireLeptons_;
 
 };

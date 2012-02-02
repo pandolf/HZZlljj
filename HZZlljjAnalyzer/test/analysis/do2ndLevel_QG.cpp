@@ -5,10 +5,11 @@
 
 
 
+
 int main( int argc, char* argv[]) {
 
   if( argc!=2 && argc!=3 && argc!=4 ) {
-    std::cout << "USAGE: ./do2ndLevel_QG [dataset] [inputfile=""] [flags=""]" << std::endl;
+    std::cout << "USAGE: ./do2ndLevel_QG [dataset] [flags=""] [inputfile=""]" << std::endl;
     exit(31);
   }
 
@@ -20,20 +21,32 @@ int main( int argc, char* argv[]) {
 
   Ntp1Analyzer_QG* na;
 
-  if( argc<4 ) {
-    na = new Ntp1Analyzer_QG(dataset, !isQCD);
-  } else {
-    std::string flags(argv[3]);
-    na = new Ntp1Analyzer_QG(dataset, !isQCD, flags);
+  std::string flags="";
+  if( argc>2 ) {
+    std::string flags_tmp(argv[2]);
+    flags = flags_tmp;
   }
 
+  bool requireLeptons = !isQCD;
+  bool chargedHadronSubtraction = (flags=="CHS");
 
-  if( argc==2 ) {
-    na->LoadInput();
-  } else {
-    std::string inputfile(argv[2]);
-    na->LoadInputFromFile(inputfile.c_str());
-  }
+  if( requireLeptons ) std::cout << "-> Requiring leptons." << std::endl;
+  if( chargedHadronSubtraction ) std::cout << "-> Charged hadron subtraction: ON" << std::endl;
+
+  //if( argc<4 ) {
+  //  na = new Ntp1Analyzer_QG(dataset, chargedHadronSubtraction, !isQCD);
+  //} else {
+    na = new Ntp1Analyzer_QG(dataset, chargedHadronSubtraction, requireLeptons, flags);
+  //}
+
+
+  na->LoadInput();
+
+//if( argc==2 ) {
+//} else {
+//  std::string inputfile(argv[2]);
+//  na->LoadInputFromFile(inputfile.c_str());
+//}
 
   na->Loop();
 
