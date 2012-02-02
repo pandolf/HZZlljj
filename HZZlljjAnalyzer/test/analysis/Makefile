@@ -207,7 +207,7 @@ Ntp1Analyzer_TMVA.o: Ntp1Analyzer_TMVA.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ Ntp1Analyzer_TMVA.C $(ROOTFLAG)
 
 Ntp1Analyzer_QG.o: Ntp1Analyzer_QG.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_QG.C $(ROOTFLAG)
+	$(CC) $(CFLAGS) $(INCLUDES) Ntp1Analyzer_QG.C $(ROOTFLAG)
 
 Ntp1Analyzer_DiJet.o: Ntp1Analyzer_DiJet.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_DiJet.C $(ROOTFLAG)
@@ -215,8 +215,8 @@ Ntp1Analyzer_DiJet.o: Ntp1Analyzer_DiJet.C
 Ntp1Analyzer_Zbb.o: Ntp1Analyzer_Zbb.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/CommonTools Ntp1Analyzer_Zbb.C $(ROOTFLAG)
 
-Ntp1Finalizer.o: Ntp1Finalizer.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ Ntp1Finalizer.C $(ROOTFLAG)
+Ntp1Finalizer.o: $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/Ntp1Finalizer.C
+	$(CC) $(CFLAGS) $(INCLUDES) $(CMSSW_BASE)/src/UserCode/pandolf/CommonTools/Ntp1Finalizer.C $(ROOTFLAG)
 
 Ntp1Finalizer_HZZlljj.o: Ntp1Finalizer_HZZlljj.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/ -I$(CMSSW_BASE)/src/UserCode/pandolf/QGLikelihood Ntp1Finalizer_HZZlljj.C $(ROOTFLAG)
@@ -234,7 +234,7 @@ Ntp1Finalizer_ZGamma.o: Ntp1Finalizer_ZGamma.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/  Ntp1Finalizer_ZGamma.C $(ROOTFLAG)
 
 Ntp1Finalizer_QG.o: Ntp1Finalizer_QG.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/  Ntp1Finalizer_QG.C $(ROOTFLAG)
+	$(CC) $(CFLAGS) $(INCLUDES)  Ntp1Finalizer_QG.C $(ROOTFLAG)
 
 Ntp1Finalizer_QGTMVA.o: Ntp1Finalizer_QGTMVA.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/  Ntp1Finalizer_QGTMVA.C $(ROOTFLAG)
