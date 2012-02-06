@@ -20,18 +20,19 @@ queue = "8nh"
 #queue = "2nd"
 #ijobmax = 40
 ijobmax = int(sys.argv[2])
-#application = "VecbosApp"
+
 analyzerType = "HZZlljj"
-if len(sys.argv) == 4:
+if len(sys.argv) >= 4:
     analyzerType = sys.argv[3]
 flags = ""
-if len(sys.argv) == 5:
+if len(sys.argv) >= 5:
     flags = sys.argv[4]
 application = "do2ndLevel_"+analyzerType
 if flags=="400":
     application = "do2ndLevel_TMVA_400"
 if flags=="500":
     application = "do2ndLevel_TMVA_500"
+
 # to write on the cmst3 cluster disks
 ################################################
 castordir = "/castor/cern.ch/user/p/pandolf/NTUPLES/" + dataset
@@ -43,7 +44,11 @@ afsdir = "/afs/cern.ch/user/p/pandolf/scratch0/NTUPLES/"+dataset
 #diskoutputdir = "/cmsrm/pc21_2/pandolf/MC/"+dataset
 diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Summer11/"+dataset
 match_Spring11 = re.search( r'Spring11', dataset, re.M|re.I)
-    diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Spring11/"+dataset
+match_Fall11 = re.search( r'Fall11', dataset, re.M|re.I)
+if match_Spring11:
+    diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Spring11_v2/"+dataset
+if match_Fall11:
+    diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Fall11/"+dataset
 #diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Summer11/"+dataset
 #diskoutputmain2 = castordir
 #diskoutputmain2 = pnfsdir
@@ -95,7 +100,6 @@ while (len(inputfiles) > 0):
     outputfile = open(outputname,'w')
     outputfile.write('#!/bin/bash\n')
     outputfile.write('export STAGE_HOST=castorcms\n')
-    outputfile.write('export STAGE_SVCCLASS=cmst3\n')
     outputfile.write('export SCRAM_ARCH=slc5_amd64_gcc434\n')
     outputfile.write('cd /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_4_2_3_patch5/ ; eval `scramv1 runtime -sh` ; cd -\n')
     #outputfile.write('export ROOTSYS=/afs/cern.ch/sw/lcg/app/releases/ROOT/5.26.00/x86_64-slc5-gcc34-opt/root\n')
@@ -105,10 +109,14 @@ while (len(inputfiles) > 0):
     #outputfile.write('cp '+pwd+'/lumi_by_LS_132440_140401.csv $WORKDIR\n')
     #outputfile.write('cp -r  /afs/cern.ch/user/p/pandolf/scratch1/CMSSW_3_8_7/src/HZZlljj/HZZlljjAnalyzer/test/analysis/Bins $WORKDIR\n')
     outputfile.write('cp '+pwd+'/QG_QCD_Pt_15to3000_TuneZ2_Flat*.root $WORKDIR\n')
+    outputfile.write('cp '+pwd+'/Pileup*.root $WORKDIR\n')
     outputfile.write('cp '+pwd+'/SF_*.txt $WORKDIR\n')
     outputfile.write('cd $WORKDIR\n')
     #outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" _"+str(ijob)+"\n")
-    outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" "+str(ijob)+"\n")
+    if flags=="":
+      outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" "+str(ijob)+"\n")
+    else :
+      outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" "+flags+"_"+str(ijob)+"\n")
     outputfile.write('rm QG_QCD_Pt_15to3000_TuneZ2_Flat*.root\n')
     outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm22:'+diskoutputmain+'/{}\n') 
     #outputfile.write('cp *.root '+diskoutputmain2+'\n') 
