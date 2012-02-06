@@ -9,7 +9,7 @@
 int main( int argc, char* argv[]) {
 
   if( argc!=2 && argc!=3 && argc!=4 ) {
-    std::cout << "USAGE: ./do2ndLevel_QG [dataset] [flags=""] [inputfile=""]" << std::endl;
+    std::cout << "USAGE: ./do2ndLevel_QG [dataset] [inputfile=""] [flags=""]" << std::endl;
     exit(31);
   }
 
@@ -22,13 +22,15 @@ int main( int argc, char* argv[]) {
   Ntp1Analyzer_QG* na;
 
   std::string flags="";
-  if( argc>2 ) {
-    std::string flags_tmp(argv[2]);
+  if( argc>3 ) {
+    std::string flags_tmp(argv[3]);
     flags = flags_tmp;
   }
 
+  TString flags_tstr(flags);
+
   bool requireLeptons = !isQCD;
-  bool chargedHadronSubtraction = (flags=="CHS");
+  bool chargedHadronSubtraction = (flags_tstr.Contains("CHS"));
 
   if( requireLeptons ) std::cout << "-> Requiring leptons." << std::endl;
   if( chargedHadronSubtraction ) std::cout << "-> Charged hadron subtraction: ON" << std::endl;
@@ -40,13 +42,15 @@ int main( int argc, char* argv[]) {
   //}
 
 
-  na->LoadInput();
 
-//if( argc==2 ) {
-//} else {
-//  std::string inputfile(argv[2]);
-//  na->LoadInputFromFile(inputfile.c_str());
-//}
+  if( argc>=2 ) {
+    std::string inputfile(argv[2]);
+    na->LoadInputFromFile(inputfile.c_str());
+  } else {
+    na->LoadInput();
+  }
+
+
 
   na->Loop();
 
