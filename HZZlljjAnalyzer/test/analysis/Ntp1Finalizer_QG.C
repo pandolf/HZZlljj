@@ -45,33 +45,33 @@ void Ntp1Finalizer_QG::finalize() {
 
   TH1D* h1_rhoPF = new TH1D("rhoPF", "", 50, 0., 20.);
 
-  TH1D* h1_nCharged_nvert1 = new TH1D("nCharged_nvert1", "", 51, -0.5, 50.5);
-  TH1D* h1_nNeutral_nvert1 = new TH1D("nNeutral_nvert1", "", 51, -0.5, 50.5);
+  TH1D* h1_nCharged_nvert1 = new TH1D("nCharged_nvert1", "", 101, -0.5, 100.5);
+  TH1D* h1_nNeutral_nvert1 = new TH1D("nNeutral_nvert1", "", 101, -0.5, 100.5);
   TH1D* h1_nPtD_nvert1 = new TH1D("nNPtD_nvert1", "", 50, 0., 1.);
   TH1D* h1_rmsCand_nvert1 = new TH1D("rmsCand_nvert1", "", 50, 0., 0.1);
 
-  TH1D* h1_nCharged_quark_nvert1 = new TH1D("nCharged_quark_nvert1", "", 51, -0.5, 50.5);
-  TH1D* h1_nNeutral_quark_nvert1 = new TH1D("nNeutral_quark_nvert1", "", 51, -0.5, 50.5);
+  TH1D* h1_nCharged_quark_nvert1 = new TH1D("nCharged_quark_nvert1", "", 101, -0.5, 100.5);
+  TH1D* h1_nNeutral_quark_nvert1 = new TH1D("nNeutral_quark_nvert1", "", 101, -0.5, 100.5);
   TH1D* h1_nPtD_quark_nvert1 = new TH1D("nNPtD_quark_nvert1", "", 50, 0., 1.);
   TH1D* h1_rmsCand_quark_nvert1 = new TH1D("rmsCand_quark_nvert1", "", 50, 0., 0.1);
 
-  TH1D* h1_nCharged_gluon_nvert1 = new TH1D("nCharged_gluon_nvert1", "", 51, -0.5, 50.5);
-  TH1D* h1_nNeutral_gluon_nvert1 = new TH1D("nNeutral_gluon_nvert1", "", 51, -0.5, 50.5);
+  TH1D* h1_nCharged_gluon_nvert1 = new TH1D("nCharged_gluon_nvert1", "", 101, -0.5, 100.5);
+  TH1D* h1_nNeutral_gluon_nvert1 = new TH1D("nNeutral_gluon_nvert1", "", 101, -0.5, 100.5);
   TH1D* h1_nPtD_gluon_nvert1 = new TH1D("nNPtD_gluon_nvert1", "", 50, 0., 1.);
   TH1D* h1_rmsCand_gluon_nvert1 = new TH1D("rmsCand_gluon_nvert1", "", 50, 0., 0.1);
 
-  TH1D* h1_nCharged_nvert10 = new TH1D("nCharged_nvert10", "", 51, -0.5, 50.5);
-  TH1D* h1_nNeutral_nvert10 = new TH1D("nNeutral_nvert10", "", 51, -0.5, 50.5);
+  TH1D* h1_nCharged_nvert10 = new TH1D("nCharged_nvert10", "", 101, -0.5, 100.5);
+  TH1D* h1_nNeutral_nvert10 = new TH1D("nNeutral_nvert10", "", 101, -0.5, 100.5);
   TH1D* h1_nPtD_nvert10 = new TH1D("nNPtD_nvert10", "", 50, 0., 1.);
   TH1D* h1_rmsCand_nvert10 = new TH1D("rmsCand_nvert10", "", 50, 0., 0.1);
 
-  TH1D* h1_nCharged_quark_nvert10 = new TH1D("nCharged_quark_nvert10", "", 51, -0.5, 50.5);
-  TH1D* h1_nNeutral_quark_nvert10 = new TH1D("nNeutral_quark_nvert10", "", 51, -0.5, 50.5);
+  TH1D* h1_nCharged_quark_nvert10 = new TH1D("nCharged_quark_nvert10", "", 101, -0.5, 100.5);
+  TH1D* h1_nNeutral_quark_nvert10 = new TH1D("nNeutral_quark_nvert10", "", 101, -0.5, 100.5);
   TH1D* h1_nPtD_quark_nvert10 = new TH1D("nNPtD_quark_nvert10", "", 50, 0., 1.);
   TH1D* h1_rmsCand_quark_nvert10 = new TH1D("rmsCand_quark_nvert10", "", 50, 0., 0.1);
 
-  TH1D* h1_nCharged_gluon_nvert10 = new TH1D("nCharged_gluon_nvert10", "", 51, -0.5, 50.5);
-  TH1D* h1_nNeutral_gluon_nvert10 = new TH1D("nNeutral_gluon_nvert10", "", 51, -0.5, 50.5);
+  TH1D* h1_nCharged_gluon_nvert10 = new TH1D("nCharged_gluon_nvert10", "", 101, -0.5, 100.5);
+  TH1D* h1_nNeutral_gluon_nvert10 = new TH1D("nNeutral_gluon_nvert10", "", 101, -0.5, 100.5);
   TH1D* h1_nPtD_gluon_nvert10 = new TH1D("nNPtD_gluon_nvert10", "", 50, 0., 1.);
   TH1D* h1_rmsCand_gluon_nvert10 = new TH1D("rmsCand_gluon_nvert10", "", 50, 0., 0.1);
 
@@ -95,13 +95,13 @@ void Ntp1Finalizer_QG::finalize() {
   std::vector<TH1D*> vh1_ptD_quark;
   std::vector<TH1D*> vh1_rmsCand_quark;
 
-  std::vector< std::vector<TH1D*> >  vvh1_nCharged_gluon = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "nCharged_gluon", 51, -0.5, 50.5);
-  std::vector< std::vector<TH1D*> >  vvh1_nNeutral_gluon = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "nNeutral_gluon", 51, -0.5, 50.5);
+  std::vector< std::vector<TH1D*> >  vvh1_nCharged_gluon = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "nCharged_gluon", 101, -0.5, 100.5);
+  std::vector< std::vector<TH1D*> >  vvh1_nNeutral_gluon = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "nNeutral_gluon", 101, -0.5, 100.5);
   std::vector< std::vector<TH1D*> >  vvh1_ptD_gluon = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "ptD_gluon", 50, 0., 1.);
   std::vector< std::vector<TH1D*> >  vvh1_rmsCand_gluon = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "rmsCand_gluon", 50, 0., 0.1);
 
-  std::vector< std::vector<TH1D*> >  vvh1_nCharged_quark = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "nCharged_quark", 51, -0.5, 50.5);
-  std::vector< std::vector<TH1D*> >  vvh1_nNeutral_quark = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "nNeutral_quark", 51, -0.5, 50.5);
+  std::vector< std::vector<TH1D*> >  vvh1_nCharged_quark = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "nCharged_quark", 101, -0.5, 100.5);
+  std::vector< std::vector<TH1D*> >  vvh1_nNeutral_quark = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "nNeutral_quark", 101, -0.5, 100.5);
   std::vector< std::vector<TH1D*> >  vvh1_ptD_quark = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "ptD_quark", 50, 0., 1.);
   std::vector< std::vector<TH1D*> >  vvh1_rmsCand_quark = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "rmsCand_quark", 50, 0., 0.1);
 
@@ -115,8 +115,8 @@ void Ntp1Finalizer_QG::finalize() {
   std::vector<TH2D*> vh2_rmsCand_vs_nCharged_quark;
   std::vector<TH2D*> vh2_nCharged_vs_nNeutral_quark;
 
-  TH1D* h1_nCharged_corr = new TH1D("nCharged_corr", "", 51, -0.5, 50.5);
-  TH1D* h1_nNeutral_corr = new TH1D("nNeutral_corr", "", 51, -0.5, 50.5);
+  TH1D* h1_nCharged_corr = new TH1D("nCharged_corr", "", 101, -0.5, 100.5);
+  TH1D* h1_nNeutral_corr = new TH1D("nNeutral_corr", "", 101, -0.5, 100.5);
   TH1D* h1_ptD_corr = new TH1D("ptD_corr", "", 50, 0., 1.);
   TH1D* h1_rmsCand_corr = new TH1D("rmsCand_corr", "", 50, 0., 0.1);
 
@@ -156,36 +156,36 @@ void Ntp1Finalizer_QG::finalize() {
     vhp_rmsCand_vs_rhoPF.push_back(hp_rmsCand_vs_rhoPF_new);
 
     sprintf( histoname, "nCharged_pt%.0f_%.0f", ptMin, ptMax);
-    TH1D* h1_nCharged_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    TH1D* h1_nCharged_new = new TH1D(histoname, "", 101, -0.5, 100.5);
     h1_nCharged_new->Sumw2();
     vh1_nCharged.push_back(h1_nCharged_new);
     sprintf( histoname, "nCharged_corr_pt%.0f_%.0f", ptMin, ptMax);
-    TH1D* h1_nCharged_corr_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    TH1D* h1_nCharged_corr_new = new TH1D(histoname, "", 101, -0.5, 100.5);
     h1_nCharged_corr_new->Sumw2();
     vh1_nCharged_corr.push_back(h1_nCharged_corr_new);
     sprintf( histoname, "nCharged_gluon_pt%.0f_%.0f", ptMin, ptMax);
-    TH1D* h1_nCharged_gluon_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    TH1D* h1_nCharged_gluon_new = new TH1D(histoname, "", 101, -0.5, 100.5);
     h1_nCharged_gluon_new->Sumw2();
     vh1_nCharged_gluon.push_back(h1_nCharged_gluon_new);
     sprintf( histoname, "nCharged_quark_pt%.0f_%.0f", ptMin, ptMax);
-    TH1D* h1_nCharged_quark_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    TH1D* h1_nCharged_quark_new = new TH1D(histoname, "", 101, -0.5, 100.5);
     h1_nCharged_quark_new->Sumw2();
     vh1_nCharged_quark.push_back(h1_nCharged_quark_new);
 
     sprintf( histoname, "nNeutral_pt%.0f_%.0f", ptMin, ptMax);
-    TH1D* h1_nNeutral_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    TH1D* h1_nNeutral_new = new TH1D(histoname, "", 101, -0.5, 100.5);
     h1_nNeutral_new->Sumw2();
     vh1_nNeutral.push_back(h1_nNeutral_new);
     sprintf( histoname, "nNeutral_corr_pt%.0f_%.0f", ptMin, ptMax);
-    TH1D* h1_nNeutral_corr_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    TH1D* h1_nNeutral_corr_new = new TH1D(histoname, "", 101, -0.5, 100.5);
     h1_nNeutral_corr_new->Sumw2();
     vh1_nNeutral_corr.push_back(h1_nNeutral_corr_new);
     sprintf( histoname, "nNeutral_gluon_pt%.0f_%.0f", ptMin, ptMax);
-    TH1D* h1_nNeutral_gluon_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    TH1D* h1_nNeutral_gluon_new = new TH1D(histoname, "", 101, -0.5, 100.5);
     h1_nNeutral_gluon_new->Sumw2();
     vh1_nNeutral_gluon.push_back(h1_nNeutral_gluon_new);
     sprintf( histoname, "nNeutral_quark_pt%.0f_%.0f", ptMin, ptMax);
-    TH1D* h1_nNeutral_quark_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    TH1D* h1_nNeutral_quark_new = new TH1D(histoname, "", 101, -0.5, 100.5);
     h1_nNeutral_quark_new->Sumw2();
     vh1_nNeutral_quark.push_back(h1_nNeutral_quark_new);
 
@@ -233,29 +233,29 @@ void Ntp1Finalizer_QG::finalize() {
     vh2_ptD_vs_rmsCand_quark.push_back(h2_ptD_vs_rmsCand_quark_new);
 
     sprintf( histoname, "ptD_vs_nCharged_gluon_pt%.0f_%.0f", ptMin, ptMax);
-    TH2D* h2_ptD_vs_nCharged_gluon_new = new TH2D(histoname, "", 51, -0.5, 50.5, 50, 0., 1.);
+    TH2D* h2_ptD_vs_nCharged_gluon_new = new TH2D(histoname, "", 101, -0.5, 100.5, 50, 0., 1.);
     h2_ptD_vs_nCharged_gluon_new->Sumw2();
     vh2_ptD_vs_nCharged_gluon.push_back(h2_ptD_vs_nCharged_gluon_new);
     sprintf( histoname, "ptD_vs_nCharged_quark_pt%.0f_%.0f", ptMin, ptMax);
-    TH2D* h2_ptD_vs_nCharged_quark_new = new TH2D(histoname, "", 51, -0.5, 50.5, 50, 0., 1.);
+    TH2D* h2_ptD_vs_nCharged_quark_new = new TH2D(histoname, "", 101, -0.5, 100.5, 50, 0., 1.);
     h2_ptD_vs_nCharged_quark_new->Sumw2();
     vh2_ptD_vs_nCharged_quark.push_back(h2_ptD_vs_nCharged_quark_new);
 
     sprintf( histoname, "nCharged_vs_nNeutral_gluon_pt%.0f_%.0f", ptMin, ptMax);
-    TH2D* h2_nCharged_vs_nNeutral_gluon_new = new TH2D(histoname, "", 51, -0.5, 50.5, 51, -0.5, 50.5);
+    TH2D* h2_nCharged_vs_nNeutral_gluon_new = new TH2D(histoname, "", 101, -0.5, 100.5, 101, -0.5, 100.5);
     h2_nCharged_vs_nNeutral_gluon_new->Sumw2();
     vh2_nCharged_vs_nNeutral_gluon.push_back(h2_nCharged_vs_nNeutral_gluon_new);
     sprintf( histoname, "nCharged_vs_nNeutral_quark_pt%.0f_%.0f", ptMin, ptMax);
-    TH2D* h2_nCharged_vs_nNeutral_quark_new = new TH2D(histoname, "", 51, -0.5, 50.5, 51, -0.5, 50.5);
+    TH2D* h2_nCharged_vs_nNeutral_quark_new = new TH2D(histoname, "", 101, -0.5, 100.5, 101, -0.5, 100.5);
     h2_nCharged_vs_nNeutral_quark_new->Sumw2();
     vh2_nCharged_vs_nNeutral_quark.push_back(h2_nCharged_vs_nNeutral_quark_new);
 
     sprintf( histoname, "rmsCand_vs_nCharged_gluon_pt%.0f_%.0f", ptMin, ptMax);
-    TH2D* h2_rmsCand_vs_nCharged_gluon_new = new TH2D(histoname, "", 51, -0.5, 50.5, 50, 0., 0.1);
+    TH2D* h2_rmsCand_vs_nCharged_gluon_new = new TH2D(histoname, "", 101, -0.5, 100.5, 50, 0., 0.1);
     h2_rmsCand_vs_nCharged_gluon_new->Sumw2();
     vh2_rmsCand_vs_nCharged_gluon.push_back(h2_rmsCand_vs_nCharged_gluon_new);
     sprintf( histoname, "rmsCand_vs_nCharged_quark_pt%.0f_%.0f", ptMin, ptMax);
-    TH2D* h2_rmsCand_vs_nCharged_quark_new = new TH2D(histoname, "", 51, -0.5, 50.5, 50, 0., 0.1);
+    TH2D* h2_rmsCand_vs_nCharged_quark_new = new TH2D(histoname, "", 101, -0.5, 100.5, 50, 0., 0.1);
     h2_rmsCand_vs_nCharged_quark_new->Sumw2();
     vh2_rmsCand_vs_nCharged_quark.push_back(h2_rmsCand_vs_nCharged_quark_new);
 
