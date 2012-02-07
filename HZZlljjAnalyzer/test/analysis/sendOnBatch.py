@@ -42,13 +42,13 @@ afsdir = "/afs/cern.ch/user/p/pandolf/scratch0/NTUPLES/"+dataset
 # to write on local disks
 ################################################
 #diskoutputdir = "/cmsrm/pc21_2/pandolf/MC/"+dataset
-diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Summer11/"+dataset
+diskoutputdir = "/cmsrm/pc24_2/pandolf/MC/Summer11/"+dataset
 match_Spring11 = re.search( r'Spring11', dataset, re.M|re.I)
 match_Fall11 = re.search( r'Fall11', dataset, re.M|re.I)
 if match_Spring11:
-    diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Spring11_v2/"+dataset
+    diskoutputdir = "/cmsrm/pc24_2/pandolf/MC/Spring11_v2/"+dataset
 if match_Fall11:
-    diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Fall11/"+dataset
+    diskoutputdir = "/cmsrm/pc24_2/pandolf/MC/Fall11/"+dataset
 #diskoutputdir = "/cmsrm/pc22_2/pandolf/MC/Summer11/"+dataset
 #diskoutputmain2 = castordir
 #diskoutputmain2 = pnfsdir
@@ -71,7 +71,7 @@ os.system("mkdir -p "+dir+"/src/")
 #else: os.system("mkdir -p "+outputroot)
 
 if diskoutputdir != "none": 
-    os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm22 mkdir -p "+diskoutputmain)
+    os.system("ssh -o BatchMode=yes -o StrictHostKeyChecking=no pccmsrm25 mkdir -p "+diskoutputmain)
 
 #look for the current directory
 #######################################
@@ -118,7 +118,7 @@ while (len(inputfiles) > 0):
     else :
       outputfile.write(pwd+'/'+application+" "+dataset+" "+inputfilename+" "+flags+"_"+str(ijob)+"\n")
     outputfile.write('rm QG_QCD_Pt_15to3000_TuneZ2_Flat*.root\n')
-    outputfile.write('ls *.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm22:'+diskoutputmain+'/{}\n') 
+    outputfile.write('ls '+analyzerType+'*.root | xargs -i scp -o BatchMode=yes -o StrictHostKeyChecking=no {} pccmsrm25:'+diskoutputmain+'/{}\n') 
     #outputfile.write('cp *.root '+diskoutputmain2+'\n') 
     outputfile.close
     os.system("echo bsub -q "+queue+" -o "+dir+"/log/"+dataset+"_"+str(ijob)+".log source "+pwd+"/"+outputname)
