@@ -138,7 +138,7 @@ void drawCompare_vs_pt( DrawBase* db, const std::string& name, const std::string
 
 void drawCompareHZZ_vs_pt( DrawBase* db, TFile* file_HZZlljj, const std::string& quark_gluon, const std::string& name, const std::string& axisName, bool log ) {
 
-  TFile* file_QCD = db->get_mcFile(0);
+  TFile* file_QCD = db->get_mcFile(0).file;
 
   const int nBins = 20;
   Double_t ptBins[nBins+1];
@@ -271,7 +271,7 @@ void drawCompareHZZ_vs_pt( DrawBase* db, TFile* file_HZZlljj, const std::string&
 void drawEffRej_vs_pt( DrawBase* db ) {
 
 
-  TFile* file = db->get_mcFile(0);
+  TFile* file = db->get_mcFile(0).file;
 
   TPaveText* label_cms = db->get_labelCMS();
   TPaveText* label_sqrt = db->get_labelSqrt();
@@ -481,7 +481,7 @@ void drawEffRej_vs_pt( DrawBase* db ) {
 void drawVar_vs_PU( DrawBase* db, const std::string& varName, const std::string& axisName ) {
 
 
-  TFile* file = db->get_mcFile(0);
+  TFile* file = db->get_mcFile(0).file;
 
   TPaveText* label_cms = db->get_labelCMS();
   TPaveText* label_sqrt = db->get_labelSqrt();
