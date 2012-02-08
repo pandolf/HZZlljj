@@ -80,6 +80,22 @@ void Ntp1Finalizer_QG::finalize() {
   std::vector<TProfile*> vhp_ptD_vs_rhoPF;
   std::vector<TProfile*> vhp_rmsCand_vs_rhoPF;
 
+  std::vector<TProfile*> vhp_nCharged_vs_nvertex;
+  std::vector<TProfile*> vhp_nNeutral_vs_nvertex;
+  std::vector<TProfile*> vhp_ptD_vs_nvertex;
+  std::vector<TProfile*> vhp_rmsCand_vs_nvertex;
+
+  std::vector<TProfile*> vhp_nCharged_vs_nvertex_quark;
+  std::vector<TProfile*> vhp_nNeutral_vs_nvertex_quark;
+  std::vector<TProfile*> vhp_ptD_vs_nvertex_quark;
+  std::vector<TProfile*> vhp_rmsCand_vs_nvertex_quark;
+
+  std::vector<TProfile*> vhp_nCharged_vs_nvertex_gluon;
+  std::vector<TProfile*> vhp_nNeutral_vs_nvertex_gluon;
+  std::vector<TProfile*> vhp_ptD_vs_nvertex_gluon;
+  std::vector<TProfile*> vhp_rmsCand_vs_nvertex_gluon;
+
+
   std::vector<TH1D*> vh1_nCharged;
   std::vector<TH1D*> vh1_nNeutral;
   std::vector<TH1D*> vh1_ptD;
@@ -94,6 +110,46 @@ void Ntp1Finalizer_QG::finalize() {
   std::vector<TH1D*> vh1_nNeutral_quark;
   std::vector<TH1D*> vh1_ptD_quark;
   std::vector<TH1D*> vh1_rmsCand_quark;
+
+  std::vector<TH1D*> vh1_nCharged_charm;
+  std::vector<TH1D*> vh1_nNeutral_charm;
+  std::vector<TH1D*> vh1_ptD_charm;
+  std::vector<TH1D*> vh1_rmsCand_charm;
+
+  std::vector<TH1D*> vh1_nCharged_bottom;
+  std::vector<TH1D*> vh1_nNeutral_bottom;
+  std::vector<TH1D*> vh1_ptD_bottom;
+  std::vector<TH1D*> vh1_rmsCand_bottom;
+
+  std::vector<TH1D*> vh1_nCharged_nvert1;
+  std::vector<TH1D*> vh1_nNeutral_nvert1;
+  std::vector<TH1D*> vh1_ptD_nvert1;
+  std::vector<TH1D*> vh1_rmsCand_nvert1;
+
+  std::vector<TH1D*> vh1_nCharged_gluon_nvert1;
+  std::vector<TH1D*> vh1_nNeutral_gluon_nvert1;
+  std::vector<TH1D*> vh1_ptD_gluon_nvert1;
+  std::vector<TH1D*> vh1_rmsCand_gluon_nvert1;
+
+  std::vector<TH1D*> vh1_nCharged_quark_nvert1;
+  std::vector<TH1D*> vh1_nNeutral_quark_nvert1;
+  std::vector<TH1D*> vh1_ptD_quark_nvert1;
+  std::vector<TH1D*> vh1_rmsCand_quark_nvert1;
+
+  std::vector<TH1D*> vh1_nCharged_nvert10;
+  std::vector<TH1D*> vh1_nNeutral_nvert10;
+  std::vector<TH1D*> vh1_ptD_nvert10;
+  std::vector<TH1D*> vh1_rmsCand_nvert10;
+
+  std::vector<TH1D*> vh1_nCharged_gluon_nvert10;
+  std::vector<TH1D*> vh1_nNeutral_gluon_nvert10;
+  std::vector<TH1D*> vh1_ptD_gluon_nvert10;
+  std::vector<TH1D*> vh1_rmsCand_gluon_nvert10;
+
+  std::vector<TH1D*> vh1_nCharged_quark_nvert10;
+  std::vector<TH1D*> vh1_nNeutral_quark_nvert10;
+  std::vector<TH1D*> vh1_ptD_quark_nvert10;
+  std::vector<TH1D*> vh1_rmsCand_quark_nvert10;
 
   std::vector< std::vector<TH1D*> >  vvh1_nCharged_gluon = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "nCharged_gluon", 101, -0.5, 100.5);
   std::vector< std::vector<TH1D*> >  vvh1_nNeutral_gluon = allocateHistogramMatrix(nPtBins, ptBins, nRhoBins, "nNeutral_gluon", 101, -0.5, 100.5);
@@ -143,7 +199,7 @@ void Ntp1Finalizer_QG::finalize() {
     hp_nCharged_vs_rhoPF_new->Sumw2();
     vhp_nCharged_vs_rhoPF.push_back(hp_nCharged_vs_rhoPF_new);
     sprintf( histoname, "nNeutral_vs_rhoPF_pt%.0f_%.0f", ptMin, ptMax);
-    TProfile* hp_nNeutral_vs_rhoPF_new = new TProfile(histoname, "", 10, -0.5, 15.);
+    TProfile* hp_nNeutral_vs_rhoPF_new = new TProfile(histoname, "", 10, 0., 15.);
     hp_nNeutral_vs_rhoPF_new->Sumw2();
     vhp_nNeutral_vs_rhoPF.push_back(hp_nNeutral_vs_rhoPF_new);
     sprintf( histoname, "ptD_vs_rhoPF_pt%.0f_%.0f", ptMin, ptMax);
@@ -154,6 +210,58 @@ void Ntp1Finalizer_QG::finalize() {
     TProfile* hp_rmsCand_vs_rhoPF_new = new TProfile(histoname, "", 10, 0., 15.);
     hp_rmsCand_vs_rhoPF_new->Sumw2();
     vhp_rmsCand_vs_rhoPF.push_back(hp_rmsCand_vs_rhoPF_new);
+
+    sprintf( histoname, "nCharged_vs_nvertex_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_nCharged_vs_nvertex_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_nCharged_vs_nvertex_new->Sumw2();
+    vhp_nCharged_vs_nvertex.push_back(hp_nCharged_vs_nvertex_new);
+    sprintf( histoname, "nNeutral_vs_nvertex_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_nNeutral_vs_nvertex_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_nNeutral_vs_nvertex_new->Sumw2();
+    vhp_nNeutral_vs_nvertex.push_back(hp_nNeutral_vs_nvertex_new);
+    sprintf( histoname, "ptD_vs_nvertex_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_ptD_vs_nvertex_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_ptD_vs_nvertex_new->Sumw2();
+    vhp_ptD_vs_nvertex.push_back(hp_ptD_vs_nvertex_new);
+    sprintf( histoname, "rmsCand_vs_nvertex_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_rmsCand_vs_nvertex_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_rmsCand_vs_nvertex_new->Sumw2();
+    vhp_rmsCand_vs_nvertex.push_back(hp_rmsCand_vs_nvertex_new);
+
+    sprintf( histoname, "nCharged_vs_nvertex_quark_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_nCharged_vs_nvertex_quark_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_nCharged_vs_nvertex_quark_new->Sumw2();
+    vhp_nCharged_vs_nvertex_quark.push_back(hp_nCharged_vs_nvertex_quark_new);
+    sprintf( histoname, "nNeutral_vs_nvertex_quark_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_nNeutral_vs_nvertex_quark_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_nNeutral_vs_nvertex_quark_new->Sumw2();
+    vhp_nNeutral_vs_nvertex_quark.push_back(hp_nNeutral_vs_nvertex_quark_new);
+    sprintf( histoname, "ptD_vs_nvertex_quark_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_ptD_vs_nvertex_quark_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_ptD_vs_nvertex_quark_new->Sumw2();
+    vhp_ptD_vs_nvertex_quark.push_back(hp_ptD_vs_nvertex_quark_new);
+    sprintf( histoname, "rmsCand_vs_nvertex_quark_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_rmsCand_vs_nvertex_quark_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_rmsCand_vs_nvertex_quark_new->Sumw2();
+    vhp_rmsCand_vs_nvertex_quark.push_back(hp_rmsCand_vs_nvertex_quark_new);
+
+    sprintf( histoname, "nCharged_vs_nvertex_gluon_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_nCharged_vs_nvertex_gluon_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_nCharged_vs_nvertex_gluon_new->Sumw2();
+    vhp_nCharged_vs_nvertex_gluon.push_back(hp_nCharged_vs_nvertex_gluon_new);
+    sprintf( histoname, "nNeutral_vs_nvertex_gluon_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_nNeutral_vs_nvertex_gluon_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_nNeutral_vs_nvertex_gluon_new->Sumw2();
+    vhp_nNeutral_vs_nvertex_gluon.push_back(hp_nNeutral_vs_nvertex_gluon_new);
+    sprintf( histoname, "ptD_vs_nvertex_gluon_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_ptD_vs_nvertex_gluon_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_ptD_vs_nvertex_gluon_new->Sumw2();
+    vhp_ptD_vs_nvertex_gluon.push_back(hp_ptD_vs_nvertex_gluon_new);
+    sprintf( histoname, "rmsCand_vs_nvertex_gluon_pt%.0f_%.0f", ptMin, ptMax);
+    TProfile* hp_rmsCand_vs_nvertex_gluon_new = new TProfile(histoname, "", 15, 0.5, 15.);
+    hp_rmsCand_vs_nvertex_gluon_new->Sumw2();
+    vhp_rmsCand_vs_nvertex_gluon.push_back(hp_rmsCand_vs_nvertex_gluon_new);
+
 
     sprintf( histoname, "nCharged_pt%.0f_%.0f", ptMin, ptMax);
     TH1D* h1_nCharged_new = new TH1D(histoname, "", 101, -0.5, 100.5);
@@ -171,6 +279,14 @@ void Ntp1Finalizer_QG::finalize() {
     TH1D* h1_nCharged_quark_new = new TH1D(histoname, "", 101, -0.5, 100.5);
     h1_nCharged_quark_new->Sumw2();
     vh1_nCharged_quark.push_back(h1_nCharged_quark_new);
+    sprintf( histoname, "nCharged_charm_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nCharged_charm_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nCharged_charm_new->Sumw2();
+    vh1_nCharged_charm.push_back(h1_nCharged_charm_new);
+    sprintf( histoname, "nCharged_bottom_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nCharged_bottom_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nCharged_bottom_new->Sumw2();
+    vh1_nCharged_bottom.push_back(h1_nCharged_bottom_new);
 
     sprintf( histoname, "nNeutral_pt%.0f_%.0f", ptMin, ptMax);
     TH1D* h1_nNeutral_new = new TH1D(histoname, "", 101, -0.5, 100.5);
@@ -188,6 +304,14 @@ void Ntp1Finalizer_QG::finalize() {
     TH1D* h1_nNeutral_quark_new = new TH1D(histoname, "", 101, -0.5, 100.5);
     h1_nNeutral_quark_new->Sumw2();
     vh1_nNeutral_quark.push_back(h1_nNeutral_quark_new);
+    sprintf( histoname, "nNeutral_charm_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nNeutral_charm_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nNeutral_charm_new->Sumw2();
+    vh1_nNeutral_charm.push_back(h1_nNeutral_charm_new);
+    sprintf( histoname, "nNeutral_bottom_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nNeutral_bottom_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nNeutral_bottom_new->Sumw2();
+    vh1_nNeutral_bottom.push_back(h1_nNeutral_bottom_new);
 
     sprintf( histoname, "rmsCand_pt%.0f_%.0f", ptMin, ptMax);
     TH1D* h1_rmsCand_new = new TH1D(histoname, "", 50, 0., 0.1);
@@ -205,6 +329,14 @@ void Ntp1Finalizer_QG::finalize() {
     TH1D* h1_rmsCand_quark_new = new TH1D(histoname, "", 50, 0., 0.1);
     h1_rmsCand_quark_new->Sumw2();
     vh1_rmsCand_quark.push_back(h1_rmsCand_quark_new);
+    sprintf( histoname, "rmsCand_charm_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_rmsCand_charm_new = new TH1D(histoname, "", 51, 0., 0.1);
+    h1_rmsCand_charm_new->Sumw2();
+    vh1_rmsCand_charm.push_back(h1_rmsCand_charm_new);
+    sprintf( histoname, "rmsCand_bottom_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_rmsCand_bottom_new = new TH1D(histoname, "", 51, 0., 0.1);
+    h1_rmsCand_bottom_new->Sumw2();
+    vh1_rmsCand_bottom.push_back(h1_rmsCand_bottom_new);
 
     sprintf( histoname, "ptD_pt%.0f_%.0f", ptMin, ptMax);
     TH1D* h1_ptD_new = new TH1D(histoname, "", 50, 0., 1.0001);
@@ -222,6 +354,120 @@ void Ntp1Finalizer_QG::finalize() {
     TH1D* h1_ptD_quark_new = new TH1D(histoname, "", 50, 0., 1.0001);
     h1_ptD_quark_new->Sumw2();
     vh1_ptD_quark.push_back(h1_ptD_quark_new);
+    sprintf( histoname, "ptD_charm_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_ptD_charm_new = new TH1D(histoname, "", 50, 0., 1.0001);
+    h1_ptD_charm_new->Sumw2();
+    vh1_ptD_charm.push_back(h1_ptD_charm_new);
+    sprintf( histoname, "ptD_bottom_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_ptD_bottom_new = new TH1D(histoname, "", 50, 0., 1.0001);
+    h1_ptD_bottom_new->Sumw2();
+    vh1_ptD_bottom.push_back(h1_ptD_bottom_new);
+
+    sprintf( histoname, "nCharged_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nCharged_nvert1_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nCharged_nvert1_new->Sumw2();
+    vh1_nCharged_nvert1.push_back(h1_nCharged_nvert1_new);
+    sprintf( histoname, "nCharged_gluon_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nCharged_gluon_nvert1_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nCharged_gluon_nvert1_new->Sumw2();
+    vh1_nCharged_gluon_nvert1.push_back(h1_nCharged_gluon_nvert1_new);
+    sprintf( histoname, "nCharged_quark_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nCharged_quark_nvert1_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nCharged_quark_nvert1_new->Sumw2();
+    vh1_nCharged_quark_nvert1.push_back(h1_nCharged_quark_nvert1_new);
+
+    sprintf( histoname, "nNeutral_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nNeutral_nvert1_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nNeutral_nvert1_new->Sumw2();
+    vh1_nNeutral_nvert1.push_back(h1_nNeutral_nvert1_new);
+    sprintf( histoname, "nNeutral_gluon_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nNeutral_gluon_nvert1_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nNeutral_gluon_nvert1_new->Sumw2();
+    vh1_nNeutral_gluon_nvert1.push_back(h1_nNeutral_gluon_nvert1_new);
+    sprintf( histoname, "nNeutral_quark_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nNeutral_quark_nvert1_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nNeutral_quark_nvert1_new->Sumw2();
+    vh1_nNeutral_quark_nvert1.push_back(h1_nNeutral_quark_nvert1_new);
+
+    sprintf( histoname, "rmsCand_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_rmsCand_nvert1_new = new TH1D(histoname, "", 50, 0., 0.1);
+    h1_rmsCand_nvert1_new->Sumw2();
+    vh1_rmsCand_nvert1.push_back(h1_rmsCand_nvert1_new);
+    sprintf( histoname, "rmsCand_gluon_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_rmsCand_gluon_nvert1_new = new TH1D(histoname, "", 50, 0., 0.1);
+    h1_rmsCand_gluon_nvert1_new->Sumw2();
+    vh1_rmsCand_gluon_nvert1.push_back(h1_rmsCand_gluon_nvert1_new);
+    sprintf( histoname, "rmsCand_quark_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_rmsCand_quark_nvert1_new = new TH1D(histoname, "", 50, 0., 0.1);
+    h1_rmsCand_quark_nvert1_new->Sumw2();
+    vh1_rmsCand_quark_nvert1.push_back(h1_rmsCand_quark_nvert1_new);
+
+    sprintf( histoname, "ptD_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_ptD_nvert1_new = new TH1D(histoname, "", 50, 0., 1.0001);
+    h1_ptD_nvert1_new->Sumw2();
+    vh1_ptD_nvert1.push_back(h1_ptD_nvert1_new);
+    sprintf( histoname, "ptD_gluon_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_ptD_gluon_nvert1_new = new TH1D(histoname, "", 50, 0., 1.0001);
+    h1_ptD_gluon_nvert1_new->Sumw2();
+    vh1_ptD_gluon_nvert1.push_back(h1_ptD_gluon_nvert1_new);
+    sprintf( histoname, "ptD_quark_nvert1_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_ptD_quark_nvert1_new = new TH1D(histoname, "", 50, 0., 1.0001);
+    h1_ptD_quark_nvert1_new->Sumw2();
+    vh1_ptD_quark_nvert1.push_back(h1_ptD_quark_nvert1_new);
+
+
+    sprintf( histoname, "nCharged_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nCharged_nvert10_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nCharged_nvert10_new->Sumw2();
+    vh1_nCharged_nvert10.push_back(h1_nCharged_nvert10_new);
+    sprintf( histoname, "nCharged_gluon_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nCharged_gluon_nvert10_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nCharged_gluon_nvert10_new->Sumw2();
+    vh1_nCharged_gluon_nvert10.push_back(h1_nCharged_gluon_nvert10_new);
+    sprintf( histoname, "nCharged_quark_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nCharged_quark_nvert10_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nCharged_quark_nvert10_new->Sumw2();
+    vh1_nCharged_quark_nvert10.push_back(h1_nCharged_quark_nvert10_new);
+
+    sprintf( histoname, "nNeutral_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nNeutral_nvert10_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nNeutral_nvert10_new->Sumw2();
+    vh1_nNeutral_nvert10.push_back(h1_nNeutral_nvert10_new);
+    sprintf( histoname, "nNeutral_gluon_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nNeutral_gluon_nvert10_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nNeutral_gluon_nvert10_new->Sumw2();
+    vh1_nNeutral_gluon_nvert10.push_back(h1_nNeutral_gluon_nvert10_new);
+    sprintf( histoname, "nNeutral_quark_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_nNeutral_quark_nvert10_new = new TH1D(histoname, "", 51, -0.5, 50.5);
+    h1_nNeutral_quark_nvert10_new->Sumw2();
+    vh1_nNeutral_quark_nvert10.push_back(h1_nNeutral_quark_nvert10_new);
+
+    sprintf( histoname, "rmsCand_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_rmsCand_nvert10_new = new TH1D(histoname, "", 50, 0., 0.1);
+    h1_rmsCand_nvert10_new->Sumw2();
+    vh1_rmsCand_nvert10.push_back(h1_rmsCand_nvert10_new);
+    sprintf( histoname, "rmsCand_gluon_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_rmsCand_gluon_nvert10_new = new TH1D(histoname, "", 50, 0., 0.1);
+    h1_rmsCand_gluon_nvert10_new->Sumw2();
+    vh1_rmsCand_gluon_nvert10.push_back(h1_rmsCand_gluon_nvert10_new);
+    sprintf( histoname, "rmsCand_quark_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_rmsCand_quark_nvert10_new = new TH1D(histoname, "", 50, 0., 0.1);
+    h1_rmsCand_quark_nvert10_new->Sumw2();
+    vh1_rmsCand_quark_nvert10.push_back(h1_rmsCand_quark_nvert10_new);
+
+    sprintf( histoname, "ptD_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_ptD_nvert10_new = new TH1D(histoname, "", 50, 0., 1.0001);
+    h1_ptD_nvert10_new->Sumw2();
+    vh1_ptD_nvert10.push_back(h1_ptD_nvert10_new);
+    sprintf( histoname, "ptD_gluon_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_ptD_gluon_nvert10_new = new TH1D(histoname, "", 50, 0., 1.0001);
+    h1_ptD_gluon_nvert10_new->Sumw2();
+    vh1_ptD_gluon_nvert10.push_back(h1_ptD_gluon_nvert10_new);
+    sprintf( histoname, "ptD_quark_nvert10_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_ptD_quark_nvert10_new = new TH1D(histoname, "", 50, 0., 1.0001);
+    h1_ptD_quark_nvert10_new->Sumw2();
+    vh1_ptD_quark_nvert10.push_back(h1_ptD_quark_nvert10_new);
+
 
     sprintf( histoname, "ptD_vs_rmsCand_gluon_pt%.0f_%.0f", ptMin, ptMax);
     TH2D* h2_ptD_vs_rmsCand_gluon_new = new TH2D(histoname, "", 50, 0., 0.1, 50, 0., 1.);
@@ -377,18 +623,22 @@ void Ntp1Finalizer_QG::finalize() {
       vhp_rmsCand_vs_rhoPF[thisPtBin]->Fill( rhoPF, rmsCandJet[iJet], eventWeight );
 
       if( nvertex==1 ) {
-        h1_nCharged_nvert1->Fill( nChargedJet[iJet], eventWeight );
-        h1_nNeutral_nvert1->Fill( nNeutralJet[iJet], eventWeight );
-        h1_nPtD_nvert1->Fill( ptDJet[iJet], eventWeight );
-        h1_rmsCand_nvert1->Fill( rmsCandJet[iJet], eventWeight );
+        vh1_nCharged_nvert1[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
+        vh1_nNeutral_nvert1[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
+        vh1_ptD_nvert1[thisPtBin]->Fill( ptDJet[iJet], eventWeight );
+        vh1_rmsCand_nvert1[thisPtBin]->Fill( rmsCandJet[iJet], eventWeight );
       }
       if( nvertex==10 ) {
-        h1_nCharged_nvert10->Fill( nChargedJet[iJet], eventWeight );
-        h1_nNeutral_nvert10->Fill( nNeutralJet[iJet], eventWeight );
-        h1_nPtD_nvert10->Fill( ptDJet[iJet], eventWeight );
-        h1_rmsCand_nvert10->Fill( rmsCandJet[iJet], eventWeight );
+        vh1_nCharged_nvert10[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
+        vh1_nNeutral_nvert10[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
+        vh1_ptD_nvert10[thisPtBin]->Fill( ptDJet[iJet], eventWeight );
+        vh1_rmsCand_nvert10[thisPtBin]->Fill( rmsCandJet[iJet], eventWeight );
       }
 
+      vhp_nCharged_vs_nvertex[thisPtBin]->Fill(nvertex, nChargedJet[iJet], eventWeight);
+      vhp_nNeutral_vs_nvertex[thisPtBin]->Fill(nvertex, nNeutralJet[iJet], eventWeight);
+      vhp_rmsCand_vs_nvertex[thisPtBin]->Fill(nvertex, rmsCandJet[iJet], eventWeight);
+      vhp_ptD_vs_nvertex[thisPtBin]->Fill(nvertex, ptDJet[iJet], eventWeight);
 
       // then match to parton:
 
@@ -416,7 +666,7 @@ void Ntp1Finalizer_QG::finalize() {
 
 
 
-      if( abs(partFlavor)< 5 ) { //light quark
+      if( abs(partFlavor)< 4 ) { //light quark
         //h1_ptJet_quark[thisPtBin]->Fill( ptJet[iJet], eventWeight );
         vh1_nCharged_quark[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
         vh1_nNeutral_quark[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
@@ -434,19 +684,43 @@ void Ntp1Finalizer_QG::finalize() {
         vvh1_rmsCand_quark[thisPtBin][thisRhoBin]->Fill( rmsCandJet[iJet], eventWeight );
 
         if( nvertex==1 ) {
-          h1_nCharged_quark_nvert1->Fill( nChargedJet[iJet], eventWeight );
-          h1_nNeutral_quark_nvert1->Fill( nNeutralJet[iJet], eventWeight );
-          h1_nPtD_quark_nvert1->Fill( ptDJet[iJet], eventWeight );
-          h1_rmsCand_quark_nvert1->Fill( rmsCandJet[iJet], eventWeight );
+          vh1_nCharged_quark_nvert1[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
+          vh1_nNeutral_quark_nvert1[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
+          vh1_ptD_quark_nvert1[thisPtBin]->Fill( ptDJet[iJet], eventWeight );
+          vh1_rmsCand_quark_nvert1[thisPtBin]->Fill( rmsCandJet[iJet], eventWeight );
         }
         if( nvertex==10 ) {
-          h1_nCharged_quark_nvert10->Fill( nChargedJet[iJet], eventWeight );
-          h1_nNeutral_quark_nvert10->Fill( nNeutralJet[iJet], eventWeight );
-          h1_nPtD_quark_nvert10->Fill( ptDJet[iJet], eventWeight );
-          h1_rmsCand_quark_nvert10->Fill( rmsCandJet[iJet], eventWeight );
+          vh1_nCharged_quark_nvert10[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
+          vh1_nNeutral_quark_nvert10[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
+          vh1_ptD_quark_nvert10[thisPtBin]->Fill( ptDJet[iJet], eventWeight );
+          vh1_rmsCand_quark_nvert10[thisPtBin]->Fill( rmsCandJet[iJet], eventWeight );
         }
 
+        vhp_nCharged_vs_nvertex_quark[thisPtBin]->Fill(nvertex, nChargedJet[iJet], eventWeight);
+        vhp_nNeutral_vs_nvertex_quark[thisPtBin]->Fill(nvertex, nNeutralJet[iJet], eventWeight);
+        vhp_rmsCand_vs_nvertex_quark[thisPtBin]->Fill(nvertex, rmsCandJet[iJet], eventWeight);
+        vhp_ptD_vs_nvertex_quark[thisPtBin]->Fill(nvertex, ptDJet[iJet], eventWeight);
+
+
+      } else if( abs(partFlavor)==4 ) { //charm
+
+        //h1_ptJet_charm[thisPtBin]->Fill( ptJet[iJet], eventWeight );
+        vh1_nCharged_charm[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
+        vh1_nNeutral_charm[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
+        vh1_ptD_charm[thisPtBin]->Fill( ptDJet[iJet], eventWeight );
+        vh1_rmsCand_charm[thisPtBin]->Fill( rmsCandJet[iJet], eventWeight );
+
+
+      } else if( abs(partFlavor)==5 ) { //bottom
+
+        //h1_ptJet_bottom[thisPtBin]->Fill( ptJet[iJet], eventWeight );
+        vh1_nCharged_bottom[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
+        vh1_nNeutral_bottom[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
+        vh1_ptD_bottom[thisPtBin]->Fill( ptDJet[iJet], eventWeight );
+        vh1_rmsCand_bottom[thisPtBin]->Fill( rmsCandJet[iJet], eventWeight );
+
       } else if( partFlavor==21 ) { //gluon
+
         //h1_ptJet_gluon[thisPtBin]->Fill( ptJet[iJet], eventWeight );
         vh1_nCharged_gluon[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
         vh1_nNeutral_gluon[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
@@ -464,17 +738,23 @@ void Ntp1Finalizer_QG::finalize() {
         vvh1_rmsCand_gluon[thisPtBin][thisRhoBin]->Fill( rmsCandJet[iJet], eventWeight );
 
         if( nvertex==1 ) {
-          h1_nCharged_gluon_nvert1->Fill( nChargedJet[iJet], eventWeight );
-          h1_nNeutral_gluon_nvert1->Fill( nNeutralJet[iJet], eventWeight );
-          h1_nPtD_gluon_nvert1->Fill( ptDJet[iJet], eventWeight );
-          h1_rmsCand_gluon_nvert1->Fill( rmsCandJet[iJet], eventWeight );
+          vh1_nCharged_gluon_nvert1[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
+          vh1_nNeutral_gluon_nvert1[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
+          vh1_ptD_gluon_nvert1[thisPtBin]->Fill( ptDJet[iJet], eventWeight );
+          vh1_rmsCand_gluon_nvert1[thisPtBin]->Fill( rmsCandJet[iJet], eventWeight );
         }
         if( nvertex==10 ) {
-          h1_nCharged_gluon_nvert10->Fill( nChargedJet[iJet], eventWeight );
-          h1_nNeutral_gluon_nvert10->Fill( nNeutralJet[iJet], eventWeight );
-          h1_nPtD_gluon_nvert10->Fill( ptDJet[iJet], eventWeight );
-          h1_rmsCand_gluon_nvert10->Fill( rmsCandJet[iJet], eventWeight );
+          vh1_nCharged_gluon_nvert10[thisPtBin]->Fill( nChargedJet[iJet], eventWeight );
+          vh1_nNeutral_gluon_nvert10[thisPtBin]->Fill( nNeutralJet[iJet], eventWeight );
+          vh1_ptD_gluon_nvert10[thisPtBin]->Fill( ptDJet[iJet], eventWeight );
+          vh1_rmsCand_gluon_nvert10[thisPtBin]->Fill( rmsCandJet[iJet], eventWeight );
         }
+
+        vhp_nCharged_vs_nvertex_gluon[thisPtBin]->Fill(nvertex, nChargedJet[iJet], eventWeight);
+        vhp_nNeutral_vs_nvertex_gluon[thisPtBin]->Fill(nvertex, nNeutralJet[iJet], eventWeight);
+        vhp_rmsCand_vs_nvertex_gluon[thisPtBin]->Fill(nvertex, rmsCandJet[iJet], eventWeight);
+        vhp_ptD_vs_nvertex_gluon[thisPtBin]->Fill(nvertex, ptDJet[iJet], eventWeight);
+
       }
 
     } // for jets
@@ -567,35 +847,6 @@ void Ntp1Finalizer_QG::finalize() {
   h1_rhoPF->Write();
   h2_rhoPF_vs_nvertex->Write();
 
-  h1_nCharged_nvert1->Write();
-  h1_nNeutral_nvert1->Write();
-  h1_nPtD_nvert1->Write();
-  h1_rmsCand_nvert1->Write();
-
-  h1_nCharged_nvert10->Write();
-  h1_nNeutral_nvert10->Write();
-  h1_nPtD_nvert10->Write();
-  h1_rmsCand_nvert10->Write();
-
-  h1_nCharged_gluon_nvert1->Write();
-  h1_nNeutral_gluon_nvert1->Write();
-  h1_nPtD_gluon_nvert1->Write();
-  h1_rmsCand_gluon_nvert1->Write();
-
-  h1_nCharged_gluon_nvert10->Write();
-  h1_nNeutral_gluon_nvert10->Write();
-  h1_nPtD_gluon_nvert10->Write();
-  h1_rmsCand_gluon_nvert10->Write();
-
-  h1_nCharged_quark_nvert1->Write();
-  h1_nNeutral_quark_nvert1->Write();
-  h1_nPtD_quark_nvert1->Write();
-  h1_rmsCand_quark_nvert1->Write();
-
-  h1_nCharged_quark_nvert10->Write();
-  h1_nNeutral_quark_nvert10->Write();
-  h1_nPtD_quark_nvert10->Write();
-  h1_rmsCand_quark_nvert10->Write();
 
   h1_nCharged_corr->Write();
   h1_nNeutral_corr->Write();
@@ -611,37 +862,93 @@ void Ntp1Finalizer_QG::finalize() {
     vhp_ptD_vs_rhoPF[iBin]->Write();
     vhp_rmsCand_vs_rhoPF[iBin]->Write();
 
+    vhp_nCharged_vs_nvertex[iBin]->Write();
+    vhp_nNeutral_vs_nvertex[iBin]->Write();
+    vhp_ptD_vs_nvertex[iBin]->Write();
+    vhp_rmsCand_vs_nvertex[iBin]->Write();
+
     vh1_nCharged[iBin]->Write();
     vh1_nNeutral[iBin]->Write();
     vh1_ptD[iBin]->Write();
     vh1_rmsCand[iBin]->Write();
-
-    //h1_ptJet_gluon[iBin]->Write();
-    vh1_nCharged_gluon[iBin]->Write();
-    vh1_nNeutral_gluon[iBin]->Write();
-    vh1_ptD_gluon[iBin]->Write();
-    vh1_rmsCand_gluon[iBin]->Write();
-
-    //h1_ptJet_quark[iBin]->Write();
-    vh1_nCharged_quark[iBin]->Write();
-    vh1_nNeutral_quark[iBin]->Write();
-    vh1_ptD_quark[iBin]->Write();
-    vh1_rmsCand_quark[iBin]->Write();
 
     vh1_nCharged_corr[iBin]->Write();
     vh1_nNeutral_corr[iBin]->Write();
     vh1_ptD_corr[iBin]->Write();
     vh1_rmsCand_corr[iBin]->Write();
 
-    vh2_ptD_vs_nCharged_gluon[iBin]->Write();
-    vh2_ptD_vs_rmsCand_gluon[iBin]->Write();
-    vh2_rmsCand_vs_nCharged_gluon[iBin]->Write();
-    vh2_nCharged_vs_nNeutral_gluon[iBin]->Write();
+    vh1_nCharged_nvert1[iBin]->Write();
+    vh1_nNeutral_nvert1[iBin]->Write();
+    vh1_ptD_nvert1[iBin]->Write();
+    vh1_rmsCand_nvert1[iBin]->Write();
+
+    vh1_nCharged_nvert10[iBin]->Write();
+    vh1_nNeutral_nvert10[iBin]->Write();
+    vh1_ptD_nvert10[iBin]->Write();
+    vh1_rmsCand_nvert10[iBin]->Write();
+
+    vhp_nCharged_vs_nvertex_quark[iBin]->Write();
+    vhp_nNeutral_vs_nvertex_quark[iBin]->Write();
+    vhp_ptD_vs_nvertex_quark[iBin]->Write();
+    vhp_rmsCand_vs_nvertex_quark[iBin]->Write();
+
+    vh1_nCharged_quark[iBin]->Write();
+    vh1_nNeutral_quark[iBin]->Write();
+    vh1_ptD_quark[iBin]->Write();
+    vh1_rmsCand_quark[iBin]->Write();
+
+    vh1_nCharged_quark_nvert1[iBin]->Write();
+    vh1_nNeutral_quark_nvert1[iBin]->Write();
+    vh1_ptD_quark_nvert1[iBin]->Write();
+    vh1_rmsCand_quark_nvert1[iBin]->Write();
+
+    vh1_nCharged_quark_nvert10[iBin]->Write();
+    vh1_nNeutral_quark_nvert10[iBin]->Write();
+    vh1_ptD_quark_nvert10[iBin]->Write();
+    vh1_rmsCand_quark_nvert10[iBin]->Write();
 
     vh2_ptD_vs_nCharged_quark[iBin]->Write();
     vh2_ptD_vs_rmsCand_quark[iBin]->Write();
     vh2_rmsCand_vs_nCharged_quark[iBin]->Write();
     vh2_nCharged_vs_nNeutral_quark[iBin]->Write();
+
+    vh1_nCharged_charm[iBin]->Write();
+    vh1_nNeutral_charm[iBin]->Write();
+    vh1_ptD_charm[iBin]->Write();
+    vh1_rmsCand_charm[iBin]->Write();
+
+
+
+    vh1_nCharged_bottom[iBin]->Write();
+    vh1_nNeutral_bottom[iBin]->Write();
+    vh1_ptD_bottom[iBin]->Write();
+    vh1_rmsCand_bottom[iBin]->Write();
+
+
+    vhp_nCharged_vs_nvertex_gluon[iBin]->Write();
+    vhp_nNeutral_vs_nvertex_gluon[iBin]->Write();
+    vhp_ptD_vs_nvertex_gluon[iBin]->Write();
+    vhp_rmsCand_vs_nvertex_gluon[iBin]->Write();
+
+    vh1_nCharged_gluon[iBin]->Write();
+    vh1_nNeutral_gluon[iBin]->Write();
+    vh1_ptD_gluon[iBin]->Write();
+    vh1_rmsCand_gluon[iBin]->Write();
+
+    vh1_nCharged_gluon_nvert1[iBin]->Write();
+    vh1_nNeutral_gluon_nvert1[iBin]->Write();
+    vh1_ptD_gluon_nvert1[iBin]->Write();
+    vh1_rmsCand_gluon_nvert1[iBin]->Write();
+
+    vh1_nCharged_gluon_nvert10[iBin]->Write();
+    vh1_nNeutral_gluon_nvert10[iBin]->Write();
+    vh1_ptD_gluon_nvert10[iBin]->Write();
+    vh1_rmsCand_gluon_nvert10[iBin]->Write();
+
+    vh2_ptD_vs_nCharged_gluon[iBin]->Write();
+    vh2_ptD_vs_rmsCand_gluon[iBin]->Write();
+    vh2_rmsCand_vs_nCharged_gluon[iBin]->Write();
+    vh2_nCharged_vs_nNeutral_gluon[iBin]->Write();
 
   }
 
