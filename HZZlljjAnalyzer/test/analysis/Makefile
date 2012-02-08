@@ -240,7 +240,7 @@ Ntp1Finalizer_QGTMVA.o: Ntp1Finalizer_QGTMVA.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/  Ntp1Finalizer_QGTMVA.C $(ROOTFLAG)
 
 Ntp1Finalizer_ComputeQGLikelihood.o: Ntp1Finalizer_ComputeQGLikelihood.C
-	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf Ntp1Finalizer_ComputeQGLikelihood.C $(ROOTFLAG)
+	$(CC) $(CFLAGS) $(INCLUDES) Ntp1Finalizer_ComputeQGLikelihood.C $(ROOTFLAG)
 
 Ntp1Finalizer_GG.o: Ntp1Finalizer_GG.C
 	$(CC) $(CFLAGS) -I$(CMSSW_BASE)/src/UserCode/pandolf/  Ntp1Finalizer_GG.C $(ROOTFLAG)
