@@ -63,10 +63,10 @@ int main(int argc, char* argv[]) {
   std::cout << "Opened mc file '" << mcFileName2 << "'." << std::endl;
   db2->add_mcFile( mcFile2, dataset, "Z + Jets", 38, 3001);
 
-  drawCompare_vs_pt( db2, "QGLikelihood", "Likelihood" );
-  drawCompare_vs_pt( db2, "QGLikelihood_norms", "Likelihood" );
-  drawCompare_vs_pt( db2, "QGLikelihood_norms_noptD", "Likelihood" );
-  drawCompare_vs_pt( db2, "QGLikelihood_onlyNch", "Likelihood" );
+  drawCompare_vs_pt( db2, "QGLikelihood", "Quark-Gluon LD" );
+  drawCompare_vs_pt( db2, "QGLikelihood_norms", "Quark-Gluon LD" );
+  drawCompare_vs_pt( db2, "QGLikelihood_norms_noptD", "Quark-Gluon LD" );
+  drawCompare_vs_pt( db2, "QGLikelihood_onlyNch", "Quark-Gluon LD" );
   //drawCompare_vs_pt( db2, "rmsCand_cutOnQGLikelihood_norms", "RMS Cands" );
 
 
