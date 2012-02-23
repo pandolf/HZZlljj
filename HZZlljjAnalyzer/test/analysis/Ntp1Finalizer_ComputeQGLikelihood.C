@@ -188,7 +188,8 @@ void Ntp1Finalizer_ComputeQGLikelihood::finalize() {
 
 
   //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Fall10.root", nBins);
-  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root", nBins);
+  //QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("QG_QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_Spring11-PU_S1_START311_V1G1-v1.root", nBins);
+  QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator("QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root", nBins);
 
 
   int nEntries = tree_->GetEntries();
@@ -261,7 +262,7 @@ void Ntp1Finalizer_ComputeQGLikelihood::finalize() {
       float QGLikelihood_norms_noptD = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], nNeutralJet[iJet], -1., -1. );
       float QGLikelihood_onlyNch = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], -1., -1., -1. );
 
-      if( abs(partFlavor)< 7 ) { //quark
+      if( abs(partFlavor)< 4 ) { //light quark
         
         vh1_QGLikelihood_quark[thisBin]->Fill( QGLikelihood, eventWeight );
         vh1_QGLikelihood_norms_quark[thisBin]->Fill( QGLikelihood_norms, eventWeight );
