@@ -36,9 +36,9 @@ void Ntp1Finalizer_QG::finalize() {
   Double_t ptBins[nPtBins+1];
   fitTools::getBins_int( nPtBins+1, ptBins, 15., 1000. );
 
-  const int nRhoBins = 17;
+  const int nRhoBins = 20;
   Double_t rhoBins[nRhoBins+1];
-  fitTools::getBins( nRhoBins+1, rhoBins, 0., 17., false );
+  fitTools::getBins( nRhoBins+1, rhoBins, 0., 20., false );
 
 
   TH2D* h2_rhoPF_vs_nvertex  = new TH2D("rhoPF_vs_nvertex", "", 15, 0.5, 15.5, 50, 0., 20.);
