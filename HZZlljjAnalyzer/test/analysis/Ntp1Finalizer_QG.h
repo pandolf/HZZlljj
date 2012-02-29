@@ -19,7 +19,10 @@ class Ntp1Finalizer_QG : public Ntp1Finalizer {
   Ntp1Finalizer_QG( const std::string& dataset );
   virtual ~Ntp1Finalizer_QG() {};
 
-  void finalize();
+
+  void finalize() { this->finalize(false); };
+
+  void finalize( bool write_tree=false );
 
 
   std::vector< std::vector<TH1D*> > allocateHistogramMatrix(int nPtBins, Double_t *ptBins, int nRhoBins, const std::string& histoName, int nBins, float xMin, float xMax);

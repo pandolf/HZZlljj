@@ -26,7 +26,12 @@ Ntp1Finalizer_QG::Ntp1Finalizer_QG( const std::string& dataset ) : Ntp1Finalizer
 
 
 
-void Ntp1Finalizer_QG::finalize() {
+void Ntp1Finalizer_QG::finalize( bool write_tree ) {
+
+  if( write_tree ) {
+    if( flags_=="" ) flags_ = "TREE";
+    else flags_ = flags_ + "_TREE";
+  }
 
   if( outFile_==0 ) this->createOutputFile();
 
@@ -510,6 +515,10 @@ void Ntp1Finalizer_QG::finalize() {
 
   Int_t run;
   tree_->SetBranchAddress("run", &run);
+  Int_t LS;
+  tree_->SetBranchAddress("LS", &LS);
+  Int_t event;
+  tree_->SetBranchAddress("event", &event);
   Float_t eventWeight;
   tree_->SetBranchAddress("eventWeight", &eventWeight);
   Int_t nvertex;
@@ -553,6 +562,23 @@ void Ntp1Finalizer_QG::finalize() {
   tree_->SetBranchAddress("pdgIdPart", pdgIdPart);
 
 
+  Float_t ptJet_t, etaJet_t, ptDJet_t;
+  Int_t nChargedJet_t, nNeutralJet_t, pdgIdPartJet_t;
+
+  TTree* tree_passedEvents = new TTree("tree_passedEvents", "");
+
+  tree_passedEvents->Branch( "run", &run, "run/I" );
+  tree_passedEvents->Branch( "LS", &LS, "LS/I" );
+  tree_passedEvents->Branch( "event", &event, "event/I" );
+  tree_passedEvents->Branch( "rhoPF", &rhoPF, "rhoPF/F" );
+  tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
+  tree_passedEvents->Branch( "ptJet0", &ptJet_t, "ptJet_t/F" );
+  tree_passedEvents->Branch( "etaJet0", &etaJet_t, "etaJet_t/F" );
+  tree_passedEvents->Branch( "nChargedJet0", &nChargedJet_t, "nChargedJet_t/I" );
+  tree_passedEvents->Branch( "nNeutralJet0", &nNeutralJet_t, "nNeutralJet_t/I" );
+  tree_passedEvents->Branch( "ptDJet0", &ptDJet_t, "ptDJet_t/F" );
+  tree_passedEvents->Branch( "pdgIdPartJet0", &pdgIdPartJet_t, "pdgIdPartJet_t/I" );
+
 
 
   int nEntries = tree_->GetEntries();
@@ -576,6 +602,8 @@ void Ntp1Finalizer_QG::finalize() {
       thisJet.SetPtEtaPhiE( ptJet[iJet], etaJet[iJet], phiJet[iJet], eJet[iJet]);
 
       if( fabs(thisJet.Eta())>2. ) continue;
+      if( thisJet.Pt()<ptBins[0] ) continue;
+      if( thisJet.Pt()>3500. ) continue;
 
 
 
@@ -664,6 +692,15 @@ void Ntp1Finalizer_QG::finalize() {
       if( deltaRmin > 0.5 ) continue;
       //if( deltaRmin > 0.5 ) partFlavor=21; //lets try this
 
+
+      ptJet_t = thisJet.Pt();
+      etaJet_t = thisJet.Eta();
+      nChargedJet_t = nChargedJet[iJet];
+      nNeutralJet_t = nNeutralJet[iJet];
+      ptDJet_t = ptDJet[iJet];
+      pdgIdPartJet_t = partFlavor;
+
+      tree_passedEvents->Fill();
 
 
       if( abs(partFlavor)< 4 ) { //light quark
@@ -844,142 +881,150 @@ void Ntp1Finalizer_QG::finalize() {
 
   outFile_->cd();
 
-  h1_rhoPF->Write();
-  h2_rhoPF_vs_nvertex->Write();
+  if( write_tree ) {
+
+    tree_passedEvents->Write();
+
+  } else {
+
+    h1_rhoPF->Write();
+    h2_rhoPF_vs_nvertex->Write();
 
 
-  h1_nCharged_corr->Write();
-  h1_nNeutral_corr->Write();
-  h1_ptD_corr->Write();
-  h1_rmsCand_corr->Write();
-
-
-
-  for( unsigned iBin=0; iBin<nPtBins; ++iBin ) {
-
-    vhp_nCharged_vs_rhoPF[iBin]->Write();
-    vhp_nNeutral_vs_rhoPF[iBin]->Write();
-    vhp_ptD_vs_rhoPF[iBin]->Write();
-    vhp_rmsCand_vs_rhoPF[iBin]->Write();
-
-    vhp_nCharged_vs_nvertex[iBin]->Write();
-    vhp_nNeutral_vs_nvertex[iBin]->Write();
-    vhp_ptD_vs_nvertex[iBin]->Write();
-    vhp_rmsCand_vs_nvertex[iBin]->Write();
-
-    vh1_nCharged[iBin]->Write();
-    vh1_nNeutral[iBin]->Write();
-    vh1_ptD[iBin]->Write();
-    vh1_rmsCand[iBin]->Write();
-
-    vh1_nCharged_corr[iBin]->Write();
-    vh1_nNeutral_corr[iBin]->Write();
-    vh1_ptD_corr[iBin]->Write();
-    vh1_rmsCand_corr[iBin]->Write();
-
-    vh1_nCharged_nvert1[iBin]->Write();
-    vh1_nNeutral_nvert1[iBin]->Write();
-    vh1_ptD_nvert1[iBin]->Write();
-    vh1_rmsCand_nvert1[iBin]->Write();
-
-    vh1_nCharged_nvert10[iBin]->Write();
-    vh1_nNeutral_nvert10[iBin]->Write();
-    vh1_ptD_nvert10[iBin]->Write();
-    vh1_rmsCand_nvert10[iBin]->Write();
-
-    vhp_nCharged_vs_nvertex_quark[iBin]->Write();
-    vhp_nNeutral_vs_nvertex_quark[iBin]->Write();
-    vhp_ptD_vs_nvertex_quark[iBin]->Write();
-    vhp_rmsCand_vs_nvertex_quark[iBin]->Write();
-
-    vh1_nCharged_quark[iBin]->Write();
-    vh1_nNeutral_quark[iBin]->Write();
-    vh1_ptD_quark[iBin]->Write();
-    vh1_rmsCand_quark[iBin]->Write();
-
-    vh1_nCharged_quark_nvert1[iBin]->Write();
-    vh1_nNeutral_quark_nvert1[iBin]->Write();
-    vh1_ptD_quark_nvert1[iBin]->Write();
-    vh1_rmsCand_quark_nvert1[iBin]->Write();
-
-    vh1_nCharged_quark_nvert10[iBin]->Write();
-    vh1_nNeutral_quark_nvert10[iBin]->Write();
-    vh1_ptD_quark_nvert10[iBin]->Write();
-    vh1_rmsCand_quark_nvert10[iBin]->Write();
-
-    vh2_ptD_vs_nCharged_quark[iBin]->Write();
-    vh2_ptD_vs_rmsCand_quark[iBin]->Write();
-    vh2_rmsCand_vs_nCharged_quark[iBin]->Write();
-    vh2_nCharged_vs_nNeutral_quark[iBin]->Write();
-
-    vh1_nCharged_charm[iBin]->Write();
-    vh1_nNeutral_charm[iBin]->Write();
-    vh1_ptD_charm[iBin]->Write();
-    vh1_rmsCand_charm[iBin]->Write();
+    h1_nCharged_corr->Write();
+    h1_nNeutral_corr->Write();
+    h1_ptD_corr->Write();
+    h1_rmsCand_corr->Write();
 
 
 
-    vh1_nCharged_bottom[iBin]->Write();
-    vh1_nNeutral_bottom[iBin]->Write();
-    vh1_ptD_bottom[iBin]->Write();
-    vh1_rmsCand_bottom[iBin]->Write();
+    for( unsigned iBin=0; iBin<nPtBins; ++iBin ) {
+
+      vhp_nCharged_vs_rhoPF[iBin]->Write();
+      vhp_nNeutral_vs_rhoPF[iBin]->Write();
+      vhp_ptD_vs_rhoPF[iBin]->Write();
+      vhp_rmsCand_vs_rhoPF[iBin]->Write();
+
+      vhp_nCharged_vs_nvertex[iBin]->Write();
+      vhp_nNeutral_vs_nvertex[iBin]->Write();
+      vhp_ptD_vs_nvertex[iBin]->Write();
+      vhp_rmsCand_vs_nvertex[iBin]->Write();
+
+      vh1_nCharged[iBin]->Write();
+      vh1_nNeutral[iBin]->Write();
+      vh1_ptD[iBin]->Write();
+      vh1_rmsCand[iBin]->Write();
+
+      vh1_nCharged_corr[iBin]->Write();
+      vh1_nNeutral_corr[iBin]->Write();
+      vh1_ptD_corr[iBin]->Write();
+      vh1_rmsCand_corr[iBin]->Write();
+
+      vh1_nCharged_nvert1[iBin]->Write();
+      vh1_nNeutral_nvert1[iBin]->Write();
+      vh1_ptD_nvert1[iBin]->Write();
+      vh1_rmsCand_nvert1[iBin]->Write();
+
+      vh1_nCharged_nvert10[iBin]->Write();
+      vh1_nNeutral_nvert10[iBin]->Write();
+      vh1_ptD_nvert10[iBin]->Write();
+      vh1_rmsCand_nvert10[iBin]->Write();
+
+      vhp_nCharged_vs_nvertex_quark[iBin]->Write();
+      vhp_nNeutral_vs_nvertex_quark[iBin]->Write();
+      vhp_ptD_vs_nvertex_quark[iBin]->Write();
+      vhp_rmsCand_vs_nvertex_quark[iBin]->Write();
+
+      vh1_nCharged_quark[iBin]->Write();
+      vh1_nNeutral_quark[iBin]->Write();
+      vh1_ptD_quark[iBin]->Write();
+      vh1_rmsCand_quark[iBin]->Write();
+
+      vh1_nCharged_quark_nvert1[iBin]->Write();
+      vh1_nNeutral_quark_nvert1[iBin]->Write();
+      vh1_ptD_quark_nvert1[iBin]->Write();
+      vh1_rmsCand_quark_nvert1[iBin]->Write();
+
+      vh1_nCharged_quark_nvert10[iBin]->Write();
+      vh1_nNeutral_quark_nvert10[iBin]->Write();
+      vh1_ptD_quark_nvert10[iBin]->Write();
+      vh1_rmsCand_quark_nvert10[iBin]->Write();
+
+      vh2_ptD_vs_nCharged_quark[iBin]->Write();
+      vh2_ptD_vs_rmsCand_quark[iBin]->Write();
+      vh2_rmsCand_vs_nCharged_quark[iBin]->Write();
+      vh2_nCharged_vs_nNeutral_quark[iBin]->Write();
+
+      vh1_nCharged_charm[iBin]->Write();
+      vh1_nNeutral_charm[iBin]->Write();
+      vh1_ptD_charm[iBin]->Write();
+      vh1_rmsCand_charm[iBin]->Write();
 
 
-    vhp_nCharged_vs_nvertex_gluon[iBin]->Write();
-    vhp_nNeutral_vs_nvertex_gluon[iBin]->Write();
-    vhp_ptD_vs_nvertex_gluon[iBin]->Write();
-    vhp_rmsCand_vs_nvertex_gluon[iBin]->Write();
 
-    vh1_nCharged_gluon[iBin]->Write();
-    vh1_nNeutral_gluon[iBin]->Write();
-    vh1_ptD_gluon[iBin]->Write();
-    vh1_rmsCand_gluon[iBin]->Write();
-
-    vh1_nCharged_gluon_nvert1[iBin]->Write();
-    vh1_nNeutral_gluon_nvert1[iBin]->Write();
-    vh1_ptD_gluon_nvert1[iBin]->Write();
-    vh1_rmsCand_gluon_nvert1[iBin]->Write();
-
-    vh1_nCharged_gluon_nvert10[iBin]->Write();
-    vh1_nNeutral_gluon_nvert10[iBin]->Write();
-    vh1_ptD_gluon_nvert10[iBin]->Write();
-    vh1_rmsCand_gluon_nvert10[iBin]->Write();
-
-    vh2_ptD_vs_nCharged_gluon[iBin]->Write();
-    vh2_ptD_vs_rmsCand_gluon[iBin]->Write();
-    vh2_rmsCand_vs_nCharged_gluon[iBin]->Write();
-    vh2_nCharged_vs_nNeutral_gluon[iBin]->Write();
-
-  }
+      vh1_nCharged_bottom[iBin]->Write();
+      vh1_nNeutral_bottom[iBin]->Write();
+      vh1_ptD_bottom[iBin]->Write();
+      vh1_rmsCand_bottom[iBin]->Write();
 
 
+      vhp_nCharged_vs_nvertex_gluon[iBin]->Write();
+      vhp_nNeutral_vs_nvertex_gluon[iBin]->Write();
+      vhp_ptD_vs_nvertex_gluon[iBin]->Write();
+      vhp_rmsCand_vs_nvertex_gluon[iBin]->Write();
 
+      vh1_nCharged_gluon[iBin]->Write();
+      vh1_nNeutral_gluon[iBin]->Write();
+      vh1_ptD_gluon[iBin]->Write();
+      vh1_rmsCand_gluon[iBin]->Write();
 
-  for( unsigned iBin=0; iBin<nPtBins; ++iBin ) {
+      vh1_nCharged_gluon_nvert1[iBin]->Write();
+      vh1_nNeutral_gluon_nvert1[iBin]->Write();
+      vh1_ptD_gluon_nvert1[iBin]->Write();
+      vh1_rmsCand_gluon_nvert1[iBin]->Write();
 
+      vh1_nCharged_gluon_nvert10[iBin]->Write();
+      vh1_nNeutral_gluon_nvert10[iBin]->Write();
+      vh1_ptD_gluon_nvert10[iBin]->Write();
+      vh1_rmsCand_gluon_nvert10[iBin]->Write();
 
-    char ptBinDir[200];
-    sprintf( ptBinDir, "rhoBins_pt%.0f_%.0f", ptBins[iBin], ptBins[iBin+1] );
-
-    outFile_->mkdir(ptBinDir);
-    outFile_->cd(ptBinDir);
-
-
-    for( unsigned iRhoBin=0; iRhoBin<nRhoBins; ++iRhoBin  ) {
-
-      vvh1_nCharged_gluon[iBin][iRhoBin]->Write();
-      vvh1_nNeutral_gluon[iBin][iRhoBin]->Write();
-      vvh1_ptD_gluon[iBin][iRhoBin]->Write();
-      vvh1_rmsCand_gluon[iBin][iRhoBin]->Write();
-
-      vvh1_nCharged_quark[iBin][iRhoBin]->Write();
-      vvh1_nNeutral_quark[iBin][iRhoBin]->Write();
-      vvh1_ptD_quark[iBin][iRhoBin]->Write();
-      vvh1_rmsCand_quark[iBin][iRhoBin]->Write();
+      vh2_ptD_vs_nCharged_gluon[iBin]->Write();
+      vh2_ptD_vs_rmsCand_gluon[iBin]->Write();
+      vh2_rmsCand_vs_nCharged_gluon[iBin]->Write();
+      vh2_nCharged_vs_nNeutral_gluon[iBin]->Write();
 
     }
 
-  }
+
+
+
+    for( unsigned iBin=0; iBin<nPtBins; ++iBin ) {
+
+
+      char ptBinDir[200];
+      sprintf( ptBinDir, "rhoBins_pt%.0f_%.0f", ptBins[iBin], ptBins[iBin+1] );
+
+      outFile_->mkdir(ptBinDir);
+      outFile_->cd(ptBinDir);
+
+
+      for( unsigned iRhoBin=0; iRhoBin<nRhoBins; ++iRhoBin  ) {
+
+        vvh1_nCharged_gluon[iBin][iRhoBin]->Write();
+        vvh1_nNeutral_gluon[iBin][iRhoBin]->Write();
+        vvh1_ptD_gluon[iBin][iRhoBin]->Write();
+        vvh1_rmsCand_gluon[iBin][iRhoBin]->Write();
+
+        vvh1_nCharged_quark[iBin][iRhoBin]->Write();
+        vvh1_nNeutral_quark[iBin][iRhoBin]->Write();
+        vvh1_ptD_quark[iBin][iRhoBin]->Write();
+        vvh1_rmsCand_quark[iBin][iRhoBin]->Write();
+
+      }
+
+    }
+
+  } // if write_tree
 
 
   outFile_->Close();

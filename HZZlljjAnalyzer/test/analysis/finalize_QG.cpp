@@ -11,13 +11,22 @@
 int main( int argc, char* argv[] ) {
 
 
-  if( argc!=2 ) {
-    std::cout << "USAGE: ./finalize_QG [dataset]" << std::endl;
+  if( argc!=2 && argc!=3 ) {
+    std::cout << "USAGE: ./finalize_QG [dataset] [write_tree=false]" << std::endl;
     std::cout << "Exiting. " << std::endl;
     exit(1615);
   } 
 
   std::string dataset(argv[1]);
+
+  bool write_tree = false;
+  if( argc==3 ) {
+    std::string write_tree_str(argv[2]);
+    if(write_tree_str=="true") {
+      write_tree=true;
+      std::cout << "-> Going to write tree to output file, not histograms." << std::endl;
+    }
+  }
 
 
 
@@ -93,7 +102,7 @@ int main( int argc, char* argv[] ) {
 
  
 
-  nf->finalize();
+  nf->finalize(write_tree);
 
   delete nf;
   nf=0;
