@@ -65,8 +65,8 @@ int main(int argc, char* argv[]) {
 
   drawCompare_vs_pt( db2, "QGLikelihood", "Quark-Gluon LD" );
   drawCompare_vs_pt( db2, "QGLikelihood_norms", "Quark-Gluon LD" );
-  drawCompare_vs_pt( db2, "QGLikelihood_norms_noptD", "Quark-Gluon LD" );
-  drawCompare_vs_pt( db2, "QGLikelihood_onlyNch", "Quark-Gluon LD" );
+  //drawCompare_vs_pt( db2, "QGLikelihood_norms_noptD", "Quark-Gluon LD" );
+  //drawCompare_vs_pt( db2, "QGLikelihood_onlyNch", "Quark-Gluon LD" );
   //drawCompare_vs_pt( db2, "rmsCand_cutOnQGLikelihood_norms", "RMS Cands" );
 
 
@@ -97,7 +97,8 @@ void drawCompare_vs_pt( DrawBase* db, const std::string& name, const std::string
 
   const int nBins = 20;
   Double_t ptBins[nBins+1];
-  fitTools::getBins_int( nBins+1, ptBins, 15., 1000. );
+  fitTools::getBins_int( nBins+1, ptBins, 20., 2000. );
+  //fitTools::getBins_int( nBins+1, ptBins, 15., 1000. );
 
   for( unsigned iBin=0; iBin<nBins; ++iBin ) {
 
@@ -142,7 +143,7 @@ void drawCompareHZZ_vs_pt( DrawBase* db, TFile* file_HZZlljj, const std::string&
 
   const int nBins = 20;
   Double_t ptBins[nBins+1];
-  fitTools::getBins_int( nBins+1, ptBins, 15., 1000. );
+  fitTools::getBins_int( nBins+1, ptBins, 20., 2000. );
 
   for( unsigned iBin=0; iBin<nBins; ++iBin ) {
 
@@ -238,7 +239,7 @@ void drawCompareHZZ_vs_pt( DrawBase* db, TFile* file_HZZlljj, const std::string&
           yMin = h1_quark->GetBinContent(iBin);
       }
 
-      TH2D* h2_axes_log = new TH2D("axes", "", 10, xMin, xMax, 10, yMin, 20.*yMax);
+      TH2D* h2_axes_log = new TH2D("axes_log", "", 10, xMin, xMax, 10, yMin, 20.*yMax);
       h2_axes_log->GetXaxis()->SetTitleOffset(1.1);
       h2_axes_log->GetYaxis()->SetTitleOffset(1.5);
       h2_axes_log->SetXTitle(axisName.c_str());
@@ -256,6 +257,9 @@ void drawCompareHZZ_vs_pt( DrawBase* db, TFile* file_HZZlljj, const std::string&
       char canvasName_log[200];
       sprintf( canvasName_log, "%s/HZZ_vs_quark_%s_pt%.0f_%.0f_log.eps", (db->get_outputdir()).c_str(), name.c_str(), ptMin, ptMax);
       c1->SaveAs(canvasName_log);
+
+      delete h2_axes;
+      delete h2_axes_log;
 
     }
 
@@ -279,7 +283,7 @@ void drawEffRej_vs_pt( DrawBase* db ) {
 
   const int nBins = 20;
   Double_t ptBins[nBins+1];
-  fitTools::getBins_int( nBins+1, ptBins, 15., 1000. );
+  fitTools::getBins_int( nBins+1, ptBins, 20., 2000. );
 
   gStyle->SetPadTickX(1);
   gStyle->SetPadTickY(1);
@@ -399,17 +403,18 @@ void drawEffRej_vs_pt( DrawBase* db ) {
     legend_norms->AddEntry(gr_eff_vs_rej_norms_noptD, "No RMS, no p_{T}D", "P");
     legend_norms->AddEntry(gr_eff_vs_rej_onlyNch, "Only N_{ch}", "P");
 
-    legend_norms->Draw("same");
+    //legend_norms->Draw("same");
     gr_eff_vs_rej_norms->Draw("psame");
-    gr_eff_vs_rej_noptD->Draw("psame");
-    gr_eff_vs_rej_norms_noptD->Draw("psame");
-    gr_eff_vs_rej_onlyNch->Draw("psame");
-    gr_eff_vs_rej->Draw("psame");
+    //gr_eff_vs_rej_noptD->Draw("psame");
+    //gr_eff_vs_rej_norms_noptD->Draw("psame");
+    //gr_eff_vs_rej_onlyNch->Draw("psame");
+    //gr_eff_vs_rej->Draw("psame");
 
     sprintf( canvasName, "%s/eff_vs_rej_norms_pt%.0f_%.0f.eps", (db->get_outputdir()).c_str(), ptMin, ptMax);
     c1->SaveAs(canvasName);
 
     delete c1;
+    delete h2_axes;
 
   }
 
@@ -417,7 +422,7 @@ void drawEffRej_vs_pt( DrawBase* db ) {
   TCanvas* c_pt = new TCanvas("c_pt", "c1", 600, 600);
   c_pt->SetLogx();
 
-  TH2D* h2_pt = new TH2D("axes", "", 10, 15., 1000., 10, 0., 1.00001);
+  TH2D* h2_pt = new TH2D("axes_pt", "", 10, 20., 2000., 10, 0., 1.00001);
   h2_pt->SetXTitle("Jet Transverse Momentum [GeV/c]");
   h2_pt->SetYTitle("Gluon Jet Efficiency");
   h2_pt->GetXaxis()->SetMoreLogLabels();
@@ -473,6 +478,8 @@ void drawEffRej_vs_pt( DrawBase* db ) {
   gStyle->SetPadTickX(0);
   gStyle->SetPadTickY(0);
 
+  delete h2_pt;
+
 }
 
 
@@ -489,7 +496,7 @@ void drawVar_vs_PU( DrawBase* db, const std::string& varName, const std::string&
 
   const int nBins = 20;
   Double_t ptBins[nBins+1];
-  fitTools::getBins_int( nBins+1, ptBins, 15., 1000. );
+  fitTools::getBins_int( nBins+1, ptBins, 20., 2000. );
 
 
   for( unsigned iBin=0; iBin<nBins; ++iBin ) {
@@ -575,6 +582,7 @@ void drawVar_vs_PU( DrawBase* db, const std::string& varName, const std::string&
     c1->SaveAs(canvasName_png.c_str());
 
     delete c1;
+    delete h2_axes;
     
   } //for pt bins
 
