@@ -4,6 +4,10 @@
 #include "CommonTools/DrawBase.h"
 #include "CommonTools/fitTools.h"
 
+int NBINSPT_ = 18;
+float PTMIN_ = 20.;
+float PTMAX_ = 1000.;
+
 
 
 void drawEffRej_vs_pt( DrawBase* db );
@@ -43,8 +47,10 @@ int main(int argc, char* argv[]) {
 
   drawCompare_vs_pt( db, "ptD", "p_{T} Distribution" );
   drawCompare_vs_pt( db, "rmsCand", "PFCandidate p_{T}-Weighted Spread");
+  db->set_xAxisMax(50);
   drawCompare_vs_pt( db, "nCharged", "Jet Charged Multiplicity");
   drawCompare_vs_pt( db, "nNeutral", "Jet Neutral Multiplicity");
+  db->set_xAxisMax();
 
   drawVar_vs_PU( db, "ptD", "p_{T} Distribution" );
   drawVar_vs_PU( db, "rmsCand", "PFCandidate p_{T}-Weighted Spread");
@@ -95,9 +101,10 @@ int main(int argc, char* argv[]) {
 
 void drawCompare_vs_pt( DrawBase* db, const std::string& name, const std::string& axisName ) {
 
-  const int nBins = 20;
+  const int nBins = NBINSPT_;
   Double_t ptBins[nBins+1];
-  fitTools::getBins_int( nBins+1, ptBins, 20., 2000. );
+  fitTools::getBins_int( nBins, ptBins, PTMIN_, PTMAX_ );
+  ptBins[nBins] = 3500.;
   //fitTools::getBins_int( nBins+1, ptBins, 15., 1000. );
 
   for( unsigned iBin=0; iBin<nBins; ++iBin ) {
@@ -141,9 +148,11 @@ void drawCompareHZZ_vs_pt( DrawBase* db, TFile* file_HZZlljj, const std::string&
 
   TFile* file_QCD = db->get_mcFile(0).file;
 
-  const int nBins = 20;
+  const int nBins = NBINSPT_;
   Double_t ptBins[nBins+1];
-  fitTools::getBins_int( nBins+1, ptBins, 20., 2000. );
+  fitTools::getBins_int( nBins, ptBins, PTMIN_, PTMAX_ );
+  ptBins[nBins] = 3500.;
+
 
   for( unsigned iBin=0; iBin<nBins; ++iBin ) {
 
@@ -281,9 +290,11 @@ void drawEffRej_vs_pt( DrawBase* db ) {
   TPaveText* label_sqrt = db->get_labelSqrt();
 
 
-  const int nBins = 20;
+  const int nBins = NBINSPT_;
   Double_t ptBins[nBins+1];
-  fitTools::getBins_int( nBins+1, ptBins, 20., 2000. );
+  fitTools::getBins_int( nBins, ptBins, PTMIN_, PTMAX_ );
+  ptBins[nBins] = 3500.;
+
 
   gStyle->SetPadTickX(1);
   gStyle->SetPadTickY(1);
@@ -422,7 +433,7 @@ void drawEffRej_vs_pt( DrawBase* db ) {
   TCanvas* c_pt = new TCanvas("c_pt", "c1", 600, 600);
   c_pt->SetLogx();
 
-  TH2D* h2_pt = new TH2D("axes_pt", "", 10, 20., 2000., 10, 0., 1.00001);
+  TH2D* h2_pt = new TH2D("axes_pt", "", 10, 0.9*PTMIN_, PTMAX_, 10, 0., 1.00001);
   h2_pt->SetXTitle("Jet Transverse Momentum [GeV/c]");
   h2_pt->SetYTitle("Gluon Jet Efficiency");
   h2_pt->GetXaxis()->SetMoreLogLabels();
@@ -494,9 +505,9 @@ void drawVar_vs_PU( DrawBase* db, const std::string& varName, const std::string&
   TPaveText* label_sqrt = db->get_labelSqrt();
 
 
-  const int nBins = 20;
+  const int nBins = NBINSPT_;
   Double_t ptBins[nBins+1];
-  fitTools::getBins_int( nBins+1, ptBins, 20., 2000. );
+  fitTools::getBins_int( nBins+1, ptBins, PTMIN_, PTMAX_ );
 
 
   for( unsigned iBin=0; iBin<nBins; ++iBin ) {
