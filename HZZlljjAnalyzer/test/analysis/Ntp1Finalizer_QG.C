@@ -37,9 +37,13 @@ void Ntp1Finalizer_QG::finalize( bool write_tree ) {
 
 
 
-  const int nPtBins = 20;
+  const int nPtBins = 18;
   Double_t ptBins[nPtBins+1];
-  fitTools::getBins_int( nPtBins+1, ptBins, 15., 1000. );
+  fitTools::getBins_int( nPtBins, ptBins, 20., 1000. );
+  ptBins[nPtBins] = 3500.;
+  //fitTools::getBins_int( nPtBins+1, ptBins, 15., 1000. );
+
+
 
   const int nRhoBins = 20;
   Double_t rhoBins[nRhoBins+1];
@@ -565,20 +569,25 @@ void Ntp1Finalizer_QG::finalize( bool write_tree ) {
   Float_t ptJet_t, etaJet_t, ptDJet_t;
   Int_t nChargedJet_t, nNeutralJet_t, pdgIdPartJet_t;
 
-  TTree* tree_passedEvents = new TTree("tree_passedEvents", "");
+  TTree* tree_passedEvents;
 
-  tree_passedEvents->Branch( "run", &run, "run/I" );
-  tree_passedEvents->Branch( "LS", &LS, "LS/I" );
-  tree_passedEvents->Branch( "event", &event, "event/I" );
-  tree_passedEvents->Branch( "rhoPF", &rhoPF, "rhoPF/F" );
-  tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
-  tree_passedEvents->Branch( "ptJet0", &ptJet_t, "ptJet_t/F" );
-  tree_passedEvents->Branch( "etaJet0", &etaJet_t, "etaJet_t/F" );
-  tree_passedEvents->Branch( "nChargedJet0", &nChargedJet_t, "nChargedJet_t/I" );
-  tree_passedEvents->Branch( "nNeutralJet0", &nNeutralJet_t, "nNeutralJet_t/I" );
-  tree_passedEvents->Branch( "ptDJet0", &ptDJet_t, "ptDJet_t/F" );
-  tree_passedEvents->Branch( "pdgIdPartJet0", &pdgIdPartJet_t, "pdgIdPartJet_t/I" );
+  if( write_tree ) {
 
+    tree_passedEvents = new TTree("tree_passedEvents", "");
+
+    tree_passedEvents->Branch( "run", &run, "run/I" );
+    tree_passedEvents->Branch( "LS", &LS, "LS/I" );
+    tree_passedEvents->Branch( "event", &event, "event/I" );
+    tree_passedEvents->Branch( "rhoPF", &rhoPF, "rhoPF/F" );
+    tree_passedEvents->Branch( "eventWeight", &eventWeight, "eventWeight/F" );
+    tree_passedEvents->Branch( "ptJet0", &ptJet_t, "ptJet_t/F" );
+    tree_passedEvents->Branch( "etaJet0", &etaJet_t, "etaJet_t/F" );
+    tree_passedEvents->Branch( "nChargedJet0", &nChargedJet_t, "nChargedJet_t/I" );
+    tree_passedEvents->Branch( "nNeutralJet0", &nNeutralJet_t, "nNeutralJet_t/I" );
+    tree_passedEvents->Branch( "ptDJet0", &ptDJet_t, "ptDJet_t/F" );
+    tree_passedEvents->Branch( "pdgIdPartJet0", &pdgIdPartJet_t, "pdgIdPartJet_t/I" );
+
+  }
 
 
   int nEntries = tree_->GetEntries();
@@ -700,7 +709,8 @@ void Ntp1Finalizer_QG::finalize( bool write_tree ) {
       ptDJet_t = ptDJet[iJet];
       pdgIdPartJet_t = partFlavor;
 
-      tree_passedEvents->Fill();
+      if( write_tree )
+        tree_passedEvents->Fill();
 
 
       if( abs(partFlavor)< 4 ) { //light quark
