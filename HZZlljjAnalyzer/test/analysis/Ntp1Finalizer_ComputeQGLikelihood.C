@@ -45,9 +45,10 @@ void Ntp1Finalizer_ComputeQGLikelihood::finalize() {
 
 
 
-  const int nBins = 20;
+  const int nBins = 18;
   Double_t ptBins[nBins+1];
-  fitTools::getBins_int( nBins+1, ptBins, 15., 1000. );
+  fitTools::getBins_int( nBins, ptBins, 20., 1000. );
+  ptBins[nBins] = 3500.;
 
 
   std::vector<TH1D*> vh1_QGLikelihood_gluon;
@@ -68,13 +69,16 @@ void Ntp1Finalizer_ComputeQGLikelihood::finalize() {
   std::vector<TH1D*> vh1_rmsCand_cutOnQGLikelihood_norms_gluon;
   std::vector<TH1D*> vh1_rmsCand_cutOnQGLikelihood_norms_quark;
 
+  std::vector<TH1D*> vh1_QGLikelihood_eta35_gluon;
+  std::vector<TH1D*> vh1_QGLikelihood_eta35_quark;
+
 
   for( unsigned iBin=0; iBin<nBins; iBin++ ) {
 
     float ptMin = ptBins[iBin];
     float ptMax = ptBins[iBin+1];
 
-    char histoname[200];
+    char histoname[500];
     
     sprintf( histoname, "QGLikelihood_gluon_pt%.0f_%.0f", ptMin, ptMax);
     TH1D* h1_QGLikelihood_gluon_new = new TH1D(histoname, "", 50, 0., 1.);
@@ -140,6 +144,18 @@ void Ntp1Finalizer_ComputeQGLikelihood::finalize() {
     TH1D* h1_rmsCand_cutOnQGLikelihood_norms_quark_new = new TH1D(histoname, "", 100, 0., 0.1 );
     h1_rmsCand_cutOnQGLikelihood_norms_quark_new->Sumw2();
     vh1_rmsCand_cutOnQGLikelihood_norms_quark.push_back(h1_rmsCand_cutOnQGLikelihood_norms_quark_new);
+
+    sprintf( histoname, "QGLikelihood_eta35_gluon_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_QGLikelihood_eta35_gluon_new = new TH1D(histoname, "", 50, 0., 1.);
+    h1_QGLikelihood_eta35_gluon_new->Sumw2();
+    vh1_QGLikelihood_eta35_gluon.push_back(h1_QGLikelihood_eta35_gluon_new);
+
+    sprintf( histoname, "QGLikelihood_eta35_quark_pt%.0f_%.0f", ptMin, ptMax);
+    TH1D* h1_QGLikelihood_eta35_quark_new = new TH1D(histoname, "", 50, 0., 1.);
+    h1_QGLikelihood_eta35_quark_new->Sumw2();
+    vh1_QGLikelihood_eta35_quark.push_back(h1_QGLikelihood_eta35_quark_new);
+
+
 
   } //for bins
 
@@ -211,8 +227,6 @@ void Ntp1Finalizer_ComputeQGLikelihood::finalize() {
       TLorentzVector thisJet;
       thisJet.SetPtEtaPhiE( ptJet[iJet], etaJet[iJet], phiJet[iJet], eJet[iJet]);
 
-      if( fabs(thisJet.Eta())>2. ) continue;
-
       float deltaRmin=999.;
       int partFlavor=-1;
       TLorentzVector foundPart;
@@ -256,32 +270,59 @@ void Ntp1Finalizer_ComputeQGLikelihood::finalize() {
     //float QGLikelihood_norms_noptD = qglikeli->computeQGLikelihood( thisJet.Pt(), nChargedJet[iJet], nNeutralJet[iJet], -1., -1. );
     //float QGLikelihood_onlyNch = qglikeli->computeQGLikelihood( thisJet.Pt(), nChargedJet[iJet], -1., -1., -1. );
 
-      float QGLikelihood = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], nNeutralJet[iJet], ptDJet[iJet], rmsCandJet[iJet] );
-      float QGLikelihood_norms = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], nNeutralJet[iJet], ptDJet[iJet], -1. );
-      float QGLikelihood_noptD = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], nNeutralJet[iJet], -1., rmsCandJet[iJet] );
-      float QGLikelihood_norms_noptD = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], nNeutralJet[iJet], -1., -1. );
-      float QGLikelihood_onlyNch = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], -1., -1., -1. );
 
-      if( abs(partFlavor)< 4 ) { //light quark
-        
-        vh1_QGLikelihood_quark[thisBin]->Fill( QGLikelihood, eventWeight );
-        vh1_QGLikelihood_norms_quark[thisBin]->Fill( QGLikelihood_norms, eventWeight );
-        vh1_QGLikelihood_noptD_quark[thisBin]->Fill( QGLikelihood_noptD, eventWeight );
-        vh1_QGLikelihood_norms_noptD_quark[thisBin]->Fill( QGLikelihood_norms_noptD, eventWeight );
-        if( QGLikelihood_norms<0.9 ) vh1_rmsCand_cutOnQGLikelihood_norms_quark[thisBin]->Fill( rmsCandJet[iJet], eventWeight );
-        vh1_QGLikelihood_onlyNch_quark[thisBin]->Fill( QGLikelihood_onlyNch, eventWeight );
+      // change to new var: -ln rmsCand:
+      rmsCandJet[iJet] = -log(rmsCandJet[iJet]);
 
-      } else if( partFlavor==21 ) { //gluon
+      if( fabs(thisJet.Eta())<2. ) {
 
-        vh1_QGLikelihood_gluon[thisBin]->Fill( QGLikelihood, eventWeight );
-        vh1_QGLikelihood_norms_gluon[thisBin]->Fill( QGLikelihood_norms, eventWeight );
-        vh1_QGLikelihood_noptD_gluon[thisBin]->Fill( QGLikelihood_noptD, eventWeight );
-        vh1_QGLikelihood_norms_noptD_gluon[thisBin]->Fill( QGLikelihood_norms_noptD, eventWeight );
-        if( QGLikelihood_norms<0.9 ) vh1_rmsCand_cutOnQGLikelihood_norms_gluon[thisBin]->Fill( rmsCandJet[iJet], eventWeight );
-        vh1_QGLikelihood_onlyNch_gluon[thisBin]->Fill( QGLikelihood_onlyNch, eventWeight );
+        float QGLikelihood = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], nNeutralJet[iJet], ptDJet[iJet], rmsCandJet[iJet] );
+        float QGLikelihood_norms = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], nNeutralJet[iJet], ptDJet[iJet], -1. );
+    
+        float QGLikelihood_noptD = -1.;
+        float QGLikelihood_norms_noptD = -1.;
+        float QGLikelihood_onlyNch = -1.;
+    
+        //float QGLikelihood_noptD = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], nNeutralJet[iJet], -1., rmsCandJet[iJet] );
+        //float QGLikelihood_norms_noptD = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], nNeutralJet[iJet], -1., -1. );
+        //float QGLikelihood_onlyNch = qglikeli->computeQGLikelihoodPU( thisJet.Pt(), rhoPF, nChargedJet[iJet], -1., -1., -1. );
+    
+        if( abs(partFlavor)< 4 ) { //light quark
+          
+          vh1_QGLikelihood_quark[thisBin]->Fill( QGLikelihood, eventWeight );
+          vh1_QGLikelihood_norms_quark[thisBin]->Fill( QGLikelihood_norms, eventWeight );
+          vh1_QGLikelihood_noptD_quark[thisBin]->Fill( QGLikelihood_noptD, eventWeight );
+          vh1_QGLikelihood_norms_noptD_quark[thisBin]->Fill( QGLikelihood_norms_noptD, eventWeight );
+          if( QGLikelihood_norms<0.9 ) vh1_rmsCand_cutOnQGLikelihood_norms_quark[thisBin]->Fill( rmsCandJet[iJet], eventWeight );
+          vh1_QGLikelihood_onlyNch_quark[thisBin]->Fill( QGLikelihood_onlyNch, eventWeight );
+    
+        } else if( partFlavor==21 ) { //gluon
+    
+          vh1_QGLikelihood_gluon[thisBin]->Fill( QGLikelihood, eventWeight );
+          vh1_QGLikelihood_norms_gluon[thisBin]->Fill( QGLikelihood_norms, eventWeight );
+          vh1_QGLikelihood_noptD_gluon[thisBin]->Fill( QGLikelihood_noptD, eventWeight );
+          vh1_QGLikelihood_norms_noptD_gluon[thisBin]->Fill( QGLikelihood_norms_noptD, eventWeight );
+          if( QGLikelihood_norms<0.9 ) vh1_rmsCand_cutOnQGLikelihood_norms_gluon[thisBin]->Fill( rmsCandJet[iJet], eventWeight );
+          vh1_QGLikelihood_onlyNch_gluon[thisBin]->Fill( QGLikelihood_onlyNch, eventWeight );
+    
+        }
 
-      }
+      } else if( fabs(thisJet.Eta())>3. && fabs(thisJet.Eta())<5. ) {
 
+        float QGLikelihood = qglikeli->computeQGLikelihoodFwd( thisJet.Pt(), rhoPF, ptDJet[iJet], rmsCandJet[iJet] );
+    
+        if( abs(partFlavor)< 4 ) { //light quark
+          
+          vh1_QGLikelihood_eta35_quark[thisBin]->Fill( QGLikelihood, eventWeight );
+    
+        } else if( partFlavor==21 ) { //gluon
+    
+          vh1_QGLikelihood_eta35_gluon[thisBin]->Fill( QGLikelihood, eventWeight );
+
+        } //if gluon
+
+      } //if eta
+    
     } // for jets
 
 
@@ -378,6 +419,9 @@ void Ntp1Finalizer_ComputeQGLikelihood::finalize() {
 
     vh1_QGLikelihood_onlyNch_gluon[iBin]->Write();
     vh1_QGLikelihood_onlyNch_quark[iBin]->Write();
+
+    vh1_QGLikelihood_eta35_gluon[iBin]->Write();
+    vh1_QGLikelihood_eta35_quark[iBin]->Write();
 
     vh1_rmsCand_cutOnQGLikelihood_norms_gluon[iBin]->Write();
     vh1_rmsCand_cutOnQGLikelihood_norms_quark[iBin]->Write();
