@@ -69,6 +69,11 @@ void Ntp1Analyzer_QG::CreateOutputFile() {
   reducedTree_->Branch("etaJet", etaJet_, "etaJet_[nJet_]/F");
   reducedTree_->Branch("phiJet", phiJet_, "phiJet_[nJet_]/F");
 
+  reducedTree_->Branch("eJetGen",  eJetGen_,  "eJet_[nJetGen_]/F");
+  reducedTree_->Branch( "ptJetGen",  ptJetGen_,  "ptJetGen_[nJetGen_]/F");
+  reducedTree_->Branch("etaJetGen", etaJetGen_, "etaJetGen_[nJetGen_]/F");
+  reducedTree_->Branch("phiJetGen", phiJetGen_, "phiJetGen_[nJetGen_]/F");
+
   reducedTree_->Branch("nChargedJet", nCharged_, "nCharged_[nJet_]/I");
   reducedTree_->Branch("nNeutralJet", nNeutral_, "nNeutral_[nJet_]/I");
   reducedTree_->Branch("ptDJet", ptD_, "ptD_[nJet_]/F");
@@ -479,7 +484,7 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
      // JETS
      // ------------------
 
-     float jetPt_thresh = 30.;
+     float jetPt_thresh = 20.;
 
      // first save leading jets in event:
      std::vector<AnalysisJet> leadJets;
@@ -560,8 +565,8 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
        // --------------
        // kinematics:
        // --------------
-       //if( thisJet.Pt() < jetPt_thresh ) continue;
-       if( fabs(thisJet.Eta()) > 2.4 ) continue;
+       if( thisJet.Pt() < jetPt_thresh ) continue;
+       //if( fabs(thisJet.Eta()) > 2.4 ) continue;
 
 
        if( nJet_ < 20 ) {
@@ -575,9 +580,43 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          ptD_[nJet_] = leadJets[nJet_].ptD;
          rmsCand_[nJet_] = leadJets[nJet_].rmsCand;
 
+         // match to gen jet:
+         float deltaR_genJet_best = 999.;
+         TLorentzVector foundGenJet;
+         for( unsigned iGenJet=0; iGenJet<nAK5GenJet; ++iGenJet ) {
+
+           TLorentzVector* thisGenJet = new TLorentzVector( pxAK5GenJet[iGenJet], pyAK5GenJet[iGenJet], pzAK5GenJet[iGenJet], energyAK5GenJet[iGenJet] );
+           
+           if( thisGenJet->Pt()<3. ) continue;
+           float deltaR = thisGenJet->DeltaR(leadJets[nJet_]);
+
+           if( deltaR<deltaR_genJet_best ) {
+             deltaR_genJet_best = deltaR;
+             foundGenJet = *thisGenJet;
+           }
+           
+         } //for genjets
+
+         if( deltaR_genJet_best<999. ) {
+
+           eJetGen_[nJet_]   = foundGenJet.Energy();
+           ptJetGen_[nJet_]  = foundGenJet.Pt();
+           etaJetGen_[nJet_] = foundGenJet.Eta();
+           phiJetGen_[nJet_] = foundGenJet.Phi();
+
+         } else {
+
+           eJetGen_[nJet_]   = 0.;
+           ptJetGen_[nJet_]  = 0.;
+           etaJetGen_[nJet_] = 0.;
+           phiJetGen_[nJet_] = 0.;
+
+         } 
+
          nJet_++;
           
-       }
+       } //if less than 20
+
             
      } //for i
 
