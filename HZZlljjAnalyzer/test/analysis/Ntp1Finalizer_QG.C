@@ -45,14 +45,14 @@ void Ntp1Finalizer_QG::finalize( bool write_tree ) {
 
 
 
-  const int nRhoBins = 20;
+  const int nRhoBins = 40;
   Double_t rhoBins[nRhoBins+1];
-  fitTools::getBins( nRhoBins+1, rhoBins, 0., 20., false );
+  fitTools::getBins( nRhoBins+1, rhoBins, 0., (float)nRhoBins, false );
 
 
-  TH2D* h2_rhoPF_vs_nvertex  = new TH2D("rhoPF_vs_nvertex", "", 15, 0.5, 15.5, 50, 0., 20.);
+  TH2D* h2_rhoPF_vs_nvertex  = new TH2D("rhoPF_vs_nvertex", "", 15, 0.5, 15.5, 50, 0., (float)nRhoBins);
 
-  TH1D* h1_rhoPF = new TH1D("rhoPF", "", 50, 0., 20.);
+  TH1D* h1_rhoPF = new TH1D("rhoPF", "", 50, 0., (float)nRhoBins)
 
   TH1D* h1_nCharged_nvert1 = new TH1D("nCharged_nvert1", "", 101, -0.5, 100.5);
   TH1D* h1_nNeutral_nvert1 = new TH1D("nNeutral_nvert1", "", 101, -0.5, 100.5);
@@ -612,7 +612,7 @@ void Ntp1Finalizer_QG::finalize( bool write_tree ) {
 
       if( fabs(thisJet.Eta())>2. ) continue;
       if( thisJet.Pt()<ptBins[0] ) continue;
-      if( thisJet.Pt()>3500. ) continue;
+      if( thisJet.Pt()>4000. ) continue;
 
 
 
