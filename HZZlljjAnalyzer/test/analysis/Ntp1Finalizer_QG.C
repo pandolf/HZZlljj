@@ -52,7 +52,7 @@ void Ntp1Finalizer_QG::finalize( bool write_tree ) {
 
   TH2D* h2_rhoPF_vs_nvertex  = new TH2D("rhoPF_vs_nvertex", "", 15, 0.5, 15.5, 50, 0., (float)nRhoBins);
 
-  TH1D* h1_rhoPF = new TH1D("rhoPF", "", 50, 0., (float)nRhoBins)
+  TH1D* h1_rhoPF = new TH1D("rhoPF", "", 50, 0., (float)nRhoBins);
 
   TH1D* h1_nCharged_nvert1 = new TH1D("nCharged_nvert1", "", 101, -0.5, 100.5);
   TH1D* h1_nNeutral_nvert1 = new TH1D("nNeutral_nvert1", "", 101, -0.5, 100.5);
