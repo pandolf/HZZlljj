@@ -67,11 +67,40 @@ class Ntp1Analyzer_QG : public Ntp1Analyzer {
    Float_t etaPart_[20];
    Int_t pdgIdPart_[20];
 
-
-   bool DEBUG_VERBOSE_;
-
-   bool chargedHadronSubtraction_;
-   bool requireLeptons_;
+   Float_t axis1_[20];
+   Float_t axis2_[20];
+   Float_t pull_[20];
+   Float_t tana_[20];
+  
+   Float_t ptD_QC_[20];
+   Float_t rmsCand_QC_[20];
+   Float_t axis1_QC_[20];
+   Float_t axis2_QC_[20];
+   Float_t pull_QC_[20];
+   Float_t tana_QC_[20];
+  
+   Int_t nChg_ptCut_[20];
+   Int_t nChg_QC_[20];
+   Int_t nChg_ptCut_QC_[20];
+   Int_t nNeutral_ptCut_[20];
+  
+   Float_t Rchg_[20];
+   Float_t Rneutral_[20];
+   Float_t R_[20];
+   Float_t Rchg_QC_[20];
+  
+   Float_t pTMax_[20];
+   Float_t pTMaxChg_[20];
+   Float_t pTMaxNeutral_[20];
+   Float_t pTMaxChg_QC_[20];
+  
+   Float_t betastar_[20];
+  
+  
+    bool DEBUG_VERBOSE_;
+  
+    bool chargedHadronSubtraction_;
+    bool requireLeptons_;
 
 };
 

@@ -28,6 +28,35 @@ class AnalysisJet : public TLorentzVector {
   float ptD;
   float rmsCand;
 
+  float axis1;
+  float axis2;
+  float pull;
+  float tana;
+
+  float ptD_QC;
+  float rmsCand_QC;
+  float axis1_QC;
+  float axis2_QC;
+  float pull_QC;
+  float tana_QC;
+
+  int nChg_ptCut;
+  int nChg_QC;
+  int nChg_ptCut_QC;
+  int nNeutral_ptCut;
+
+  float Rchg;
+  float Rneutral;
+  float R;
+  float Rchg_QC;
+
+  float pTMax;
+  float pTMaxChg;
+  float pTMaxNeutral;
+  float pTMaxChg_QC;
+
+  float betastar;
+
 };
 
 
@@ -78,6 +107,36 @@ void Ntp1Analyzer_QG::CreateOutputFile() {
   reducedTree_->Branch("nNeutralJet", nNeutral_, "nNeutral_[nJet_]/I");
   reducedTree_->Branch("ptDJet", ptD_, "ptD_[nJet_]/F");
   reducedTree_->Branch("rmsCandJet", rmsCand_, "rmsCand_[nJet_]/F");
+
+  reducedTree_->Branch("axis1Jet", axis1_, "axis1_[nJet_]/F");
+  reducedTree_->Branch("axis2Jet", axis2_, "axis2_[nJet_]/F");
+  reducedTree_->Branch("pullJet", pull_, "pull_[nJet_]/F");
+  reducedTree_->Branch("tanaJet", tana_, "tana_[nJet_]/F");
+
+  reducedTree_->Branch("ptD_QCJet", ptD_QC_, "ptD_QC_[nJet_]/F");
+  reducedTree_->Branch("rmsCand_QCJet", rmsCand_QC_, "rmsCand_QC_[nJet_]/F");
+  reducedTree_->Branch("axis1_QCJet", axis1_QC_, "axis1_QC_[nJet_]/F");
+  reducedTree_->Branch("axis2_QCJet", axis2_QC_, "axis2_QC_[nJet_]/F");
+  reducedTree_->Branch("pull_QCJet", pull_QC_, "pull_QC_[nJet_]/F");
+  reducedTree_->Branch("tana_QCJet", tana_QC_, "tana_QC_[nJet_]/F");
+
+  reducedTree_->Branch("nChg_ptCutJet", nChg_ptCut_, "nChg_ptCut_[nJet_]/I");
+  reducedTree_->Branch("nChg_QCJet", nChg_QC_, "nChg_QC_[nJet_]/I");
+  reducedTree_->Branch("nChg_ptCut_QCJet", nChg_ptCut_QC_, "nChg_ptCut_QC_[nJet_]/I");
+  reducedTree_->Branch("nNeutral_ptCutJet", nNeutral_ptCut_, "nNeutral_ptCut_[nJet_]/I");
+
+  reducedTree_->Branch("RchgJet", Rchg_, "Rchg_[nJet_]/F");
+  reducedTree_->Branch("RneutralJet", Rneutral_, "Rneutral_[nJet_]/F");
+  reducedTree_->Branch("RJet", R_, "R_[nJet_]/F");
+  reducedTree_->Branch("Rchg_QCJet", Rchg_QC_, "Rchg_QC_[nJet_]/F");
+
+  reducedTree_->Branch("pTMaxJet", pTMax_, "pTMax_[nJet_]/F");
+  reducedTree_->Branch("pTMaxChgJet", pTMaxChg_, "pTMaxChg_[nJet_]/F");
+  reducedTree_->Branch("pTMaxNeutralJet", pTMaxNeutral_, "pTMaxNeutral_[nJet_]/F");
+  reducedTree_->Branch("pTMaxChg_QCJet", pTMaxChg_QC_, "pTMaxChg_QC_[nJet_]/F");
+
+  reducedTree_->Branch("betastarJet", betastar_, "betastar_[nJet_]/F");
+
 
   reducedTree_->Branch("nPart", &nPart_, "nPart_/I");
   reducedTree_->Branch("ePart",  ePart_,  "ePart_[nPart_]/F");
@@ -516,8 +575,39 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          thisJet.ptD = ptDAK5PFNoPUJet[iJet];
          thisJet.rmsCand = rmsCandAK5PFNoPUJet[iJet];
 
+         thisJet.axis1 = axis1AK5PFNoPUJet[iJet];
+         thisJet.axis2 = axis2AK5PFNoPUJet[iJet];
+         thisJet.pull = pullAK5PFNoPUJet[iJet];
+         thisJet.tana = tanaAK5PFNoPUJet[iJet];
+
+         thisJet.ptD_QC = ptD_QCAK5PFNoPUJet[iJet];
+         thisJet.rmsCand_QC = rmsCand_QCAK5PFNoPUJet[iJet];
+         thisJet.axis1_QC = axis1_QCAK5PFNoPUJet[iJet];
+         thisJet.axis2_QC = axis2_QCAK5PFNoPUJet[iJet];
+         thisJet.pull_QC = pull_QCAK5PFNoPUJet[iJet];
+         thisJet.tana_QC = tana_QCAK5PFNoPUJet[iJet];
+
+         thisJet.nChg_ptCut = nChg_ptCutAK5PFNoPUJet[iJet];
+         thisJet.nChg_QC = nChg_QCAK5PFNoPUJet[iJet];
+         thisJet.nChg_ptCut_QC = nChg_ptCut_QCAK5PFNoPUJet[iJet];
+         thisJet.nNeutral_ptCut = nNeutral_ptCutAK5PFNoPUJet[iJet];
+
+         thisJet.Rchg = RchgAK5PFNoPUJet[iJet];
+         thisJet.Rneutral = RneutralAK5PFNoPUJet[iJet];
+         thisJet.R = RAK5PFNoPUJet[iJet];
+         thisJet.Rchg_QC = Rchg_QCAK5PFNoPUJet[iJet];
+
+         thisJet.pTMax = pTMaxAK5PFNoPUJet[iJet];
+         thisJet.pTMaxChg = pTMaxChgAK5PFNoPUJet[iJet];
+         thisJet.pTMaxNeutral = pTMaxNeutralAK5PFNoPUJet[iJet];
+         thisJet.pTMaxChg_QC = pTMaxChg_QCAK5PFNoPUJet[iJet];
+
+         thisJet.betastar = betastarAK5PFNoPUJet[iJet];
+
+
          leadJets.push_back(thisJet);
          leadJetsIndex.push_back(iJet);
+
 
        } //for jets
 
@@ -545,6 +635,36 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
                             HFEMMultiplicityAK5PFPUcorrJet[iJet];
          thisJet.ptD = ptDAK5PFPUcorrJet[iJet];
          thisJet.rmsCand = rmsCandAK5PFPUcorrJet[iJet];
+
+         thisJet.axis1 = axis1AK5PFPUcorrJet[iJet];
+         thisJet.axis2 = axis2AK5PFPUcorrJet[iJet];
+         thisJet.pull = pullAK5PFPUcorrJet[iJet];
+         thisJet.tana = tanaAK5PFPUcorrJet[iJet];
+
+         thisJet.ptD_QC = ptD_QCAK5PFPUcorrJet[iJet];
+         thisJet.rmsCand_QC = rmsCand_QCAK5PFPUcorrJet[iJet];
+         thisJet.axis1_QC = axis1_QCAK5PFPUcorrJet[iJet];
+         thisJet.axis2_QC = axis2_QCAK5PFPUcorrJet[iJet];
+         thisJet.pull_QC = pull_QCAK5PFPUcorrJet[iJet];
+         thisJet.tana_QC = tana_QCAK5PFPUcorrJet[iJet];
+
+         thisJet.nChg_ptCut = nChg_ptCutAK5PFPUcorrJet[iJet];
+         thisJet.nChg_QC = nChg_QCAK5PFPUcorrJet[iJet];
+         thisJet.nChg_ptCut_QC = nChg_ptCut_QCAK5PFPUcorrJet[iJet];
+         thisJet.nNeutral_ptCut = nNeutral_ptCutAK5PFPUcorrJet[iJet];
+
+         thisJet.Rchg = RchgAK5PFPUcorrJet[iJet];
+         thisJet.Rneutral = RneutralAK5PFPUcorrJet[iJet];
+         thisJet.R = RAK5PFPUcorrJet[iJet];
+         thisJet.Rchg_QC = Rchg_QCAK5PFPUcorrJet[iJet];
+
+         thisJet.pTMax = pTMaxAK5PFPUcorrJet[iJet];
+         thisJet.pTMaxChg = pTMaxChgAK5PFPUcorrJet[iJet];
+         thisJet.pTMaxNeutral = pTMaxNeutralAK5PFPUcorrJet[iJet];
+         thisJet.pTMaxChg_QC = pTMaxChg_QCAK5PFPUcorrJet[iJet];
+
+         thisJet.betastar = betastarAK5PFPUcorrJet[iJet];
+
 
          leadJets.push_back(thisJet);
          leadJetsIndex.push_back(iJet);
@@ -579,6 +699,35 @@ if( DEBUG_VERBOSE_ ) std::cout << "entry n." << jentry << std::endl;
          nNeutral_[nJet_] = leadJets[nJet_].nNeutral;
          ptD_[nJet_] = leadJets[nJet_].ptD;
          rmsCand_[nJet_] = leadJets[nJet_].rmsCand;
+
+         axis1_[nJet_] = thisJet.axis1;
+         axis2_[nJet_] = thisJet.axis2;
+         pull_[nJet_] = thisJet.pull;
+         tana_[nJet_] = thisJet.tana;
+
+         ptD_QC_[nJet_] = thisJet.ptD_QC;
+         rmsCand_QC_[nJet_] = thisJet.rmsCand_QC;
+         axis1_QC_[nJet_] = thisJet.axis1_QC;
+         axis2_QC_[nJet_] = thisJet.axis2_QC;
+         pull_QC_[nJet_] = thisJet.pull_QC;
+         tana_QC_[nJet_] = thisJet.tana_QC;
+
+         nChg_ptCut_[nJet_] = thisJet.nChg_ptCut;
+         nChg_QC_[nJet_] = thisJet.nChg_QC;
+         nChg_ptCut_QC_[nJet_] = thisJet.nChg_ptCut_QC;
+         nNeutral_ptCut_[nJet_] = thisJet.nNeutral_ptCut;
+
+         Rchg_[nJet_] = thisJet.Rchg;
+         Rneutral_[nJet_] = thisJet.Rneutral;
+         R_[nJet_] = thisJet.R;
+         Rchg_QC_[nJet_] = thisJet.Rchg_QC;
+
+         pTMax_[nJet_] = thisJet.pTMax;
+         pTMaxChg_[nJet_] = thisJet.pTMaxChg;
+         pTMaxNeutral_[nJet_] = thisJet.pTMaxNeutral;
+         pTMaxChg_QC_[nJet_] = thisJet.pTMaxChg_QC;
+
+         betastar_[nJet_] = thisJet.betastar;
 
          // match to gen jet:
          float deltaR_genJet_best = 999.;
